@@ -154,8 +154,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _arrowHeadLength: 0.2
   _arrowHeadRadius: 0.2
-  _a: {x: 1.58, y: 0, z: -0.87}
-  _b: {x: 1, y: 0, z: -1.6}
+  _a: {x: 1, y: 0, z: 0}
+  _b: {x: 0, y: 1, z: 0}
 --- !u!4 &100299156
 Transform:
   m_ObjectHideFlags: 0
@@ -202,8 +202,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _arrowHeadLength: 0.2
   _arrowHeadRadius: 0.2
-  _a: {x: 2.94, y: 4.8, z: 5}
-  _b: {x: 6.76, y: 4, z: 0}
+  _a: {x: 3, y: 3, z: 0}
+  _b: {x: 1, y: 2, z: 0}
   _subtract: 0
 --- !u!4 &1498385580
 Transform:
@@ -251,7 +251,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _arrowHeadLength: 0.2
   _arrowHeadRadius: 0.2
-  _vectorToMultiply: {x: 4.73, y: 2.4, z: 0}
+  _vectorToMultiply: {x: 1, y: 1, z: 0}
   _by: 2
 --- !u!4 &1807311182
 Transform:

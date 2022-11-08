@@ -20,8 +20,8 @@ namespace UnityPraktika.P0.Scripts.VectorVisualization
             }
             else
             {
-                DrawVectorWithArrowHead(Vector3.zero, _b, Color.green);
-                DrawVectorWithArrowHead(_b, _a - _b, Color.yellow);
+                DrawVectorWithArrowHead(_a, -_b, Color.green);
+                DrawVectorWithArrowHead(Vector3.zero, _a - _b, Color.yellow);
             }
         }
     }
