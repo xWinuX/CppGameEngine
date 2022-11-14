@@ -2,6 +2,8 @@
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 
+#include "Shader.h"
+
 #define INITIAL_WINDOW_WIDTH  800
 #define INITIAL_WINDOW_HEIGHT 600
 
@@ -63,6 +65,8 @@ int main()
     // ------------------------------
     // Render Loop
     // ------------------------------
+    const Shader defaultShader = Shader("test", "test");
+    defaultShader.Use();
     float currentTime = getCurrentTime();
     while (!glfwWindowShouldClose(window))
     {
@@ -70,7 +74,7 @@ int main()
         // Time
         //------------------------------
         const float newTime   = getCurrentTime();
-        float       deltaTime = getCurrentTime() - currentTime;
+        float       deltaTime = newTime - currentTime;
         currentTime           = newTime;
 
         //------------------------------
