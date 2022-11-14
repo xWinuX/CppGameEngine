@@ -2,7 +2,9 @@
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 
-#include "Shader.h"
+#include "Rendering/Material.h"
+#include "Rendering/Mesh.h"
+#include "Rendering/Shader.h"
 
 #define INITIAL_WINDOW_WIDTH  800
 #define INITIAL_WINDOW_HEIGHT 600
@@ -63,10 +65,26 @@ int main()
     }
 
     // ------------------------------
+    // Initialize Mesh
+    // ------------------------------
+    float positions[] = {
+        -0.5f, -0.5f,
+        0.0f, 0.5f,
+        0.5f, -0.5f,
+    };
+
+    unsigned int indices[] = {0, 1, 2};
+
+    Mesh mesh = Mesh(positions, indices);
+
+    
+    
+    // ------------------------------
     // Render Loop
     // ------------------------------
-    const Shader defaultShader = Shader("test", "test");
-    defaultShader.Use();
+    const Shader   defaultShader   = Shader("test", "test");
+    const Material defaultMaterial = Material(&defaultShader);
+    
     float currentTime = getCurrentTime();
     while (!glfwWindowShouldClose(window))
     {

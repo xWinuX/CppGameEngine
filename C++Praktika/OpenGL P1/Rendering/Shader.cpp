@@ -24,6 +24,12 @@ Shader::Shader(const char* vertexShaderFilePath, const char* fragmentShaderFileP
     _programID = CreateProgram(vertexShader, fragmentShader);
 }
 
+Shader::~Shader()
+{
+    glDeleteProgram(_programID);
+}
+
+
 int Shader::CompileShader(const char* shaderSource, const int type)
 {
     const int shaderID = glCreateShader(type);
@@ -54,7 +60,7 @@ int Shader::CreateProgram(int vertexShaderID, int fragmentShaderID)
     if (!success)
     {
         char infoLog[512];
-        glGetProgramInfoLog(shaderProgramID, 512, NULL, infoLog);
+        glGetProgramInfoLog(shaderProgramID, 512, nullptr, infoLog);
         std::cout << " Exception: Program linking failed.\\n" << infoLog << std::endl;
     }
 
@@ -62,7 +68,7 @@ int Shader::CreateProgram(int vertexShaderID, int fragmentShaderID)
     glDeleteShader(vertexShaderID);
     glDeleteShader(fragmentShaderID);
 
-    return  shaderProgramID;
+    return shaderProgramID;
 }
 
 void Shader::Use() const
