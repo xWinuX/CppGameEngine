@@ -43,8 +43,8 @@ Shader::ShaderProgramSource Shader::ParseShader(const std::string& vertexShaderP
 unsigned int Shader::CompileShader(const std::string& shaderSource, const int type)
 {
     // Create shader
-    const unsigned int shaderID = glCreateShader(type);
-    const char* pShaderSource = shaderSource.c_str();
+    const unsigned int shaderID      = glCreateShader(type);
+    const char*        pShaderSource = shaderSource.c_str();
 
     // Bind shader source and compile
     glShaderSource(shaderID, 1, &pShaderSource, nullptr);
@@ -59,7 +59,7 @@ unsigned int Shader::CompileShader(const std::string& shaderSource, const int ty
         glGetShaderInfoLog(shaderID, 512, nullptr, infoLog);
         std::cout << "Exception: Vertex shader compilation failed.\n" << infoLog << std::endl;
     }
-    
+
     return shaderID;
 }
 
@@ -91,4 +91,11 @@ unsigned int Shader::CreateProgram(const int vertexShaderID, const int fragmentS
 void Shader::Use() const
 {
     glUseProgram(_programID);
+}
+
+void Shader::SetUniform4F(const GLchar* uniformName, const float f0, const float f1, const float f2, const float f3) const
+{
+    const int location = glGetUniformLocation(_programID, uniformName);
+    if (location != -1) { glUniform4f(location, f0, f1, f2, f3); }
+    else { std::cout << "Something went wrong setting uniform \"" << uniformName << "\"" << std::endl; }
 }

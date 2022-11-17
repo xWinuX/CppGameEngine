@@ -1,5 +1,6 @@
 ﻿#pragma once
 #include <iostream>
+#include <glad/glad.h>
 
 class Shader
 {
@@ -17,4 +18,5 @@ class Shader
         Shader(const std::string& vertexShaderFilePath, const std::string& fragmentShaderFilePath);
         ~Shader();
         void Use() const;
+        void SetUniform4F(const GLchar* uniformName, float f0, float f1, float f2, float f3) const;
 };

@@ -32,6 +32,8 @@ void processInput(GLFWwindow* window)
 
 float getCurrentTime() { return static_cast<float>(glfwGetTime()); }
 
+float sin01(const float x) { return (sin(x) + 1.0f) / 2.0f; }
+
 int main()
 {
     //-------------------------------
@@ -126,7 +128,8 @@ int main()
     // Render Loop
     // ------------------------------
 
-    glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+    glPolygonMode(GL_FRONT_AND_BACK, GL_TRIANGLES);
+
     defaultMaterial.UseShader();
 
     
@@ -151,6 +154,8 @@ int main()
         glClearColor(0.15f, 0.25f, 0.3f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT);
 
+        defaultShader.SetUniform4F("u_Color", sin01(newTime), sin01(newTime+1), sin01(newTime+2), 1.0f);
+        
         vertexArrayObject.Draw();
 
         //------------------------------
