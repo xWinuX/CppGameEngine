@@ -4,9 +4,9 @@
 class Shader
 {
     private:
-        int        _programID;
-        static int CompileShader(const std::string& shaderSource, int type);
-        static int CreateProgram(int vertexShaderID, int fragmentShaderID);
+        unsigned int        _programID;
+        static unsigned int CompileShader(const std::string& shaderSource, int type);
+        static unsigned int CreateProgram(int vertexShaderID, int fragmentShaderID);
         struct ShaderProgramSource
         {
             std::string vertexSource;

@@ -40,10 +40,10 @@ Shader::ShaderProgramSource Shader::ParseShader(const std::string& vertexShaderP
     return {ss[0].str(), ss[1].str()};
 }
 
-int Shader::CompileShader(const std::string& shaderSource, const int type)
+unsigned int Shader::CompileShader(const std::string& shaderSource, const int type)
 {
     // Create shader
-    const int shaderID = glCreateShader(type);
+    const unsigned int shaderID = glCreateShader(type);
     const char* pShaderSource = shaderSource.c_str();
 
     // Bind shader source and compile
@@ -63,10 +63,10 @@ int Shader::CompileShader(const std::string& shaderSource, const int type)
     return shaderID;
 }
 
-int Shader::CreateProgram(const int vertexShaderID, const int fragmentShaderID)
+unsigned int Shader::CreateProgram(const int vertexShaderID, const int fragmentShaderID)
 {
     // Attach shaders and link them
-    const int shaderProgramID = glCreateProgram();
+    const unsigned int shaderProgramID = glCreateProgram();
     glAttachShader(shaderProgramID, vertexShaderID);
     glAttachShader(shaderProgramID, fragmentShaderID);
     glLinkProgram(shaderProgramID);

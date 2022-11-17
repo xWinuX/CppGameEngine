@@ -125,11 +125,10 @@
     <ClCompile Include="glad.c" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="src\Rendering\Material.cpp" />
-    <ClCompile Include="src\Rendering\Mesh.cpp" />
+    <ClCompile Include="src\Rendering\Renderer.cpp" />
     <ClCompile Include="src\Rendering\Shader.cpp" />
     <ClCompile Include="src\Rendering\VertexArrayObject.cpp" />
     <ClCompile Include="src\Rendering\VertexAttribute.cpp" />
-    <ClCompile Include="src\Rendering\VertexAttributes.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="src" />
@@ -137,10 +136,11 @@
   <ItemGroup>
     <ClInclude Include="src\Rendering\Material.h" />
     <ClInclude Include="src\Rendering\Mesh.h" />
+    <ClInclude Include="src\Rendering\MeshData.h" />
+    <ClInclude Include="src\Rendering\Renderer.h" />
     <ClInclude Include="src\Rendering\Shader.h" />
     <ClInclude Include="src\Rendering\VertexArrayObject.h" />
     <ClInclude Include="src\Rendering\VertexAttribute.h" />
-    <ClInclude Include="src\Rendering\VertexAttributes.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

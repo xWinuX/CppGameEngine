@@ -2,11 +2,13 @@
 #include <iostream>
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
+
+#include "src/Rendering/Material.h"
 #include "src/Rendering/Mesh.h"
+#include "src/Rendering/MeshData.h"
 #include "src/Rendering/Shader.h"
 #include "src/Rendering/VertexArrayObject.h"
 #include "src/Rendering/VertexAttribute.h"
-#include "src/Rendering/VertexAttributes.h"
 
 #define INITIAL_WINDOW_WIDTH  800
 #define INITIAL_WINDOW_HEIGHT 600
@@ -29,8 +31,6 @@ void processInput(GLFWwindow* window)
 }
 
 float getCurrentTime() { return static_cast<float>(glfwGetTime()); }
-
-float sin01(const float x) { return (sin(x) + 1.0f) / 2.0f; }
 
 int main()
 {
@@ -70,53 +70,66 @@ int main()
     // Initialize Mesh
     // ------------------------------
 
-    float positions[9]{
-        -0.5f, -0.5f, 0.0f,
-        0.0f, 0.5f, 0.0f,
-        0.5f, -0.5f, 0.0f,
+    const Shader   defaultShader   = Shader("res/shaders/DefaultShader.vsh", "res/shaders/DefaultShader.fsh");
+    const Material defaultMaterial = Material(&defaultShader);
+    
+    float trianglePositions[9] = {
+        -0.5f, -0.5f, 1.0f,
+        0.0f, 0.5f, 1.0f,
+        0.5f, -0.5f, 1.0f,
     };
-    constexpr unsigned int positionsCount = sizeof(positions) / sizeof(float);
+    GLubyte triangleIndices[3] = {0, 1, 2};
 
-    unsigned int           indices[3]   = {0, 1, 2};
-    constexpr unsigned int indicesCount = sizeof(indices) / sizeof(unsigned int);
+    const MeshData triangleMeshData = {
+        &trianglePositions[0],
+        &triangleIndices[0],
+        sizeof(trianglePositions) / sizeof(float),
+        sizeof(triangleIndices) / sizeof(GLubyte)
+    };
+    
+    const Mesh triangleMesh = {
+        &triangleMeshData,
+        &defaultMaterial
+    };
+    
+    float smallTrianglePositions[9] = {
+        -0.25f, -0.25f, 0.0f,
+        0.0f, 0.25f, 0.0f,
+        0.25f, -0.25f, 0.0f,
+    };
+    GLubyte smallTriangleIndices[3] = {0, 1, 2};
 
-
-    std::cout << positionsCount << std::endl;
-    std::cout << indicesCount << std::endl;
-
-    const Mesh mesh = Mesh(positions, indices, positionsCount, indicesCount);
-
+    const MeshData smallTriangleMeshData = {
+        &smallTrianglePositions[0],
+        &smallTriangleIndices[0],
+        sizeof(smallTrianglePositions) / sizeof(float),
+        sizeof(smallTriangleIndices) / sizeof(GLubyte)
+    };
+    
+    const Mesh smallTriangleMesh = {
+        &smallTriangleMeshData,
+        &defaultMaterial
+    };
+    
     const VertexAttribute defaultVertexAttributes[1] = {
         VertexAttribute(3, GL_FLOAT, GL_FALSE, sizeof(float) * 3, nullptr)
     };
-    const VertexAttributes defaultAttributes = VertexAttributes(defaultVertexAttributes, sizeof(defaultAttributes));
 
-    VertexArrayObject vertexArrayObject = VertexArrayObject();
+    VertexArrayObject vertexArrayObject = VertexArrayObject(defaultVertexAttributes, sizeof(defaultVertexAttributes) / sizeof(VertexAttribute));
 
-    // Build VBO
-    vertexArrayObject.Bind();
-    defaultAttributes.Bind();
-
-    GLuint vertexBuffer;
-    glGenBuffers(1, &vertexBuffer);
-    glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer);
-
-    GLuint indexBuffer;
-    glGenBuffers(1, &indexBuffer);
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexBuffer);
-
-    glBufferData(GL_ARRAY_BUFFER, mesh.GetPositionsCount() * sizeof(float), positions, GL_STATIC_DRAW);
-    glBufferData(GL_ELEMENT_ARRAY_BUFFER, mesh.GetIndicesCount() * sizeof(GLubyte), indices, GL_STATIC_DRAW);
-
-    vertexArrayObject.Bind();
+    vertexArrayObject.AddMesh(&triangleMesh);
+    vertexArrayObject.AddMesh(&smallTriangleMesh);
+    
+    vertexArrayObject.Initialize();
 
     // ------------------------------
     // Render Loop
     // ------------------------------
-    const Shader defaultShader = Shader("res/shaders/DefaultShader.vsh", "res/shaders/DefaultShader.fsh");
 
-    defaultShader.Use();
+    glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+    defaultMaterial.UseShader();
 
+    
     float currentTime = getCurrentTime();
     while (!glfwWindowShouldClose(window))
     {
@@ -135,11 +148,10 @@ int main()
         //------------------------------
         // Render
         //------------------------------
-        glClearColor(sin01(currentTime), 0.0f, 0.0f, 1.0f);
+        glClearColor(0.15f, 0.25f, 0.3f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT);
 
-        vertexArrayObject.Bind();
-        glDrawElements(GL_TRIANGLES, 3, GL_UNSIGNED_BYTE, nullptr);
+        vertexArrayObject.Draw();
 
         //------------------------------
         // glfw: swap buffers and poll IO events (keys pressed/released, mouse moved etc.)
