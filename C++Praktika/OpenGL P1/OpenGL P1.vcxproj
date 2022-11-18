@@ -130,9 +130,9 @@
     <ClCompile Include="src\Rendering\VertexAttribute.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="src" />
-  </ItemGroup>
-  <ItemGroup>
+    <ClInclude Include="src\Math\Vector2.h" />
+    <ClInclude Include="src\Math\Vector3.h" />
+    <ClInclude Include="src\Math\Vector4.h" />
     <ClInclude Include="src\Rendering\Material.h" />
     <ClInclude Include="src\Rendering\Mesh.h" />
     <ClInclude Include="src\Rendering\MeshData.h" />

@@ -3,6 +3,7 @@
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 
+#include "src/Math/Vector4.h"
 #include "src/Rendering/Material.h"
 #include "src/Rendering/Mesh.h"
 #include "src/Rendering/MeshData.h"
@@ -19,15 +20,6 @@
 void framebufferSizeCallback(GLFWwindow* window, const int width, const int height)
 {
     glViewport(0, 0, width, height);
-}
-
-//------------------------------
-// Process all input: query GLFW whether relevant keys are pressed/released this frame and react accordingly
-//------------------------------
-void processInput(GLFWwindow* window)
-{
-    // Close Window if escape key is pressed
-    if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS) { glfwSetWindowShouldClose(window, true); }
 }
 
 float getCurrentTime() { return static_cast<float>(glfwGetTime()); }
@@ -69,12 +61,21 @@ int main()
     }
 
     // ------------------------------
-    // Initialize Mesh
+    // Initialize Shaders and Materials
     // ------------------------------
+    Shader defaultShader = Shader("res/shaders/DefaultShader.vsh", "res/shaders/DefaultShader.fsh");
+    const GLchar* u_Color = "u_Color";
+    defaultShader.InitializeUniform4F(u_Color);
 
-    const Shader   defaultShader   = Shader("res/shaders/DefaultShader.vsh", "res/shaders/DefaultShader.fsh");
-    const Material defaultMaterial = Material(&defaultShader);
-    
+    Material triangleMaterial = Material(&defaultShader);
+    triangleMaterial.SetUniform4F(u_Color, {0.0f, 0.0f, 1.0f, 1.0f});
+
+    Material wideTriangleMaterial = Material(&defaultShader);
+    wideTriangleMaterial.SetUniform4F(u_Color, {1.0f, 0.0f, 0.0f, 1.0f});
+
+    // ------------------------------
+    // Initialize Meshes 
+    // ------------------------------
     float trianglePositions[9] = {
         -0.5f, -0.5f, 1.0f,
         0.0f, 0.5f, 1.0f,
@@ -88,31 +89,34 @@ int main()
         sizeof(trianglePositions) / sizeof(float),
         sizeof(triangleIndices) / sizeof(GLubyte)
     };
-    
+
     const Mesh triangleMesh = {
         &triangleMeshData,
-        &defaultMaterial
+        &triangleMaterial
     };
-    
-    float smallTrianglePositions[9] = {
-        -0.25f, -0.25f, 0.0f,
-        0.0f, 0.25f, 0.0f,
-        0.25f, -0.25f, 0.0f,
-    };
-    GLubyte smallTriangleIndices[3] = {0, 1, 2};
 
-    const MeshData smallTriangleMeshData = {
-        &smallTrianglePositions[0],
-        &smallTriangleIndices[0],
-        sizeof(smallTrianglePositions) / sizeof(float),
-        sizeof(smallTriangleIndices) / sizeof(GLubyte)
+    float wideTrianglePositions[9] = {
+        -0.9f, -0.25f, 0.0f,
+        0.0f, 0.9f, 0.0f,
+        0.9f, -0.25f, 0.0f,
     };
-    
-    const Mesh smallTriangleMesh = {
-        &smallTriangleMeshData,
-        &defaultMaterial
+    GLubyte wideTriangleIndices[3] = {0, 1, 2};
+
+    const MeshData wideTriangleMeshData = {
+        &wideTrianglePositions[0],
+        &wideTriangleIndices[0],
+        sizeof(wideTrianglePositions) / sizeof(float),
+        sizeof(wideTriangleIndices) / sizeof(GLubyte)
     };
-    
+
+    const Mesh wideTriangleMesh = {
+        &wideTriangleMeshData,
+        &wideTriangleMaterial
+    };
+
+    // ------------------------------
+    // Initialize Vertex Array Object
+    // ------------------------------
     const VertexAttribute defaultVertexAttributes[1] = {
         VertexAttribute(3, GL_FLOAT, GL_FALSE, sizeof(float) * 3, nullptr)
     };
@@ -120,19 +124,13 @@ int main()
     VertexArrayObject vertexArrayObject = VertexArrayObject(defaultVertexAttributes, sizeof(defaultVertexAttributes) / sizeof(VertexAttribute));
 
     vertexArrayObject.AddMesh(&triangleMesh);
-    vertexArrayObject.AddMesh(&smallTriangleMesh);
-    
-    vertexArrayObject.Initialize();
+    vertexArrayObject.AddMesh(&wideTriangleMesh);
+
+    vertexArrayObject.PrepareMeshes();
 
     // ------------------------------
     // Render Loop
     // ------------------------------
-
-    glPolygonMode(GL_FRONT_AND_BACK, GL_TRIANGLES);
-
-    defaultMaterial.UseShader();
-
-    
     float currentTime = getCurrentTime();
     while (!glfwWindowShouldClose(window))
     {
@@ -146,16 +144,22 @@ int main()
         //------------------------------
         // Input
         //------------------------------
-        processInput(window);
 
+        // Close Window if escape key is pressed
+        if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS) { glfwSetWindowShouldClose(window, true); }
+
+        // Change Polygon Mode
+        if (glfwGetKey(window, GLFW_KEY_P) == GLFW_PRESS) { glPolygonMode(GL_FRONT_AND_BACK, GL_POINT); }
+        if (glfwGetKey(window, GLFW_KEY_F) == GLFW_PRESS) { glPolygonMode(GL_FRONT_AND_BACK, GL_FILL); }
+        if (glfwGetKey(window, GLFW_KEY_L) == GLFW_PRESS) { glPolygonMode(GL_FRONT_AND_BACK, GL_LINE); }
+        
         //------------------------------
         // Render
         //------------------------------
         glClearColor(0.15f, 0.25f, 0.3f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT);
 
-        defaultShader.SetUniform4F("u_Color", sin01(newTime), sin01(newTime+1), sin01(newTime+2), 1.0f);
-        
+        triangleMaterial.SetUniform4F(u_Color, {sin01(currentTime), sin01(currentTime + 1), sin01(currentTime + 2), 1.0f});
         vertexArrayObject.Draw();
 
         //------------------------------

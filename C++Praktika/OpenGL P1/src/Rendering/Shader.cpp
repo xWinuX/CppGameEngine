@@ -8,8 +8,8 @@ Shader::Shader(const std::string& vertexShaderFilePath, const std::string& fragm
 {
     const ShaderProgramSource source = ParseShader(vertexShaderFilePath, fragmentShaderFilePath);
 
-    const int vertexShader   = CompileShader(source.vertexSource, GL_VERTEX_SHADER);
-    const int fragmentShader = CompileShader(source.fragmentSource, GL_FRAGMENT_SHADER);
+    const GLuint vertexShader   = CompileShader(source.VertexSource, GL_VERTEX_SHADER);
+    const GLuint fragmentShader = CompileShader(source.FragmentSource, GL_FRAGMENT_SHADER);
 
     _programID = CreateProgram(vertexShader, fragmentShader);
 }
@@ -40,11 +40,11 @@ Shader::ShaderProgramSource Shader::ParseShader(const std::string& vertexShaderP
     return {ss[0].str(), ss[1].str()};
 }
 
-unsigned int Shader::CompileShader(const std::string& shaderSource, const int type)
+GLuint Shader::CompileShader(const std::string& shaderSource, const int type)
 {
     // Create shader
-    const unsigned int shaderID      = glCreateShader(type);
-    const char*        pShaderSource = shaderSource.c_str();
+    const GLuint shaderID      = glCreateShader(type);
+    const char*  pShaderSource = shaderSource.c_str();
 
     // Bind shader source and compile
     glShaderSource(shaderID, 1, &pShaderSource, nullptr);
@@ -63,7 +63,7 @@ unsigned int Shader::CompileShader(const std::string& shaderSource, const int ty
     return shaderID;
 }
 
-unsigned int Shader::CreateProgram(const int vertexShaderID, const int fragmentShaderID)
+unsigned int Shader::CreateProgram(const GLuint vertexShaderID, const GLuint fragmentShaderID)
 {
     // Attach shaders and link them
     const unsigned int shaderProgramID = glCreateProgram();
@@ -93,9 +93,21 @@ void Shader::Use() const
     glUseProgram(_programID);
 }
 
-void Shader::SetUniform4F(const GLchar* uniformName, const float f0, const float f1, const float f2, const float f3) const
+void Shader::InitializeUniform4F(const GLchar* uniformName)
 {
     const int location = glGetUniformLocation(_programID, uniformName);
-    if (location != -1) { glUniform4f(location, f0, f1, f2, f3); }
-    else { std::cout << "Something went wrong setting uniform \"" << uniformName << "\"" << std::endl; }
+    if (location != -1) { _uniformLocation[uniformName] = location; }
+    else { std::cout << "Something went wrong initializing uniform \"" << uniformName << "\"" << std::endl; }
 }
+
+void Shader::SetUniform4F(const GLchar* uniformName, const Vector4 vector4) const
+{
+    if (_uniformLocation.find(uniformName) != _uniformLocation.end()) { SetUniform4F(_uniformLocation.at(uniformName), vector4); }
+}
+
+void Shader::SetUniform4F(const int uniformLocation, const Vector4 vector4)
+{
+    glUniform4f(uniformLocation, vector4.X, vector4.Y, vector4.Z, vector4.W);
+}
+
+int Shader::GetUniformLocation(const GLchar* uniformName) { return _uniformLocation[uniformName]; }

@@ -4,8 +4,8 @@
 struct MeshData
 {
     public:
-        const float*       pPositions;
-        const GLubyte*     pIndices;
-        const int numPositions;
-        const int numIndices;
+        const float*       PPositions;
+        const GLubyte*     PIndices;
+        const int NumPositions;
+        const int NumIndices;
 };

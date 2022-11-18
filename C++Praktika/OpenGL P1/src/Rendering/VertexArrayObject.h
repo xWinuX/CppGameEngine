@@ -11,16 +11,18 @@ class VertexArrayObject
         const VertexAttribute* _pVertexAttributes;
         unsigned int           _numVertexAttributes;
         GLuint                 _vertexArrayID{};
-
+    
         std::vector<Mesh*>                                  _meshes;
         std::map<const Material*, std::vector<const Mesh*>> _meshMap;
+        std::map<const Material*, int> _indicesBatchMap;
 
-        int _numIndices;
+        int _numPositions = 0;
+        int _numIndices = 0;
 
         void Bind() const;
     public:
         explicit VertexArrayObject(const VertexAttribute* pVertexAttributes, unsigned int numVertexAttributes);
-        void     Initialize();
+        void     PrepareMeshes() const;
         void     Draw() const;
         void     AddMesh(const Mesh* mesh);
 };

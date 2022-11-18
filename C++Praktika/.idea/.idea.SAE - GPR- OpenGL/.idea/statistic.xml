@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="Statistic">
+    <option name="excludedDirectories">
+      <list>
+        <option value="$PROJECT_DIR$/.idea" />
+        <option value="$PROJECT_DIR$/.vs" />
+        <option value="$PROJECT_DIR$/Debug" />
+        <option value="$PROJECT_DIR$/opengl" />
+        <option value="$PROJECT_DIR$/Release" />
+        <option value="$PROJECT_DIR$/OpenGL P1/Debug" />
+        <option value="$PROJECT_DIR$/OpenGL P1/Release" />
+      </list>
+    </option>
+  </component>
+</project>

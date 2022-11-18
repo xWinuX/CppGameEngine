@@ -12,25 +12,9 @@ VertexArrayObject::VertexArrayObject(const VertexAttribute* pVertexAttributes, c
     _numVertexAttributes = numVertexAttributes;
 }
 
-int add(int a, int b) { return a + b; }
-
-void VertexArrayObject::Initialize()
+void VertexArrayObject::PrepareMeshes() const
 {
-    // Prepare Arrays
-    unsigned int numPositions = 0;
-    _numIndices   = 0;
-
-    for (const auto& mapIterator : _meshMap)
-    {
-        std::vector<const Mesh*> meshes = mapIterator.second;
-        for (const Mesh* const& mesh : meshes)
-        {
-            numPositions += mesh->pMeshData->numPositions;
-            _numIndices += mesh->pMeshData->numIndices;
-        }
-    }
-
-    std::vector<float>   positions = std::vector<float>(numPositions);
+    std::vector<float>   positions = std::vector<float>(_numPositions);
     std::vector<GLubyte> indices   = std::vector<GLubyte>(_numIndices);
 
     int  positionPosition  = 0;
@@ -43,20 +27,20 @@ void VertexArrayObject::Initialize()
         for (const Mesh* const& mesh : meshes)
         {
             // Combine Positions
-            const float* meshDataPositions    = mesh->pMeshData->pPositions;
-            const int    numMeshDataPositions = mesh->pMeshData->numPositions;
+            const float* meshDataPositions    = mesh->PMeshData->PPositions;
+            const int    numMeshDataPositions = mesh->PMeshData->NumPositions;
             std::copy_n(meshDataPositions, numMeshDataPositions, positionsIterator);
             positionsIterator += numMeshDataPositions;
             positionPosition += numMeshDataPositions;
 
             // Combine indices
-            const GLubyte* meshDataIndices    = mesh->pMeshData->pIndices;
-            const int      numMeshDataIndices = mesh->pMeshData->numIndices;
+            const GLubyte* meshDataIndices    = mesh->PMeshData->PIndices;
+            const int      numMeshDataIndices = mesh->PMeshData->NumIndices;
             std::transform(
                            meshDataIndices,
                            meshDataIndices + numMeshDataIndices,
                            indicesIterator,
-                           [indicesPosition](GLubyte input) { return input + indicesPosition; }
+                           [indicesPosition](const GLubyte input) { return input + indicesPosition; }
                           );
             indicesPosition += numMeshDataIndices;
             indicesIterator += numMeshDataIndices;
@@ -69,7 +53,7 @@ void VertexArrayObject::Initialize()
     GLuint vertexBufferID;
     glGenBuffers(1, &vertexBufferID);
     glBindBuffer(GL_ARRAY_BUFFER, vertexBufferID);
-    glBufferData(GL_ARRAY_BUFFER, numPositions * sizeof(float), positions.data(), GL_STATIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, _numPositions * sizeof(float), positions.data(), GL_STATIC_DRAW);
 
     // Bind Vertex Attributes
     for (unsigned int i = 0; i < _numVertexAttributes; i++) { _pVertexAttributes[i].Bind(i); }
@@ -79,6 +63,12 @@ void VertexArrayObject::Initialize()
     glGenBuffers(1, &indexBufferID);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexBufferID);
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, _numIndices * sizeof(GLubyte), indices.data(), GL_STATIC_DRAW);
+
+    std::cout << "posSize: " << positions.size() << std::endl;
+    for (const float position : positions) { std::cout << "pos: " << position << std::endl; }
+
+    std::cout << "indSize: " << indices.size() << std::endl;
+    for (const float index : indices) { std::cout << "ind: " << index << std::endl; }
 
     Bind();
 }
@@ -91,7 +81,36 @@ void VertexArrayObject::Bind() const
 void VertexArrayObject::Draw() const
 {
     Bind();
-    glDrawElements(GL_TRIANGLES, _numIndices, GL_UNSIGNED_BYTE, nullptr);
+    int           offset = 0;
+    const Shader* shader = nullptr;
+    for (const auto& indicesBatchMap : _indicesBatchMap)
+    {
+        // Choose if new shader should get activated
+        const Shader* newShader = indicesBatchMap.first->GetShader();
+        if (shader == nullptr || shader != newShader)
+        {
+            indicesBatchMap.first->UseShader();
+            shader = newShader;
+        }
+
+        // Apply material unique uniforms
+        indicesBatchMap.first->ApplyUniforms();
+
+        // Actually draw the elements
+        glDrawElements(GL_TRIANGLES, indicesBatchMap.second, GL_UNSIGNED_BYTE, (void*)offset);
+        offset += indicesBatchMap.second;
+    }
 }
 
-void VertexArrayObject::AddMesh(const Mesh* mesh) { _meshMap[mesh->pMaterial].push_back(mesh); }
+void VertexArrayObject::AddMesh(const Mesh* mesh)
+{
+    // TODO: Add smarter way to batch materials (make it so that if there are materials with the same shader they are in order so the shader only gets switched once)
+    _meshMap[mesh->PMaterial].push_back(mesh);
+
+    const int numIndices   = mesh->PMeshData->NumIndices;
+    const int numPositions = mesh->PMeshData->NumPositions;
+
+    _indicesBatchMap[mesh->PMaterial] += numIndices;
+    _numPositions += numPositions;
+    _numIndices += numIndices;
+}

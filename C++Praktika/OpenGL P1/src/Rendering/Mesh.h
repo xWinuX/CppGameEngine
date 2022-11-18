@@ -6,6 +6,6 @@ class Material;
 struct Mesh
 {
     public:
-        const MeshData* pMeshData;
-        const Material* pMaterial;
+        const MeshData* PMeshData;
+        const Material* PMaterial;
 };
