@@ -8,11 +8,13 @@
 VertexArrayObject::VertexArrayObject(const VertexAttribute* pVertexAttributes, const unsigned int numVertexAttributes)
 {
     glGenVertexArrays(1, &_vertexArrayID);
+    glGenBuffers(1, &_vertexBufferID);
+    glGenBuffers(1, &_indexBufferID);
     _pVertexAttributes   = pVertexAttributes;
     _numVertexAttributes = numVertexAttributes;
 }
 
-void VertexArrayObject::PrepareMeshes() const
+void VertexArrayObject::PrepareMeshes()
 {
     std::vector<float>   positions = std::vector<float>(_numPositions);
     std::vector<GLubyte> indices   = std::vector<GLubyte>(_numIndices);
@@ -50,25 +52,15 @@ void VertexArrayObject::PrepareMeshes() const
     Bind();
 
     // Generate Vertex Buffer
-    GLuint vertexBufferID;
-    glGenBuffers(1, &vertexBufferID);
-    glBindBuffer(GL_ARRAY_BUFFER, vertexBufferID);
+    glBindBuffer(GL_ARRAY_BUFFER, _vertexBufferID);
     glBufferData(GL_ARRAY_BUFFER, _numPositions * sizeof(float), positions.data(), GL_STATIC_DRAW);
 
     // Bind Vertex Attributes
     for (unsigned int i = 0; i < _numVertexAttributes; i++) { _pVertexAttributes[i].Bind(i); }
 
     // Generate Index Buffer
-    GLuint indexBufferID;
-    glGenBuffers(1, &indexBufferID);
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexBufferID);
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, _indexBufferID);
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, _numIndices * sizeof(GLubyte), indices.data(), GL_STATIC_DRAW);
-
-    std::cout << "posSize: " << positions.size() << std::endl;
-    for (const float position : positions) { std::cout << "pos: " << position << std::endl; }
-
-    std::cout << "indSize: " << indices.size() << std::endl;
-    for (const float index : indices) { std::cout << "ind: " << index << std::endl; }
 
     Bind();
 }
@@ -113,4 +105,27 @@ void VertexArrayObject::AddMesh(const Mesh* mesh)
     _indicesBatchMap[mesh->PMaterial] += numIndices;
     _numPositions += numPositions;
     _numIndices += numIndices;
+}
+
+void VertexArrayObject::RemoveMesh(const Mesh* mesh)
+{
+    std::vector<const Mesh*>* vec               = &_meshMap[mesh->PMaterial];
+    const auto                foundMeshIterator = std::find(vec->begin(), vec->end(), mesh);
+    if (foundMeshIterator != vec->end())
+    {
+        _indicesBatchMap[mesh->PMaterial] -= mesh->PMeshData->NumIndices;
+        _numPositions -= mesh->PMeshData->NumPositions;
+        _numIndices -= mesh->PMeshData->NumIndices;
+        vec->erase(foundMeshIterator);
+    }
+}
+
+void VertexArrayObject::ClearMeshes()
+{
+    for (auto& meshMap : _meshMap) { meshMap.second.clear(); }
+
+    _meshMap.clear();
+    _indicesBatchMap.clear();
+    _numPositions = 0;
+    _numIndices   = 0;
 }
