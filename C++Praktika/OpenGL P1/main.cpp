@@ -2,7 +2,6 @@
 #include <iostream>
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
-
 #include "src/Math/Vector4.h"
 #include "src/Rendering/Material.h"
 #include "src/Rendering/Mesh.h"
