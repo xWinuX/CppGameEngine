@@ -2,6 +2,7 @@
 #include <iostream>
 #include <map>
 #include <glad/glad.h>
+#include <glm/mat4x4.hpp>
 
 #include "../Math/Vector4.h"
 
@@ -25,9 +26,11 @@ class Shader
         ~Shader();
 
         static void SetUniform4F(int uniformLocation, Vector4 vector4);
+        static void SetUniformMat4F(int uniformLocation, glm::mat4x4 mat4);
 
         void Use() const;
-        void InitializeUniform4F(const GLchar* uniformName);
+        void InitializeUniform(const GLchar* uniformName);
         void SetUniform4F(const GLchar* uniformName, Vector4 vector4) const;
+        void SetUniformMat4F(const GLchar* uniformName, glm::mat4x4 mat4) const;
         int  GetUniformLocation(const GLchar* uniformName);
 };

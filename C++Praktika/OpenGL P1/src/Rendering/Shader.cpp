@@ -3,6 +3,7 @@
 #include <fstream>
 #include <sstream>
 #include <glad/glad.h>
+#include <glm/gtc/type_ptr.hpp>
 
 Shader::Shader(const std::string& vertexShaderFilePath, const std::string& fragmentShaderFilePath)
 {
@@ -93,7 +94,7 @@ void Shader::Use() const
     glUseProgram(_programID);
 }
 
-void Shader::InitializeUniform4F(const GLchar* uniformName)
+void Shader::InitializeUniform(const GLchar* uniformName)
 {
     const int location = glGetUniformLocation(_programID, uniformName);
     if (location != -1) { _uniformLocation[uniformName] = location; }
@@ -105,9 +106,19 @@ void Shader::SetUniform4F(const GLchar* uniformName, const Vector4 vector4) cons
     if (_uniformLocation.find(uniformName) != _uniformLocation.end()) { SetUniform4F(_uniformLocation.at(uniformName), vector4); }
 }
 
+void Shader::SetUniformMat4F(const GLchar* uniformName, const glm::mat4x4 mat4) const
+{
+    if (_uniformLocation.find(uniformName) != _uniformLocation.end()) { SetUniformMat4F(_uniformLocation.at(uniformName), mat4); }
+}
+
 void Shader::SetUniform4F(const int uniformLocation, const Vector4 vector4)
 {
     glUniform4f(uniformLocation, vector4.X, vector4.Y, vector4.Z, vector4.W);
+}
+
+void Shader::SetUniformMat4F(const int uniformLocation, glm::mat4x4 mat4)
+{
+    glUniformMatrix4fv(uniformLocation, 1, GL_FALSE, &mat4[0][0]);
 }
 
 int Shader::GetUniformLocation(const GLchar* uniformName) { return _uniformLocation[uniformName]; }

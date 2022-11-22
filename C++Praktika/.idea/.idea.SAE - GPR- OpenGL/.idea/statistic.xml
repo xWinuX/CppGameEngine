@@ -10,6 +10,7 @@
         <option value="$PROJECT_DIR$/Release" />
         <option value="$PROJECT_DIR$/OpenGL P1/Debug" />
         <option value="$PROJECT_DIR$/OpenGL P1/Release" />
+        <option value="$PROJECT_DIR$/opengl/include/glm" />
       </list>
     </option>
   </component>

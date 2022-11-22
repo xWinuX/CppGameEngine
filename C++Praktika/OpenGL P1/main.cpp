@@ -2,6 +2,9 @@
 #include <iostream>
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
+#include <glm/ext/matrix_clip_space.hpp>
+#include <glm/ext/matrix_transform.hpp>
+
 #include "src/Math/Vector4.h"
 #include "src/Rendering/Material.h"
 #include "src/Rendering/Mesh.h"
@@ -16,9 +19,17 @@
 //------------------------------
 // glfw: whenever the window size changed (by OS or user resize input) this callback function executes
 //------------------------------
+
+glm::mat4 projectionMatrix = glm::mat4(1.0f);
+
+void resizeProjectionMatrix(const float screenWidth, const float screenHeight) { projectionMatrix = glm::ortho(0.0f, screenWidth, 0.0f, screenHeight, -1000.0f, 1000.0f); }
+
 void framebufferSizeCallback(GLFWwindow* window, const int width, const int height)
 {
     glViewport(0, 0, width, height);
+    const float screenWidth  = static_cast<float>(width);
+    const float screenHeight = static_cast<float>(height);
+    resizeProjectionMatrix(screenWidth, screenHeight);
 }
 
 bool cull = false;
@@ -73,6 +84,9 @@ int main()
         return -1;
     }
 
+    // Resize Projection Matrix with new size
+    resizeProjectionMatrix(INITIAL_WINDOW_WIDTH, INITIAL_WINDOW_HEIGHT);
+
     // Set Callbacks
     glfwMakeContextCurrent(window);
     glfwSetFramebufferSizeCallback(window, framebufferSizeCallback);
@@ -90,41 +104,33 @@ int main()
     // ------------------------------
     // Initialize Shaders and Materials
     // ------------------------------
-    Shader        defaultShader = Shader("res/shaders/DefaultShader.vsh", "res/shaders/DefaultShader.fsh");
-    const GLchar* u_Color       = "u_Color";
-    defaultShader.InitializeUniform4F(u_Color);
+    Shader defaultShader = Shader("res/shaders/DefaultShader.vsh", "res/shaders/DefaultShader.fsh");
+
+    const GLchar* u_Color      = "u_Color";
+    const GLchar* u_Model      = "u_Model";
+    const GLchar* u_View       = "u_View";
+    const GLchar* u_Projection = "u_Projection";
+
+    defaultShader.InitializeUniform(u_Color);
+    defaultShader.InitializeUniform(u_Model);
+    defaultShader.InitializeUniform(u_View);
+    defaultShader.InitializeUniform(u_Projection);
 
     Material defaultMaterial = Material(&defaultShader);
+
     defaultMaterial.SetUniform4F(u_Color, {0.0f, 0.0f, 1.0f, 1.0f});
 
     // ------------------------------
     // Initialize Mesh Data
     // ------------------------------
-
-    #pragma region Triangle
-    float trianglePositions[9] = {
-        0.0f, 0.5f, 0.0f,   // 0 Top
-        0.5f, -0.5f, 0.0f,  // 1 Right
-        -0.5f, -0.5f, 0.0f, // 2 Left
-    };
-    GLubyte triangleIndices[3] = {0, 1, 2};
-
-    const MeshData triangleMeshData = {
-        &trianglePositions[0],
-        &triangleIndices[0],
-        sizeof(trianglePositions) / sizeof(float),
-        sizeof(triangleIndices) / sizeof(GLubyte)
-    };
-    #pragma endregion
-
-
     #pragma region Quad
-    float quadPositions[12] = {
-        -0.5f, 0.5f, 0.0f,  // 0 Top Left
-        0.5f, 0.5f, 0.0f,   // 1 Top Right
-        -0.5f, -0.5f, 0.0f, // 2 Bottom Left
-        0.5f, -0.5f, 0.0f   // 3 Bottom Right
-
+    constexpr float centerX           = INITIAL_WINDOW_WIDTH / 2.0f;
+    constexpr float centerY           = INITIAL_WINDOW_HEIGHT / 2.0f;
+    float           quadPositions[12] = {
+        centerX - 200.0f, centerY - 200.0f, 0.0f, // 0 Top Left
+        centerX + 200.0f, centerY - 200.0f, 0.0f, // 1 Top Right
+        centerX - 200.0f, centerY + 200.0f, 0.0f, // 2 Bottom Left
+        centerX + 200.0f, centerY + 200.0f, 0.0f  // 3 Bottom Right
     };
     GLubyte quadIndices[6] = {
         0, 1, 2, // First Triangle
@@ -142,16 +148,16 @@ int main()
     #pragma region Cube
     float cubePositions[24] = {
         // Front
-        -0.5f, 0.5f, 1.0f,  // 0 Front Top Left 
-        0.5f, 0.5f, 1.0f,   // 1 Front Top Right
-        -0.5f, -0.5f, 1.0f, // 2 Front Bottom Left
-        0.5f, -0.5f, 1.0f,  // 3 Front Bottom Right
+        centerX - 200.0f, centerY - 200.0f, 0.0f, // 0 Front Top Left
+        centerX + 200.0f, centerY - 200.0f, 0.0f, // 1 Front Top Right
+        centerX - 200.0f, centerY + 200.0f, 0.0f, // 2 Front Bottom Left
+        centerX + 200.0f, centerY + 200.0f, 0.0f,  // 3 Front Bottom Right
 
         // Back
-        -0.3f, 0.8f, -1.0f,  // 4 Back Top Left
-        0.8f, 0.8f, -1.0f,   // 5 Back Top Right
-        -0.3f, -0.3f, -1.0f, // 6 Back Bottom Left
-        0.8f, -0.3f, -1.0f   // 7 Back Bottom Right
+        centerX - 200.0f, centerY - 200.0f, 200.0f, // 0 Back Top Left
+        centerX + 200.0f, centerY - 200.0f, 200.0f, // 1 Back Top Right
+        centerX - 200.0f, centerY + 200.0f, 200.0f, // 2 Back Bottom Left
+        centerX + 200.0f, centerY + 200.0f, 200.0f,  // 3 Back Bottom Right
     };
     GLubyte cubeIndices[36] = {
         // Front Face
@@ -187,28 +193,6 @@ int main()
     };
     #pragma endregion
 
-    #pragma region Pyramid
-    float pyramidPositions[12] = {
-        0.0f, 0.5f, 0.0f,   // 0 Top
-        0.5f, -0.5f, 0.5f,  // 1 Right
-        -0.5f, -0.5f, 0.5f, // 2 Left
-        0.0f, -0.3f, -0.5f, // 3 Back
-    };
-    GLubyte pyramidIndices[12] = {
-        0, 1, 2, // Front Face
-        0, 3, 1, // Right Face
-        0, 2, 3, // Left Face
-        2, 1, 3, // Bottom Face
-    };
-
-    const MeshData pyramidMeshData = {
-        &pyramidPositions[0],
-        &pyramidIndices[0],
-        sizeof(pyramidPositions) / sizeof(float),
-        sizeof(pyramidIndices) / sizeof(GLubyte)
-    };
-    #pragma endregion
-
     // ------------------------------
     // Initialize Vertex Array Object
     // ------------------------------
@@ -221,26 +205,10 @@ int main()
     // ------------------------------
     // Create Renderable Meshes
     // ------------------------------
-    const Mesh triangleMesh = {&triangleMeshData, &defaultMaterial};
-    const Mesh quadMesh     = {&quadMeshData, &defaultMaterial};
-    const Mesh cubeMesh     = {&cubeMeshData, &defaultMaterial};
-    const Mesh pyramidMesh  = {&pyramidMeshData, &defaultMaterial};
+    const Mesh quadMesh = {&quadMeshData, &defaultMaterial};
+    const Mesh cubeMesh = {&cubeMeshData, &defaultMaterial};
 
-    struct MeshToKeyAssociation
-    {
-        public:
-            const Mesh* PMesh;
-            int Key;
-    };
-
-    MeshToKeyAssociation meshToKeyAssociation[4] = {
-        {&triangleMesh, GLFW_KEY_1},
-        {&quadMesh, GLFW_KEY_2},
-        {&cubeMesh, GLFW_KEY_3},
-        {&pyramidMesh, GLFW_KEY_4}
-    };
-    
-    vertexArrayObject.AddMesh(&triangleMesh);
+    vertexArrayObject.AddMesh(&cubeMesh);
     vertexArrayObject.PrepareMeshes();
 
     // ------------------------------
@@ -257,23 +225,20 @@ int main()
         currentTime           = newTime;
 
         //------------------------------
-        // Dynamic Input
-        //------------------------------
-        for (const MeshToKeyAssociation association : meshToKeyAssociation)
-        {
-            if (glfwGetKey(window, association.Key) == GLFW_PRESS)
-            {
-                vertexArrayObject.ClearMeshes();
-                vertexArrayObject.AddMesh(association.PMesh);
-                vertexArrayObject.PrepareMeshes();
-            }
-        }
-        
-        //------------------------------
         // Render
         //------------------------------
         glClearColor(0.15f, 0.25f, 0.3f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT);
+
+        glm::mat4 model = glm::mat4(1.0f); // Set to identity matrix first
+        glm::mat4 view  = glm::mat4(1.0f);
+
+        model = translate(model, glm::vec3(0.0f, 0.0f, 3.0f));
+        view  = translate(view, glm::vec3(0.0f, 0.0f, 0.0f));
+
+        defaultMaterial.SetUniformMat4F(u_Model, model);
+        defaultMaterial.SetUniformMat4F(u_View, view);
+        defaultMaterial.SetUniformMat4F(u_Projection, projectionMatrix);
 
         defaultMaterial.SetUniform4F(u_Color, {sin01(currentTime), sin01(currentTime + 1), sin01(currentTime + 2), 1.0f});
         vertexArrayObject.Draw();
