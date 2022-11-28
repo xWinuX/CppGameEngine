@@ -163,20 +163,20 @@ int main()
         5, 7, 3, // Second Triangle
 
         // Left Face
-        0, 2, 4, // First Triangle
-        4, 2, 6, // Second Triangle
+        0, 6, 4, // First Triangle
+        6, 0, 2, // Second Triangle
 
         // Top Face
         1, 0, 4, // First Triangle
         1, 4, 5, // Second Triangle
 
         // Bottom Face
-        2, 3, 6, // First Triangle
-        3, 7, 6, // Second Triangle
+        2, 3, 7, // First Triangle
+        6, 2, 7, // Second Triangle
 
         // Back Face
-        6, 5, 4, // First Triangle
-        6, 7, 5  // Second Triangle
+        7, 5, 4, // First Triangle
+        4, 6, 7  // Second Triangle
     };
 
     const MeshData cubeMeshData = {
