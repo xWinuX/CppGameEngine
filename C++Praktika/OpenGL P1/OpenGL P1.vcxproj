@@ -124,12 +124,21 @@
   <ItemGroup>
     <ClCompile Include="glad.c" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="src\Components\Transform.cpp" />
+    <ClCompile Include="src\Core\Application.cpp" />
+    <ClCompile Include="src\Core\GameObject.cpp" />
+    <ClCompile Include="src\Core\Scene.cpp" />
     <ClCompile Include="src\Rendering\Material.cpp" />
     <ClCompile Include="src\Rendering\Shader.cpp" />
     <ClCompile Include="src\Rendering\VertexArrayObject.cpp" />
     <ClCompile Include="src\Rendering\VertexAttribute.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\Components\Component.h" />
+    <ClInclude Include="src\Components\Transform.h" />
+    <ClInclude Include="src\Core\Application.h" />
+    <ClInclude Include="src\Core\GameObject.h" />
+    <ClInclude Include="src\Core\Scene.h" />
     <ClInclude Include="src\Math\Vector2.h" />
     <ClInclude Include="src\Math\Vector3.h" />
     <ClInclude Include="src\Math\Vector4.h" />

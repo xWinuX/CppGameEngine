@@ -1,10 +1,12 @@
 #include <array>
 #include <iostream>
+#include <set>
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 #include <glm/ext/matrix_clip_space.hpp>
 #include <glm/ext/matrix_transform.hpp>
 
+#include "src/Components/Transform.h"
 #include "src/Math/Vector4.h"
 #include "src/Rendering/Material.h"
 #include "src/Rendering/Mesh.h"
@@ -214,6 +216,13 @@ int main()
     // ------------------------------
     // Render Loop
     // ------------------------------
+
+    glm::mat4 cameraPosition = glm::mat4(1.0f);
+    glm::mat4 cameraRotation = glm::mat4(1.0f);
+    glm::mat4 cameraScale = glm::mat4(1.0f);
+    glm::mat4 cameraTRS = cameraScale * cameraRotation * cameraPosition;
+    
+    Transform modelTransform;
     float currentTime = getCurrentTime();
     while (!glfwWindowShouldClose(window))
     {
@@ -229,14 +238,18 @@ int main()
         //------------------------------
         glClearColor(0.15f, 0.25f, 0.3f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT);
-
-        glm::mat4 model = glm::mat4(1.0f); // Set to identity matrix first
+        
         glm::mat4 view  = glm::mat4(1.0f);
+        
+        modelTransform.Move(glm::vec3(10.0f, 0.0f, 0.0f));
+        modelTransform.SetScale(glm::vec3(sin01(currentTime)));
+        modelTransform.SetEulerAngles(glm::vec3(0.0, 0.0f, 45.0f));
 
-        model = translate(model, glm::vec3(0.0f, 0.0f, 3.0f));
+        std::cout << modelTransform.GetPosition().x << std::endl;
+        
         view  = translate(view, glm::vec3(0.0f, 0.0f, 0.0f));
 
-        defaultMaterial.SetUniformMat4F(u_Model, model);
+        defaultMaterial.SetUniformMat4F(u_Model, modelTransform.GetTRS());
         defaultMaterial.SetUniformMat4F(u_View, view);
         defaultMaterial.SetUniformMat4F(u_Projection, projectionMatrix);
 
