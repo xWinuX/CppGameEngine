@@ -1,10 +1,9 @@
 ﻿#include "VertexArrayObject.h"
 
-#include <algorithm>
 #include <glad/glad.h>
 
-#include "Material.h"
 
+/*
 VertexArrayObject::VertexArrayObject(const VertexBufferAttribute* pVertexAttributes, const unsigned int numVertexAttributes)
 {
     glGenVertexArrays(1, &_vertexArrayID);
@@ -128,4 +127,35 @@ void VertexArrayObject::ClearMeshes()
     _indicesBatchMap.clear();
     _numPositions = 0;
     _numIndices   = 0;
+}*/
+
+VertexArrayObject::VertexArrayObject(const VertexBufferLayout* pVertexBufferLayout)
+{
+    _pVertexBufferLayout = pVertexBufferLayout;
+    glGenVertexArrays(1, &_vertexArrayObjectID);
+}
+
+VertexArrayObject::~VertexArrayObject()
+{
+    glDeleteVertexArrays(1, &_vertexArrayObjectID);
+}
+
+void VertexArrayObject::AddVertexBuffer(VertexBuffer* pVertexBuffer)
+{
+    _vertexBuffers.push_back(pVertexBuffer);
+}
+
+void VertexArrayObject::SetIndexBuffer(IndexBuffer* pIndexBuffer)
+{
+    _pIndexBuffer = pIndexBuffer;
+}
+
+void VertexArrayObject::Bind() const
+{
+    glBindVertexArray(_vertexArrayObjectID);
+}
+
+void VertexArrayObject::Unbind()
+{
+    glBindVertexArray(0);
 }

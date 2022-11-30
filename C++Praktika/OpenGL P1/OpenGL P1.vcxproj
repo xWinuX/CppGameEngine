@@ -124,6 +124,7 @@
   <ItemGroup>
     <ClCompile Include="glad.c" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="src\Components\Component.cpp" />
     <ClCompile Include="src\Components\MeshRenderer.cpp" />
     <ClCompile Include="src\Components\Transform.cpp" />
     <ClCompile Include="src\Core\Application.cpp" />
@@ -431,6 +432,7 @@
       <LinkCompiled>true</LinkCompiled>
     </ClCompile>
     <ClCompile Include="src\Rendering\Material.cpp" />
+    <ClCompile Include="src\Rendering\Renderer.cpp" />
     <ClCompile Include="src\Rendering\Shader.cpp" />
     <ClCompile Include="src\Rendering\VertexArrayObject.cpp" />
   </ItemGroup>
@@ -451,6 +453,8 @@
     <ClInclude Include="src\Rendering\Buffers\VertexBufferLayout.h" />
     <ClInclude Include="src\Rendering\Material.h" />
     <ClInclude Include="src\Rendering\Mesh.h" />
+    <ClInclude Include="src\Rendering\Renderable.h" />
+    <ClInclude Include="src\Rendering\Renderer.h" />
     <ClInclude Include="src\Rendering\Shader.h" />
     <ClInclude Include="src\Rendering\VertexArrayObject.h" />
     <ClInclude Include="src\Rendering\Vertex.h" />

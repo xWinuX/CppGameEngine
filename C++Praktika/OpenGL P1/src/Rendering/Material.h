@@ -7,8 +7,8 @@
 class Material
 {
     private:
-        Shader*                   _shader;
-        std::map<int, Vector4> _uniform4Fs;
+        Shader*                    _shader;
+        std::map<int, Vector4>     _uniform4Fs;
         std::map<int, glm::mat4x4> _uniformMat4Fs;
     public:
         explicit Material(Shader* shader);

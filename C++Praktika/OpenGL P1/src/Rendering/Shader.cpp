@@ -101,6 +101,10 @@ void Shader::InitializeUniform(const GLchar* uniformName)
     else { std::cout << "Something went wrong initializing uniform \"" << uniformName << "\"" << std::endl; }
 }
 
+void Shader::SetViewProjectionMatrix(glm::mat4 viewProjection)
+{
+}
+
 void Shader::SetUniform4F(const GLchar* uniformName, const Vector4 vector4) const
 {
     if (_uniformLocation.find(uniformName) != _uniformLocation.end()) { SetUniform4F(_uniformLocation.at(uniformName), vector4); }
