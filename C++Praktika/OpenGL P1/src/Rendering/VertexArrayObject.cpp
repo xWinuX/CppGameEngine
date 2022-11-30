@@ -5,7 +5,7 @@
 
 #include "Material.h"
 
-VertexArrayObject::VertexArrayObject(const VertexAttribute* pVertexAttributes, const unsigned int numVertexAttributes)
+VertexArrayObject::VertexArrayObject(const VertexBufferAttribute* pVertexAttributes, const unsigned int numVertexAttributes)
 {
     glGenVertexArrays(1, &_vertexArrayID);
     glGenBuffers(1, &_vertexBufferID);

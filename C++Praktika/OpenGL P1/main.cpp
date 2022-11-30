@@ -1,6 +1,5 @@
 #include <array>
 #include <iostream>
-#include <set>
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 #include <glm/ext/matrix_clip_space.hpp>
@@ -8,12 +7,13 @@
 
 #include "src/Components/Transform.h"
 #include "src/Math/Vector4.h"
+#include "src/Rendering/Buffers/IndexBuffer.h"
 #include "src/Rendering/Material.h"
 #include "src/Rendering/Mesh.h"
-#include "src/Rendering/MeshData.h"
 #include "src/Rendering/Shader.h"
 #include "src/Rendering/VertexArrayObject.h"
-#include "src/Rendering/VertexAttribute.h"
+#include "src/Rendering/Buffers/VertexBufferAttribute.h"
+#include "src/Rendering/Buffers/VertexBuffer.h"
 
 #define INITIAL_WINDOW_WIDTH  800
 #define INITIAL_WINDOW_HEIGHT 600
@@ -24,17 +24,33 @@
 
 glm::mat4 projectionMatrix = glm::mat4(1.0f);
 
-void resizeProjectionMatrix(const float screenWidth, const float screenHeight) { projectionMatrix = glm::ortho(0.0f, screenWidth, 0.0f, screenHeight, -1000.0f, 1000.0f); }
+float currentFOV        = 60;
+float currentViewWidth  = INITIAL_WINDOW_WIDTH;
+float currentViewHeight = INITIAL_WINDOW_WIDTH;
+
+float screenWidth  = INITIAL_WINDOW_WIDTH;
+float screenHeight = INITIAL_WINDOW_HEIGHT;
+
+bool cull = false;
+
+void updateProjectionMatrix(const float width, const float height, const float fov)
+{
+    const float aspectRatio = screenWidth / screenHeight;
+    currentViewWidth        = width;
+    currentViewHeight       = height;
+    currentFOV              = fov;
+    projectionMatrix        = glm::perspective(glm::radians(currentFOV), aspectRatio, 0.1f, 100.0f);
+}
 
 void framebufferSizeCallback(GLFWwindow* window, const int width, const int height)
 {
     glViewport(0, 0, width, height);
-    const float screenWidth  = static_cast<float>(width);
-    const float screenHeight = static_cast<float>(height);
-    resizeProjectionMatrix(screenWidth, screenHeight);
+    screenWidth  = static_cast<float>(width);
+    screenHeight = static_cast<float>(height);
+    updateProjectionMatrix(screenWidth, screenHeight, currentFOV);
 }
 
-bool cull = false;
+float lerp(const float a, const float b, const float t) { return a + (b - a) * t; }
 
 void keyCallback(GLFWwindow* window, const int key, int scancode, const int action, int mods)
 {
@@ -50,12 +66,7 @@ void keyCallback(GLFWwindow* window, const int key, int scancode, const int acti
     if (key == GLFW_KEY_C && action == GLFW_PRESS)
     {
         cull = !cull;
-        if (cull)
-        {
-            glEnable(GL_CULL_FACE);
-            glCullFace(GL_BACK);
-            glFrontFace(GL_CW);
-        }
+        if (cull) { glEnable(GL_CULL_FACE); }
         else { glDisable(GL_CULL_FACE); }
     }
 }
@@ -87,7 +98,7 @@ int main()
     }
 
     // Resize Projection Matrix with new size
-    resizeProjectionMatrix(INITIAL_WINDOW_WIDTH, INITIAL_WINDOW_HEIGHT);
+    updateProjectionMatrix(screenWidth, screenHeight, currentFOV);
 
     // Set Callbacks
     glfwMakeContextCurrent(window);
@@ -108,15 +119,13 @@ int main()
     // ------------------------------
     Shader defaultShader = Shader("res/shaders/DefaultShader.vsh", "res/shaders/DefaultShader.fsh");
 
-    const GLchar* u_Color      = "u_Color";
-    const GLchar* u_Model      = "u_Model";
-    const GLchar* u_View       = "u_View";
-    const GLchar* u_Projection = "u_Projection";
+    const GLchar* u_Color          = "u_Color";
+    const GLchar* u_Model          = "u_Model";
+    const GLchar* u_ViewProjection = "u_ViewProjection";
 
     defaultShader.InitializeUniform(u_Color);
     defaultShader.InitializeUniform(u_Model);
-    defaultShader.InitializeUniform(u_View);
-    defaultShader.InitializeUniform(u_Projection);
+    defaultShader.InitializeUniform(u_ViewProjection);
 
     Material defaultMaterial = Material(&defaultShader);
 
@@ -125,42 +134,23 @@ int main()
     // ------------------------------
     // Initialize Mesh Data
     // ------------------------------
-    #pragma region Quad
-    constexpr float centerX           = INITIAL_WINDOW_WIDTH / 2.0f;
-    constexpr float centerY           = INITIAL_WINDOW_HEIGHT / 2.0f;
-    float           quadPositions[12] = {
-        centerX - 200.0f, centerY - 200.0f, 0.0f, // 0 Top Left
-        centerX + 200.0f, centerY - 200.0f, 0.0f, // 1 Top Right
-        centerX - 200.0f, centerY + 200.0f, 0.0f, // 2 Bottom Left
-        centerX + 200.0f, centerY + 200.0f, 0.0f  // 3 Bottom Right
-    };
-    GLubyte quadIndices[6] = {
-        0, 1, 2, // First Triangle
-        3, 2, 1  // Second Triangle
-    };
-
-    const MeshData quadMeshData = {
-        &quadPositions[0],
-        &quadIndices[0],
-        sizeof(quadPositions) / sizeof(float),
-        sizeof(quadIndices) / sizeof(GLubyte)
-    };
-    #pragma endregion
-
     #pragma region Cube
-    float cubePositions[24] = {
+    
+    VertexPos cubeVertices[8] = {
         // Front
-        centerX - 200.0f, centerY - 200.0f, 0.0f, // 0 Front Top Left
-        centerX + 200.0f, centerY - 200.0f, 0.0f, // 1 Front Top Right
-        centerX - 200.0f, centerY + 200.0f, 0.0f, // 2 Front Bottom Left
-        centerX + 200.0f, centerY + 200.0f, 0.0f,  // 3 Front Bottom Right
+        {{-1.0f, -1.0f, 1.0f}}, // 0 Front Top Left
+        {{1.0f, -1.0f, 1.0f}},  // 1 Front Top Right
+        {{-1.0f, 1.0f, 1.0f}},  // 2 Front Bottom Left
+        {{1.0f, 1.0f, 1.0f}},   // 3 Front Bottom Right
 
         // Back
-        centerX - 200.0f, centerY - 200.0f, 200.0f, // 0 Back Top Left
-        centerX + 200.0f, centerY - 200.0f, 200.0f, // 1 Back Top Right
-        centerX - 200.0f, centerY + 200.0f, 200.0f, // 2 Back Bottom Left
-        centerX + 200.0f, centerY + 200.0f, 200.0f,  // 3 Back Bottom Right
+        {{-1.0f, -1.0f, -1.0f}}, // 0 Back Top Left
+        {{1.0f, -1.0f, -1.0f}},  // 1 Back Top Right
+        {{-1.0f, 1.0f, -1.0f}},  // 2 Back Bottom Left
+        {{1.0f, 1.0f, -1.0f}},   // 3 Back Bottom Right
     };
+    VertexBuffer cubeVertexBuffer = VertexBuffer(cubeVertices, sizeof(cubeVertices) / sizeof(VertexPos));
+    
     GLubyte cubeIndices[36] = {
         // Front Face
         0, 1, 2, // First Triangle
@@ -171,58 +161,53 @@ int main()
         5, 7, 3, // Second Triangle
 
         // Left Face
-        0, 2, 4, // First Triangle
-        4, 2, 6, // Second Triangle
+        0, 6, 4, // First Triangle
+        6, 0, 2, // Second Triangle
 
         // Top Face
         1, 0, 4, // First Triangle
         1, 4, 5, // Second Triangle
 
         // Bottom Face
-        2, 3, 6, // First Triangle
-        3, 7, 6, // Second Triangle
+        2, 3, 7, // First Triangle
+        6, 2, 7, // Second Triangle
 
         // Back Face
-        6, 5, 4, // First Triangle
-        6, 7, 5  // Second Triangle
+        7, 5, 4, // First Triangle
+        4, 6, 7  // Second Triangle
     };
-
-    const MeshData cubeMeshData = {
-        &cubePositions[0],
-        &cubeIndices[0],
-        sizeof(cubePositions) / sizeof(float),
-        sizeof(cubeIndices) / sizeof(GLubyte)
+    IndexBuffer cubeIndexBuffer = IndexBuffer(cubeIndices, sizeof(cubeIndices) / sizeof(GLubyte));
+    
+    const Mesh cubeMeshData = {
+        &cubeVertexBuffer,
+        &cubeIndexBuffer
     };
+    
     #pragma endregion
 
     // ------------------------------
     // Initialize Vertex Array Object
     // ------------------------------
-    const VertexAttribute defaultVertexAttributes[1] = {
-        VertexAttribute(3, GL_FLOAT, GL_FALSE, sizeof(float) * 3, nullptr)
+    const VertexBufferAttribute defaultVertexAttributes[1] = {
+        VertexBufferAttribute(3, GL_FLOAT, GL_FALSE, sizeof(float) * 3, nullptr),
     };
 
-    VertexArrayObject vertexArrayObject = VertexArrayObject(defaultVertexAttributes, sizeof(defaultVertexAttributes) / sizeof(VertexAttribute));
+    VertexArrayObject vertexArrayObject = VertexArrayObject(defaultVertexAttributes, sizeof(defaultVertexAttributes) / sizeof(VertexBufferAttribute));
 
     // ------------------------------
     // Create Renderable Meshes
     // ------------------------------
-    const Mesh quadMesh = {&quadMeshData, &defaultMaterial};
-    const Mesh cubeMesh = {&cubeMeshData, &defaultMaterial};
 
-    vertexArrayObject.AddMesh(&cubeMesh);
+   // vertexArrayObject.AddMesh(&cubeMesh);
     vertexArrayObject.PrepareMeshes();
 
     // ------------------------------
     // Render Loop
     // ------------------------------
-
-    glm::mat4 cameraPosition = glm::mat4(1.0f);
-    glm::mat4 cameraRotation = glm::mat4(1.0f);
-    glm::mat4 cameraScale = glm::mat4(1.0f);
-    glm::mat4 cameraTRS = cameraScale * cameraRotation * cameraPosition;
-    
     Transform modelTransform;
+    Transform cameraTransform;
+    modelTransform.SetPosition(glm::vec3(0.0f, 0.0f, -6.0f));
+
     float currentTime = getCurrentTime();
     while (!glfwWindowShouldClose(window))
     {
@@ -233,27 +218,34 @@ int main()
         float       deltaTime = newTime - currentTime;
         currentTime           = newTime;
 
+        std::cout << "deltaTime: " << deltaTime << std::endl;
+
+        //------------------------------
+        // Gameplay
+        //------------------------------
+        updateProjectionMatrix(currentViewWidth, currentViewHeight, lerp(45.0f, 90.0f, sin01(currentTime)));
+
+        glm::vec3 velocity = glm::vec3(0.0f);
+        if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS) { velocity.x += 5.0f * deltaTime; }
+        if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS) { velocity.x -= 5.0f * deltaTime; }
+        if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) { velocity.y += 5.0f * deltaTime; }
+        if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS) { velocity.y -= 5.0f * deltaTime; }
+
+        modelTransform.Move(velocity);
+
+        modelTransform.Rotate(glm::vec3(45.0f, 45.0f, 45.0f) * deltaTime);
+
+        defaultMaterial.SetUniformMat4F(u_Model, modelTransform.GetTRS());
+        defaultMaterial.SetUniformMat4F(u_ViewProjection, cameraTransform.GetTRS() * projectionMatrix);
+
+        defaultMaterial.SetUniform4F(u_Color, {sin01(currentTime), sin01(currentTime + 1), sin01(currentTime + 2), 1.0f});
+
         //------------------------------
         // Render
         //------------------------------
         glClearColor(0.15f, 0.25f, 0.3f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT);
-        
-        glm::mat4 view  = glm::mat4(1.0f);
-        
-        modelTransform.Move(glm::vec3(10.0f, 0.0f, 0.0f));
-        modelTransform.SetScale(glm::vec3(sin01(currentTime)));
-        modelTransform.SetEulerAngles(glm::vec3(0.0, 0.0f, 45.0f));
 
-        std::cout << modelTransform.GetPosition().x << std::endl;
-        
-        view  = translate(view, glm::vec3(0.0f, 0.0f, 0.0f));
-
-        defaultMaterial.SetUniformMat4F(u_Model, modelTransform.GetTRS());
-        defaultMaterial.SetUniformMat4F(u_View, view);
-        defaultMaterial.SetUniformMat4F(u_Projection, projectionMatrix);
-
-        defaultMaterial.SetUniform4F(u_Color, {sin01(currentTime), sin01(currentTime + 1), sin01(currentTime + 2), 1.0f});
         vertexArrayObject.Draw();
 
         //------------------------------

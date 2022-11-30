@@ -1,11 +1,12 @@
 ﻿#pragma once
+#include "../Core/Behaviour.h"
 
-class Component
+class Component : Behaviour
 {
     public:
-        virtual ~Component() {}
-        virtual void Update() {}
-        virtual void LateUpdate() {}
+        void    Update() override {}
+        void    LateUpdate() override {}
+        void    Draw() override {}
 };
 
 

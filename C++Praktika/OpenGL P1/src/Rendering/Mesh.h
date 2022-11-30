@@ -1,11 +1,12 @@
 ﻿#pragma once
-#include "MeshData.h"
+#include "Buffers/VertexBuffer.h"
+#include "Buffers/IndexBuffer.h"
 
 class Material;
 
 struct Mesh
 {
     public:
-        const MeshData* PMeshData;
-        const Material* PMaterial;
+        VertexBuffer* PVertexBuffer;
+        IndexBuffer* PIndexBuffer;
 };

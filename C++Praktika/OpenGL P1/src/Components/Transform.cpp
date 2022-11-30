@@ -5,9 +5,14 @@ glm::vec3 Transform::GetPosition() const { return _position; }
 glm::vec3 Transform::GetEulerAngles() const { return _eulerAngles; }
 glm::vec3 Transform::GetScale() const { return _scale; }
 
-void Transform::Move(const glm::vec3& by)
+void Transform::Move(const glm::vec3& vector3)
 {
-    SetPosition(_position + by);
+    SetPosition(_position + vector3);
+}
+
+void Transform::Rotate(const glm::vec3& eulerAngles)
+{
+    SetEulerAngles(_eulerAngles + eulerAngles);
 }
 
 void Transform::SetPosition(const glm::vec3& position)
@@ -21,7 +26,7 @@ void Transform::SetPosition(const glm::vec3& position)
 void Transform::SetEulerAngles(const glm::vec3& eulerAngles)
 {
     _eulerAngles    = eulerAngles;
-    _rotationMatrix = mat4_cast(glm::quat(_eulerAngles));
+    _rotationMatrix = mat4_cast(glm::quat(glm::radians(_eulerAngles)));
 }
 
 void Transform::SetScale(const glm::vec3& scale)
@@ -32,4 +37,7 @@ void Transform::SetScale(const glm::vec3& scale)
     _scaleMatrix[2][2] = _scale.z;
 }
 
-glm::mat4 Transform::GetTRS() const { return _transformationMatrix * _rotationMatrix * _scaleMatrix; }
+glm::mat4 Transform::GetTRS() const
+{
+    return _transformationMatrix * _rotationMatrix * _scaleMatrix;
+}

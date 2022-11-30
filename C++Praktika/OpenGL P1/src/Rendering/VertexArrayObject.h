@@ -3,12 +3,12 @@
 #include <vector>
 
 #include "Mesh.h"
-#include "VertexAttribute.h"
+#include "VertexBufferAttribute.h"
 
 class VertexArrayObject
 {
     private:
-        const VertexAttribute* _pVertexAttributes;
+        const VertexBufferAttribute* _pVertexAttributes;
         unsigned int           _numVertexAttributes;
         GLuint                 _vertexArrayID = 0;
 
@@ -23,7 +23,7 @@ class VertexArrayObject
 
         void Bind() const;
     public:
-        explicit VertexArrayObject(const VertexAttribute* pVertexAttributes, unsigned int numVertexAttributes);
+        explicit VertexArrayObject(const VertexBufferAttribute* pVertexAttributes, unsigned int numVertexAttributes);
         void     PrepareMeshes();
         void     Draw() const;
         void     AddMesh(const Mesh* mesh);
