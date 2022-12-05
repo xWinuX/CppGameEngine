@@ -15,7 +15,7 @@ class GameObject
         TransformComponent&     GetTransform() { return _transform; }
         std::vector<Component>& GetComponents();
 
-        void AddComponent(const Component& component);
+        void AddComponent(Component& component);
 
         void Update() const;
         void LateUpdate() const;

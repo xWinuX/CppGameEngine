@@ -116,7 +116,8 @@ void Application::Run() const
     Cube cube = Cube();
 
     std::cout << "Before meshrenderer" << std::endl;
-    cubeObject.AddComponent(MeshRendererComponent(cube.GetMesh(), &defaultMaterial));
+    MeshRendererComponent meshRenderer = MeshRendererComponent(cube.GetMesh(), &defaultMaterial); 
+    cubeObject.AddComponent(meshRenderer);
     std::cout << "after meshrenderer" << std::endl;
 
     
@@ -138,9 +139,7 @@ void Application::Run() const
     // ------------------------------
     // Render Loop
     // ------------------------------
-    TransformComponent modelTransform;
-    TransformComponent cameraTransform;
-    modelTransform.SetPosition(glm::vec3(0.0f, 0.0f, -6.0f));
+
 
     std::cout << "Before main loop" << std::endl;
     

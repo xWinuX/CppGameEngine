@@ -15,6 +15,5 @@ class MeshRendererComponent final : public Component, public Renderable
         Mesh&              GetMesh() const;
         Material*          GetMaterial() override;
         VertexArrayObject* GetVertexArrayObject() override;
-        Transform* GetTransform() override;
         void OnDraw() override;
 };
