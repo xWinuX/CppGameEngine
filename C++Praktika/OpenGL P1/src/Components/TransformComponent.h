@@ -3,7 +3,7 @@
 #include "../Core/Transform.h"
 #include "Component.h"
 
-class TransformComponent final : public Component, Transform
+class TransformComponent final : public Component, public Transform
 {
     public:
         void Move(const glm::vec3& vector3);

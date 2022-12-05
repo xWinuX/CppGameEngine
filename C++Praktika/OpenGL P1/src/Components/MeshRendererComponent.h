@@ -4,7 +4,7 @@
 #include "../Rendering/Material.h"
 #include "../Rendering/Renderable.h"
 
-class MeshRendererComponent final : Component, Renderable
+class MeshRendererComponent final : public Component, public Renderable
 {
     private:
         Mesh*             _pMesh;

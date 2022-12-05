@@ -5,6 +5,7 @@
 
 #include "Core/Window.h"
 #include "Components/TransformComponent.h"
+#include "Core/Scene.h"
 #include "Rendering/Buffers/IndexBuffer.h"
 #include "Rendering/Material.h"
 #include "Rendering/Mesh.h"
@@ -74,6 +75,12 @@ void Application::Run(const glm::ivec2 initialWindowSize)
 {
     Window window = Window(initialWindowSize);
     _window       = &window;
+
+    Scene scene = Scene();
+
+    GameObject testObject = GameObject();
+    
+    scene.AddGameObject(testObject);
 
     // Resize Projection Matrix with new size
     updateProjectionMatrix(screenWidth, screenHeight, currentFOV);
