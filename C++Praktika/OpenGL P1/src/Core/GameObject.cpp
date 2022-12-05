@@ -15,27 +15,27 @@ std::vector<Component>& GameObject::GetComponents()
     return _components;
 }
 
-void GameObject::Update()
+void GameObject::Update() const
 {
     for (Component component : _components)
     {
-        component.Update();
+        component.OnUpdate();
     }
 }
 
-void GameObject::LateUpdate()
+void GameObject::LateUpdate() const
 {
     for (Component component : _components)
     {
-        component.LateUpdate();
+        component.OnLateUpdate();
     }
 }
 
-void GameObject::Draw()
+void GameObject::Draw() const
 {
     for (Component component : _components)
     {
-        component.Draw();
+        component.OnDraw();
     }
 }
 

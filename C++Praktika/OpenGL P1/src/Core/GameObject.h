@@ -1,11 +1,9 @@
 ﻿#pragma once
 #include <vector>
 #include <glm/vec3.hpp>
-
-#include "../Components/Component.h"
 #include "../Components/Transform.h"
 
-class GameObject : Behaviour
+class GameObject
 {
     private:
         std::vector<Component> _components;
@@ -13,11 +11,11 @@ class GameObject : Behaviour
     public:
         GameObject();
         explicit GameObject(glm::vec3 position);
-    
+
         Transform&              GetTransform() { return _transform; }
         std::vector<Component>& GetComponents();
-    
-        void                    Update() override;
-        void                    LateUpdate() override;
-        void                    Draw() override;
+
+        void Update() const;
+        void LateUpdate() const;
+        void Draw() const;
 };

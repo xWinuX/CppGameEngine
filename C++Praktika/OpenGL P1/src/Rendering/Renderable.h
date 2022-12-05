@@ -5,7 +5,9 @@
 class Renderable
 {
     public:
-        virtual VertexArrayObject* GetVertexArrayObject() = 0;
-        virtual Material*          GetMaterial() = 0;
-        virtual Transform*         GetTransform() = 0;
+        virtual ~Renderable() = default;
+
+        virtual VertexArrayObject* GetVertexArrayObject() { return nullptr; }
+        virtual Material*          GetMaterial() { return nullptr; }
+        virtual Transform*         GetTransform() { return nullptr; }
 };

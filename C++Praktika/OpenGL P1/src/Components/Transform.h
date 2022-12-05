@@ -1,6 +1,5 @@
 ﻿#pragma once
 #include <glm/ext/matrix_transform.hpp>
-
 #include "Component.h"
 
 

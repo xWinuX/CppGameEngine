@@ -12,8 +12,8 @@ class VertexArrayObject
         IndexBuffer*               _pIndexBuffer;
         std::vector<VertexBuffer*> _vertexBuffers;
     public:
+        explicit VertexArrayObject(const VertexBufferLayout* pVertexBufferLayout);
         ~VertexArrayObject();
-        VertexArrayObject(const VertexBufferLayout* pVertexBufferLayout);
 
         void        AddVertexBuffer(VertexBuffer* pVertexBuffer);
         void        SetIndexBuffer(IndexBuffer* pIndexBuffer);
