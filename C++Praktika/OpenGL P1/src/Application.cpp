@@ -4,7 +4,7 @@
 #include <glm/ext/matrix_transform.hpp>
 
 #include "Core/Window.h"
-#include "Components/Transform.h"
+#include "Components/TransformComponent.h"
 #include "Rendering/Buffers/IndexBuffer.h"
 #include "Rendering/Material.h"
 #include "Rendering/Mesh.h"
@@ -176,8 +176,8 @@ void Application::Run(const glm::ivec2 initialWindowSize)
     // ------------------------------
     // Render Loop
     // ------------------------------
-    Transform modelTransform;
-    Transform cameraTransform;
+    TransformComponent modelTransform;
+    TransformComponent cameraTransform;
     modelTransform.SetPosition(glm::vec3(0.0f, 0.0f, -6.0f));
 
     float currentTime = getCurrentTime();

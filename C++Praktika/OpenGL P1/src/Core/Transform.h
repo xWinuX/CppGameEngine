@@ -1,11 +1,9 @@
 ﻿#pragma once
 #include <glm/ext/matrix_transform.hpp>
-#include "Component.h"
 
-
-class Transform final : public Component
+class Transform
 {
-    private:
+    protected:
         glm::vec3 _position    = glm::vec3(0.0f, 0.0f, 0.0f);
         glm::vec3 _eulerAngles = glm::vec3(0.0f, 0.0f, 0.0f);
         glm::vec3 _scale       = glm::vec3(1.0f, 1.0f, 1.0f);
@@ -17,13 +15,7 @@ class Transform final : public Component
         glm::vec3 GetPosition() const;
         glm::vec3 GetEulerAngles() const;
         glm::vec3 GetScale() const;
-
-        void Move(const glm::vec3& vector3);
-        void Rotate(const glm::vec3& eulerAngles);
-    
-        void SetPosition(const glm::vec3& position);
-        void SetEulerAngles(const glm::vec3& eulerAngles);
-        void SetScale(const glm::vec3& scale);
-    
+        
         glm::mat4 GetTRS() const;
+        
 };

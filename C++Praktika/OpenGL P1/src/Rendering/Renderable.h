@@ -1,6 +1,6 @@
 ﻿#pragma once
 #include "VertexArrayObject.h"
-#include "../Components/Transform.h"
+#include "../Core/Transform.h"
 
 class Renderable
 {

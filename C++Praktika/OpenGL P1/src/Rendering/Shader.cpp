@@ -20,12 +20,6 @@ Shader::~Shader()
     glDeleteProgram(_programID);
 }
 
-/**
- * \brief Parses given file sources into an easy to use struct
- * \param vertexShaderPath Path to the vertex shader file
- * \param fragmentShaderPath Path tot hte fragment shader file 
- * \return ShaderProgramSource struct containing the both sources
- */
 Shader::ShaderProgramSource Shader::ParseShader(const std::string& vertexShaderPath, const std::string& fragmentShaderPath)
 {
     int               i = 0;
@@ -105,7 +99,7 @@ void Shader::SetViewProjectionMatrix(glm::mat4 viewProjection)
 {
 }
 
-void Shader::SetUniform4F(const GLchar* uniformName, const Vector4 vector4) const
+void Shader::SetUniform4F(const GLchar* uniformName, const glm::vec4 vector4) const
 {
     if (_uniformLocation.find(uniformName) != _uniformLocation.end()) { SetUniform4F(_uniformLocation.at(uniformName), vector4); }
 }
@@ -115,9 +109,9 @@ void Shader::SetUniformMat4F(const GLchar* uniformName, const glm::mat4x4 mat4) 
     if (_uniformLocation.find(uniformName) != _uniformLocation.end()) { SetUniformMat4F(_uniformLocation.at(uniformName), mat4); }
 }
 
-void Shader::SetUniform4F(const int uniformLocation, const Vector4 vector4)
+void Shader::SetUniform4F(const int uniformLocation, const glm::vec4 vector4)
 {
-    glUniform4f(uniformLocation, vector4.X, vector4.Y, vector4.Z, vector4.W);
+    glUniform4f(uniformLocation, vector4.x, vector4.y, vector4.z, vector4.w);
 }
 
 void Shader::SetUniformMat4F(const int uniformLocation, glm::mat4x4 mat4)

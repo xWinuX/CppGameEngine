@@ -199,11 +199,12 @@
       <SDLCheck>true</SDLCheck>
       <LinkCompiled>true</LinkCompiled>
     </ClCompile>
-    <ClCompile Include="src\Components\MeshRenderer.cpp" />
-    <ClCompile Include="src\Components\Transform.cpp" />
+    <ClCompile Include="src\Components\MeshRendererComponent.cpp" />
+    <ClCompile Include="src\Components\TransformComponent.cpp" />
     <ClCompile Include="src\Core\Behaviour.cpp" />
     <ClCompile Include="src\Core\GameObject.cpp" />
     <ClCompile Include="src\Core\Scene.cpp" />
+    <ClCompile Include="src\Core\Transform.cpp" />
     <ClCompile Include="src\Core\Window.cpp" />
     <ClCompile Include="src\Rendering\Buffers\IndexBuffer.cpp">
       <RuntimeLibrary>MultiThreadedDebugDll</RuntimeLibrary>
@@ -513,15 +514,13 @@
   <ItemGroup>
     <ClInclude Include="src\Application.h" />
     <ClInclude Include="src\Components\Component.h" />
-    <ClInclude Include="src\Components\MeshRenderer.h" />
-    <ClInclude Include="src\Components\Transform.h" />
+    <ClInclude Include="src\Components\MeshRendererComponent.h" />
+    <ClInclude Include="src\Components\TransformComponent.h" />
     <ClInclude Include="src\Core\Behaviour.h" />
     <ClInclude Include="src\Core\GameObject.h" />
     <ClInclude Include="src\Core\Scene.h" />
+    <ClInclude Include="src\Core\Transform.h" />
     <ClInclude Include="src\Core\Window.h" />
-    <ClInclude Include="src\Math\Vector2.h" />
-    <ClInclude Include="src\Math\Vector3.h" />
-    <ClInclude Include="src\Math\Vector4.h" />
     <ClInclude Include="src\Rendering\Buffers\IndexBuffer.h" />
     <ClInclude Include="src\Rendering\Buffers\VertexBuffer.h" />
     <ClInclude Include="src\Rendering\Buffers\VertexBufferAttribute.h" />

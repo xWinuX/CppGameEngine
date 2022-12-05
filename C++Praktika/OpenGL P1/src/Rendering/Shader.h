@@ -4,8 +4,6 @@
 #include <glad/glad.h>
 #include <glm/mat4x4.hpp>
 
-#include "../Math/Vector4.h"
-
 class Shader
 {
     private:
@@ -25,13 +23,13 @@ class Shader
         Shader(const std::string& vertexShaderFilePath, const std::string& fragmentShaderFilePath);
         ~Shader();
 
-        static void SetUniform4F(int uniformLocation, Vector4 vector4);
+        static void SetUniform4F(int uniformLocation, glm::vec4 vector4);
         static void SetUniformMat4F(int uniformLocation, glm::mat4x4 mat4);
 
         void Use() const;
         void InitializeUniform(const GLchar* uniformName);
         void SetViewProjectionMatrix(glm::mat4 viewProjection);
-        void SetUniform4F(const GLchar* uniformName, Vector4 vector4) const;
+        void SetUniform4F(const GLchar* uniformName, glm::vec4 vector4) const;
         void SetUniformMat4F(const GLchar* uniformName, glm::mat4x4 mat4) const;
         int  GetUniformLocation(const GLchar* uniformName);
 };

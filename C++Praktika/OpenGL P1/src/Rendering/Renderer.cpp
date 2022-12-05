@@ -1,11 +1,10 @@
 ﻿#include "Renderer.h"
 
-#include "Material.h"
-#include "Renderable.h"
+std::map<Material*, std::vector<Renderable*>> Renderer::_renderables = std::map<Material*, std::vector<Renderable*>>();
 
 void Renderer::Submit(Renderable* renderable)
 {
-  //  _renderables[renderable->GetMaterial()].push_back(renderable);
+    _renderables[renderable->GetMaterial()].push_back(renderable);
 }
 
 void Renderer::Draw()

@@ -3,8 +3,6 @@
 #include "Buffers/IndexBuffer.h"
 #include "Buffers/VertexBufferLayout.h"
 
-class Material;
-
 struct Mesh
 {
     public:
