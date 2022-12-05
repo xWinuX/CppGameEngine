@@ -6,17 +6,19 @@
 class VertexArrayObject
 {
     private:
-        const VertexBufferLayout* _pVertexBufferLayout;
+        const VertexBufferLayout* _pVertexBufferLayout = nullptr;
+        IndexBuffer*              _pIndexBuffer        = nullptr;
 
         GLuint                     _vertexArrayObjectID;
-        IndexBuffer*               _pIndexBuffer;
         std::vector<VertexBuffer*> _vertexBuffers;
     public:
+        explicit VertexArrayObject(const Mesh* pMesh);
         explicit VertexArrayObject(const VertexBufferLayout* pVertexBufferLayout);
         ~VertexArrayObject();
 
-        void        AddVertexBuffer(VertexBuffer* pVertexBuffer);
-        void        SetIndexBuffer(IndexBuffer* pIndexBuffer);
+        void         AddVertexBuffer(VertexBuffer* pVertexBuffer);
+        void         SetIndexBuffer(IndexBuffer* pIndexBuffer);
+        IndexBuffer* GetIndexBuffer() const;
         void        Bind() const;
         static void Unbind();
 };

@@ -7,18 +7,22 @@ class Window
 {
     private:
         typedef void (*WindowResizeCallbackFunction)(Window*);
-    
-        GLFWwindow*                 _glWindow;
-        glm::ivec2                  _size = glm::ivec2(0);
+
+        GLFWwindow*                               _glWindow = nullptr;
+        glm::ivec2                                _size     = glm::ivec2(500);
         std::vector<WindowResizeCallbackFunction> _resizeCallbacks;
     public:
-        explicit Window(glm::ivec2 size);
-        Window();
+        explicit Window(glm::ivec2 initialSize);
+        void     DestroyGLWindow() const;
         ~Window();
-    
+
         static void FramebufferSizeCallback(GLFWwindow* glWindow, int width, int height);
 
-        std::vector<WindowResizeCallbackFunction>& GetResizeCallbacks() { return _resizeCallbacks; }
-        GLFWwindow*                  GetGlWindow() const { return _glWindow; }
+        void CreateContext();
 
+        void SetSize(glm::ivec2 newSize);
+
+        glm::ivec2                                 GetSize() const;
+        std::vector<WindowResizeCallbackFunction>& GetResizeCallbacks();
+        GLFWwindow*                                GetGlWindow() const;
 };

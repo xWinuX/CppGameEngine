@@ -9,9 +9,8 @@
 
 int main()
 {
-    Application application = Application();
-
-    application.Run(glm::ivec2(INITIAL_WINDOW_WIDTH, INITIAL_WINDOW_HEIGHT));
+    const Application application = Application();
+    application.Run();
     
     return 0;
 }

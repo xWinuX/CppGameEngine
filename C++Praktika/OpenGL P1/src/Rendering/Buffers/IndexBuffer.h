@@ -10,6 +10,7 @@ class IndexBuffer
     public:
         IndexBuffer(GLubyte* pIndices, unsigned int numIndices);
         ~IndexBuffer();
+        unsigned int GetNumIndices() const;
         void Bind() const;
         static void Unbind();
 };

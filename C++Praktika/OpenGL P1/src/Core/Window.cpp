@@ -1,10 +1,22 @@
 ﻿#include "Window.h"
 #include <iostream>
 
+Window::Window(const glm::ivec2 initialSize) { _size = initialSize; }
 
-Window::Window(const glm::ivec2 size)
+void Window::DestroyGLWindow() const { if (_glWindow != nullptr) { glfwDestroyWindow(_glWindow); } }
+
+Window::~Window() { DestroyGLWindow(); }
+
+void Window::FramebufferSizeCallback(GLFWwindow* glWindow, int width, int height)
 {
-    _size = size;
+    Window* window = static_cast<Window*>(glfwGetWindowUserPointer(glWindow));
+    for (const auto resizeCallback : window->GetResizeCallbacks()) { resizeCallback(nullptr); }
+}
+
+void Window::CreateContext()
+{
+    // Destroy current gl window if one already exists
+    if (_glWindow != nullptr) { DestroyGLWindow(); }
 
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
@@ -22,15 +34,14 @@ Window::Window(const glm::ivec2 size)
     glfwSetFramebufferSizeCallback(_glWindow, [](GLFWwindow* glWindow, const int x, const int y) { Window::FramebufferSizeCallback(glWindow, x, y); });
 }
 
-Window::Window() : Window(glm::ivec2(500, 500)) { }
-
-Window::~Window() { glfwDestroyWindow(_glWindow); }
-
-void Window::FramebufferSizeCallback(GLFWwindow* glWindow, int width, int height)
+void Window::SetSize(const glm::ivec2 newSize)
 {
-    Window* window = static_cast<Window*>(glfwGetWindowUserPointer(glWindow));
-    for (const auto resizeCallback : window->GetResizeCallbacks())
-    {
-        resizeCallback(nullptr);
-    }
+    _size = newSize;
+    glfwSetWindowSize(_glWindow, newSize.x, newSize.y);
 }
+
+glm::ivec2 Window::GetSize() const { return _size; }
+
+std::vector<Window::WindowResizeCallbackFunction>& Window::GetResizeCallbacks() { return _resizeCallbacks; }
+
+GLFWwindow* Window::GetGlWindow() const { return _glWindow; }

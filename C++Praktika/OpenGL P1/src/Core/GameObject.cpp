@@ -1,18 +1,14 @@
 ﻿#include "GameObject.h"
 
-GameObject::GameObject()
-{
-    _components.push_back(_transform);
-}
+GameObject::GameObject() { _components.push_back(_transform); }
 
-GameObject::GameObject(const glm::vec3 position) : GameObject()
-{
-    _transform.SetPosition(position);
-}
+GameObject::GameObject(const glm::vec3 position) : GameObject() { _transform.SetPosition(position); }
 
-std::vector<Component>& GameObject::GetComponents()
+std::vector<Component>& GameObject::GetComponents() { return _components; }
+
+void GameObject::AddComponent(const Component& component)
 {
-    return _components;
+    _components.push_back(component);
 }
 
 void GameObject::Update() const

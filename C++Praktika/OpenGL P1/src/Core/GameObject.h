@@ -7,13 +7,15 @@ class GameObject
 {
     private:
         std::vector<Component> _components;
-        TransformComponent              _transform;
+        TransformComponent     _transform;
     public:
         GameObject();
         explicit GameObject(glm::vec3 position);
 
-        TransformComponent&              GetTransform() { return _transform; }
+        TransformComponent&     GetTransform() { return _transform; }
         std::vector<Component>& GetComponents();
+
+        void AddComponent(const Component& component);
 
         void Update() const;
         void LateUpdate() const;

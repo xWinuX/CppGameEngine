@@ -1,20 +1,26 @@
-﻿#include "Application.h"
+﻿#include <glad/glad.h>
+#include <GLFW/glfw3.h>
+
+#include "Application.h"
 
 #include <glm/ext/matrix_clip_space.hpp>
 #include <glm/ext/matrix_transform.hpp>
 
+#include "Components/MeshRendererComponent.h"
 #include "Core/Window.h"
 #include "Components/TransformComponent.h"
 #include "Core/Scene.h"
-#include "Rendering/Buffers/IndexBuffer.h"
 #include "Rendering/Material.h"
-#include "Rendering/Mesh.h"
+#include "Rendering/Renderer.h"
 #include "Rendering/Shader.h"
 #include "Rendering/Buffers/VertexBufferAttribute.h"
 #include "Rendering/Buffers/VertexBuffer.h"
+#include "Rendering/Shapes/Cube.h"
 
 #define INITIAL_WINDOW_WIDTH  800
 #define INITIAL_WINDOW_HEIGHT 600
+
+Window Application::_window = Window(glm::ivec2(INITIAL_WINDOW_WIDTH, INITIAL_WINDOW_HEIGHT));
 
 glm::mat4 projectionMatrix = glm::mat4(1.0f);
 
@@ -69,117 +75,66 @@ float getCurrentTime() { return static_cast<float>(glfwGetTime()); }
 
 float sin01(const float x) { return (sin(x) + 1.0f) / 2.0f; }
 
-Application::Application() { glfwInit(); }
-
-void Application::Run(const glm::ivec2 initialWindowSize)
+Application::Application()
 {
-    Window window = Window(initialWindowSize);
-    _window       = &window;
+    glfwInit();
 
-    Scene scene = Scene();
+    _window.CreateContext();
 
-    GameObject testObject = GameObject();
-    
-    scene.AddGameObject(testObject);
-
-    // Resize Projection Matrix with new size
-    updateProjectionMatrix(screenWidth, screenHeight, currentFOV);
-
-    // Set Callbacks
-    glfwSetKeyCallback(GetWindow().GetGlWindow(), keyCallback);
-
-    // ------------------------------
-    // GLAD: load all OpenGL function pointers
-    // ------------------------------
     if (!gladLoadGLLoader(reinterpret_cast<GLADloadproc>(glfwGetProcAddress))) { std::cout << "Failed to initialize GLAD" << std::endl; }
+}
 
-    // ------------------------------
-    // Initialize Shaders and Materials
-    // ------------------------------
+
+
+void Application::Run() const
+{
+    std::cout << "Run enter" << std::endl;
+    Scene scene = Scene();
+    
     Shader defaultShader = Shader("res/shaders/DefaultShader.vsh", "res/shaders/DefaultShader.fsh");
 
     const GLchar* u_Color          = "u_Color";
     const GLchar* u_Model          = "u_Model";
-    const GLchar* u_ViewProjection = "u_ViewProjection";
 
+    std::cout << "before uniforms" << std::endl;
+    
     defaultShader.InitializeUniform(u_Color);
     defaultShader.InitializeUniform(u_Model);
-    defaultShader.InitializeUniform(u_ViewProjection);
+
+    std::cout << "after uniforms" << std::endl;
 
     Material defaultMaterial = Material(&defaultShader);
 
+
+    std::cout << "before game object" << std::endl;
+
+    GameObject cameraObject = GameObject();
+    GameObject cubeObject = GameObject();
+
+
+    
+    Cube cube = Cube();
+
+    std::cout << "Before meshrenderer" << std::endl;
+    cubeObject.AddComponent(MeshRendererComponent(cube.GetMesh(), &defaultMaterial));
+    std::cout << "after meshrenderer" << std::endl;
+
+    
+    scene.AddGameObject(cubeObject);
+
+    std::cout << "Before proj" << std::endl;
+    
+    // Resize Projection Matrix with new size
+    updateProjectionMatrix(screenWidth, screenHeight, currentFOV);
+
+    // Set Callbacks
+    glfwSetKeyCallback(_window.GetGlWindow(), keyCallback);
+
+    // ------------------------------
+    // Initialize Shaders and Materials
+    // ------------------------------
     defaultMaterial.SetUniform4F(u_Color, {0.0f, 0.0f, 1.0f, 1.0f});
-
-    // ------------------------------
-    // Initialize Mesh Data
-    // ------------------------------
-    #pragma region Cube
-
-    VertexPos cubeVertices[8] = {
-        // Front
-        {{-1.0f, -1.0f, 1.0f}}, // 0 Front Top Left
-        {{1.0f, -1.0f, 1.0f}},  // 1 Front Top Right
-        {{-1.0f, 1.0f, 1.0f}},  // 2 Front Bottom Left
-        {{1.0f, 1.0f, 1.0f}},   // 3 Front Bottom Right
-
-        // Back
-        {{-1.0f, -1.0f, -1.0f}}, // 0 Back Top Left
-        {{1.0f, -1.0f, -1.0f}},  // 1 Back Top Right
-        {{-1.0f, 1.0f, -1.0f}},  // 2 Back Bottom Left
-        {{1.0f, 1.0f, -1.0f}},   // 3 Back Bottom Right
-    };
-    VertexBuffer cubeVertexBuffer = VertexBuffer(cubeVertices, sizeof(cubeVertices) / sizeof(VertexPos));
-
-    GLubyte cubeIndices[36] = {
-        // Front Face
-        0, 1, 2, // First Triangle
-        1, 3, 2, // Second Triangle
-
-        // Right Face
-        1, 5, 3, // First Triangle
-        5, 7, 3, // Second Triangle
-
-        // Left Face
-        0, 6, 4, // First Triangle
-        6, 0, 2, // Second Triangle
-
-        // Top Face
-        1, 0, 4, // First Triangle
-        1, 4, 5, // Second Triangle
-
-        // Bottom Face
-        2, 3, 7, // First Triangle
-        6, 2, 7, // Second Triangle
-
-        // Back Face
-        7, 5, 4, // First Triangle
-        4, 6, 7  // Second Triangle
-    };
-    IndexBuffer cubeIndexBuffer = IndexBuffer(cubeIndices, sizeof(cubeIndices) / sizeof(GLubyte));
-
-    const Mesh cubeMeshData = {
-        &cubeVertexBuffer,
-        &cubeIndexBuffer
-    };
-
-    #pragma endregion
-
-    // ------------------------------
-    // Initialize Vertex Array Object
-    // ------------------------------
-    const VertexBufferAttribute defaultVertexAttributes[1] = {
-        VertexBufferAttribute(3, GL_FLOAT, GL_FALSE, sizeof(float) * 3, nullptr),
-    };
-
-    //VertexArrayObject vertexArrayObject = VertexArrayObject(defaultVertexAttributes, sizeof(defaultVertexAttributes) / sizeof(VertexBufferAttribute));
-
-    // ------------------------------
-    // Create Renderable Meshes
-    // ------------------------------
-
-    // vertexArrayObject.AddMesh(&cubeMesh);
-    //vertexArrayObject.PrepareMeshes();
-
+    
     // ------------------------------
     // Render Loop
     // ------------------------------
@@ -187,8 +142,10 @@ void Application::Run(const glm::ivec2 initialWindowSize)
     TransformComponent cameraTransform;
     modelTransform.SetPosition(glm::vec3(0.0f, 0.0f, -6.0f));
 
+    std::cout << "Before main loop" << std::endl;
+    
     float currentTime = getCurrentTime();
-    while (!glfwWindowShouldClose(GetWindow().GetGlWindow()))
+    while (!glfwWindowShouldClose(_window.GetGlWindow()))
     {
         //------------------------------
         // Time
@@ -202,6 +159,8 @@ void Application::Run(const glm::ivec2 initialWindowSize)
         //------------------------------
         // Gameplay
         //------------------------------
+        scene.RunScene();
+        /*
         updateProjectionMatrix(currentViewWidth, currentViewHeight, lerp(45.0f, 90.0f, sin01(currentTime)));
 
         glm::vec3 velocity = glm::vec3(0.0f);
@@ -218,19 +177,21 @@ void Application::Run(const glm::ivec2 initialWindowSize)
         defaultMaterial.SetUniformMat4F(u_ViewProjection, cameraTransform.GetTRS() * projectionMatrix);
 
         defaultMaterial.SetUniform4F(u_Color, {sin01(currentTime), sin01(currentTime + 1), sin01(currentTime + 2), 1.0f});
-
+        */
         //------------------------------
         // Render
         //------------------------------
         glClearColor(0.15f, 0.25f, 0.3f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT);
+        
+        Renderer::Draw();
 
         //vertexArrayObject.Draw();
 
         //------------------------------
         // glfw: swap buffers and poll IO events (keys pressed/released, mouse moved etc.)
         //------------------------------
-        glfwSwapBuffers(GetWindow().GetGlWindow());
+        glfwSwapBuffers(_window.GetGlWindow());
         glfwPollEvents();
     }
 

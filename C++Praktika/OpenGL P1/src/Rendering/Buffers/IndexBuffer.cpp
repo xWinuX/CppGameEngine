@@ -12,6 +12,11 @@ IndexBuffer::~IndexBuffer()
     glDeleteBuffers(GL_ELEMENT_ARRAY_BUFFER, &_indexBufferID);
 }
 
+unsigned int IndexBuffer::GetNumIndices() const
+{
+    return _numIndices;
+}
+
 
 void IndexBuffer::Bind() const
 {

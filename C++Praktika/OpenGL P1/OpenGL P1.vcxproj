@@ -199,6 +199,7 @@
       <SDLCheck>true</SDLCheck>
       <LinkCompiled>true</LinkCompiled>
     </ClCompile>
+    <ClCompile Include="src\Components\CameraComponent.cpp" />
     <ClCompile Include="src\Components\MeshRendererComponent.cpp" />
     <ClCompile Include="src\Components\TransformComponent.cpp" />
     <ClCompile Include="src\Core\Behaviour.cpp" />
@@ -509,10 +510,12 @@
     <ClCompile Include="src\Rendering\Material.cpp" />
     <ClCompile Include="src\Rendering\Renderer.cpp" />
     <ClCompile Include="src\Rendering\Shader.cpp" />
+    <ClCompile Include="src\Rendering\Shapes\Cube.cpp" />
     <ClCompile Include="src\Rendering\VertexArrayObject.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Application.h" />
+    <ClInclude Include="src\Components\CameraComponent.h" />
     <ClInclude Include="src\Components\Component.h" />
     <ClInclude Include="src\Components\MeshRendererComponent.h" />
     <ClInclude Include="src\Components\TransformComponent.h" />
@@ -530,8 +533,12 @@
     <ClInclude Include="src\Rendering\Renderable.h" />
     <ClInclude Include="src\Rendering\Renderer.h" />
     <ClInclude Include="src\Rendering\Shader.h" />
+    <ClInclude Include="src\Rendering\Shapes\Cube.h" />
     <ClInclude Include="src\Rendering\VertexArrayObject.h" />
     <ClInclude Include="src\Rendering\Vertex.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Debug" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
