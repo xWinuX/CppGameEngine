@@ -22,7 +22,6 @@
 Window Application::_window = Window(glm::ivec2(INITIAL_WINDOW_WIDTH, INITIAL_WINDOW_HEIGHT));
 
 
-
 bool cull = false;
 
 
@@ -30,7 +29,6 @@ void framebufferSizeCallback(Window* window)
 {
     const glm::vec2 size = window->GetSize();
     glViewport(0, 0, size.x, size.y);
-
 }
 
 float lerp(const float a, const float b, const float t) { return a + (b - a) * t; }
@@ -69,29 +67,28 @@ Application::Application()
 }
 
 
-
 void Application::Run() const
 {
     Scene scene = Scene();
-    
+
     Shader defaultShader = Shader("res/shaders/DefaultShader.vsh", "res/shaders/DefaultShader.fsh");
-    
+
     Material defaultMaterial = Material(&defaultShader);
-    
-    GameObject cameraObject = GameObject();
+
+    GameObject      cameraObject    = GameObject();
     CameraComponent cameraComponent = CameraComponent(60, 0.01f, 1000.0f);
     cameraObject.AddComponent(&cameraComponent);
     scene.AddGameObject(cameraObject);
-    
-    GameObject cubeObject = GameObject();
-    Cube cube = Cube();
-    MeshRendererComponent cubeMeshRenderer = MeshRendererComponent(cube.GetMesh(), &defaultMaterial); 
+
+    GameObject            cubeObject       = GameObject();
+    Cube                  cube             = Cube();
+    MeshRendererComponent cubeMeshRenderer = MeshRendererComponent(cube.GetMesh(), &defaultMaterial);
     cubeObject.AddComponent(&cubeMeshRenderer);
     scene.AddGameObject(cubeObject);
 
-    GameObject floorObject = GameObject();
-    Cube floorCube = Cube();
-    MeshRendererComponent floorMeshRenderer = MeshRendererComponent(floorCube.GetMesh(), &defaultMaterial); 
+    GameObject            floorObject       = GameObject();
+    Cube                  floorCube         = Cube();
+    MeshRendererComponent floorMeshRenderer = MeshRendererComponent(floorCube.GetMesh(), &defaultMaterial);
     floorObject.AddComponent(&floorMeshRenderer);
     floorObject.GetTransform().SetPosition(glm::vec3(0.0f, -30.0f, 0.0f));
     floorObject.GetTransform().SetScale(glm::vec3(20.0f));
@@ -99,7 +96,7 @@ void Application::Run() const
 
     // Set Callbacks
     glfwSetKeyCallback(_window.GetGlWindow(), keyCallback);
-    
+
     scene.InitializeScene();
 
 
@@ -107,7 +104,7 @@ void Application::Run() const
     glDepthMask(GL_TRUE);
     glDepthFunc(GL_LEQUAL);
     glDepthRange(0.0f, 1.0f);
-    
+
     float currentTime = getCurrentTime();
     while (!glfwWindowShouldClose(_window.GetGlWindow()))
     {
@@ -118,7 +115,7 @@ void Application::Run() const
         float       deltaTime = newTime - currentTime;
         currentTime           = newTime;
 
-       // std::cout << "deltaTime: " << deltaTime << std::endl;
+        // std::cout << "deltaTime: " << deltaTime << std::endl;
 
         //------------------------------
         // Gameplay
@@ -141,21 +138,21 @@ void Application::Run() const
         if (glfwGetKey(_window.GetGlWindow(), GLFW_KEY_DOWN) == GLFW_PRESS) { look.x += 50.0f * deltaTime; }
 
 
-        velocity = cameraObject.GetTransform().GetTRS()*velocity;
-        
+        velocity = cameraObject.GetTransform().GetTRS() * velocity;
+
         cubeObject.GetTransform().SetPosition(glm::vec3(0.0f, 0.0f, -3 + sin01(currentTime) * -5.0f));
-        cubeObject.GetTransform().Rotate(glm::vec3(sin01(currentTime), sin01(currentTime),0.0f));
-        
+        cubeObject.GetTransform().Rotate(glm::vec3(sin01(currentTime), sin01(currentTime), 0.0f));
+
         cameraObject.GetTransform().Move(velocity);
         cameraObject.GetTransform().Rotate(look);
-        
+
         //------------------------------
         // Render
         //------------------------------
         glClearColor(0.05f, 0.15f, 0.3f, 1.0f);
         glClearDepth(1.0);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-        
+
         Renderer::Draw();
 
         //vertexArrayObject.Draw();
