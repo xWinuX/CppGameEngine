@@ -22,6 +22,9 @@ class Window
 
         void SetSize(glm::ivec2 newSize);
 
+        void AddFramebufferSizeCallback(const WindowResizeCallbackFunction callbackFunction);
+
+    
         glm::ivec2                                 GetSize() const;
         std::vector<WindowResizeCallbackFunction>& GetResizeCallbacks();
         GLFWwindow*                                GetGlWindow() const;

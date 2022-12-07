@@ -16,9 +16,10 @@ class VertexArrayObject
         explicit VertexArrayObject(const VertexBufferLayout* pVertexBufferLayout);
         ~VertexArrayObject();
 
-        void         AddVertexBuffer(VertexBuffer* pVertexBuffer);
-        void         SetIndexBuffer(IndexBuffer* pIndexBuffer);
-        IndexBuffer* GetIndexBuffer() const;
-        void        Bind() const;
-        static void Unbind();
+        void          AddVertexBuffer(VertexBuffer* pVertexBuffer);
+        VertexBuffer* GetVertexBuffer() const;
+        void          SetIndexBuffer(IndexBuffer* pIndexBuffer);
+        IndexBuffer*  GetIndexBuffer() const;
+        void          Bind() const;
+        static void   Unbind();
 };

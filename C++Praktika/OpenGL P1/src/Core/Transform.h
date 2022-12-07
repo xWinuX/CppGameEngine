@@ -17,5 +17,12 @@ class Transform
         glm::vec3 GetScale() const;
         
         glm::mat4 GetTRS() const;
+
+        void Move(const glm::vec3& vector3);
+        void Rotate(const glm::vec3& eulerAngles);
+        
+        void SetPosition(const glm::vec3& position);
+        void SetEulerAngles(const glm::vec3& eulerAngles);
+        void SetScale(const glm::vec3& scale);
         
 };

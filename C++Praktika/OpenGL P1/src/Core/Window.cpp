@@ -10,7 +10,7 @@ Window::~Window() { DestroyGLWindow(); }
 void Window::FramebufferSizeCallback(GLFWwindow* glWindow, int width, int height)
 {
     Window* window = static_cast<Window*>(glfwGetWindowUserPointer(glWindow));
-    for (const auto resizeCallback : window->GetResizeCallbacks()) { resizeCallback(nullptr); }
+    for (const auto resizeCallback : window->GetResizeCallbacks()) { resizeCallback(window); }
 }
 
 void Window::CreateContext()
@@ -39,6 +39,8 @@ void Window::SetSize(const glm::ivec2 newSize)
     _size = newSize;
     glfwSetWindowSize(_glWindow, newSize.x, newSize.y);
 }
+
+void Window::AddFramebufferSizeCallback(const WindowResizeCallbackFunction callbackFunction) { _resizeCallbacks.push_back(callbackFunction); }
 
 glm::ivec2 Window::GetSize() const { return _size; }
 

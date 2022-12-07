@@ -14,4 +14,7 @@ class VertexBuffer
         ~VertexBuffer();
         void     Bind() const;
         static void Unbind();
+
+        VertexPos* PVertices() const { return _pVertices; }
+        unsigned   NumVertices() const { return _numVertices; }
 };

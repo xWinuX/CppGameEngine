@@ -9,5 +9,5 @@ class Renderable
 
         virtual VertexArrayObject* GetVertexArrayObject() { return nullptr; }
         virtual Material*          GetMaterial() { return nullptr; }
-        virtual Transform*         GetTransform() { return nullptr; }
+        virtual const Transform*   GetTransform() { return nullptr; }
 };

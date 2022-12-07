@@ -13,6 +13,10 @@ Shader::Shader(const std::string& vertexShaderFilePath, const std::string& fragm
     const GLuint fragmentShader = CompileShader(source.FragmentSource, GL_FRAGMENT_SHADER);
 
     _programID = CreateProgram(vertexShader, fragmentShader);
+
+    Use();
+    InitializeUniform("u_ViewProjection");
+    InitializeUniform("u_Transform");
 }
 
 Shader::~Shader()
@@ -80,9 +84,6 @@ unsigned int Shader::CreateProgram(const GLuint vertexShaderID, const GLuint fra
     glDeleteShader(vertexShaderID);
     glDeleteShader(fragmentShaderID);
 
-    Use();
-    InitializeUniform("u_ViewProjection");
-
     return shaderProgramID;
 }
 
@@ -96,6 +97,11 @@ void Shader::InitializeUniform(const GLchar* uniformName)
     const int location = glGetUniformLocation(_programID, uniformName);
     if (location != -1) { _uniformLocation[uniformName] = location; }
     else { std::cout << "Something went wrong initializing uniform \"" << uniformName << "\"" << std::endl; }
+}
+
+void Shader::SetTransformMatrix(const glm::mat4 transformMatrix) const
+{
+    if (_uniformLocation.find("u_Transform") != _uniformLocation.end()) { SetUniformMat4F(_uniformLocation.at("u_Transform"), transformMatrix); }
 }
 
 void Shader::SetViewProjectionMatrix(const glm::mat4 viewProjection) const

@@ -201,7 +201,6 @@
     </ClCompile>
     <ClCompile Include="src\Components\CameraComponent.cpp" />
     <ClCompile Include="src\Components\MeshRendererComponent.cpp" />
-    <ClCompile Include="src\Components\TransformComponent.cpp" />
     <ClCompile Include="src\Core\Behaviour.cpp" />
     <ClCompile Include="src\Core\GameObject.cpp" />
     <ClCompile Include="src\Core\Scene.cpp" />

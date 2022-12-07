@@ -15,6 +15,8 @@ Material* MeshRendererComponent::GetMaterial() { return _pMaterial; }
 
 VertexArrayObject* MeshRendererComponent::GetVertexArrayObject() { return &_vertexArrayObject; }
 
-Transform* MeshRendererComponent::GetTransform() { return nullptr; }
-
-void MeshRendererComponent::OnDraw() { Renderer::Submit(this); }
+void MeshRendererComponent::OnStart()
+{
+    std::cout << "Start" << std::endl;
+    Renderer::Submit(this);
+}
