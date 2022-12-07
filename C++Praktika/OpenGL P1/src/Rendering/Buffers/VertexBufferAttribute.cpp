@@ -1,6 +1,6 @@
-﻿#include "VertexAttribute.h"
+﻿#include "VertexBufferAttribute.h"
 
-VertexAttribute::VertexAttribute(const GLint size, const GLenum type, const GLboolean normalized, const GLsizei stride, const void* pointer)
+VertexBufferAttribute::VertexBufferAttribute(const GLint size, const GLenum type, const GLboolean normalized, const GLsizei stride, const void* pointer)
 {
     _size       = size;
     _type       = type;
@@ -9,7 +9,7 @@ VertexAttribute::VertexAttribute(const GLint size, const GLenum type, const GLbo
     _pointer    = pointer;
 }
 
-void VertexAttribute::Bind(const GLuint index) const
+void VertexBufferAttribute::Bind(const GLuint index) const
 {
     glEnableVertexAttribArray(index);
     glVertexAttribPointer(index, _size, _type, _normalized, _stride, _pointer);

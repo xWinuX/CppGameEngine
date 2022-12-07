@@ -1,32 +1,26 @@
 ﻿#pragma once
-#include <map>
-#include <vector>
 
 #include "Mesh.h"
-#include "VertexAttribute.h"
+#include "vector"
 
 class VertexArrayObject
 {
     private:
-        const VertexAttribute* _pVertexAttributes;
-        unsigned int           _numVertexAttributes;
-        GLuint                 _vertexArrayID = 0;
+        const VertexBufferLayout* _pVertexBufferLayout = nullptr;
+        IndexBuffer*              _pIndexBuffer        = nullptr;
 
-        std::map<const Material*, std::vector<const Mesh*>> _meshMap;
-        std::map<const Material*, int>                      _indicesBatchMap;
-
-        GLuint _vertexBufferID;
-        GLuint _indexBufferID;
-    
-        int _numPositions = 0;
-        int _numIndices   = 0;
-
-        void Bind() const;
+        GLuint                     _vertexArrayObjectID = 0;
+        std::vector<VertexBuffer*> _vertexBuffers;
     public:
-        explicit VertexArrayObject(const VertexAttribute* pVertexAttributes, unsigned int numVertexAttributes);
-        void     PrepareMeshes();
-        void     Draw() const;
-        void     AddMesh(const Mesh* mesh);
-        void     RemoveMesh(const Mesh* mesh);
-        void     ClearMeshes();
+        explicit VertexArrayObject(const Mesh* pMesh);
+        explicit VertexArrayObject(const VertexBufferLayout* pVertexBufferLayout);
+        ~VertexArrayObject();
+
+        void          AddVertexBuffer(VertexBuffer* pVertexBuffer);
+        VertexBuffer* GetVertexBuffer() const;
+        void          SetIndexBuffer(IndexBuffer* pIndexBuffer);
+        IndexBuffer*  GetIndexBuffer() const;
+        void          Finalize() const;
+        void          Bind() const;
+        static void   Unbind();
 };

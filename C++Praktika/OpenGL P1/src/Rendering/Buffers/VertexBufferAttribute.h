@@ -1,7 +1,7 @@
 ﻿#pragma once
 #include <glad/glad.h>
 
-class VertexAttribute
+class VertexBufferAttribute
 {
     private:
         GLint       _size;
@@ -10,6 +10,6 @@ class VertexAttribute
         GLsizei     _stride;
         const void* _pointer;
     public:
-        VertexAttribute(GLint size, GLenum type, GLboolean normalized, GLsizei stride, const void* pointer);
+        VertexBufferAttribute(GLint size, GLenum type, GLboolean normalized, GLsizei stride, const void* pointer);
          void Bind(GLuint index) const;
 };
