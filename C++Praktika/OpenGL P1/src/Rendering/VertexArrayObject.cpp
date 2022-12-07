@@ -3,11 +3,8 @@
 
 VertexArrayObject::VertexArrayObject(const Mesh* pMesh) : VertexArrayObject(pMesh->PVertexBufferLayout)
 {
-    Bind();
     AddVertexBuffer(pMesh->PVertexBuffer);
-    _pVertexBufferLayout->Bind(); //TODO: Refactor this 
     SetIndexBuffer(pMesh->PIndexBuffer);
-    Unbind();
 }
 
 VertexArrayObject::VertexArrayObject(const VertexBufferLayout* pVertexBufferLayout)
@@ -21,11 +18,7 @@ VertexArrayObject::~VertexArrayObject()
     glDeleteVertexArrays(1, &_vertexArrayObjectID);
 }
 
-void VertexArrayObject::AddVertexBuffer(VertexBuffer* pVertexBuffer)
-{
-    _vertexBuffers.push_back(pVertexBuffer);
-    pVertexBuffer->Bind();
-}
+void VertexArrayObject::AddVertexBuffer(VertexBuffer* pVertexBuffer) { _vertexBuffers.push_back(pVertexBuffer); }
 
 VertexBuffer* VertexArrayObject::GetVertexBuffer() const
 {
@@ -39,6 +32,15 @@ void VertexArrayObject::SetIndexBuffer(IndexBuffer* pIndexBuffer)
 }
 
 IndexBuffer* VertexArrayObject::GetIndexBuffer() const { return _pIndexBuffer; }
+
+void VertexArrayObject::Finalize() const
+{
+    Bind();
+    for (const VertexBuffer* vertexBuffer : _vertexBuffers) { vertexBuffer->Bind(); }
+    _pVertexBufferLayout->Bind();
+    _pIndexBuffer->Bind();
+    Unbind();
+}
 
 void VertexArrayObject::Bind() const
 {

@@ -81,21 +81,32 @@ void Application::Run() const
     GameObject cameraObject = GameObject();
     CameraComponent cameraComponent = CameraComponent(60, 0.01f, 1000.0f);
     cameraObject.AddComponent(&cameraComponent);
-
+    scene.AddGameObject(cameraObject);
+    
     GameObject cubeObject = GameObject();
     Cube cube = Cube();
-    MeshRendererComponent meshRenderer = MeshRendererComponent(cube.GetMesh(), &defaultMaterial); 
-    cubeObject.AddComponent(&meshRenderer);
-
-    cubeObject.GetTransform().SetPosition(glm::vec3(0.0f, 0.0f, 20.0f));
-    
+    MeshRendererComponent cubeMeshRenderer = MeshRendererComponent(cube.GetMesh(), &defaultMaterial); 
+    cubeObject.AddComponent(&cubeMeshRenderer);
     scene.AddGameObject(cubeObject);
-    scene.AddGameObject(cameraObject);
+
+    GameObject floorObject = GameObject();
+    Cube floorCube = Cube();
+    MeshRendererComponent floorMeshRenderer = MeshRendererComponent(floorCube.GetMesh(), &defaultMaterial); 
+    floorObject.AddComponent(&floorMeshRenderer);
+    floorObject.GetTransform().SetPosition(glm::vec3(0.0f, -30.0f, 0.0f));
+    floorObject.GetTransform().SetScale(glm::vec3(20.0f));
+    scene.AddGameObject(floorObject);
 
     // Set Callbacks
     glfwSetKeyCallback(_window.GetGlWindow(), keyCallback);
     
     scene.InitializeScene();
+
+
+    glEnable(GL_DEPTH_TEST);
+    glDepthMask(GL_TRUE);
+    glDepthFunc(GL_LEQUAL);
+    glDepthRange(0.0f, 1.0f);
     
     float currentTime = getCurrentTime();
     while (!glfwWindowShouldClose(_window.GetGlWindow()))
@@ -115,19 +126,35 @@ void Application::Run() const
         scene.UpdateScene();
 
 
-        glm::vec3 velocity = glm::vec3(0.0f);
+        glm::vec4 velocity = glm::vec4(0.0f);
+        if (glfwGetKey(_window.GetGlWindow(), GLFW_KEY_SPACE) == GLFW_PRESS) { velocity.y += 5.0f * deltaTime; }
+        if (glfwGetKey(_window.GetGlWindow(), GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS) { velocity.y -= 5.0f * deltaTime; }
         if (glfwGetKey(_window.GetGlWindow(), GLFW_KEY_D) == GLFW_PRESS) { velocity.x += 5.0f * deltaTime; }
         if (glfwGetKey(_window.GetGlWindow(), GLFW_KEY_A) == GLFW_PRESS) { velocity.x -= 5.0f * deltaTime; }
-        if (glfwGetKey(_window.GetGlWindow(), GLFW_KEY_W) == GLFW_PRESS) { velocity.y += 5.0f * deltaTime; }
-        if (glfwGetKey(_window.GetGlWindow(), GLFW_KEY_S) == GLFW_PRESS) { velocity.y -= 5.0f * deltaTime; }
+        if (glfwGetKey(_window.GetGlWindow(), GLFW_KEY_W) == GLFW_PRESS) { velocity.z -= 5.0f * deltaTime; }
+        if (glfwGetKey(_window.GetGlWindow(), GLFW_KEY_S) == GLFW_PRESS) { velocity.z += 5.0f * deltaTime; }
 
+        glm::vec3 look = glm::vec3(0.0f);
+        if (glfwGetKey(_window.GetGlWindow(), GLFW_KEY_RIGHT) == GLFW_PRESS) { look.y -= 50.0f * deltaTime; }
+        if (glfwGetKey(_window.GetGlWindow(), GLFW_KEY_LEFT) == GLFW_PRESS) { look.y += 50.0f * deltaTime; }
+        if (glfwGetKey(_window.GetGlWindow(), GLFW_KEY_UP) == GLFW_PRESS) { look.x -= 50.0f * deltaTime; }
+        if (glfwGetKey(_window.GetGlWindow(), GLFW_KEY_DOWN) == GLFW_PRESS) { look.x += 50.0f * deltaTime; }
+
+
+        velocity = cameraObject.GetTransform().GetTRS()*velocity;
+        
+        cubeObject.GetTransform().SetPosition(glm::vec3(0.0f, 0.0f, -3 + sin01(currentTime) * -5.0f));
+        cubeObject.GetTransform().Rotate(glm::vec3(sin01(currentTime), sin01(currentTime),0.0f));
+        
         cameraObject.GetTransform().Move(velocity);
+        cameraObject.GetTransform().Rotate(look);
         
         //------------------------------
         // Render
         //------------------------------
-        glClearColor(0.15f, 0.25f, 0.3f, 1.0f);
-        glClear(GL_COLOR_BUFFER_BIT);
+        glClearColor(0.05f, 0.15f, 0.3f, 1.0f);
+        glClearDepth(1.0);
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         
         Renderer::Draw();
 

@@ -10,6 +10,7 @@ Window::~Window() { DestroyGLWindow(); }
 void Window::FramebufferSizeCallback(GLFWwindow* glWindow, int width, int height)
 {
     Window* window = static_cast<Window*>(glfwGetWindowUserPointer(glWindow));
+    window->SetSize(glm::ivec2(width, height));
     for (const auto resizeCallback : window->GetResizeCallbacks()) { resizeCallback(window); }
 }
 
@@ -40,10 +41,13 @@ void Window::SetSize(const glm::ivec2 newSize)
     glfwSetWindowSize(_glWindow, newSize.x, newSize.y);
 }
 
-void Window::AddFramebufferSizeCallback(const WindowResizeCallbackFunction callbackFunction) { _resizeCallbacks.push_back(callbackFunction); }
+void Window::AddFramebufferSizeCallback(const std::function<void(Window*)>& callbackFunction)
+{
+    _resizeCallbacks.push_back(callbackFunction);
+}
 
 glm::ivec2 Window::GetSize() const { return _size; }
 
-std::vector<Window::WindowResizeCallbackFunction>& Window::GetResizeCallbacks() { return _resizeCallbacks; }
+std::vector<std::function<void(Window*)>>& Window::GetResizeCallbacks() { return _resizeCallbacks; }
 
 GLFWwindow* Window::GetGlWindow() const { return _glWindow; }

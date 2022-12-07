@@ -9,7 +9,7 @@ class VertexArrayObject
         const VertexBufferLayout* _pVertexBufferLayout = nullptr;
         IndexBuffer*              _pIndexBuffer        = nullptr;
 
-        GLuint                     _vertexArrayObjectID;
+        GLuint                     _vertexArrayObjectID = 0;
         std::vector<VertexBuffer*> _vertexBuffers;
     public:
         explicit VertexArrayObject(const Mesh* pMesh);
@@ -20,6 +20,7 @@ class VertexArrayObject
         VertexBuffer* GetVertexBuffer() const;
         void          SetIndexBuffer(IndexBuffer* pIndexBuffer);
         IndexBuffer*  GetIndexBuffer() const;
+        void          Finalize() const;
         void          Bind() const;
         static void   Unbind();
 };

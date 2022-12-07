@@ -7,6 +7,7 @@ MeshRendererComponent::MeshRendererComponent(Mesh& pMesh, Material* pMaterial) :
     _pMaterial(pMaterial),
     _vertexArrayObject(&pMesh)
 {
+    _vertexArrayObject.Finalize();
 }
 
 Mesh& MeshRendererComponent::GetMesh() const { return _pMesh; }

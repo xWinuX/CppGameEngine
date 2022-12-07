@@ -18,6 +18,8 @@ void Scene::UpdateScene() const
 
     for (const GameObject& gameObject : _gameObjects) { gameObject.LateUpdate(); }
 
+    for (const GameObject& gameObject : _gameObjects) { gameObject.PreDraw(); }
+    
     for (const GameObject& gameObject : _gameObjects) { gameObject.Draw(); }
 }
 
