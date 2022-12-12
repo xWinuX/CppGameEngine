@@ -21,6 +21,8 @@ class Window
 
         void AddFramebufferSizeCallback(const std::function<void(Window*)>& callbackFunction);
 
+        bool ShouldClose() const;
+    
         WindowResizeCallbackFunction ResizeCallback(Window* window);
 
         glm::ivec2                                 GetSize() const;

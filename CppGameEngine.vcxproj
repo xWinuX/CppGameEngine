@@ -192,6 +192,7 @@
       <SDLCheck>true</SDLCheck>
       <LinkCompiled>true</LinkCompiled>
     </ClCompile>
+    <ClCompile Include="src\Input\Input.cpp" />
     <ClCompile Include="src\Rendering\Buffers\IndexBuffer.cpp">
       <RuntimeLibrary>MultiThreadedDebugDll</RuntimeLibrary>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
@@ -498,6 +499,7 @@
     <ClCompile Include="src\Rendering\Shapes\Cube.cpp" />
     <ClCompile Include="src\Rendering\VertexArrayObject.cpp" />
     <ClCompile Include="src\Utils\Math.cpp" />
+    <ClCompile Include="src\Utils\Time.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Application.h" />
@@ -509,6 +511,7 @@
     <ClInclude Include="src\Core\Scene.h" />
     <ClInclude Include="src\Core\Transform.h" />
     <ClInclude Include="src\Core\Window.h" />
+    <ClInclude Include="src\Input\Input.h" />
     <ClInclude Include="src\Rendering\Buffers\IndexBuffer.h" />
     <ClInclude Include="src\Rendering\Buffers\VertexBuffer.h" />
     <ClInclude Include="src\Rendering\Buffers\VertexBufferAttribute.h" />
@@ -522,6 +525,11 @@
     <ClInclude Include="src\Rendering\VertexArrayObject.h" />
     <ClInclude Include="src\Rendering\Vertex.h" />
     <ClInclude Include="src\Utils\Math.h" />
+    <ClInclude Include="src\Utils\Time.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="res\shaders\DefaultShader.fsh" />
+    <Content Include="res\shaders\DefaultShader.vsh" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

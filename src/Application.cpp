@@ -11,12 +11,14 @@
 #include "Core/Window.h"
 #include "Components/TransformComponent.h"
 #include "Core/Scene.h"
+#include "Input/Input.h"
 #include "Rendering/Material.h"
 #include "Rendering/Renderer.h"
 #include "Rendering/Shader.h"
 #include "Rendering/Buffers/VertexBuffer.h"
 #include "Rendering/Shapes/Cube.h"
 #include "Utils/Math.h"
+#include "Utils/Time.h"
 
 #define INITIAL_WINDOW_WIDTH  800
 #define INITIAL_WINDOW_HEIGHT 600
@@ -24,27 +26,6 @@
 Window Application::_window = Window(glm::ivec2(INITIAL_WINDOW_WIDTH, INITIAL_WINDOW_HEIGHT));
 
 bool cull = false;
-
-void keyCallback(GLFWwindow* window, const int key, int scancode, const int action, int mods)
-{
-    // Close window if escape key is pressed
-    if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS) { glfwSetWindowShouldClose(window, true); }
-
-    // Change polygon Mode
-    if (key == GLFW_KEY_P && action == GLFW_PRESS) { glPolygonMode(GL_FRONT_AND_BACK, GL_POINT); }
-    if (key == GLFW_KEY_F && action == GLFW_PRESS) { glPolygonMode(GL_FRONT_AND_BACK, GL_FILL); }
-    if (key == GLFW_KEY_L && action == GLFW_PRESS) { glPolygonMode(GL_FRONT_AND_BACK, GL_LINE); }
-
-    // Enable/Disable culling
-    if (key == GLFW_KEY_C && action == GLFW_PRESS)
-    {
-        cull = !cull;
-        if (cull) { glEnable(GL_CULL_FACE); }
-        else { glDisable(GL_CULL_FACE); }
-    }
-}
-
-float getCurrentTime() { return static_cast<float>(glfwGetTime()); }
 
 Application::Application()
 {
@@ -64,7 +45,7 @@ void Application::Run() const
     Shader defaultShader = Shader("res/shaders/DefaultShader.vsh", "res/shaders/DefaultShader.fsh");
 
     Material defaultMaterial = Material(&defaultShader);
-    
+
     // Camera
     GameObject      cameraObject    = GameObject();
     CameraComponent cameraComponent = CameraComponent(60, 0.01f, 1000.0f);
@@ -91,45 +72,61 @@ void Application::Run() const
     floorTransform.SetScale(glm::vec3(20.0f));
     scene.AddGameObject(floorObject);
 
-    // Set Callbacks
-    glfwSetKeyCallback(_window.GetGlWindow(), keyCallback);
-
     scene.InitializeScene();
 
-    float currentTime = getCurrentTime();
-    while (!glfwWindowShouldClose(_window.GetGlWindow()))
+    while (!_window.ShouldClose())
     {
-        //------------------------------
-        // Time
-        //------------------------------
-        const float newTime   = getCurrentTime();
-        float       deltaTime = newTime - currentTime;
-        currentTime           = newTime;
-        
+        Input::Update();
+
+        Time::UpdateDeltaTime();
+
         //------------------------------
         // Gameplay
         //------------------------------
         scene.Update();
 
         glm::vec4 velocity = glm::vec4(0.0f);
-        if (glfwGetKey(_window.GetGlWindow(), GLFW_KEY_SPACE) == GLFW_PRESS) { velocity.y += 5.0f * deltaTime; }
-        if (glfwGetKey(_window.GetGlWindow(), GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS) { velocity.y -= 5.0f * deltaTime; }
-        if (glfwGetKey(_window.GetGlWindow(), GLFW_KEY_D) == GLFW_PRESS) { velocity.x += 5.0f * deltaTime; }
-        if (glfwGetKey(_window.GetGlWindow(), GLFW_KEY_A) == GLFW_PRESS) { velocity.x -= 5.0f * deltaTime; }
-        if (glfwGetKey(_window.GetGlWindow(), GLFW_KEY_W) == GLFW_PRESS) { velocity.z -= 5.0f * deltaTime; }
-        if (glfwGetKey(_window.GetGlWindow(), GLFW_KEY_S) == GLFW_PRESS) { velocity.z += 5.0f * deltaTime; }
+        if (Input::GetKeyDown(GLFW_KEY_SPACE)) { velocity.y += 5.0f * Time::GetDeltaTime(); }
+        if (Input::GetKeyDown(GLFW_KEY_LEFT_SHIFT)) { velocity.y -= 5.0f * Time::GetDeltaTime(); }
+        if (Input::GetKeyDown(GLFW_KEY_D)) { velocity.x += 5.0f * Time::GetDeltaTime(); }
+        if (Input::GetKeyDown(GLFW_KEY_A)) { velocity.x -= 5.0f * Time::GetDeltaTime(); }
+        if (Input::GetKeyDown(GLFW_KEY_W)) { velocity.z -= 5.0f * Time::GetDeltaTime(); }
+        if (Input::GetKeyDown(GLFW_KEY_S)) { velocity.z += 5.0f * Time::GetDeltaTime(); }
 
         glm::vec4 look = glm::vec4(0.0f);
-        if (glfwGetKey(_window.GetGlWindow(), GLFW_KEY_RIGHT) == GLFW_PRESS) { look.y -= 50.0f * deltaTime; }
-        if (glfwGetKey(_window.GetGlWindow(), GLFW_KEY_LEFT) == GLFW_PRESS) { look.y += 50.0f * deltaTime; }
-        if (glfwGetKey(_window.GetGlWindow(), GLFW_KEY_UP) == GLFW_PRESS) { look.x -= 50.0f * deltaTime; }
-        if (glfwGetKey(_window.GetGlWindow(), GLFW_KEY_DOWN) == GLFW_PRESS) { look.x += 50.0f * deltaTime; }
+        if (Input::GetKeyDown(GLFW_KEY_RIGHT)) { look.y -= 50.0f * Time::GetDeltaTime(); }
+        if (Input::GetKeyDown(GLFW_KEY_LEFT)) { look.y += 50.0f * Time::GetDeltaTime(); }
+        if (Input::GetKeyDown(GLFW_KEY_UP)) { look.x -= 50.0f * Time::GetDeltaTime(); }
+        if (Input::GetKeyDown(GLFW_KEY_DOWN)) { look.x += 50.0f * Time::GetDeltaTime(); }
+        
+        if (Input::GetKeyPressed(GLFW_KEY_0)) { std::cout << "0" << std::endl; }
+        if (Input::GetKeyPressed(GLFW_KEY_1)) { std::cout << "1" << std::endl; }
+        if (Input::GetKeyPressed(GLFW_KEY_2)) { std::cout << "2" << std::endl; }
+        if (Input::GetKeyPressed(GLFW_KEY_3)) { std::cout << "3" << std::endl; }
 
+
+
+        // Close window if escape key is pressed
+        if (Input::GetKeyPressed(GLFW_KEY_ESCAPE)) { glfwSetWindowShouldClose(_window.GetGlWindow(), true); }
+
+        // Change polygon Mode
+        if (Input::GetKeyPressed(GLFW_KEY_P)) { glPolygonMode(GL_FRONT_AND_BACK, GL_POINT); }
+        if (Input::GetKeyPressed(GLFW_KEY_F)) { glPolygonMode(GL_FRONT_AND_BACK, GL_FILL); }
+        if (Input::GetKeyPressed(GLFW_KEY_L)) { glPolygonMode(GL_FRONT_AND_BACK, GL_LINE); }
+
+        // Enable/Disable culling
+        if (Input::GetKeyPressed(GLFW_KEY_C))
+        {
+            cull = !cull;
+            if (cull) { glEnable(GL_CULL_FACE); }
+            else { glDisable(GL_CULL_FACE); }
+        }
+        
         velocity = cameraObject.GetTransform().GetTRS() * velocity;
 
-        cameraComponent.SetFOVInDegrees(Math::Lerp(45.0f, 90.0f, Math::Sin01(currentTime)));
+        cameraComponent.SetFOVInDegrees(Math::Lerp(45.0f, 90.0f, Math::Sin01(Time::GetTimeSinceStart())));
 
-        cubeTransform.Rotate(glm::vec3(0.0f, 0.0f, 45.0f * deltaTime));
+        cubeTransform.Rotate(glm::vec3(0.0f, 0.0f, 45.0f * Time::GetDeltaTime()));
 
         cameraTransform.Move(velocity);
         cameraTransform.Rotate(look);
@@ -138,12 +135,6 @@ void Application::Run() const
         // Render
         //------------------------------
         Renderer::Draw();
-        
-        //------------------------------
-        // glfw: swap buffers and poll IO events (keys pressed/released, mouse moved etc.)
-        //------------------------------
-        glfwSwapBuffers(_window.GetGlWindow());
-        glfwPollEvents();
     }
 
     //------------------------------

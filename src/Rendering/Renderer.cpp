@@ -1,5 +1,9 @@
 ﻿#include "Renderer.h"
 
+#include <GLFW/glfw3.h>
+
+#include "../Application.h"
+
 std::map<Material*, std::vector<Renderable*>> Renderer::_renderables      = std::map<Material*, std::vector<Renderable*>>();
 glm::mat4                                     Renderer::_projectionMatrix = glm::identity<glm::mat4>();
 glm::mat4                                     Renderer::_viewMatrix       = glm::identity<glm::mat4>();
@@ -55,4 +59,6 @@ void Renderer::Draw()
             glDrawElements(GL_TRIANGLES, renderable->GetVertexArrayObject()->GetIndexBuffer()->GetNumIndices(), GL_UNSIGNED_BYTE, static_cast<void*>(nullptr));
         }
     }
+
+    glfwSwapBuffers(Application::GetWindow().GetGlWindow());
 }
