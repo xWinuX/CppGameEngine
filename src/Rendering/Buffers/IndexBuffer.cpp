@@ -17,7 +17,6 @@ unsigned int IndexBuffer::GetNumIndices() const
     return _numIndices;
 }
 
-
 void IndexBuffer::Bind() const
 {
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, _indexBufferID);
