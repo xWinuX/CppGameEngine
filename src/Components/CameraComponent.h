@@ -15,9 +15,10 @@ class CameraComponent final : public Component
         float _zNear;
         float _zFar;
         glm::mat4 _projectionMatrix = glm::identity<glm::mat4>();
+        void UpdateProjectionMatrix();
     public:
         CameraComponent(float fovInDegrees, float zNear, float zFar);
-        void OnPreDraw() override;
-        void ResizeProjectionMatrix(Window* window);
-        
+        void  OnPreDraw() override;
+        float GetFOVInDegrees() const;
+        void SetFOVInDegrees(float value);
 };

@@ -4,6 +4,14 @@ std::map<Material*, std::vector<Renderable*>> Renderer::_renderables      = std:
 glm::mat4                                     Renderer::_projectionMatrix = glm::identity<glm::mat4>();
 glm::mat4                                     Renderer::_viewMatrix       = glm::identity<glm::mat4>();
 
+void Renderer::Initialize()
+{
+    glEnable(GL_DEPTH_TEST);
+    glDepthMask(GL_TRUE);
+    glDepthFunc(GL_LEQUAL);
+    glDepthRange(0.0f, 1.0f);
+}
+
 void Renderer::Submit(Renderable* renderable)
 {
     std::cout << "submit" << std::endl;
@@ -16,6 +24,11 @@ void Renderer::SetViewMatrix(const glm::mat4 viewMatrix) { _viewMatrix = viewMat
 
 void Renderer::Draw()
 {
+    // Clear
+    glClearColor(0.05f, 0.15f, 0.3f, 1.0f);
+    glClearDepth(1.0);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    
     const Shader* shader = nullptr;
     
     for (const auto& materialRenderables : _renderables)

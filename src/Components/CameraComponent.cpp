@@ -10,8 +10,8 @@ CameraComponent::CameraComponent(const float fovInDegrees, const float zNear, co
     _zNear(zNear),
     _zFar(zFar)
 {
-    ResizeProjectionMatrix(&Application::GetWindow());
-    Application::GetWindow().AddFramebufferSizeCallback([this](Window* window){ResizeProjectionMatrix(window);});
+    UpdateProjectionMatrix();
+    Application::GetWindow().AddFramebufferSizeCallback([this](Window* window) { UpdateProjectionMatrix(); });
 }
 
 void CameraComponent::OnPreDraw()
@@ -20,8 +20,17 @@ void CameraComponent::OnPreDraw()
     Renderer::SetViewMatrix(glm::inverse(GetTransform()->GetTRS()));
 }
 
-void CameraComponent::ResizeProjectionMatrix(Window* window)
+
+void CameraComponent::UpdateProjectionMatrix()
 {
     const glm::vec2 windowSize = Application::GetWindow().GetSize();
     _projectionMatrix          = glm::perspective(glm::radians(_fovInDegrees), windowSize.x / windowSize.y, _zNear, _zFar);
+}
+
+float CameraComponent::GetFOVInDegrees() const { return _fovInDegrees; }
+
+void CameraComponent::SetFOVInDegrees(const float value)
+{
+    _fovInDegrees = value;
+    UpdateProjectionMatrix();   
 }

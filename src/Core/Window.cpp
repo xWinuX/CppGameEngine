@@ -1,4 +1,5 @@
-﻿#include "Window.h"
+﻿#include <glad/glad.h>
+#include "Window.h"
 #include <iostream>
 
 Window::Window(const glm::ivec2 initialSize) { _size = initialSize; }
@@ -11,7 +12,9 @@ void Window::FramebufferSizeCallback(GLFWwindow* glWindow, int width, int height
 {
     Window* window = static_cast<Window*>(glfwGetWindowUserPointer(glWindow));
     window->SetSize(glm::ivec2(width, height));
-    for (const auto resizeCallback : window->GetResizeCallbacks()) { resizeCallback(window); }
+    for (const auto& resizeCallback : window->GetResizeCallbacks()) { resizeCallback(window); }
+    const glm::ivec2 size = window->GetSize();
+    glViewport(0, 0, size.x, size.y);
 }
 
 void Window::CreateContext()

@@ -10,7 +10,7 @@ class Scene
         std::vector<GameObject> _gameObjects;
     public:
         virtual void InitializeScene() const;
-        virtual void UpdateScene() const;
+        virtual void Update() const;
         void AddGameObject(const GameObject& gameObject);
         
 };

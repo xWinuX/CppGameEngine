@@ -12,7 +12,7 @@ void Scene::InitializeScene() const
     }
 }
 
-void Scene::UpdateScene() const
+void Scene::Update() const
 {
     for (const GameObject& gameObject : _gameObjects) { gameObject.Update(); }
 
