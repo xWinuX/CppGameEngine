@@ -47,29 +47,28 @@ void Application::Run() const
     Material defaultMaterial = Material(&defaultShader);
 
     // Camera
-    GameObject      cameraObject    = GameObject();
-    CameraComponent cameraComponent = CameraComponent(60, 0.01f, 1000.0f);
-    Transform&      cameraTransform = cameraObject.GetTransform();
-    cameraTransform.SetPosition(glm::vec3(0.0f, 0.0f, 5.0f));
-    cameraObject.AddComponent(&cameraComponent);
+    GameObject* cameraObject = new GameObject();
+
+    Transform* cameraTransform = cameraObject->GetTransform();
+    cameraTransform->SetPosition(glm::vec3(0.0f, 0.0f, 5.0f));
+    cameraObject->AddComponent(new CameraComponent(60, 0.01f, 50.0f));
     scene.AddGameObject(cameraObject);
 
     // Cube
-    GameObject            cubeObject       = GameObject();
-    Cube                  cube             = Cube();
-    MeshRendererComponent cubeMeshRenderer = MeshRendererComponent(cube.GetMesh(), &defaultMaterial);
-    Transform&            cubeTransform    = cubeObject.GetTransform();
-    cubeObject.AddComponent(&cubeMeshRenderer);
+    GameObject* cubeObject = new GameObject();
+    Cube        cube       = Cube();
+
+    Transform* cubeTransform = cubeObject->GetTransform();
+    cubeObject->AddComponent(new MeshRendererComponent(cube.GetMesh(), &defaultMaterial));
     scene.AddGameObject(cubeObject);
 
     // Floor
-    GameObject            floorObject       = GameObject();
-    Cube                  floorCube         = Cube();
-    MeshRendererComponent floorMeshRenderer = MeshRendererComponent(floorCube.GetMesh(), &defaultMaterial);
-    Transform&            floorTransform    = floorObject.GetTransform();
-    floorObject.AddComponent(&floorMeshRenderer);
-    floorTransform.SetPosition(glm::vec3(0.0f, -30.0f, 0.0f));
-    floorTransform.SetScale(glm::vec3(20.0f));
+    GameObject* floorObject    = new GameObject();
+    Cube        floorCube      = Cube();
+    Transform*  floorTransform = floorObject->GetTransform();
+    floorObject->AddComponent(new MeshRendererComponent(floorCube.GetMesh(), &defaultMaterial));
+    floorTransform->SetPosition(glm::vec3(0.0f, -30.0f, 0.0f));
+    floorTransform->SetScale(glm::vec3(20.0f));
     scene.AddGameObject(floorObject);
 
     scene.InitializeScene();
@@ -98,13 +97,11 @@ void Application::Run() const
         if (Input::GetKeyDown(GLFW_KEY_LEFT)) { look.y += 50.0f * Time::GetDeltaTime(); }
         if (Input::GetKeyDown(GLFW_KEY_UP)) { look.x -= 50.0f * Time::GetDeltaTime(); }
         if (Input::GetKeyDown(GLFW_KEY_DOWN)) { look.x += 50.0f * Time::GetDeltaTime(); }
-        
+
         if (Input::GetKeyPressed(GLFW_KEY_0)) { std::cout << "0" << std::endl; }
         if (Input::GetKeyPressed(GLFW_KEY_1)) { std::cout << "1" << std::endl; }
         if (Input::GetKeyPressed(GLFW_KEY_2)) { std::cout << "2" << std::endl; }
         if (Input::GetKeyPressed(GLFW_KEY_3)) { std::cout << "3" << std::endl; }
-
-
 
         // Close window if escape key is pressed
         if (Input::GetKeyPressed(GLFW_KEY_ESCAPE)) { glfwSetWindowShouldClose(_window.GetGlWindow(), true); }
@@ -121,15 +118,16 @@ void Application::Run() const
             if (cull) { glEnable(GL_CULL_FACE); }
             else { glDisable(GL_CULL_FACE); }
         }
-        
-        velocity = cameraObject.GetTransform().GetTRS() * velocity;
 
-        cameraComponent.SetFOVInDegrees(Math::Lerp(45.0f, 90.0f, Math::Sin01(Time::GetTimeSinceStart())));
+        velocity = cameraObject->GetTransform()->GetTRS() * velocity;
 
-        cubeTransform.Rotate(glm::vec3(0.0f, 0.0f, 45.0f * Time::GetDeltaTime()));
 
-        cameraTransform.Move(velocity);
-        cameraTransform.Rotate(look);
+        cameraObject->GetComponent<CameraComponent>()->SetFOVInDegrees(Math::Lerp(45.0f, 90.0f, Math::Sin01(Time::GetTimeSinceStart())));
+
+        cubeTransform->Rotate(glm::vec3(0.0f, 0.0f, 45.0f * Time::GetDeltaTime()));
+
+        cameraTransform->Move(velocity);
+        cameraTransform->Rotate(look);
 
         //------------------------------
         // Render

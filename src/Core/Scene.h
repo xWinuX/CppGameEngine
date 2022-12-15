@@ -7,10 +7,11 @@
 class Scene
 {
     private:
-        std::vector<GameObject> _gameObjects;
+        std::vector<GameObject*> _gameObjects;
     public:
+        Scene() = default;
+        virtual ~Scene();
         virtual void InitializeScene() const;
         virtual void Update() const;
-        void AddGameObject(const GameObject& gameObject);
-        
+        void         AddGameObject(GameObject* gameObject);
 };

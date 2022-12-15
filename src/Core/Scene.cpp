@@ -2,29 +2,25 @@
 
 #include <iostream>
 
-void Scene::InitializeScene() const
+Scene::~Scene()
 {
-    std::cout << "init scene" << std::endl;
-    for (const GameObject& gameObject : _gameObjects)
+    for (const GameObject* gameObject : _gameObjects)
     {
-        std::cout << "start gameobjects" << std::endl;
-        gameObject.Start();
+        delete gameObject;
     }
 }
 
+void Scene::InitializeScene() const { for (const GameObject* gameObject : _gameObjects) { gameObject->Start(); } }
+
 void Scene::Update() const
 {
-    for (const GameObject& gameObject : _gameObjects) { gameObject.Update(); }
+    for (const GameObject* gameObject : _gameObjects) { gameObject->Update(); }
 
-    for (const GameObject& gameObject : _gameObjects) { gameObject.LateUpdate(); }
+    for (const GameObject* gameObject : _gameObjects) { gameObject->LateUpdate(); }
 
-    for (const GameObject& gameObject : _gameObjects) { gameObject.PreDraw(); }
-    
-    for (const GameObject& gameObject : _gameObjects) { gameObject.Draw(); }
+    for (const GameObject* gameObject : _gameObjects) { gameObject->PreDraw(); }
+
+    for (const GameObject* gameObject : _gameObjects) { gameObject->Draw(); }
 }
 
-void Scene::AddGameObject(const GameObject& gameObject)
-{
-    std::cout << "Add gameobject" << std::endl;
-    _gameObjects.push_back(gameObject);
-}
+void Scene::AddGameObject(GameObject* gameObject) { _gameObjects.push_back(gameObject); }

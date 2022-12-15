@@ -2,16 +2,24 @@
 
 #include <iostream>
 
-GameObject::GameObject() { _components.push_back(&_transform); }
+GameObject::GameObject(): _transform(new TransformComponent()) { _components.push_back(_transform); }
 
-GameObject::GameObject(const glm::vec3 position) : GameObject() { _transform.SetPosition(position); }
+GameObject::~GameObject()
+{
+    for (const Component* component : _components)
+    {
+        delete component;
+    }
+}
+
+GameObject::GameObject(const glm::vec3 position) : GameObject() { _transform->SetPosition(position); }
 
 std::vector<Component*>& GameObject::GetComponents() { return _components; }
 
 void GameObject::AddComponent(Component* component)
 {
     _components.push_back(component);
-    component->SetTransform(&_transform);
+    component->SetTransform(_transform);
 }
 
 void GameObject::Update() const
@@ -36,9 +44,5 @@ void GameObject::Draw() const
 
 void GameObject::Start() const
 {
-    for (Component* component : _components)
-    {
-        std::cout << "start component" << std::endl;
-        component->OnStart();
-    }
+    for (Component* component : _components) { component->OnStart(); }
 }
