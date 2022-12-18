@@ -13,6 +13,7 @@
 #include "Core/Scene.h"
 #include "Input/Input.h"
 #include "Rendering/Material.h"
+#include "Rendering/Model.h"
 #include "Rendering/Renderer.h"
 #include "Rendering/Shader.h"
 #include "Rendering/Texture.h"
@@ -50,6 +51,8 @@ void Application::Run() const
 
     Material defaultMaterial = Material(&defaultShader);
     defaultMaterial.SetUniformTextureSampler2D("u_Texture", &theDudeTexture);
+
+    Model model = Model("res/models/Cube.obj");
     
     // Camera
     GameObject* cameraObject = new GameObject();

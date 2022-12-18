@@ -33,6 +33,7 @@ Shader::ShaderProgramSource Shader::ParseShader(const std::string& vertexShaderP
     {
         std::ifstream stream(element);
         while (getline(stream, line)) { ss[i] << line << '\n'; }
+        stream.close();
         i++;
     }
 

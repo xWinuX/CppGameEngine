@@ -22,10 +22,10 @@ class Cube
             {{1.0f, 1.0f, 1.0f}, {1.0f,1.0f}},   // 3 Front Bottom Right
 
             // Back
-            {{-1.0f, -1.0f, -1.0f}, {0.0f,0.0f}}, // 0 Back Top Left
-            {{1.0f, -1.0f, -1.0f}, {1.0f,0.0f}},  // 1 Back Top Right
+            {{-1.0f, -1.0f, -1.0f}, {1.0f,0.0f}}, // 0 Back Top Left
+            {{1.0f, -1.0f, -1.0f}, {1.0f,1.0f}},  // 1 Back Top Right
             {{-1.0f, 1.0f, -1.0f}, {0.0f,1.0f}},  // 2 Back Bottom Left
-            {{1.0f, 1.0f, -1.0f}, {1.0f,1.0f}},   // 3 Back Bottom Right
+            {{1.0f, 1.0f, -1.0f}, {0.0f,0.0f}},   // 3 Back Bottom Right
         };
 
         GLubyte _cubeIndices[36] = {
