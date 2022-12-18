@@ -6,15 +6,16 @@
 class VertexBuffer
 {
     private:
-        GLuint       _vertexBufferID = 0;
-        VertexPos*   _pVertices;
-        unsigned int _numVertices;
+        GLuint         _vertexBufferID = 0;
+        unsigned char* _pVertices;
+        unsigned int   _stride;
+        unsigned int   _numVertices;
     public:
-        explicit VertexBuffer(VertexPos* pVertices, unsigned int numVertices);
+        explicit VertexBuffer(unsigned char* pVertices, unsigned int stride, unsigned int numVertices);
         ~VertexBuffer();
-        void     Bind() const;
+        void        Bind() const;
         static void Unbind();
 
-        VertexPos* PVertices() const { return _pVertices; }
-        unsigned   NumVertices() const { return _numVertices; }
+        unsigned char* PVertices() const { return _pVertices; }
+        unsigned       NumVertices() const { return _numVertices; }
 };

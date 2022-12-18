@@ -1,11 +1,11 @@
-﻿#include "CameraComponent.h"
+﻿#include "Camera.h"
 
 #include <glm/ext/matrix_clip_space.hpp>
 
 #include "../Application.h"
 #include "../Rendering/Renderer.h"
 
-CameraComponent::CameraComponent(const float fovInDegrees, const float zNear, const float zFar) :
+Camera::Camera(const float fovInDegrees, const float zNear, const float zFar) :
     _fovInDegrees(fovInDegrees),
     _zNear(zNear),
     _zFar(zFar)
@@ -14,22 +14,21 @@ CameraComponent::CameraComponent(const float fovInDegrees, const float zNear, co
     Application::GetWindow().AddFramebufferSizeCallback([this](Window* window) { UpdateProjectionMatrix(); });
 }
 
-void CameraComponent::OnPreDraw()
+void Camera::OnPreDraw()
 {
     Renderer::SetProjectionMatrix(_projectionMatrix);
     Renderer::SetViewMatrix(glm::inverse(GetTransform()->GetTRS()));
 }
 
-
-void CameraComponent::UpdateProjectionMatrix()
+void Camera::UpdateProjectionMatrix()
 {
     const glm::vec2 windowSize = Application::GetWindow().GetSize();
     _projectionMatrix          = glm::perspective(glm::radians(_fovInDegrees), windowSize.x / windowSize.y, _zNear, _zFar);
 }
 
-float CameraComponent::GetFOVInDegrees() const { return _fovInDegrees; }
+float Camera::GetFOVInDegrees() const { return _fovInDegrees; }
 
-void CameraComponent::SetFOVInDegrees(const float value)
+void Camera::SetFOVInDegrees(const float value)
 {
     _fovInDegrees = value;
     UpdateProjectionMatrix();   

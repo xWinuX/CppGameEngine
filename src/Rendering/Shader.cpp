@@ -104,6 +104,7 @@ void Shader::SetTransformMatrix(const glm::mat4 transformMatrix) const
     if (_uniformLocation.find("u_Transform") != _uniformLocation.end()) { SetUniformMat4F(_uniformLocation.at("u_Transform"), transformMatrix); }
 }
 
+
 void Shader::SetViewProjectionMatrix(const glm::mat4 viewProjection) const
 {
     if (_uniformLocation.find("u_ViewProjection") != _uniformLocation.end()) { SetUniformMat4F(_uniformLocation.at("u_ViewProjection"), viewProjection); }
@@ -112,6 +113,11 @@ void Shader::SetViewProjectionMatrix(const glm::mat4 viewProjection) const
 void Shader::SetUniform4F(const GLchar* uniformName, const glm::vec4 vector4) const
 {
     if (_uniformLocation.find(uniformName) != _uniformLocation.end()) { SetUniform4F(_uniformLocation.at(uniformName), vector4); }
+}
+
+void Shader::SetUniform1I(const GLchar* uniformName, int i)
+{
+    if (_uniformLocation.find(uniformName) != _uniformLocation.end()) { SetUniform1I(_uniformLocation.at(uniformName), i); }
 }
 
 void Shader::SetUniformMat4F(const GLchar* uniformName, const glm::mat4x4 mat4) const
@@ -127,6 +133,11 @@ void Shader::SetUniform4F(const int uniformLocation, const glm::vec4 vector4)
 void Shader::SetUniformMat4F(const int uniformLocation, glm::mat4x4 mat4)
 {
     glUniformMatrix4fv(uniformLocation, 1, GL_FALSE, &mat4[0][0]);
+}
+
+void Shader::SetUniform1I(const int uniformLocation, const int i)
+{
+    glUniform1i(uniformLocation, i);
 }
 
 int Shader::GetUniformLocation(const GLchar* uniformName) { return _uniformLocation[uniformName]; }

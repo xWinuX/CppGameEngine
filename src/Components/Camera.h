@@ -8,7 +8,7 @@
 
 #include "../Core/Window.h"
 
-class CameraComponent final : public Component
+class Camera final : public Component
 {
     private:
         float _fovInDegrees;
@@ -17,7 +17,7 @@ class CameraComponent final : public Component
         glm::mat4 _projectionMatrix = glm::identity<glm::mat4>();
         void UpdateProjectionMatrix();
     public:
-        CameraComponent(float fovInDegrees, float zNear, float zFar);
+        Camera(float fovInDegrees, float zNear, float zFar);
         void  OnPreDraw() override;
         float GetFOVInDegrees() const;
         void SetFOVInDegrees(float value);

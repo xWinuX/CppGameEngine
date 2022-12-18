@@ -26,12 +26,15 @@ class Shader
 
         static void SetUniform4F(int uniformLocation, glm::vec4 vector4);
         static void SetUniformMat4F(int uniformLocation, glm::mat4x4 mat4);
+        static void SetUniform1I(int uniformLocation, int i);
 
         void Use() const;
         void InitializeUniform(const GLchar* uniformName);
         void SetViewProjectionMatrix(const glm::mat4 viewProjection) const;
         void SetTransformMatrix(const glm::mat4 transformMatrix) const;
+        void SetUniform1I(const GLchar* uniformName, int i);
         void SetUniform4F(const GLchar* uniformName, glm::vec4 vector4) const;
         void SetUniformMat4F(const GLchar* uniformName, glm::mat4x4 mat4) const;
         int  GetUniformLocation(const GLchar* uniformName);
 };
+

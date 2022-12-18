@@ -11,5 +11,6 @@ class VertexBufferAttribute
         const void* _pointer;
     public:
         VertexBufferAttribute(GLint size, GLenum type, GLboolean normalized, GLsizei stride, const void* pointer);
-         void Bind(GLuint index) const;
+        void Bind(GLuint index) const;
+        GLint GetSize() {return _size;}
 };

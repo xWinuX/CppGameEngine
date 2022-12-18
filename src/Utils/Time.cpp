@@ -4,7 +4,7 @@
 float Time::_deltaTime = 0;
 float Time::_previousTimeSinceStart = 0;
 
-void Time::UpdateDeltaTime()
+void Time::Update()
 {
     const float newTime     = GetTimeSinceStart();
     Time::_deltaTime        = newTime - _previousTimeSinceStart;

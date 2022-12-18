@@ -6,8 +6,8 @@
 #include <glm/ext/matrix_transform.hpp>
 #include <glm/ext/quaternion_common.hpp>
 
-#include "Components/CameraComponent.h"
-#include "Components/MeshRendererComponent.h"
+#include "Components/Camera.h"
+#include "Components/MeshRenderer.h"
 #include "Core/Window.h"
 #include "Components/TransformComponent.h"
 #include "Core/Scene.h"
@@ -15,9 +15,9 @@
 #include "Rendering/Material.h"
 #include "Rendering/Renderer.h"
 #include "Rendering/Shader.h"
+#include "Rendering/Texture.h"
 #include "Rendering/Buffers/VertexBuffer.h"
 #include "Rendering/Shapes/Cube.h"
-#include "Utils/Math.h"
 #include "Utils/Time.h"
 
 #define INITIAL_WINDOW_WIDTH  800
@@ -42,31 +42,34 @@ void Application::Run() const
 {
     Scene scene = Scene();
 
+    Texture theDudeTexture = Texture("res/textures/TheDude.png");
+    theDudeTexture.Bind(0);
+    
     Shader defaultShader = Shader("res/shaders/DefaultShader.vsh", "res/shaders/DefaultShader.fsh");
+    defaultShader.InitializeUniform("u_Texture");
 
     Material defaultMaterial = Material(&defaultShader);
-
+    defaultMaterial.SetUniformTextureSampler2D("u_Texture", &theDudeTexture);
+    
     // Camera
     GameObject* cameraObject = new GameObject();
-
     Transform* cameraTransform = cameraObject->GetTransform();
     cameraTransform->SetPosition(glm::vec3(0.0f, 0.0f, 5.0f));
-    cameraObject->AddComponent(new CameraComponent(60, 0.01f, 50.0f));
+    cameraObject->AddComponent(new Camera(60, 0.01f, 100.0f));
     scene.AddGameObject(cameraObject);
 
     // Cube
     GameObject* cubeObject = new GameObject();
     Cube        cube       = Cube();
-
     Transform* cubeTransform = cubeObject->GetTransform();
-    cubeObject->AddComponent(new MeshRendererComponent(cube.GetMesh(), &defaultMaterial));
+    cubeObject->AddComponent(new MeshRenderer(cube.GetMesh(), &defaultMaterial));
     scene.AddGameObject(cubeObject);
 
     // Floor
     GameObject* floorObject    = new GameObject();
     Cube        floorCube      = Cube();
     Transform*  floorTransform = floorObject->GetTransform();
-    floorObject->AddComponent(new MeshRendererComponent(floorCube.GetMesh(), &defaultMaterial));
+    floorObject->AddComponent(new MeshRenderer(floorCube.GetMesh(), &defaultMaterial));
     floorTransform->SetPosition(glm::vec3(0.0f, -30.0f, 0.0f));
     floorTransform->SetScale(glm::vec3(20.0f));
     scene.AddGameObject(floorObject);
@@ -75,9 +78,9 @@ void Application::Run() const
 
     while (!_window.ShouldClose())
     {
+        // Update engine internal systems
         Input::Update();
-
-        Time::UpdateDeltaTime();
+        Time::Update();
 
         //------------------------------
         // Gameplay
@@ -98,11 +101,6 @@ void Application::Run() const
         if (Input::GetKeyDown(GLFW_KEY_UP)) { look.x -= 50.0f * Time::GetDeltaTime(); }
         if (Input::GetKeyDown(GLFW_KEY_DOWN)) { look.x += 50.0f * Time::GetDeltaTime(); }
 
-        if (Input::GetKeyPressed(GLFW_KEY_0)) { std::cout << "0" << std::endl; }
-        if (Input::GetKeyPressed(GLFW_KEY_1)) { std::cout << "1" << std::endl; }
-        if (Input::GetKeyPressed(GLFW_KEY_2)) { std::cout << "2" << std::endl; }
-        if (Input::GetKeyPressed(GLFW_KEY_3)) { std::cout << "3" << std::endl; }
-
         // Close window if escape key is pressed
         if (Input::GetKeyPressed(GLFW_KEY_ESCAPE)) { glfwSetWindowShouldClose(_window.GetGlWindow(), true); }
 
@@ -118,11 +116,8 @@ void Application::Run() const
             if (cull) { glEnable(GL_CULL_FACE); }
             else { glDisable(GL_CULL_FACE); }
         }
-
+        
         velocity = cameraObject->GetTransform()->GetTRS() * velocity;
-
-
-        cameraObject->GetComponent<CameraComponent>()->SetFOVInDegrees(Math::Lerp(45.0f, 90.0f, Math::Sin01(Time::GetTimeSinceStart())));
 
         cubeTransform->Rotate(glm::vec3(0.0f, 0.0f, 45.0f * Time::GetDeltaTime()));
 

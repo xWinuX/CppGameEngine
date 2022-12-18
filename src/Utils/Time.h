@@ -6,7 +6,7 @@ class Time
     private:
         static float _previousTimeSinceStart;
         static float _deltaTime ;
-        static void UpdateDeltaTime();
+        static void Update();
     public:
         static float GetDeltaTime();
         static float GetTimeSinceStart();
