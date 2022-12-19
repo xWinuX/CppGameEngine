@@ -39,12 +39,19 @@ Model::Model(const std::string& filePath)
                 switch (line[1])
                 {
                     case ' ':
+
+
+                        unsigned int offset = 2;
+                        for (unsigned int i = 0; i < 3; i++)
+                        {
+                            const size_t endPoint = line.find(' ', offset); 
+                        }
+                        
                         const size_t xEndPos = line.find( ' ',2);
                         if (xEndPos == std::string::npos) { Debug::Log::Error("Invalid obj file " + filePath); }
                         Debug::Log::Error(std::to_string(xEndPos));
                         const float x = stof(line.substr(1, xEndPos));
-
-                        
+                    
                         const size_t yEndPos = line.find( ' ',xEndPos);
                         if (yEndPos == std::string::npos) { Debug::Log::Error("Invalid obj file " + filePath); }
                         const float y = stof(line.substr(xEndPos+1, yEndPos));
@@ -54,6 +61,8 @@ Model::Model(const std::string& filePath)
                         const float z = stof(line.substr(yEndPos+1, zEndPos));
         
                         Debug::Log::Message(std::to_string(x) + "," + std::to_string(y) + "," + std::to_string(z));
+
+                        vertices.emplace_back(x, y, z);
                         
                         break;
                 }
