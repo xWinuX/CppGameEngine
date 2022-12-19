@@ -74,7 +74,9 @@ Model::Model(const std::string& filePath)
         Debug::Log::Error("Cannot open " + filePath);
         exit(1);
     }
-    
+
+    std::vector<VertexPositionUVNormal> vertexBuffer;
+    std::vector<GLubyte>                indexBuffer;
     std::vector<glm::vec3> positionList;
     std::vector<glm::vec2> uvList;
     std::vector<glm::vec3> normalList;
@@ -82,6 +84,8 @@ Model::Model(const std::string& filePath)
 
     std::string line;
 
+
+    
     while (std::getline(stream, line))
     {
         if (line.length() == 0) { continue; }
@@ -154,19 +158,22 @@ Model::Model(const std::string& filePath)
         }
     }
     stream.close();
-
-    _vertexBuffer = new VertexBuffer(reinterpret_cast<unsigned char*>(vertexBuffer.data()), sizeof(VertexPositionUVNormal) ,vertexBuffer.size());
-    _indexBuffer = new IndexBuffer(indexBuffer.data(), indexBuffer.size());
-    _mesh = {_vertexBuffer, _indexBuffer, &_vertexBufferLayout};
+    
+    _meshes.push_back(new Mesh(
+        new VertexBuffer(reinterpret_cast<unsigned char*>(vertexBuffer.data()), sizeof(VertexPositionUVNormal) ,vertexBuffer.size()),
+        new IndexBuffer(indexBuffer.data(), indexBuffer.size()),
+        _vertexBufferLayout));
 }
 
 Model::~Model()
 {
-    delete _vertexBuffer;
-    delete _indexBuffer;
+    for (const Mesh* mesh : _meshes)
+    {
+        delete mesh;
+    }
 }
 
-Mesh& Model::GetMesh()
+Mesh* Model::GetMesh() const
 {
-    return _mesh;
+    return _meshes[0];
 }

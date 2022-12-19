@@ -3,8 +3,8 @@
 
 VertexArrayObject::VertexArrayObject(const Mesh* pMesh) : VertexArrayObject(pMesh->PVertexBufferLayout)
 {
-    AddVertexBuffer(pMesh->PVertexBuffer);
-    SetIndexBuffer(pMesh->PIndexBuffer);
+    AddVertexBuffer(pMesh->GetVertexBuffer);
+    SetIndexBuffer(pMesh->GetIndexBuffer);
 }
 
 VertexArrayObject::VertexArrayObject(const VertexBufferLayout* pVertexBufferLayout)

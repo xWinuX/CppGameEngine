@@ -14,6 +14,7 @@ VertexBuffer::VertexBuffer(unsigned char* pVertices, const unsigned int stride, 
 VertexBuffer::~VertexBuffer()
 {
     glDeleteBuffers(1, &_vertexBufferID);
+    delete[] _pVertices;
 }
 
 void VertexBuffer::Bind() const
