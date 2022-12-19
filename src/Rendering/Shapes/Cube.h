@@ -54,5 +54,5 @@ class Cube
     public:
         Cube();
         ~Cube();
-        Mesh& GetMesh();
+        Mesh* GetMesh() const;
 };

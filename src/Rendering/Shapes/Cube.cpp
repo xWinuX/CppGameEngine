@@ -9,11 +9,11 @@ VertexBufferAttribute Cube::_vertexBufferAttributes[2] = {
 VertexBufferLayout Cube::_vertexBufferLayout = VertexBufferLayout(_vertexBufferAttributes, sizeof(_vertexBufferAttributes)/sizeof(VertexBufferAttribute));
 
 Cube::Cube() :
-    _pMesh({
+    _pMesh(new Mesh(
         new VertexBuffer(reinterpret_cast<unsigned char*>(_cubeVertices), 5 * sizeof(float),  sizeof(_cubeVertices) / sizeof(VertexPositionUV)),
         new IndexBuffer(_cubeIndices, sizeof(_cubeIndices) / sizeof(GLubyte)),
-        &_vertexBufferLayout
-    })
+        _vertexBufferLayout
+    ))
 {  }
 
 Cube::~Cube()
@@ -21,4 +21,4 @@ Cube::~Cube()
     delete _pMesh;
 }
 
-Mesh& Cube::GetMesh() { return _pMesh; }
+Mesh* Cube::GetMesh() const { return _pMesh; }
