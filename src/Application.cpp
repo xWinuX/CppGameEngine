@@ -65,7 +65,7 @@ void Application::Run() const
     GameObject* cubeObject = new GameObject();
     Cube        cube       = Cube();
     Transform* cubeTransform = cubeObject->GetTransform();
-    cubeObject->AddComponent(new MeshRenderer(cube.GetMesh(), &defaultMaterial));
+    cubeObject->AddComponent(new MeshRenderer(model.GetMesh(), &defaultMaterial));
     scene.AddGameObject(cubeObject);
 
     // Floor
