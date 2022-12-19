@@ -9,7 +9,7 @@ VertexBufferAttribute Cube::_vertexBufferAttributes[2] = {
 VertexBufferLayout Cube::_vertexBufferLayout = VertexBufferLayout(_vertexBufferAttributes, sizeof(_vertexBufferAttributes)/sizeof(VertexBufferAttribute));
 
 Cube::Cube() :
-    _vertexBuffer(reinterpret_cast<unsigned char*>(_cubeVertices), 5 * sizeof(float),  sizeof(_cubeVertices) / sizeof(VertexPosTex)),
+    _vertexBuffer(reinterpret_cast<unsigned char*>(_cubeVertices), 5 * sizeof(float),  sizeof(_cubeVertices) / sizeof(VertexPositionUV)),
     _indexBuffer(_cubeIndices, sizeof(_cubeIndices) / sizeof(GLubyte)),
     _mesh({&_vertexBuffer, &_indexBuffer, &_vertexBufferLayout})
 {  }

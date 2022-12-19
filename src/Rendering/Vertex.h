@@ -3,38 +3,69 @@
 #include <glm/vec3.hpp>
 #include <glm/vec4.hpp>
 
-struct VertexPos
+struct VertexPosition
 {
     public:
-        explicit VertexPos(const glm::vec3 position): Position(position) {}
+        explicit VertexPosition(const glm::vec3 position): Position(position)
+        {
+        }
+
         glm::vec3 Position;
 };
 
-struct VertexTex
+
+struct VertexNormal
 {
     public:
-        explicit VertexTex(const glm::vec2 texCoords): TexCoords(texCoords) {}
+        explicit VertexNormal(const glm::vec3 normal): Normal(normal)
+        {
+        }
+
+        glm::vec2 Normal;
+};
+
+
+struct VertexUV
+{
+    public:
+        explicit VertexUV(const glm::vec2 texCoords): TexCoords(texCoords)
+        {
+        }
+
         glm::vec2 TexCoords;
 };
 
 
-struct VertexCol
+struct VertexColor
 {
     public:
-        explicit VertexCol(const glm::vec4 color): Color(color) {}
+        explicit VertexColor(const glm::vec4 color): Color(color)
+        {
+        }
+
         glm::vec4 Color;
 };
 
-struct VertexPosTex : VertexPos, VertexTex
+struct VertexPositionUV : VertexPosition, VertexUV
 {
     public:
-        VertexPosTex(const glm::vec3 position, const glm::vec2 texCoords): VertexPos(position), VertexTex(texCoords) {}
+        VertexPositionUV(const glm::vec3 position, const glm::vec2 texCoords): VertexPosition(position), VertexUV(texCoords)
+        {
+        }
 };
 
-struct VertexPosCol : VertexPos, VertexCol
+struct VertexPositionUVNormal : VertexPosition, VertexUV, VertexNormal
+{
+    public:
+        VertexPositionUVNormal(const glm::vec3 position, const glm::vec2 uv, const glm::vec3 normal): VertexPosition(position), VertexUV(uv), VertexNormal(normal)
+        {
+        }
+};
+
+struct VertexPositionColor : VertexPosition, VertexColor
 {
 };
 
-struct VertexPosColTex : VertexPos, VertexCol, VertexTex
+struct VertexPositionColorUV : VertexPosition, VertexColor, VertexUV
 {
 };

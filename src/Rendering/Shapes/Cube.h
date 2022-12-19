@@ -14,7 +14,7 @@ class Cube
         IndexBuffer  _indexBuffer;
         Mesh         _mesh;
 
-        VertexPosTex _cubeVertices[8] = {
+        VertexPositionUV _cubeVertices[8] = {
             // Front
             {{-1.0f, -1.0f, 1.0f}, {0.0f,0.0f}}, // 0 Front Top Left
             {{1.0f, -1.0f, 1.0f}, {1.0f,0.0f}},  // 1 Front Top Right
