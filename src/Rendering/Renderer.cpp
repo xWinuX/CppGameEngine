@@ -56,7 +56,7 @@ void Renderer::Draw()
             
             renderable->GetVertexArrayObject()->Bind();
             
-            glDrawElements(GL_TRIANGLES, renderable->GetVertexArrayObject()->GetIndexBuffer()->GetNumIndices(), GL_UNSIGNED_BYTE, static_cast<void*>(nullptr));
+            glDrawElements(GL_TRIANGLES, renderable->GetVertexArrayObject()->GetIndexBuffer()->GetNumIndices(), GL_UNSIGNED_INT, static_cast<void*>(nullptr));
         }
     }
 

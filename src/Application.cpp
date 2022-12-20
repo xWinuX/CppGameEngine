@@ -53,6 +53,7 @@ void Application::Run() const
     defaultMaterial.SetUniformTextureSampler2D("u_Texture", &theDudeTexture);
 
     Model model = Model("res/models/Cube.obj");
+    Model theMissingModel = Model("res/models/TheMissing.obj");
     
     // Camera
     GameObject* cameraObject = new GameObject();
@@ -63,9 +64,10 @@ void Application::Run() const
 
     // Cube
     GameObject* cubeObject = new GameObject();
-    Cube        cube       = Cube();
     Transform* cubeTransform = cubeObject->GetTransform();
-    cubeObject->AddComponent(new MeshRenderer(model.GetMesh(), &defaultMaterial));
+    cubeObject->AddComponent(new MeshRenderer(theMissingModel.GetMesh(0), &defaultMaterial));
+    cubeObject->AddComponent(new MeshRenderer(theMissingModel.GetMesh(1), &defaultMaterial));
+    cubeObject->AddComponent(new MeshRenderer(theMissingModel.GetMesh(2), &defaultMaterial));
     scene.AddGameObject(cubeObject);
 
     // Floor

@@ -2,6 +2,7 @@
 #include <glm/vec2.hpp>
 #include <glm/vec3.hpp>
 #include <glm/vec4.hpp>
+#include <glm/gtc/constants.hpp>
 
 struct VertexPosition
 {
@@ -21,7 +22,7 @@ struct VertexNormal
         {
         }
 
-        glm::vec2 Normal;
+        glm::vec3 Normal;
 };
 
 
@@ -57,6 +58,7 @@ struct VertexPositionUV : VertexPosition, VertexUV
 struct VertexPositionUVNormal : VertexPosition, VertexUV, VertexNormal
 {
     public:
+        VertexPositionUVNormal() : VertexPosition(glm::zero<glm::vec3>()), VertexUV(glm::zero<glm::vec2>()), VertexNormal(glm::zero<glm::vec3>()) {}
         VertexPositionUVNormal(const glm::vec3 position, const glm::vec2 uv, const glm::vec3 normal): VertexPosition(position), VertexUV(uv), VertexNormal(normal)
         {
         }

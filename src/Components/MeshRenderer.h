@@ -7,12 +7,12 @@
 class MeshRenderer final : public Component, public Renderable
 {
     private:
-        Mesh&              _pMesh;
+        Mesh*              _pMesh;
         Material*          _pMaterial;
         VertexArrayObject _vertexArrayObject;
     public:
-        MeshRenderer(Mesh& pMesh, Material* pMaterial);
-        Mesh&              GetMesh() const;
+        MeshRenderer(Mesh* pMesh, Material* pMaterial);
+        Mesh*              GetMesh() const;
         Material*          GetMaterial() override;
         VertexArrayObject* GetVertexArrayObject() override;
         const Transform* GetTransform() override { return Component::GetTransform(); }

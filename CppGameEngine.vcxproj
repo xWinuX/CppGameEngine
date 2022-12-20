@@ -119,6 +119,7 @@
     <ClCompile Include="src\Core\Window.cpp" />
     <ClCompile Include="src\Debug\Log.cpp" />
     <ClCompile Include="src\Input\Input.cpp" />
+    <ClCompile Include="src\IO\Stream.cpp" />
     <ClCompile Include="src\Rendering\Buffers\IndexBuffer.cpp">
       <RuntimeLibrary>MultiThreadedDebugDll</RuntimeLibrary>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
@@ -444,6 +445,7 @@
     <ClInclude Include="src\Core\Window.h" />
     <ClInclude Include="src\Debug\Log.h" />
     <ClInclude Include="src\Input\Input.h" />
+    <ClInclude Include="src\IO\Stream.h" />
     <ClInclude Include="src\Rendering\Buffers\IndexBuffer.h" />
     <ClInclude Include="src\Rendering\Buffers\VertexBuffer.h" />
     <ClInclude Include="src\Rendering\Buffers\VertexBufferAttribute.h" />
