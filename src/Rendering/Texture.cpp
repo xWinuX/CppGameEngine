@@ -3,7 +3,7 @@
 #include <iostream>
 #include <glad/glad.h>
 #include <glm/gtc/constants.hpp>
-#include <stb_image/stb_image.h>
+#include <stb_image.h>
 
 Texture::Texture(std::string filePath) :
     _textureID(0),
