@@ -47,12 +47,18 @@ void Application::Run() const
     theDudeTexture.Bind(0);
     
     Shader defaultShader = Shader("res/shaders/DefaultShader.vsh", "res/shaders/DefaultShader.fsh");
-    defaultShader.InitializeUniform("u_Texture");
+    defaultShader.InitializeUniformF4("u_ColorTint", glm::vec4(1.0f));
+    defaultShader.InitializeUniformI1("u_Texture", -1);
 
     Material defaultMaterial = Material(&defaultShader);
+    defaultMaterial.SetUniform4F("u_ColorTint", glm::vec4(1.0f, 1.0f, 1.0f, 1.0f));
     defaultMaterial.SetUniformTextureSampler2D("u_Texture", &theDudeTexture);
 
-    Model model = Model("res/models/Cube.obj");
+    Material redMaterial = Material(&defaultShader);
+    redMaterial.SetUniform4F("u_ColorTint", glm::vec4(1.0f, 0.0f, 0.0f, 1.0f));
+    
+    Model cubeModel = Model("res/models/Cube.obj");
+    Model suzanneModel = Model("res/models/Suzanne.obj");
     Model theMissingModel = Model("res/models/TheMissing.obj");
     
     // Camera
@@ -62,7 +68,14 @@ void Application::Run() const
     cameraObject->AddComponent(new Camera(60, 0.01f, 100.0f));
     scene.AddGameObject(cameraObject);
 
-    // Cube
+    // Suzanne
+    GameObject* suzanneObject = new GameObject();
+    Transform* suzanneTransform = suzanneObject->GetTransform();
+    suzanneObject->AddComponent(new MeshRenderer(suzanneModel.GetMesh(0), &redMaterial));
+    suzanneTransform->SetPosition(glm::vec3(3.0f, 0.0f, 0.0f));
+    scene.AddGameObject(suzanneObject);
+    
+    // The Missing
     GameObject* cubeObject = new GameObject();
     Transform* cubeTransform = cubeObject->GetTransform();
     cubeObject->AddComponent(new MeshRenderer(theMissingModel.GetMesh(0), &defaultMaterial));
@@ -86,10 +99,8 @@ void Application::Run() const
         // Update engine internal systems
         Input::Update();
         Time::Update();
-
-        //------------------------------
+        
         // Gameplay
-        //------------------------------
         scene.Update();
 
         glm::vec4 velocity = glm::vec4(0.0f);
@@ -129,9 +140,7 @@ void Application::Run() const
         cameraTransform->Move(velocity);
         cameraTransform->Rotate(look);
 
-        //------------------------------
         // Render
-        //------------------------------
         Renderer::Draw();
     }
 

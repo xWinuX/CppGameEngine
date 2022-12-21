@@ -10,17 +10,26 @@ void Material::UseShader() const { _shader->Use(); }
 
 void Material::ApplyUniforms() const
 {
-    for (const auto& uniform4F : _uniform4Fs) { Shader::SetUniform4F(uniform4F.first, uniform4F.second); }
+    for (const auto& uniform4F : _uniform4Fs)
+    {
+        Shader::SetUniform4F(uniform4F.first, uniform4F.second);
+    }
 
-    for (const auto& uniformMat4F : _uniformMat4Fs) { Shader::SetUniformMat4F(uniformMat4F.first, uniformMat4F.second); }
+    for (const auto& uniformMat4F : _uniformMat4Fs)
+    {
+        Shader::SetUniformMat4F(uniformMat4F.first, uniformMat4F.second);
+    }
 
-    for (const auto& uniform1I : _uniform1Is) { Shader::SetUniform1I(uniform1I.first, uniform1I.second); }
+    for (const auto& uniform1I : _uniform1Is)
+    {
+        Shader::SetUniformI1(uniform1I.first, uniform1I.second);
+    }
 
     int i = 0;
     for (const auto& uniformTextureSamples2D : _uniformTextureSamples2Ds)
     {
         uniformTextureSamples2D.second->Bind(i);
-        Shader::SetUniform1I(uniformTextureSamples2D.first, i);
+        Shader::SetUniformI1(uniformTextureSamples2D.first, i);
         i++;
     }
 }
