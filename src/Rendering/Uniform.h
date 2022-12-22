@@ -19,11 +19,10 @@ class Uniform
             _name(uniformName),
             _defaultValue(defaultValue),
             _location(glGetUniformLocation(programID, uniformName)),
-            _value(nullptr)
-        {
-        }
+            _value(nullptr),
+            _isSet(false) { }
 
-        void Apply() { Debug::Log::Error("Uniform type " + typeid(T).name() + " not supported"); }
+        void Apply() const { Debug::Log::Error("Uniform type " + typeid(T).name() + " not supported"); }
 
         void Set(T value)
         {

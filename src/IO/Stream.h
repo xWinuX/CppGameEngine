@@ -10,6 +10,7 @@ class Stream
         explicit Stream(const std::string& filePath);
         ~Stream();
         void Close();
-        std::ifstream& GetCStream() { return _stream; } 
+        std::ifstream& GetCStream() { return _stream; }
+        std::string GetFileContent();
         
 };

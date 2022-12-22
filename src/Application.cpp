@@ -47,8 +47,9 @@ void Application::Run() const
     theDudeTexture.Bind(0);
     
     Shader defaultShader = Shader("res/shaders/DefaultShader.vsh", "res/shaders/DefaultShader.fsh");
-    defaultShader.InitializeUniformF4("u_ColorTint", glm::vec4(1.0f));
-    defaultShader.InitializeUniformI1("u_Texture", -1);
+    
+    defaultShader.InitializeUniform<glm::vec4>("u_ColorTint", glm::vec4(1.0f));
+    defaultShader.InitializeUniform<int>("u_Texture", -1);
 
     Material defaultMaterial = Material(&defaultShader);
     defaultMaterial.SetUniform4F("u_ColorTint", glm::vec4(1.0f, 1.0f, 1.0f, 1.0f));
