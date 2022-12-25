@@ -57,7 +57,6 @@ void splitString(const std::string& str, const unsigned int baseOffset, const ch
     }
 }
 
-
 Model::Model(const std::string& filePath)
 {
     const std::string extension = filePath.substr(filePath.find_last_of('.') + 1);

@@ -1,11 +1,7 @@
 ﻿#include <glad/glad.h>
 #include <GLFW/glfw3.h>
-
 #include "Application.h"
-
-#include <glm/ext/matrix_transform.hpp>
 #include <glm/ext/quaternion_common.hpp>
-
 #include "Components/Camera.h"
 #include "Components/MeshRenderer.h"
 #include "Core/Window.h"
@@ -46,17 +42,22 @@ void Application::Run() const
     Texture theDudeTexture = Texture("res/textures/TheDude.png");
     theDudeTexture.Bind(0);
     
-    Shader defaultShader = Shader("res/shaders/DefaultShader.vsh", "res/shaders/DefaultShader.fsh");
+    auto defaultShader = new Shader("res/shaders/DefaultShader.vsh", "res/shaders/DefaultShader.fsh");
     
-    defaultShader.InitializeUniform<glm::vec4>("u_ColorTint", glm::vec4(1.0f));
-    defaultShader.InitializeUniform<int>("u_Texture", -1);
+    defaultShader->InitializeUniform<glm::mat4>("u_ViewProjection", glm::identity<glm::mat4>());
+    defaultShader->InitializeUniform<glm::mat4>("u_Transform", glm::identity<glm::mat4>());
+    
+    defaultShader->InitializeUniform<glm::vec4>("u_ColorTint", glm::vec4(1.0f));
+    defaultShader->InitializeUniform<int>("u_Texture", -1);
+    
+    Material defaultMaterial = Material(defaultShader);
+    
+    defaultMaterial.GetUniformBuffer()->SetUniform<glm::vec4>("u_ColorTint", glm::vec4(1.0f, 1.0f, 1.0f, 1.0f));
+    //defaultMaterial.SetUniformTextureSampler2D("u_Texture", &theDudeTexture);
 
-    Material defaultMaterial = Material(&defaultShader);
-    defaultMaterial.SetUniform4F("u_ColorTint", glm::vec4(1.0f, 1.0f, 1.0f, 1.0f));
-    defaultMaterial.SetUniformTextureSampler2D("u_Texture", &theDudeTexture);
-
-    Material redMaterial = Material(&defaultShader);
-    redMaterial.SetUniform4F("u_ColorTint", glm::vec4(1.0f, 0.0f, 0.0f, 1.0f));
+    Material redMaterial = Material(defaultShader);
+    redMaterial.GetUniformBuffer()->SetUniform<glm::vec4>("u_ColorTint", glm::vec4(1.0f, 0.0f, 0.0f, 1.0f));
+    
     
     Model cubeModel = Model("res/models/Cube.obj");
     Model suzanneModel = Model("res/models/Suzanne.obj");

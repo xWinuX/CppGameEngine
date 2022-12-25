@@ -1,5 +1,6 @@
 ﻿#include "Renderer.h"
 
+#include <iostream>
 #include <GLFW/glfw3.h>
 
 #include "../Application.h"
@@ -37,23 +38,26 @@ void Renderer::Draw()
     
     for (const auto& materialRenderables : _renderables)
     {
+        const Material* material = materialRenderables.first;
+        
         // Choose if new shader should get activated
-        const Shader* newShader = materialRenderables.first->GetShader();
+        const Shader* newShader = material->GetShader();
         if (shader == nullptr || shader != newShader)
         {
             shader = newShader;
             shader->Use();
-            shader->SetViewProjectionMatrix(_projectionMatrix*_viewMatrix);
+
         }
 
         // Apply material unique uniforms
-        materialRenderables.first->ApplyUniforms();
+        material->GetUniformBuffer()->Apply();
+        material->GetUniformBuffer()->SetUniformInstant<glm::mat4>("u_ViewProjection", _projectionMatrix*_viewMatrix);
 
         // Actually draw the elements
         for (Renderable* renderable : materialRenderables.second)
         {
-            shader->SetTransformMatrix(renderable->GetTransform()->GetTRS());
-            
+            material->GetUniformBuffer()->SetUniformInstant<glm::mat4>("u_Transform", renderable->GetTransform()->GetTRS());
+
             renderable->GetVertexArrayObject()->Bind();
             
             glDrawElements(GL_TRIANGLES, renderable->GetVertexArrayObject()->GetIndexBuffer()->GetNumIndices(), GL_UNSIGNED_INT, static_cast<void*>(nullptr));

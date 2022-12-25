@@ -1,5 +1,7 @@
 ﻿#include "MeshRenderer.h"
 
+#include <iostream>
+
 #include "../Rendering/Renderer.h"
 
 MeshRenderer::MeshRenderer(Mesh* pMesh, Material* pMaterial) :
