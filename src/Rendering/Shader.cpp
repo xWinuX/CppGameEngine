@@ -83,9 +83,4 @@ void Shader::Use() const
 
 GLuint         Shader::GetProgramID() const { return _programID; }
 UniformBuffer* Shader::GetUniformBuffer() const { return _uniformBuffer; }
-
-UniformBuffer* Shader::GetUniformBufferCopy() const
-{
-    Debug::Log::Message("COPY BUFFER");
-    return _uniformBuffer;
-}
+UniformBuffer* Shader::GetUniformBufferCopy() const { return  new UniformBuffer(*_uniformBuffer); }
