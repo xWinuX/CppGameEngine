@@ -15,6 +15,13 @@ void UniformBuffer::Apply()
     APPLY_UNIFORM(1I)
     APPLY_UNIFORM(4F)
     APPLY_UNIFORM(Mat4F)
+
+    int slot = 0;
+    for (auto& uniformTexture : _uniformTextures)
+    {
+        uniformTexture.second.Uniform.Apply(slot);
+        slot++;
+    }
 }
 
 int UniformBuffer::GetUniformLocation(const GLchar* uniformName)

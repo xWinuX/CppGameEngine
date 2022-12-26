@@ -14,8 +14,8 @@ class Texture
         explicit Texture(std::string filePath);
         ~Texture();
 
-        void Bind(unsigned int slot) const;
-        void Unbind();
+        void        Bind(unsigned int slot) const;
+        static void Unbind();
 
         const glm::ivec2& GetSize() const;
 };

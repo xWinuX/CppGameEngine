@@ -10,19 +10,19 @@
 
 #define UNIFORM(type, suffix) std::map<int,  UniformEntry<##type##>> _uniform##suffix##s;
 
-#define ADD_UNIFORM_SLOT(type,suffix) \
+#define ADD_UNIFORM_SPECIALIZATION(type,suffix) \
     template<> \
-    inline void UniformBuffer::InitializeUniform<type>(const GLchar* uniformName, const type value, const bool includeInApplyQueue) \
+    inline void UniformBuffer::InitializeUniform<type>(const GLchar* uniformName, type value, const bool includeInApplyQueue) \
     {  \
         InitializeUniform<type, &UniformBuffer::_uniform##suffix##s>(uniformName, value, includeInApplyQueue); \
     } \
     template<> \
-    inline void UniformBuffer::SetUniform<type>(const int uniformLocation, const type value) \
+    inline void UniformBuffer::SetUniform<type>(const int uniformLocation, type value) \
     { \
         _uniform##suffix##s[uniformLocation].Uniform.Set(value); \
     } \
     template<> \
-    inline void UniformBuffer::SetUniform<type>(const GLchar* uniformName, const type value) \
+    inline void UniformBuffer::SetUniform<type>(const GLchar* uniformName, type value) \
     { \
         const int uniformLocation = GetUniformLocation(uniformName); \
         if (uniformLocation == -1) \
@@ -33,13 +33,13 @@
         SetUniform<type>(uniformLocation, value); \
     } \
     template<> \
-    inline void UniformBuffer::SetUniformInstant<type>(const int uniformLocation, const type value) \
+    inline void UniformBuffer::SetUniformInstant<type>(const int uniformLocation, type value) \
     { \
         _uniform##suffix##s[uniformLocation].Uniform.Set(value); \
         _uniform##suffix##s[uniformLocation].Uniform.Apply(); \
     } \
     template<> \
-    inline void UniformBuffer::SetUniformInstant<type>(const GLchar* uniformName, const type value) \
+    inline void UniformBuffer::SetUniformInstant<type>(const GLchar* uniformName, type value) \
     { \
         const int uniformLocation = GetUniformLocation(uniformName); \
         if (uniformLocation == -1) \
@@ -55,7 +55,7 @@ class Shader;
 class UniformBuffer
 {
     friend Shader;
-    
+
     private:
         template <typename T>
         struct UniformEntry
@@ -72,6 +72,7 @@ class UniformBuffer
         UNIFORM(glm::mat4, Mat4F)
         UNIFORM(glm::vec4, 4F)
         UNIFORM(int, 1I)
+        UNIFORM(Texture*, Texture)
 
         template <typename T, std::map<int, UniformEntry<T>> UniformBuffer::*MapPtr>
         void InitializeUniform(const GLchar* uniformName, T defaultVar, bool includeInApplyQueue = true)
@@ -110,6 +111,7 @@ class UniformBuffer
         void SetUniformInstant(const GLchar* location, T value) { ShowUniformNotSupportedError<T>(); }
 };
 
-ADD_UNIFORM_SLOT(glm::mat4, Mat4F)
-ADD_UNIFORM_SLOT(glm::vec4, 4F)
-ADD_UNIFORM_SLOT(int, 1I)
+ADD_UNIFORM_SPECIALIZATION(Texture*, Texture)
+ADD_UNIFORM_SPECIALIZATION(glm::mat4, Mat4F)
+ADD_UNIFORM_SPECIALIZATION(glm::vec4, 4F)
+ADD_UNIFORM_SPECIALIZATION(int, 1I)

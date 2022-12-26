@@ -39,8 +39,8 @@ void Application::Run() const
 {
     Scene scene = Scene();
 
-    Texture theDudeTexture = Texture("res/textures/TheDude.png");
-    theDudeTexture.Bind(0);
+    Texture* theDudeTexture = new Texture("res/textures/TheDude.png");
+    Texture* createTexture =  new Texture("res/textures/Crate.jpg");
     
     auto defaultShader = new Shader("res/shaders/DefaultShader.vsh", "res/shaders/DefaultShader.fsh");
     
@@ -48,15 +48,20 @@ void Application::Run() const
     defaultShader->InitializeUniform<glm::mat4>("u_Transform", glm::identity<glm::mat4>(), false);
     
     defaultShader->InitializeUniform<glm::vec4>("u_ColorTint", glm::vec4(1.0f));
-    defaultShader->InitializeUniform<int>("u_Texture", -1);
+    defaultShader->InitializeUniform<Texture*>("u_Texture", nullptr);
     
     Material defaultMaterial = Material(defaultShader);
     
     defaultMaterial.GetUniformBuffer()->SetUniform<glm::vec4>("u_ColorTint", glm::vec4(1.0f, 1.0f, 1.0f, 1.0f));
+    defaultMaterial.GetUniformBuffer()->SetUniform("u_Texture", theDudeTexture);
     //defaultMaterial.SetUniformTextureSampler2D("u_Texture", &theDudeTexture);
 
     Material redMaterial = Material(defaultShader);
     redMaterial.GetUniformBuffer()->SetUniform<glm::vec4>("u_ColorTint", glm::vec4(1.0f, 0.0f, 0.0f, 1.0f));
+    redMaterial.GetUniformBuffer()->SetUniform("u_Texture", theDudeTexture);
+    
+    Material crateMaterial = Material(defaultShader);
+    crateMaterial.GetUniformBuffer()->SetUniform("u_Texture", createTexture);
     
     Model cubeModel = Model("res/models/Cube.obj");
     Model suzanneModel = Model("res/models/Suzanne.obj");
@@ -86,9 +91,8 @@ void Application::Run() const
 
     // Floor
     GameObject* floorObject    = new GameObject();
-    Cube        floorCube      = Cube();
     Transform*  floorTransform = floorObject->GetTransform();
-    floorObject->AddComponent(new MeshRenderer(floorCube.GetMesh(), &defaultMaterial));
+    floorObject->AddComponent(new MeshRenderer(cubeModel.GetMesh(0), &crateMaterial));
     floorTransform->SetPosition(glm::vec3(0.0f, -30.0f, 0.0f));
     floorTransform->SetScale(glm::vec3(20.0f));
     scene.AddGameObject(floorObject);
@@ -151,6 +155,9 @@ void Application::Run() const
         Renderer::Draw();
     }
 
+    delete theDudeTexture;
+    delete createTexture;
+    
     //------------------------------
     // glfw: terminate, clearing all previously allocated GLFW resources.
     //------------------------------

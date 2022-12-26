@@ -21,9 +21,8 @@ Texture::Texture(std::string filePath) :
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP);
-
-    std::cout << _size.x << "," << _size.y << std::endl;
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAX_LEVEL, 3);
+    glTexParameteri(GL_TEXTURE_2D, 0x84FE, 16); // Aniso level, TODO: Find out why i don't have the macro
     
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, _size.x, _size.y, 0, GL_RGBA, GL_UNSIGNED_BYTE, localBuffer);
 
@@ -44,9 +43,9 @@ void Texture::Bind(const unsigned slot = 0) const
     glBindTexture(GL_TEXTURE_2D, _textureID);
 }
 
-void Texture::Unbind() { glBindTexture(GL_TEXTURE_2D, 0); }
-
-const glm::ivec2& Texture::GetSize() const
+void Texture::Unbind()
 {
-    return _size;
+    glBindTexture(GL_TEXTURE_2D, 0);
 }
+
+const glm::ivec2& Texture::GetSize() const { return _size; }

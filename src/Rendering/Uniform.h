@@ -4,6 +4,8 @@
 #include "glad/glad.h"
 #include <glm/mat4x4.hpp>
 
+#include "Texture.h"
+
 template <typename T>
 class Uniform
 {
@@ -21,7 +23,7 @@ class Uniform
             _name(uniformName),
             _location(location),
             _defaultValue(defaultValue),
-            _value(_defaultValue) { }
+            _value(defaultValue) { }
 
 
         // ReSharper disable once CppMemberFunctionMayBeStatic (No it's not...)
@@ -32,6 +34,37 @@ class Uniform
         void Reset() { _value = _defaultValue; }
 };
 
+
+template <>
+class Uniform<Texture*>
+{
+    private:
+        const GLchar*  _name     = "";
+        const GLint    _location = -1;
+        const Texture* _defaultValue;
+        const Texture* _value;
+    public:
+        Uniform():
+            _defaultValue(),
+            _value() { }
+
+        Uniform(const GLchar* uniformName, const GLint location, const Texture* defaultValue):
+            _name(uniformName),
+            _location(location),
+            _defaultValue(defaultValue),
+            _value(defaultValue) { }
+    
+        // ReSharper disable once CppMemberFunctionMayBeStatic (No it's not...)
+        void Apply(const int slot=0) const
+        {
+            _value->Bind(slot);
+            glUniform1i(_location, slot);
+        }
+
+        void Set(const Texture* value) { _value = value; }
+
+        void Reset() { _value = _defaultValue; }
+};
 
 template <>
 inline void Uniform<glm::vec4>::Apply()
