@@ -10,17 +10,15 @@ Scene::~Scene()
     }
 }
 
-void Scene::InitializeScene() const { for (const GameObject* gameObject : _gameObjects) { gameObject->Start(); } }
+void Scene::InitializeScene() const { for (const GameObject* gameObject : _gameObjects) { gameObject->OnStart(); } }
 
 void Scene::Update() const
 {
-    for (const GameObject* gameObject : _gameObjects) { gameObject->Update(); }
+    for (const GameObject* gameObject : _gameObjects) { gameObject->OnUpdate(); }
 
-    for (const GameObject* gameObject : _gameObjects) { gameObject->LateUpdate(); }
+    for (const GameObject* gameObject : _gameObjects) { gameObject->OnLateUpdate(); }
 
-    for (const GameObject* gameObject : _gameObjects) { gameObject->PreDraw(); }
-
-    for (const GameObject* gameObject : _gameObjects) { gameObject->Draw(); }
+    for (const GameObject* gameObject : _gameObjects) { gameObject->OnBeforeRender(); }
 }
 
 void Scene::AddGameObject(GameObject* gameObject) { _gameObjects.push_back(gameObject); }

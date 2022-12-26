@@ -17,7 +17,7 @@ class Uniform
             _defaultValue(),
             _value() { }
 
-        Uniform(const GLuint programID, const GLchar* uniformName, const GLint location, T defaultValue):
+        Uniform(const GLchar* uniformName, const GLint location, T defaultValue):
             _name(uniformName),
             _location(location),
             _defaultValue(defaultValue),

@@ -18,7 +18,7 @@ class Camera final : public Component
         void UpdateProjectionMatrix();
     public:
         Camera(float fovInDegrees, float zNear, float zFar);
-        void  OnPreDraw() override;
+        void  OnBeforeRender() override;
         float GetFOVInDegrees() const;
         void SetFOVInDegrees(float value);
 };

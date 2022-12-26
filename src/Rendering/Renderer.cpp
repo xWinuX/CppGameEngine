@@ -4,6 +4,7 @@
 #include <GLFW/glfw3.h>
 
 #include "../Application.h"
+#include "glm/ext/matrix_transform.hpp"
 
 std::map<Material*, std::vector<Renderable*>> Renderer::_renderables      = std::map<Material*, std::vector<Renderable*>>();
 glm::mat4                                     Renderer::_projectionMatrix = glm::identity<glm::mat4>();
@@ -47,6 +48,8 @@ void Renderer::Draw()
         {
             shader = newShader;
             shader->Use();
+
+            // TODO: Somehow abstract this away
             material->GetUniformBuffer()->SetUniformInstant<glm::mat4>("u_ViewProjection", _projectionMatrix*_viewMatrix);
         }
 
@@ -56,11 +59,9 @@ void Renderer::Draw()
         // Actually draw the elements
         for (Renderable* renderable : materialRenderables.second)
         {
-            material->GetUniformBuffer()->SetUniformInstant<glm::mat4>("u_Transform", renderable->GetTransform()->GetTRS());
+            renderable->OnBeforeDraw();
+            renderable->OnDraw();
             
-            renderable->GetVertexArrayObject()->Bind();
-            
-            glDrawElements(GL_TRIANGLES, static_cast<int>(renderable->GetVertexArrayObject()->GetIndexBuffer()->GetNumIndices()), GL_UNSIGNED_INT, static_cast<void*>(nullptr));
             numDrawCalls++;
         }
     }
@@ -68,4 +69,6 @@ void Renderer::Draw()
     Debug::Log::Message("Draw Calls: " + std::to_string(numDrawCalls));
 
     glfwSwapBuffers(Application::GetWindow().GetGlWindow());
+
+    _renderables.clear();
 }

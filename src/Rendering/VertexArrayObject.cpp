@@ -47,6 +47,11 @@ void VertexArrayObject::Bind() const
     glBindVertexArray(_vertexArrayObjectID);
 }
 
+void VertexArrayObject::Render() const
+{
+    glDrawElements(GL_TRIANGLES, static_cast<int>(_pIndexBuffer->GetNumIndices()), GL_UNSIGNED_INT, static_cast<void*>(nullptr));
+}
+
 void VertexArrayObject::Unbind()
 {
     glBindVertexArray(0);

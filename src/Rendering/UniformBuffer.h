@@ -80,7 +80,7 @@ class UniformBuffer
             if (location != -1)
             {
                 _uniformNameLocationMap[uniformName] = location;
-                (this->*MapPtr).emplace(location, UniformEntry<T>{Uniform<T>{_programID, uniformName, location, defaultVar}, includeInApplyQueue});
+                (this->*MapPtr).emplace(location, UniformEntry<T>{Uniform<T>{uniformName, location, defaultVar}, includeInApplyQueue});
             }
             else { Debug::Log::Error("Something went wrong initializing uniform \"" + std::string(uniformName)); }
         }

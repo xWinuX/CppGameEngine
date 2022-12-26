@@ -22,5 +22,6 @@ class VertexArrayObject
         IndexBuffer*  GetIndexBuffer() const;
         void          Finalize() const;
         void          Bind() const;
+        void          Render() const;
         static void   Unbind();
 };

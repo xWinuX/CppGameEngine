@@ -28,13 +28,11 @@ class GameObject final
             return nullptr;
         }
 
-
         // template<typename T>
         //void AddComponent();
 
-        virtual void Update() const;
-        virtual void LateUpdate() const;
-        virtual void PreDraw() const;
-        virtual void Draw() const;
-        virtual void Start() const;
+        virtual void OnStart() const;
+        virtual void OnUpdate() const;
+        virtual void OnLateUpdate() const;
+        virtual void OnBeforeRender() const;
 };

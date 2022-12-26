@@ -22,27 +22,22 @@ void GameObject::AddComponent(Component* component)
     component->SetTransform(_transform);
 }
 
-void GameObject::Update() const
+void GameObject::OnStart() const
+{
+    for (Component* component : _components) { component->OnStart(); }
+}
+
+void GameObject::OnUpdate() const
 {
     for (Component* component : _components) { component->OnUpdate(); }
 }
 
-void GameObject::LateUpdate() const
+void GameObject::OnLateUpdate() const
 {
     for (Component* component : _components) { component->OnLateUpdate(); }
 }
 
-void GameObject::PreDraw() const
+void GameObject::OnBeforeRender() const
 {
-    for (Component* component : _components) { component->OnPreDraw(); }
-}
-
-void GameObject::Draw() const
-{
-    for (Component* component : _components) { component->OnDraw(); }
-}
-
-void GameObject::Start() const
-{
-    for (Component* component : _components) { component->OnStart(); }
+    for (Component* component : _components) { component->OnBeforeRender(); }
 }

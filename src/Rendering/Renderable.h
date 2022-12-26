@@ -1,13 +1,12 @@
 ﻿#pragma once
-#include "VertexArrayObject.h"
-#include "../Core/Transform.h"
 
 class Renderable
 {
     public:
         virtual ~Renderable() = default;
+    
+        virtual void OnBeforeDraw() {}
+        virtual void OnDraw() {}
 
-        virtual VertexArrayObject* GetVertexArrayObject() { return nullptr; }
-        virtual Material*          GetMaterial() { return nullptr; }
-        virtual const Transform*   GetTransform() { return nullptr; }
+        virtual Material* GetMaterial() { return nullptr; }
 };

@@ -4,7 +4,7 @@
 
 class Component
 {
-    private:
+    protected:
         const Transform* _transform;
     public:
         Component(): _transform(nullptr) {}
@@ -13,8 +13,7 @@ class Component
         virtual void OnStart() {}
         virtual void OnUpdate() {}
         virtual void OnLateUpdate() {}
-        virtual void OnPreDraw() {}
-        virtual void OnDraw() {}
+        virtual void OnBeforeRender() {}
 
         void SetTransform(const Transform* transform) {_transform = transform;}
         const Transform* GetTransform() const {return _transform;}

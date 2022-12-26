@@ -105,6 +105,12 @@ void Application::Run() const
         // Gameplay
         scene.Update();
 
+        if (Input::GetKeyPressed(GLFW_KEY_0))
+        {
+            MeshRenderer* meshRenderer = suzanneObject->GetComponent<MeshRenderer>();
+            meshRenderer->SetVisible(!meshRenderer->GetVisible());
+        }
+        
         glm::vec4 velocity = glm::vec4(0.0f);
         if (Input::GetKeyDown(GLFW_KEY_SPACE)) { velocity.y += 5.0f * Time::GetDeltaTime(); }
         if (Input::GetKeyDown(GLFW_KEY_LEFT_SHIFT)) { velocity.y -= 5.0f * Time::GetDeltaTime(); }
