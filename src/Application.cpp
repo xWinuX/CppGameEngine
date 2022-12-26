@@ -52,12 +52,10 @@ void Application::Run() const
     
     Material defaultMaterial = Material(defaultShader);
     
-    defaultMaterial.GetUniformBuffer()->SetUniform<glm::vec4>("u_ColorTint", glm::vec4(1.0f, 1.0f, 1.0f, 1.0f));
     defaultMaterial.GetUniformBuffer()->SetUniform("u_Texture", theDudeTexture);
     //defaultMaterial.SetUniformTextureSampler2D("u_Texture", &theDudeTexture);
 
     Material redMaterial = Material(defaultShader);
-    redMaterial.GetUniformBuffer()->SetUniform<glm::vec4>("u_ColorTint", glm::vec4(1.0f, 0.0f, 0.0f, 1.0f));
     redMaterial.GetUniformBuffer()->SetUniform("u_Texture", theDudeTexture);
     
     Material crateMaterial = Material(defaultShader);
