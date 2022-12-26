@@ -2,8 +2,6 @@
 #include <iostream>
 #include <fstream>
 
-GLuint Shader::_currentlyBoundProgram = 999;
-
 GLuint Shader::CompileShader(const std::string& shaderSource, const int type)
 {
     // Create shader

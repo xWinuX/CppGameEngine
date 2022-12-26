@@ -1,10 +1,10 @@
 ﻿#include "IndexBuffer.h"
 
-IndexBuffer::IndexBuffer(unsigned int* pIndices, const unsigned int numIndices)
+IndexBuffer::IndexBuffer(unsigned int* pIndices, const unsigned int numIndices):
+    _pIndices(pIndices),
+    _numIndices(numIndices)
 {
     glGenBuffers(1, &_indexBufferID);
-    _pIndices   = pIndices;
-    _numIndices = numIndices;
 }
 
 IndexBuffer::~IndexBuffer()

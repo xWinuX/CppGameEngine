@@ -1,7 +1,11 @@
 ﻿#include "UniformBuffer.h"
 
-#define APPLY_UNIFORM(suffix) for (auto& uniform##suffix : _uniform##suffix##s) { uniform##suffix##.second.Apply(); }
-
+#define APPLY_UNIFORM(suffix) \
+for (auto& uniform##suffix : _uniform##suffix##s) \
+{ \
+    if (!uniform##suffix##.second.ApplyInQueue) { continue; } \
+    uniform##suffix##.second.Uniform.Apply(); \
+}
 
 UniformBuffer::UniformBuffer(const GLuint programID):
     _programID(programID) {}

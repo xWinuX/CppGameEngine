@@ -35,7 +35,8 @@ void Renderer::Draw()
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     
     const Shader* shader = nullptr;
-    
+
+    unsigned int numDrawCalls = 0;
     for (const auto& materialRenderables : _renderables)
     {
         const Material* material = materialRenderables.first;
@@ -46,23 +47,25 @@ void Renderer::Draw()
         {
             shader = newShader;
             shader->Use();
-
+            material->GetUniformBuffer()->SetUniformInstant<glm::mat4>("u_ViewProjection", _projectionMatrix*_viewMatrix);
         }
 
-        // Apply material unique uniforms
+        // Apply material uniforms that are in the queue
         material->GetUniformBuffer()->Apply();
-        material->GetUniformBuffer()->SetUniformInstant<glm::mat4>("u_ViewProjection", _projectionMatrix*_viewMatrix);
 
         // Actually draw the elements
         for (Renderable* renderable : materialRenderables.second)
         {
             material->GetUniformBuffer()->SetUniformInstant<glm::mat4>("u_Transform", renderable->GetTransform()->GetTRS());
-
+            
             renderable->GetVertexArrayObject()->Bind();
             
-            glDrawElements(GL_TRIANGLES, renderable->GetVertexArrayObject()->GetIndexBuffer()->GetNumIndices(), GL_UNSIGNED_INT, static_cast<void*>(nullptr));
+            glDrawElements(GL_TRIANGLES, static_cast<int>(renderable->GetVertexArrayObject()->GetIndexBuffer()->GetNumIndices()), GL_UNSIGNED_INT, static_cast<void*>(nullptr));
+            numDrawCalls++;
         }
     }
+
+    Debug::Log::Message("Draw Calls: " + std::to_string(numDrawCalls));
 
     glfwSwapBuffers(Application::GetWindow().GetGlWindow());
 }

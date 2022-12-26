@@ -44,8 +44,8 @@ void Application::Run() const
     
     auto defaultShader = new Shader("res/shaders/DefaultShader.vsh", "res/shaders/DefaultShader.fsh");
     
-    defaultShader->InitializeUniform<glm::mat4>("u_ViewProjection", glm::identity<glm::mat4>());
-    defaultShader->InitializeUniform<glm::mat4>("u_Transform", glm::identity<glm::mat4>());
+    defaultShader->InitializeUniform<glm::mat4>("u_ViewProjection", glm::identity<glm::mat4>(), false);
+    defaultShader->InitializeUniform<glm::mat4>("u_Transform", glm::identity<glm::mat4>(), false);
     
     defaultShader->InitializeUniform<glm::vec4>("u_ColorTint", glm::vec4(1.0f));
     defaultShader->InitializeUniform<int>("u_Texture", -1);
