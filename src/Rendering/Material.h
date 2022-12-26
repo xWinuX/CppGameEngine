@@ -1,7 +1,6 @@
 ﻿#pragma once
 
-#include "Shader.h"
-#include "UniformBuffer.h"
+#include "Buffers/UniformBuffer.h"
 
 class Material
 {

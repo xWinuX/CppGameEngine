@@ -19,7 +19,8 @@ std::vector<Component*>& GameObject::GetComponents() { return _components; }
 void GameObject::AddComponent(Component* component)
 {
     _components.push_back(component);
-    component->SetTransform(_transform);
+    component->_transform = _transform;
+    component->_gameObject = this;
 }
 
 void GameObject::OnStart() const

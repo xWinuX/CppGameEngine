@@ -58,7 +58,6 @@ void Application::Run() const
     Material redMaterial = Material(defaultShader);
     redMaterial.GetUniformBuffer()->SetUniform<glm::vec4>("u_ColorTint", glm::vec4(1.0f, 0.0f, 0.0f, 1.0f));
     
-    
     Model cubeModel = Model("res/models/Cube.obj");
     Model suzanneModel = Model("res/models/Suzanne.obj");
     Model theMissingModel = Model("res/models/TheMissing.obj");

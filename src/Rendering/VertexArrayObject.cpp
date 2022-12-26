@@ -20,18 +20,12 @@ VertexArrayObject::~VertexArrayObject()
 
 void VertexArrayObject::AddVertexBuffer(VertexBuffer* pVertexBuffer) { _vertexBuffers.push_back(pVertexBuffer); }
 
-VertexBuffer* VertexArrayObject::GetVertexBuffer() const
-{
-    return _vertexBuffers[0]; //TODO: This is wrong 
-}
 
 void VertexArrayObject::SetIndexBuffer(IndexBuffer* pIndexBuffer)
 {
     _pIndexBuffer = pIndexBuffer;
     pIndexBuffer->Bind();
 }
-
-IndexBuffer* VertexArrayObject::GetIndexBuffer() const { return _pIndexBuffer; }
 
 void VertexArrayObject::Finalize() const
 {

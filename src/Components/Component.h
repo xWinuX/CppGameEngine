@@ -2,19 +2,27 @@
 
 #include "../Core/Transform.h"
 
+class GameObject;
+
 class Component
 {
+    friend GameObject;
+
     protected:
-        const Transform* _transform;
+        const GameObject* _gameObject;
+        const Transform*  _transform;
+
     public:
-        Component(): _transform(nullptr) {}
-        virtual   ~Component() = default;
+        Component():
+            _gameObject(nullptr),
+            _transform(nullptr) {}
+
+        virtual ~Component() = default;
 
         virtual void OnStart() {}
         virtual void OnUpdate() {}
         virtual void OnLateUpdate() {}
         virtual void OnBeforeRender() {}
 
-        void SetTransform(const Transform* transform) {_transform = transform;}
-        const Transform* GetTransform() const {return _transform;}
+        const Transform* GetTransform() const { return _transform; }
 };

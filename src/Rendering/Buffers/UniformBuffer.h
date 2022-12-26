@@ -4,7 +4,7 @@
 #include <iostream>
 #include <vector>
 
-#include "Uniform.h"
+#include "../Uniform.h"
 #include <glm/mat4x4.hpp>
 
 

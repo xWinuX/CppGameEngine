@@ -17,9 +17,7 @@ class VertexArrayObject
         ~VertexArrayObject();
 
         void          AddVertexBuffer(VertexBuffer* pVertexBuffer);
-        VertexBuffer* GetVertexBuffer() const;
         void          SetIndexBuffer(IndexBuffer* pIndexBuffer);
-        IndexBuffer*  GetIndexBuffer() const;
         void          Finalize() const;
         void          Bind() const;
         void          Render() const;

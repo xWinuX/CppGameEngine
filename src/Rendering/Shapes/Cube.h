@@ -2,7 +2,6 @@
 
 #include "../Mesh.h"
 #include "../Buffers/VertexBuffer.h"
-#include "../Buffers/IndexBuffer.h"
 
 class Cube
 {
