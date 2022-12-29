@@ -14,6 +14,8 @@ void UniformBuffer::Apply()
 {
     APPLY_UNIFORM(1I)
     APPLY_UNIFORM(4F)
+    APPLY_UNIFORM(3F)
+    APPLY_UNIFORM(3FV)
     APPLY_UNIFORM(Mat4F)
 
     int slot = 0;

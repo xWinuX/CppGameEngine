@@ -4,6 +4,7 @@
 #include <glm/ext/quaternion_common.hpp>
 #include "Components/Camera.h"
 #include "Components/MeshRenderer.h"
+#include "Components/PointLight.h"
 #include "Core/Window.h"
 #include "Components/TransformComponent.h"
 #include "Core/Scene.h"
@@ -17,10 +18,7 @@
 #include "Rendering/Shapes/Cube.h"
 #include "Utils/Time.h"
 
-#define INITIAL_WINDOW_WIDTH  800
-#define INITIAL_WINDOW_HEIGHT 600
-
-Window Application::_window = Window(glm::ivec2(INITIAL_WINDOW_WIDTH, INITIAL_WINDOW_HEIGHT));
+Window Application::_window = Window(glm::ivec2(800, 600));
 
 bool cull = false;
 
@@ -41,11 +39,23 @@ void Application::Run() const
 
     Texture* theDudeTexture = new Texture("res/textures/TheDude.png");
     Texture* createTexture =  new Texture("res/textures/Crate.jpg");
+
+
+    Model cubeModel = Model("res/models/Cube.obj");
+    Model suzanneModel = Model("res/models/Suzanne.obj");
+    Model theMissingModel = Model("res/models/TheMissing.obj");
+    Model sphereModel = Model("res/models/Sphere.obj");
+    
     
     auto defaultShader = new Shader("res/shaders/DefaultShader.vsh", "res/shaders/DefaultShader.fsh");
     
-    defaultShader->InitializeUniform<glm::mat4>("u_ViewProjection", glm::identity<glm::mat4>(), false);
+    defaultShader->InitializeUniform<glm::mat4>("u_Projection", glm::identity<glm::mat4>(), false);
+    defaultShader->InitializeUniform<glm::mat4>("u_View", glm::identity<glm::mat4>(), false);
     defaultShader->InitializeUniform<glm::mat4>("u_Transform", glm::identity<glm::mat4>(), false);
+
+    
+    defaultShader->InitializeUniform<int>("u_NumPointLights", 0, false);
+    defaultShader->InitializeUniform<std::vector<glm::vec3>*>("u_PointLightPositions", nullptr, false);
     
     defaultShader->InitializeUniform<glm::vec4>("u_ColorTint", glm::vec4(1.0f));
     defaultShader->InitializeUniform<Texture*>("u_Texture", nullptr);
@@ -61,10 +71,7 @@ void Application::Run() const
     Material crateMaterial = Material(defaultShader);
     crateMaterial.GetUniformBuffer()->SetUniform("u_Texture", createTexture);
     
-    Model cubeModel = Model("res/models/Cube.obj");
-    Model suzanneModel = Model("res/models/Suzanne.obj");
-    Model theMissingModel = Model("res/models/TheMissing.obj");
-    
+
     // Camera
     GameObject* cameraObject = new GameObject();
     Transform* cameraTransform = cameraObject->GetTransform();
@@ -72,6 +79,14 @@ void Application::Run() const
     cameraObject->AddComponent(new Camera(60, 0.01f, 100.0f));
     scene.AddGameObject(cameraObject);
 
+    // Light
+    GameObject* lightObject = new GameObject();
+    Transform* lightTransform = lightObject->GetTransform();
+    lightTransform->SetPosition(glm::vec3(0.0f, 0.0f, 5.0f));
+    lightObject->AddComponent(new MeshRenderer(sphereModel.GetMesh(0), &defaultMaterial));
+    lightObject->AddComponent(new PointLight(defaultShader));
+    scene.AddGameObject(lightObject);
+    
     // Suzanne
     GameObject* suzanneObject = new GameObject();
     Transform* suzanneTransform = suzanneObject->GetTransform();
@@ -142,11 +157,12 @@ void Application::Run() const
             else { glDisable(GL_CULL_FACE); }
         }
         
-        velocity = cameraObject->GetTransform()->GetTRS() * velocity;
+        velocity = lightObject->GetTransform()->GetTRS() * velocity;
 
         cubeTransform->Rotate(glm::vec3(0.0f, 0.0f, 45.0f * Time::GetDeltaTime()));
+        suzanneTransform->Rotate(glm::vec3(0.0f, 45.0f * Time::GetDeltaTime(), 0.0f));
 
-        cameraTransform->Move(velocity);
+        lightTransform->Move(velocity);
         cameraTransform->Rotate(look);
 
         // Render

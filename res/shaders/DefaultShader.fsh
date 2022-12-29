@@ -1,8 +1,8 @@
 #version 400 core
 
-in vec2 vTexCoords;
-in float vDepth;
-in vec3 vNormal;
+in vec2 v_TexCoords;
+in vec3 v_Normal;
+in float v_LightIntensity;
 
 out vec4 fragColor;
 
@@ -11,5 +11,5 @@ uniform sampler2D u_Texture;
 
 void main()
 {
-    fragColor = texture2D(u_Texture, vTexCoords) * u_ColorTint * vec4(vNormal.rgb, 1.0);
+    fragColor = texture2D(u_Texture, v_TexCoords) * u_ColorTint * v_LightIntensity;
 }

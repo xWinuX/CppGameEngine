@@ -24,8 +24,7 @@ class Uniform
             _location(location),
             _defaultValue(defaultValue),
             _value(defaultValue) { }
-
-
+    
         // ReSharper disable once CppMemberFunctionMayBeStatic (No it's not...)
         void Apply() { Debug::Log::Message("This should never appear"); }
 
@@ -66,10 +65,24 @@ class Uniform<Texture*>
         void Reset() { _value = _defaultValue; }
 };
 
+
+template <>
+inline void Uniform<std::vector<glm::vec3>*>::Apply()
+{
+    glUniform4fv(_location, _value->size(), reinterpret_cast<GLfloat*>(_value->data()));
+}
+
 template <>
 inline void Uniform<glm::vec4>::Apply()
 {
     glUniform4f(_location, _value.x, _value.y, _value.z, _value.w);
+}
+
+
+template <>
+inline void Uniform<glm::vec3>::Apply()
+{
+    glUniform3f(_location, _value.x, _value.y, _value.z);
 }
 
 template <>

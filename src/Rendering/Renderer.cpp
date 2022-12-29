@@ -6,6 +6,7 @@
 #include "../Application.h"
 #include "glm/ext/matrix_transform.hpp"
 
+std::vector<Light*>                           Renderer::_lights           = std::vector<Light*>();
 std::map<Material*, std::vector<Renderable*>> Renderer::_renderables      = std::map<Material*, std::vector<Renderable*>>();
 glm::mat4                                     Renderer::_projectionMatrix = glm::identity<glm::mat4>();
 glm::mat4                                     Renderer::_viewMatrix       = glm::identity<glm::mat4>();
@@ -18,7 +19,9 @@ void Renderer::Initialize()
     glDepthRange(0.0, 1.0);
 }
 
-void Renderer::Submit(Renderable* renderable) { _renderables[renderable->GetMaterial()].push_back(renderable); }
+void Renderer::SubmitLight(Light* light) { _lights.push_back(light); }
+
+void Renderer::SubmitRenderable(Renderable* renderable) { _renderables[renderable->GetMaterial()].push_back(renderable); }
 
 void Renderer::SetProjectionMatrix(const glm::mat4 projectionMatrix) { _projectionMatrix = projectionMatrix; }
 
@@ -45,8 +48,12 @@ void Renderer::Draw()
             shader = newShader;
             shader->Use();
 
+            Debug::Log::Message(std::to_string(_lights.size()));
+            for (Light*& light : _lights) { light->OnShaderUse(); }
+
             // TODO: Somehow abstract this away
-            material->GetUniformBuffer()->SetUniformInstant<glm::mat4>("u_ViewProjection", _projectionMatrix * _viewMatrix);
+            material->GetUniformBuffer()->SetUniformInstant<glm::mat4>("u_Projection", _projectionMatrix);
+            material->GetUniformBuffer()->SetUniformInstant<glm::mat4>("u_View", _viewMatrix);
         }
 
         // Apply material uniforms that are in the queue
@@ -67,4 +74,5 @@ void Renderer::Draw()
     glfwSwapBuffers(Application::GetWindow().GetGlWindow());
 
     _renderables.clear();
+    _lights.clear();
 }

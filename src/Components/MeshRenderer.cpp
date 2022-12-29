@@ -17,7 +17,7 @@ void MeshRenderer::OnBeforeRender()
 {
     if (!_visible) { return; }
 
-    Renderer::Submit(this);
+    Renderer::SubmitRenderable(this);
 }
 
 void MeshRenderer::OnBeforeDraw() { _pMaterial->GetUniformBuffer()->SetUniformInstant("u_Transform", _transform->GetTRS()); }
@@ -31,5 +31,5 @@ void MeshRenderer::OnDraw()
 void MeshRenderer::OnStart()
 {
     std::cout << "Start" << std::endl;
-    Renderer::Submit(this);
+    Renderer::SubmitRenderable(this);
 }

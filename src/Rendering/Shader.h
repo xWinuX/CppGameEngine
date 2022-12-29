@@ -24,6 +24,9 @@ class Shader
         template <typename T>
         void InitializeUniform(const GLchar* uniformName, T defaultValue, const bool includeInApplyQueue = true) { _uniformBuffer->InitializeUniform<T>(uniformName, defaultValue, includeInApplyQueue); }
 
+        template <typename T>
+        void SetUniformInstant(const GLchar* uniformName, T value) { _uniformBuffer->SetUniformInstant<T>(uniformName, value); }
+    
         GLuint GetProgramID() const;
 
         UniformBuffer* GetUniformBuffer() const;

@@ -71,6 +71,8 @@ class UniformBuffer
 
         UNIFORM(glm::mat4, Mat4F)
         UNIFORM(glm::vec4, 4F)
+        UNIFORM(std::vector<glm::vec3>*, 3FV)
+        UNIFORM(glm::vec3, 3F)
         UNIFORM(int, 1I)
         UNIFORM(Texture*, Texture)
 
@@ -114,4 +116,6 @@ class UniformBuffer
 ADD_UNIFORM_SPECIALIZATION(Texture*, Texture)
 ADD_UNIFORM_SPECIALIZATION(glm::mat4, Mat4F)
 ADD_UNIFORM_SPECIALIZATION(glm::vec4, 4F)
+ADD_UNIFORM_SPECIALIZATION(glm::vec3, 3F)
+ADD_UNIFORM_SPECIALIZATION(std::vector<glm::vec3>*, 3FV)
 ADD_UNIFORM_SPECIALIZATION(int, 1I)
