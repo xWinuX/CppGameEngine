@@ -10,6 +10,7 @@ uniform mat4 u_Transform;
 uniform int u_NumPointLights;
 uniform vec3 u_PointLightPositions[16];
 uniform vec4 u_PointLightColors[16];
+uniform float u_PointLightIntensities[16];
 
 out vec2 v_TexCoords;
 out vec3 v_Normal;
@@ -26,7 +27,7 @@ void main()
         vec3 lightVector = normalize(u_PointLightPositions[i] - modelViewVertex);
         float diffuse = max(dot(modelViewNormal, lightVector), 0.1);
         diffuse = diffuse * (1.0 / (1.0 + (0.25 * distance * distance)));
-        diffuseSum += u_PointLightColors[i] * diffuse;
+        diffuseSum += u_PointLightColors[i] * u_PointLightIntensities[i] * diffuse;
     }
 
     v_LightColor = diffuseSum;

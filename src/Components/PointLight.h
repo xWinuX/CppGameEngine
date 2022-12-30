@@ -10,12 +10,16 @@ class PointLight final : public Light
     private:
         static std::vector<glm::vec3> _positions;
         static std::vector<glm::vec4> _colors;
-        glm::vec4                     _color;
+        static std::vector<float> _intensities;
+
+        glm::vec4 _color;
+        float     _intensity;
 
     public:
-        explicit PointLight(Shader* shader, const glm::vec4 color = glm::vec4(1.0)):
+        explicit PointLight(Shader* shader, const glm::vec4 color = glm::vec4(1.0), const float intensity = 1.0f):
             Light(shader),
-            _color(color) {}
+            _color(color),
+            _intensity(intensity) {}
 
         void OnBeforeRender() override;
         void OnFrameEnd() override;

@@ -76,6 +76,7 @@ class UniformBuffer
         UNIFORM(glm::vec3, 3F)
         UNIFORM(std::vector<glm::vec3>*, 3FV)
         UNIFORM(int, 1I)
+        UNIFORM(std::vector<float>*, 1FV)
         UNIFORM(Texture*, Texture)
 
         template <typename T, std::map<int, UniformEntry<T>> UniformBuffer::*MapPtr>
@@ -122,4 +123,5 @@ ADD_UNIFORM_SPECIALIZATION(glm::vec4, 4F)
 ADD_UNIFORM_SPECIALIZATION(std::vector<glm::vec4>*, 4FV)
 ADD_UNIFORM_SPECIALIZATION(glm::vec3, 3F)
 ADD_UNIFORM_SPECIALIZATION(std::vector<glm::vec3>*, 3FV)
+ADD_UNIFORM_SPECIALIZATION(std::vector<float>*, 1FV)
 ADD_UNIFORM_SPECIALIZATION(int, 1I)

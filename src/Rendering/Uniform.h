@@ -65,6 +65,11 @@ class Uniform<Texture*>
         void Reset() { _value = _defaultValue; }
 };
 
+template <>
+inline void Uniform<std::vector<float>*>::Apply()
+{
+    glUniform1fv(_location, _value->size(), _value->data());
+}
 
 template <>
 inline void Uniform<glm::vec4>::Apply()

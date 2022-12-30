@@ -56,6 +56,7 @@ void Application::Run() const
     defaultShader.InitializeUniform<int>("u_NumPointLights", 0, false);
     defaultShader.InitializeUniform<std::vector<glm::vec3>*>("u_PointLightPositions", nullptr, false);
     defaultShader.InitializeUniform<std::vector<glm::vec4>*>("u_PointLightColors", nullptr, false);
+    defaultShader.InitializeUniform<std::vector<float>*>("u_PointLightIntensities", nullptr, false);
 
     // Other
     defaultShader.InitializeUniform<glm::vec4>("u_ColorTint", glm::vec4(1.0f));
@@ -93,7 +94,7 @@ void Application::Run() const
     Transform*  rainbowLight       = rainbowLightObject->GetTransform();
     rainbowLight->SetPosition(glm::vec3(-2.0f, 0.0f, 0.0f));
     rainbowLightObject->AddComponent(new MeshRenderer(sphereModel.GetMesh(0), &defaultMaterial));
-    rainbowLightObject->AddComponent(new PointLight(&defaultShader, glm::vec4(1.0f, 1.0f, 1.0f, 1.0f)));
+    rainbowLightObject->AddComponent(new PointLight(&defaultShader, glm::vec4(1.0f, 1.0f, 1.0f, 1.0f), 10.0f));
     scene.AddGameObject(rainbowLightObject);
 
     // Suzanne
