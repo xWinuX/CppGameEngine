@@ -2,7 +2,7 @@
 
 in vec2 v_TexCoords;
 in vec3 v_Normal;
-in float v_LightIntensity;
+in vec4 v_LightColor;
 
 out vec4 fragColor;
 
@@ -11,5 +11,5 @@ uniform sampler2D u_Texture;
 
 void main()
 {
-    fragColor = texture2D(u_Texture, v_TexCoords) * u_ColorTint * v_LightIntensity;
+    fragColor = texture2D(u_Texture, v_TexCoords) * u_ColorTint * v_LightColor;
 }

@@ -67,12 +67,6 @@ class Uniform<Texture*>
 
 
 template <>
-inline void Uniform<std::vector<glm::vec3>*>::Apply()
-{
-    glUniform4fv(_location, _value->size(), reinterpret_cast<GLfloat*>(_value->data()));
-}
-
-template <>
 inline void Uniform<glm::vec4>::Apply()
 {
     glUniform4f(_location, _value.x, _value.y, _value.z, _value.w);
@@ -80,10 +74,27 @@ inline void Uniform<glm::vec4>::Apply()
 
 
 template <>
+inline void Uniform<std::vector<glm::vec4>*>::Apply()
+{
+    if (_value == nullptr) { return; }
+    
+    glUniform4fv(_location, _value->size()*4, reinterpret_cast<GLfloat*>(_value->data()));
+}
+
+template <>
 inline void Uniform<glm::vec3>::Apply()
 {
     glUniform3f(_location, _value.x, _value.y, _value.z);
 }
+
+template <>
+inline void Uniform<std::vector<glm::vec3>*>::Apply()
+{
+    if (_value == nullptr) { return; }
+    
+    glUniform3fv(_location, _value->size()*3, reinterpret_cast<GLfloat*>(_value->data()));
+}
+
 
 template <>
 inline void Uniform<glm::mat4>::Apply()

@@ -73,6 +73,10 @@ void Renderer::Draw()
 
     glfwSwapBuffers(Application::GetWindow().GetGlWindow());
 
-    _renderables.clear();
+    // Cleanup lights
+    for (Light* light : _lights) { light->OnFrameEnd(); }
     _lights.clear();
+
+    // Cleanup renderables
+    _renderables.clear();
 }

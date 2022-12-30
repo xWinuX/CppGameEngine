@@ -56,6 +56,7 @@ void Application::Run() const
     
     defaultShader->InitializeUniform<int>("u_NumPointLights", 0, false);
     defaultShader->InitializeUniform<std::vector<glm::vec3>*>("u_PointLightPositions", nullptr, false);
+    defaultShader->InitializeUniform<std::vector<glm::vec4>*>("u_PointLightColors", nullptr, false);
     
     defaultShader->InitializeUniform<glm::vec4>("u_ColorTint", glm::vec4(1.0f));
     defaultShader->InitializeUniform<Texture*>("u_Texture", nullptr);
@@ -75,17 +76,25 @@ void Application::Run() const
     // Camera
     GameObject* cameraObject = new GameObject();
     Transform* cameraTransform = cameraObject->GetTransform();
-    cameraTransform->SetPosition(glm::vec3(0.0f, 0.0f, 5.0f));
+    cameraTransform->SetPosition(glm::vec3(2.0f, 0.0f, 5.0f));
     cameraObject->AddComponent(new Camera(60, 0.01f, 100.0f));
     scene.AddGameObject(cameraObject);
 
-    // Light
-    GameObject* lightObject = new GameObject();
-    Transform* lightTransform = lightObject->GetTransform();
-    lightTransform->SetPosition(glm::vec3(0.0f, 0.0f, 5.0f));
-    lightObject->AddComponent(new MeshRenderer(sphereModel.GetMesh(0), &defaultMaterial));
-    lightObject->AddComponent(new PointLight(defaultShader));
-    scene.AddGameObject(lightObject);
+    // Red Light
+    GameObject* redLightObject = new GameObject();
+    Transform* redLight = redLightObject->GetTransform();
+    redLight->SetPosition(glm::vec3(2.0f, 0.0f, 5.0f));
+    redLightObject->AddComponent(new MeshRenderer(sphereModel.GetMesh(0), &defaultMaterial));
+    redLightObject->AddComponent(new PointLight(defaultShader, glm::vec4(1.0f, 0.0f, 0.0f, 1.0f)));
+    scene.AddGameObject(redLightObject);
+
+    // Blue Light
+    GameObject* greenLightObject = new GameObject();
+    Transform* greenLight = greenLightObject->GetTransform();
+    redLight->SetPosition(glm::vec3(-2.0f, 0.0f, 5.0f));
+    greenLightObject->AddComponent(new MeshRenderer(sphereModel.GetMesh(0), &defaultMaterial));
+    greenLightObject->AddComponent(new PointLight(defaultShader, glm::vec4(0.0f, 1.0f, 0.0f, 1.0f)));
+    scene.AddGameObject(greenLightObject);
     
     // Suzanne
     GameObject* suzanneObject = new GameObject();
@@ -127,20 +136,18 @@ void Application::Run() const
             meshRenderer->SetVisible(!meshRenderer->GetVisible());
         }
         
-        glm::vec4 velocity = glm::vec4(0.0f);
-        if (Input::GetKeyDown(GLFW_KEY_SPACE)) { velocity.y += 5.0f * Time::GetDeltaTime(); }
-        if (Input::GetKeyDown(GLFW_KEY_LEFT_SHIFT)) { velocity.y -= 5.0f * Time::GetDeltaTime(); }
-        if (Input::GetKeyDown(GLFW_KEY_D)) { velocity.x += 5.0f * Time::GetDeltaTime(); }
-        if (Input::GetKeyDown(GLFW_KEY_A)) { velocity.x -= 5.0f * Time::GetDeltaTime(); }
-        if (Input::GetKeyDown(GLFW_KEY_W)) { velocity.z -= 5.0f * Time::GetDeltaTime(); }
-        if (Input::GetKeyDown(GLFW_KEY_S)) { velocity.z += 5.0f * Time::GetDeltaTime(); }
-
-        glm::vec4 look = glm::vec4(0.0f);
-        if (Input::GetKeyDown(GLFW_KEY_RIGHT)) { look.y -= 50.0f * Time::GetDeltaTime(); }
-        if (Input::GetKeyDown(GLFW_KEY_LEFT)) { look.y += 50.0f * Time::GetDeltaTime(); }
-        if (Input::GetKeyDown(GLFW_KEY_UP)) { look.x -= 50.0f * Time::GetDeltaTime(); }
-        if (Input::GetKeyDown(GLFW_KEY_DOWN)) { look.x += 50.0f * Time::GetDeltaTime(); }
-
+        glm::vec4 wasdVelocity = glm::vec4(0.0f);
+        if (Input::GetKeyDown(GLFW_KEY_D)) { wasdVelocity.x += 5.0f * Time::GetDeltaTime(); }
+        if (Input::GetKeyDown(GLFW_KEY_A)) { wasdVelocity.x -= 5.0f * Time::GetDeltaTime(); }
+        if (Input::GetKeyDown(GLFW_KEY_W)) { wasdVelocity.z -= 5.0f * Time::GetDeltaTime(); }
+        if (Input::GetKeyDown(GLFW_KEY_S)) { wasdVelocity.z += 5.0f * Time::GetDeltaTime(); }
+        
+        glm::vec4 arrowVelocity = glm::vec4(0.0f);
+        if (Input::GetKeyDown(GLFW_KEY_RIGHT)) { arrowVelocity.x += 5.0f * Time::GetDeltaTime(); }
+        if (Input::GetKeyDown(GLFW_KEY_LEFT)) { arrowVelocity.x -= 5.0f * Time::GetDeltaTime(); }
+        if (Input::GetKeyDown(GLFW_KEY_UP)) { arrowVelocity.z -= 5.0f * Time::GetDeltaTime(); }
+        if (Input::GetKeyDown(GLFW_KEY_DOWN)) { arrowVelocity.z += 5.0f * Time::GetDeltaTime(); }
+        
         // Close window if escape key is pressed
         if (Input::GetKeyPressed(GLFW_KEY_ESCAPE)) { glfwSetWindowShouldClose(_window.GetGlWindow(), true); }
 
@@ -157,13 +164,13 @@ void Application::Run() const
             else { glDisable(GL_CULL_FACE); }
         }
         
-        velocity = lightObject->GetTransform()->GetTRS() * velocity;
+        wasdVelocity = redLightObject->GetTransform()->GetTRS() * wasdVelocity;
 
         cubeTransform->Rotate(glm::vec3(0.0f, 0.0f, 45.0f * Time::GetDeltaTime()));
         suzanneTransform->Rotate(glm::vec3(0.0f, 45.0f * Time::GetDeltaTime(), 0.0f));
 
-        lightTransform->Move(velocity);
-        cameraTransform->Rotate(look);
+        redLight->Move(wasdVelocity);
+        greenLight->Move(arrowVelocity);
 
         // Render
         Renderer::Draw();

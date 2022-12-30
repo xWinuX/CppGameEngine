@@ -3,17 +3,19 @@
 #define APPLY_UNIFORM(suffix) \
 for (auto& uniform##suffix : _uniform##suffix##s) \
 { \
-    if (!uniform##suffix##.second.ApplyInQueue) { continue; } \
-    uniform##suffix##.second.Uniform.Apply(); \
+    if (uniform##suffix##.second.ApplyInQueue) { uniform##suffix##.second.Uniform.Apply(); } \
+    if (uniform##suffix##.second.ResetAfterApply) { uniform##suffix##.second.Uniform.Reset(); } \
 }
+
 
 UniformBuffer::UniformBuffer(const GLuint programID):
     _programID(programID) {}
 
-void UniformBuffer::Apply() 
+void UniformBuffer::Apply()
 {
     APPLY_UNIFORM(1I)
     APPLY_UNIFORM(4F)
+    APPLY_UNIFORM(4FV)
     APPLY_UNIFORM(3F)
     APPLY_UNIFORM(3FV)
     APPLY_UNIFORM(Mat4F)
@@ -25,6 +27,7 @@ void UniformBuffer::Apply()
         slot++;
     }
 }
+
 
 int UniformBuffer::GetUniformLocation(const GLchar* uniformName)
 {

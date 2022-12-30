@@ -9,5 +9,6 @@ class Light : public Component
     public:
         explicit Light(Shader* shader);
         void OnBeforeRender() override;
-        virtual void OnShaderUse() = 0;    
+        virtual void OnShaderUse() = 0;
+        virtual void OnFrameEnd() = 0;
 };
