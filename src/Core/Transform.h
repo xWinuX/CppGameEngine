@@ -7,10 +7,6 @@ class Transform
         glm::vec3 _position    = glm::vec3(0.0f, 0.0f, 0.0f);
         glm::vec3 _eulerAngles = glm::vec3(0.0f, 0.0f, 0.0f);
         glm::vec3 _scale       = glm::vec3(1.0f, 1.0f, 1.0f);
-
-        glm::mat4 _transformationMatrix = glm::mat4(1.0f);
-        glm::mat4 _rotationMatrix = glm::mat4(1.0f);
-        glm::mat4 _scaleMatrix = glm::mat4(1.0f);
     public:
         glm::vec3 GetPosition() const;
         glm::vec3 GetEulerAngles() const;

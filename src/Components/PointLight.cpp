@@ -12,11 +12,12 @@ void PointLight::OnBeforeRender()
 
 void PointLight::OnShaderUse()
 {
-    Debug::Log::Message("numPos: " + std::to_string(_positions.size()));
     _shader->SetUniformInstant<int>("u_NumPointLights", static_cast<int>(_positions.size()));
     _shader->SetUniformInstant<std::vector<glm::vec3>*>("u_PointLightPositions", &_positions);
     _shader->SetUniformInstant<std::vector<glm::vec4>*>("u_PointLightColors", &_colors);
 }
+
+void PointLight::SetColor(const glm::vec4 color) { _color = color; }
 
 void PointLight::OnFrameEnd()
 {

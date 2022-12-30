@@ -20,4 +20,6 @@ class PointLight final : public Light
         void OnBeforeRender() override;
         void OnFrameEnd() override;
         void OnShaderUse() override;
+
+        void SetColor(glm::vec4 color);
 };
