@@ -48,12 +48,10 @@ void Renderer::Draw()
             shader = newShader;
             shader->Use();
 
-            Debug::Log::Message(std::to_string(_lights.size()));
             for (Light*& light : _lights) { light->OnShaderUse(); }
 
             // TODO: Somehow abstract this away
-            material->GetUniformBuffer()->SetUniformInstant<glm::mat4>("u_Projection", _projectionMatrix);
-            material->GetUniformBuffer()->SetUniformInstant<glm::mat4>("u_View", _viewMatrix);
+            material->GetUniformBuffer()->SetUniformInstant<glm::mat4>("u_ViewProjection", _projectionMatrix * _viewMatrix);
         }
 
         // Apply material uniforms that are in the queue

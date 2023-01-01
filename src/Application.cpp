@@ -48,15 +48,16 @@ void Application::Run() const
     Shader defaultShader = Shader("res/shaders/DefaultShader.vsh", "res/shaders/DefaultShader.fsh");
 
     // Matrices
-    defaultShader.InitializeUniform<glm::mat4>("u_Projection", glm::identity<glm::mat4>(), false);
-    defaultShader.InitializeUniform<glm::mat4>("u_View", glm::identity<glm::mat4>(), false);
+    defaultShader.InitializeUniform<glm::mat4>("u_ViewProjection", glm::identity<glm::mat4>(), false);
     defaultShader.InitializeUniform<glm::mat4>("u_Transform", glm::identity<glm::mat4>(), false);
+    defaultShader.InitializeUniform<glm::mat4>("u_TransposedInverseTransform", glm::identity<glm::mat4>(), false);
 
     // Lighting
     defaultShader.InitializeUniform<int>("u_NumPointLights", 0, false);
     defaultShader.InitializeUniform<std::vector<glm::vec3>*>("u_PointLightPositions", nullptr, false);
     defaultShader.InitializeUniform<std::vector<glm::vec4>*>("u_PointLightColors", nullptr, false);
     defaultShader.InitializeUniform<std::vector<float>*>("u_PointLightIntensities", nullptr, false);
+    defaultShader.InitializeUniform<std::vector<float>*>("u_PointLightRanges", nullptr, false);
 
     // Other
     defaultShader.InitializeUniform<glm::vec4>("u_ColorTint", glm::vec4(1.0f));
@@ -73,7 +74,6 @@ void Application::Run() const
     Material crateMaterial = Material(&defaultShader);
     crateMaterial.GetUniformBuffer()->SetUniform("u_Texture", createTexture);
 
-
     // Camera
     GameObject* cameraObject    = new GameObject();
     Transform*  cameraTransform = cameraObject->GetTransform();
@@ -85,6 +85,7 @@ void Application::Run() const
     GameObject* redLightObject = new GameObject();
     Transform*  redLight       = redLightObject->GetTransform();
     redLight->SetPosition(glm::vec3(2.0f, 0.0f, 0.0f));
+    redLight->SetScale(glm::vec3(0.1f));
     redLightObject->AddComponent(new MeshRenderer(sphereModel.GetMesh(0), &defaultMaterial));
     redLightObject->AddComponent(new PointLight(&defaultShader, glm::vec4(1.0f, 0.0f, 0.0f, -5.0f)));
     scene.AddGameObject(redLightObject);
@@ -93,8 +94,9 @@ void Application::Run() const
     GameObject* rainbowLightObject = new GameObject();
     Transform*  rainbowLight       = rainbowLightObject->GetTransform();
     rainbowLight->SetPosition(glm::vec3(-2.0f, 0.0f, 0.0f));
+    rainbowLight->SetScale(glm::vec3(0.1f));
     rainbowLightObject->AddComponent(new MeshRenderer(sphereModel.GetMesh(0), &defaultMaterial));
-    rainbowLightObject->AddComponent(new PointLight(&defaultShader, glm::vec4(1.0f, 1.0f, 1.0f, 1.0f), 10.0f));
+    rainbowLightObject->AddComponent(new PointLight(&defaultShader, glm::vec4(1.0f, 1.0f, 1.0f, 1.0f), 10.0f, 5.0f));
     scene.AddGameObject(rainbowLightObject);
 
     // Suzanne
@@ -116,7 +118,7 @@ void Application::Run() const
     GameObject* floorObject    = new GameObject();
     Transform*  floorTransform = floorObject->GetTransform();
     floorObject->AddComponent(new MeshRenderer(cubeModel.GetMesh(0), &crateMaterial));
-    floorTransform->SetPosition(glm::vec3(0.0f, -30.0f, 0.0f));
+    floorTransform->SetPosition(glm::vec3(0.0f, -21.0f, 0.0f));
     floorTransform->SetScale(glm::vec3(20.0f));
     scene.AddGameObject(floorObject);
 
@@ -172,13 +174,12 @@ void Application::Run() const
                                                                            1.0f
                                                                           ));
 
-        wasdVelocity = redLightObject->GetTransform()->GetTRS() * wasdVelocity;
 
         cubeTransform->Rotate(glm::vec3(0.0f, 0.0f, 45.0f * Time::GetDeltaTime()));
         suzanneTransform->Rotate(glm::vec3(0.0f, 45.0f * Time::GetDeltaTime(), 0.0f));
 
-        redLight->Move(wasdVelocity);
         rainbowLight->Move(arrowVelocity);
+        redLight->Move(wasdVelocity);
 
         // Render
         Renderer::Draw();

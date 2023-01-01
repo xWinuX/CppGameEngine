@@ -1188,6 +1188,7 @@
     <Content Include="res\shaders\DefaultShader.fsh" />
     <Content Include="res\shaders\DefaultShader.vsh" />
     <Content Include="res\textures\Crate.jpg" />
+    <Content Include="res\textures\CrateNormal.png" />
     <Content Include="res\textures\TheDude.png" />
     <Content Include="vendor\GLFW\libs\glfw3.lib" />
     <Content Include="vendor\glm\include\glm\CMakeLists.txt" />
