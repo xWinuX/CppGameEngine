@@ -37,8 +37,13 @@ void Application::Run() const
 {
     Scene scene = Scene();
 
-    Texture* theDudeTexture = new Texture("res/textures/TheDude.png");
-    Texture* createTexture  = new Texture("res/textures/Crate.jpg");
+    Texture* noTexture    = new Texture("res/textures/NoTexture.png");
+    Texture* blackTexture = new Texture("res/textures/Black.png");
+    Texture* whiteTexture = new Texture("res/textures/White.png");
+
+    Texture* theDudeTexture        = new Texture("res/textures/TheDude.png");
+    Texture* crateTexture          = new Texture("res/textures/Crate.jpg");
+    Texture* crateNormalMapTexture = new Texture("res/textures/CrateNormalMap.png");
 
     Model cubeModel       = Model("res/models/Cube.obj");
     Model suzanneModel    = Model("res/models/Suzanne.obj");
@@ -61,7 +66,9 @@ void Application::Run() const
 
     // Other
     defaultShader.InitializeUniform<glm::vec4>("u_ColorTint", glm::vec4(1.0f));
-    defaultShader.InitializeUniform<Texture*>("u_Texture", nullptr);
+    defaultShader.InitializeUniform<Texture*>("u_Texture", noTexture);
+    defaultShader.InitializeUniform<Texture*>("u_NormalMap", blackTexture);
+    defaultShader.InitializeUniform<float>("u_NormalMapIntensity", 1.0f);
 
     Material defaultMaterial = Material(&defaultShader);
 
@@ -69,10 +76,11 @@ void Application::Run() const
     //defaultMaterial.SetUniformTextureSampler2D("u_Texture", &theDudeTexture);
 
     Material redMaterial = Material(&defaultShader);
-    redMaterial.GetUniformBuffer()->SetUniform("u_Texture", theDudeTexture);
 
     Material crateMaterial = Material(&defaultShader);
-    crateMaterial.GetUniformBuffer()->SetUniform("u_Texture", createTexture);
+    crateMaterial.GetUniformBuffer()->SetUniform("u_Texture", crateTexture);
+    crateMaterial.GetUniformBuffer()->SetUniform("u_NormalMap", crateNormalMapTexture);
+    crateMaterial.GetUniformBuffer()->SetUniform("u_NormalMapIntensity", 10.0f);
 
     // Camera
     GameObject* cameraObject    = new GameObject();
@@ -96,7 +104,7 @@ void Application::Run() const
     rainbowLight->SetPosition(glm::vec3(-2.0f, 0.0f, 0.0f));
     rainbowLight->SetScale(glm::vec3(0.1f));
     rainbowLightObject->AddComponent(new MeshRenderer(sphereModel.GetMesh(0), &defaultMaterial));
-    rainbowLightObject->AddComponent(new PointLight(&defaultShader, glm::vec4(1.0f, 1.0f, 1.0f, 1.0f), 10.0f, 5.0f));
+    rainbowLightObject->AddComponent(new PointLight(&defaultShader, glm::vec4(1.0f, 1.0f, 1.0f, 1.0f), 5.0f, 2.0f));
     scene.AddGameObject(rainbowLightObject);
 
     // Suzanne
@@ -113,6 +121,14 @@ void Application::Run() const
     cubeObject->AddComponent(new MeshRenderer(theMissingModel.GetMesh(1), &defaultMaterial));
     cubeObject->AddComponent(new MeshRenderer(theMissingModel.GetMesh(2), &defaultMaterial));
     scene.AddGameObject(cubeObject);
+
+    // Crate
+    GameObject* crateObject    = new GameObject();
+    Transform*  crateTransform = crateObject->GetTransform();
+    crateObject->AddComponent(new MeshRenderer(cubeModel.GetMesh(0), &crateMaterial));
+    crateTransform->SetPosition(glm::vec3(0.0f, 0.0f, 0.0f));
+
+    scene.AddGameObject(crateObject);
 
     // Floor
     GameObject* floorObject    = new GameObject();
@@ -173,6 +189,8 @@ void Application::Run() const
                                                                            Math::Sin01(Time::GetTimeSinceStart() + 750),
                                                                            1.0f
                                                                           ));
+        
+        crateTransform->SetEulerAngles(glm::vec3(Time::GetTimeSinceStart()*10.0f));
 
 
         cubeTransform->Rotate(glm::vec3(0.0f, 0.0f, 45.0f * Time::GetDeltaTime()));
@@ -185,8 +203,10 @@ void Application::Run() const
         Renderer::Draw();
     }
 
+    delete noTexture;
     delete theDudeTexture;
-    delete createTexture;
+    delete crateTexture;
+    delete crateNormalMapTexture;
 
     //------------------------------
     // glfw: terminate, clearing all previously allocated GLFW resources.

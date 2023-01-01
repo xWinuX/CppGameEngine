@@ -5,6 +5,8 @@
 #include <glm/gtc/constants.hpp>
 #include <stb_image.h>
 
+#include "../Debug/Log.h"
+
 Texture::Texture(std::string filePath) :
     _textureID(0),
     _filePath(std::move(filePath)),
@@ -25,9 +27,7 @@ Texture::Texture(std::string filePath) :
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAX_ANISOTROPY_EXT, 16);
 
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, _size.x, _size.y, 0, GL_RGBA, GL_UNSIGNED_BYTE, localBuffer);
-
-    Unbind();
-
+    
     // delete local buffer again
     if (localBuffer) { stbi_image_free(localBuffer); }
 }
@@ -39,6 +39,8 @@ Texture::~Texture()
 
 void Texture::Bind(const unsigned slot = 0) const
 {
+    Debug::Log::Message(std::to_string(_textureID));
+    Debug::Log::Message(_filePath);
     glActiveTexture(GL_TEXTURE0 + slot);
     glBindTexture(GL_TEXTURE_2D, _textureID);
 }

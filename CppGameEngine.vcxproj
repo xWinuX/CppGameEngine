@@ -1187,9 +1187,12 @@
     <Content Include="res\models\Cube.obj" />
     <Content Include="res\shaders\DefaultShader.fsh" />
     <Content Include="res\shaders\DefaultShader.vsh" />
+    <Content Include="res\textures\Black.png" />
     <Content Include="res\textures\Crate.jpg" />
-    <Content Include="res\textures\CrateNormal.png" />
+    <Content Include="res\textures\CrateNormalMap.png" />
+    <Content Include="res\textures\NoTexture.png" />
     <Content Include="res\textures\TheDude.png" />
+    <Content Include="res\textures\white.png" />
     <Content Include="vendor\GLFW\libs\glfw3.lib" />
     <Content Include="vendor\glm\include\glm\CMakeLists.txt" />
   </ItemGroup>

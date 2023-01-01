@@ -9,7 +9,7 @@ class Texture
         GLuint      _textureID;
         std::string _filePath;
         glm::ivec2  _size;
-        int _bitsPerPixel;
+        int         _bitsPerPixel;
     public:
         explicit Texture(std::string filePath);
         ~Texture();

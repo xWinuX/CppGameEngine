@@ -14,15 +14,15 @@ class PointLight final : public Light
         static std::vector<float>     _ranges;
 
         glm::vec4 _color;
-        float     _intensity;
         float     _range;
+        float     _intensity;
 
     public:
         explicit PointLight(Shader* shader, const glm::vec4 color = glm::vec4(1.0), const float range = 1.0f, const float intensity = 1.0f):
             Light(shader),
             _color(color),
-            _intensity(intensity),
-            _range(range) {}
+            _range(range),
+            _intensity(intensity) {}
 
         void OnBeforeRender() override;
         void OnFrameEnd() override;

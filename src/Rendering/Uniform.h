@@ -66,6 +66,13 @@ class Uniform<Texture*>
 };
 
 template <>
+inline void Uniform<float>::Apply()
+{
+    glUniform1f(_location, _value);
+}
+
+
+template <>
 inline void Uniform<std::vector<float>*>::Apply()
 {
     glUniform1fv(_location, _value->size(), _value->data());
