@@ -8,5 +8,6 @@ class VertexBufferLayout
         unsigned int _numVertexBufferAttributes;
     public:
         explicit VertexBufferLayout(VertexBufferAttribute* pVertexBufferAttributes, unsigned int numVertexBufferAttributes);
+        ~VertexBufferLayout();
         void Bind() const;
 };

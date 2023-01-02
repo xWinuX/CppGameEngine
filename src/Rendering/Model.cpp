@@ -1,5 +1,6 @@
 ﻿#include "Model.h"
 #include <fstream>
+#include <numeric>
 #include <random>
 #include <vector>
 #include <glm/vec2.hpp>
@@ -63,6 +64,7 @@ Model::Model(const std::string& filePath)
     const std::string extension = filePath.substr(filePath.find_last_of('.') + 1);
 
     if (extension == "obj") { ImportObjModel(filePath); }
+    else if (extension == "gltf") { ImportGLTFModel(filePath); }
     else { Debug::Log::Error("Model file extension " + extension + " is not supported"); }
 }
 
@@ -145,23 +147,38 @@ void Model::ImportGLTFModel(const std::string& filePath)
         return;
     }
 
-    for (tinygltf::Mesh mesh : model.meshes)
+    for (const tinygltf::Mesh& tinyGLTFMesh : model.meshes)
     {
-        for (const tinygltf::Primitive& primitive : mesh.primitives)
+        for (const tinygltf::Primitive& primitive : tinyGLTFMesh.primitives)
         {
+            struct BufferInfo
+            {
+                public:
+                    tinygltf::Buffer* PBuffer;
+                    unsigned int BufferElementSize;
+                    unsigned int BufferByteOffset;
+            };
+
+        
+            std::vector<BufferInfo> bufferInfos = std::vector<BufferInfo>();
+            
+            std::vector<tinygltf::Buffer*> buffers = std::vector<tinygltf::Buffer*>();
+            std::vector<unsigned int> bufferElementSize = std::vector<unsigned int>();
             std::vector<VertexBufferAttribute> attributes;
 
+            unsigned int numVertices = 0;
+
             // Calculate final stride
-            unsigned int stride = 0;
+            unsigned int vertexSize = 0;
             for (const std::pair<const std::string, int>& attribute : primitive.attributes)
             {
                 const tinygltf::Accessor accessor      = model.accessors[attribute.second];
                 const GLint              attributeSize = tinyGltfTypeLookup[accessor.type].NumComponents;
 
-                stride += tinyGltfComponentTypeLookup[accessor.componentType].Size * attributeSize;
+                vertexSize += tinyGltfComponentTypeLookup[accessor.componentType].Size * attributeSize;
             }
 
-            // Create Vertex Buffer Layout
+            
             unsigned int offset = 0;
             for (const std::pair<const std::string, int>& attribute : primitive.attributes)
             {
@@ -169,17 +186,56 @@ void Model::ImportGLTFModel(const std::string& filePath)
                 TinyGLTFTypeLookupEntry          type          = tinyGltfTypeLookup[accessor.type];
                 TinyGLTFComponentTypeLookupEntry typeComponent = tinyGltfComponentTypeLookup[accessor.componentType];
                 
-                attributes.emplace_back(type.NumComponents, typeComponent.Enum, stride, accessor.normalized, reinterpret_cast<GLvoid*>(offset));
-                offset += typeComponent.Size * type.NumComponents;
+                attributes.emplace_back(type.NumComponents, typeComponent.Enum, vertexSize, accessor.normalized, reinterpret_cast<GLvoid*>(offset));
+
+                unsigned int size = typeComponent.Size * type.NumComponents;
+                offset += size;
+
+                const tinygltf::BufferView view   = model.bufferViews[accessor.bufferView];
+                bufferInfos.push_back({&model.buffers[view.buffer], size, accessor.byteOffset + view.byteOffset});
+
+                numVertices = accessor.count;
             }
 
+            // Create vertex buffer layout
             VertexBufferAttribute* vertexBufferAttributes = new VertexBufferAttribute[attributes.size()];
             std::copy(attributes.begin(), attributes.end(), vertexBufferAttributes);
             
             VertexBufferLayout vertexBufferLayout = VertexBufferLayout(vertexBufferAttributes, attributes.size());
 
+            // Create interleaved buffer
+            unsigned int size = std::accumulate(bufferInfos.begin(), bufferInfos.end(), 0, [](int, const BufferInfo bufferInfo) { return bufferInfo.PBuffer->data.size(); });
 
+            unsigned char* vertexBufferData = new unsigned char[size];
+
+            for (unsigned int vertex = 0; vertex < numVertices; vertex++) // For each vertex
+            {
+                unsigned int elementOffset = 0;      // Size of each previous element
+                for (auto& bufferInfo : bufferInfos) // Go trough each buffer
+                {
+                    for (unsigned int elementSubOffset = 0; elementSubOffset < bufferInfo.BufferElementSize; elementSubOffset++) // Add the amount of bytes that each attribute contains
+                    {
+                        // To the buffer
+                        vertexBufferData[(vertex * vertexSize)+elementOffset+elementSubOffset] = bufferInfo.PBuffer->data[bufferInfo.BufferByteOffset + (vertex * vertexSize)+elementOffset+elementSubOffset];
+                    }
+                    elementOffset += bufferInfo.BufferElementSize;
+                }
+            }
+
+            VertexBuffer* vertexBuffer = new VertexBuffer(vertexBufferData, vertexSize, size);
+
+
+            tinygltf::Accessor   indicesAccessor   = model.accessors[primitive.indices];
+            tinygltf::BufferView indicesBufferView = model.bufferViews[indicesAccessor.bufferView];
+            tinygltf::Buffer     indicesBuffer     = model.buffers[indicesBufferView.buffer];
+
+            unsigned int* indices = new unsigned int[indicesAccessor.count];
+            auto start = std::begin(indicesBuffer.data) + indicesAccessor.byteOffset + indicesBufferView.byteOffset;
+            std::copy_n(start, indicesAccessor.count, indices);
+
+            IndexBuffer* indexBuffer = new IndexBuffer(indices, indicesAccessor.count);
             
+            _meshes.push_back(new Mesh(vertexBuffer, indexBuffer, vertexBufferLayout));
         }
     }
 

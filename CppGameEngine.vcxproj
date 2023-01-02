@@ -573,7 +573,6 @@
     <ClCompile Include="src\Rendering\Model.cpp" />
     <ClCompile Include="src\Rendering\Renderer.cpp" />
     <ClCompile Include="src\Rendering\Shader.cpp" />
-    <ClCompile Include="src\Rendering\Shapes\Cube.cpp" />
     <ClCompile Include="src\Rendering\Texture.cpp" />
     <ClCompile Include="src\Rendering\VertexArrayObject.cpp" />
     <ClCompile Include="src\Utils\Math.cpp" />
@@ -753,7 +752,6 @@
     <ClInclude Include="src\Rendering\Renderable.h" />
     <ClInclude Include="src\Rendering\Renderer.h" />
     <ClInclude Include="src\Rendering\Shader.h" />
-    <ClInclude Include="src\Rendering\Shapes\Cube.h" />
     <ClInclude Include="src\Rendering\Texture.h" />
     <ClInclude Include="src\Rendering\Uniform.h" />
     <ClInclude Include="src\Rendering\VertexArrayObject.h" />
@@ -1190,6 +1188,7 @@
   <ItemGroup>
     <Content Include="res\models\cube.glb" />
     <Content Include="res\models\Cube.obj" />
+    <Content Include="res\models\TheMissing.gltf" />
     <Content Include="res\shaders\DefaultShader.fsh" />
     <Content Include="res\shaders\DefaultShader.vsh" />
     <Content Include="res\textures\Black.png" />

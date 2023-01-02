@@ -1,0 +1,112 @@
+{
+    "asset" : {
+        "generator" : "Khronos glTF Blender I/O v3.2.43",
+        "version" : "2.0"
+    },
+    "scene" : 0,
+    "scenes" : [
+        {
+            "name" : "Scene",
+            "nodes" : [
+                0
+            ]
+        }
+    ],
+    "nodes" : [
+        {
+            "mesh" : 0,
+            "name" : "Icosphere"
+        }
+    ],
+    "meshes" : [
+        {
+            "name" : "Icosphere",
+            "primitives" : [
+                {
+                    "attributes" : {
+                        "POSITION" : 0,
+                        "NORMAL" : 1,
+                        "TANGENT" : 2,
+                        "TEXCOORD_0" : 3
+                    },
+                    "indices" : 4
+                }
+            ]
+        }
+    ],
+    "accessors" : [
+        {
+            "bufferView" : 0,
+            "componentType" : 5126,
+            "count" : 22,
+            "max" : [
+                0.8944249749183655,
+                1,
+                0.8506399989128113
+            ],
+            "min" : [
+                -0.8944249749183655,
+                -1,
+                -0.8506399989128113
+            ],
+            "type" : "VEC3"
+        },
+        {
+            "bufferView" : 1,
+            "componentType" : 5126,
+            "count" : 22,
+            "type" : "VEC3"
+        },
+        {
+            "bufferView" : 2,
+            "componentType" : 5126,
+            "count" : 22,
+            "type" : "VEC4"
+        },
+        {
+            "bufferView" : 3,
+            "componentType" : 5126,
+            "count" : 22,
+            "type" : "VEC2"
+        },
+        {
+            "bufferView" : 4,
+            "componentType" : 5123,
+            "count" : 60,
+            "type" : "SCALAR"
+        }
+    ],
+    "bufferViews" : [
+        {
+            "buffer" : 0,
+            "byteLength" : 264,
+            "byteOffset" : 0
+        },
+        {
+            "buffer" : 0,
+            "byteLength" : 264,
+            "byteOffset" : 264
+        },
+        {
+            "buffer" : 0,
+            "byteLength" : 352,
+            "byteOffset" : 528
+        },
+        {
+            "buffer" : 0,
+            "byteLength" : 176,
+            "byteOffset" : 880
+        },
+        {
+            "buffer" : 0,
+            "byteLength" : 120,
+            "byteOffset" : 1056
+        }
+    ],
+    "buffers" : [
+        {
+            "byteLength" : 1176,
+            "uri" : "data:application/octet-stream;base64,AAAAAAAAgL8AAACAAAAAAAAAgL8AAACAAAAAAAAAgL8AAACAAAAAAAAAgL8AAACAAAAAAAAAgL8AAACA2T05P1355L6WlQY/VoKNvl355L6Lw1k/VoKNvl355L6Lw1k/Cflkv1355L4AAACAVoKNvl355L6Lw1m/2T05P1355L6WlQa/VoKNPl355D6Lw1k/2T05v1355D6WlQY/2T05v1355D6WlQY/2T05v1355D6WlQa/VoKNPl355D6Lw1m/CflkP1355D4AAACAAAAAAAAAgD8AAACAAAAAAAAAgD8AAACAAAAAAAAAgD8AAACAAAAAAAAAgD8AAACAAAAAAAAAgD8AAACAgjpaNQAAgL8AAACAgjpaNQAAgL8AAACAgjpaNQAAgL8AAACAgjpaNQAAgL8AAACAgjpaNQAAgL8AAACATj45Pzj55L5KlgY/t4KNvv345L5qxFk/t4KNvv345L5qxFk/QPlkv+n45L4AAACAt4KNvv345L5qxFm/Tj45Pzj55L5Klga/uIKNPv/45D5qxFk/Tj45vzj55D5KlgY/Tj45vzj55D5KlgY/Tj45vzb55D5Jlga/toKNPgD55D5rxFm/P/lkP+f45D4AAACAL1hXtQAAgD+jG/axL1hXtQAAgD+jG/axL1hXtQAAgD+jG/axL1hXtQAAgD+jG/axL1hXtQAAgD+jG/axWXhzvyGMT7UROJ6+AACAP6l5Fr/+RQC1UxtPPwAAgD8AAAAAAAAAAAAAgL8AAIA/qXkWP/5FADVTG08/AACAP1l4cz8hjE81ETievgAAgD8MeRY/M6VktcQbT78AAIA/b59cPwyDjT5Tw9k+AACAP/F/dT/+xD6+XMVaPgAAgD8AAAAAAAAAAAAAgD8AAIA/k3hzv3H0VDSoNp4+AACAPwx5Fr8zpWQ1xBtPvwAAgD+TeHM/xzhptKg2nr4AAIA/5ML/PibFPr4elVg/AACAP9e6Kz8jg40+Yi0wPwAAgD8LeRa/evhbNcUbTz8AAIA/k3hzv0oeRDSmNp6+AACAPwAAAAAAAAAAAACAvwAAgD9YeHO/1TVMtQ84nj4AAIA/qXkWvzgiALVUG0+/AACAP/0Fz6ejG/YxAACAPwAAgD+peRY/nAv6NFQbT78AAIA/WHhzPwpmTTUPOJ4+AACAP/CiCz8AAIA/kC46PwAAgD+hLro+AACAPzC6aD8AAIA/wy46PgAAgD8Bo4s+o7BXPwAAgD+jsFc/Bi+6PaOwVz9gdFE/o7BXP8DoIj+jsFc/QbroPqOwVz/DLjo+VmEvPzC6aD9WYS8/AAAAAFZhLz+QLjo/VmEvP/CiCz9WYS8/oS66PlZhLz/A6CI/+REHP0G66D75EQc/YHRRP/kRBz8Bo4s++REHPwYvuj35EQc/BAAFAAcABQACAAoAAwAGAAgAAQAIAAkAAAAJAAoABQAKABAABwAFAAsACAAGAAwACQAIAA4ACgAJAA8ABQAQAAsABwALAA0ACAAMAA4ACQAOAA8ACgAPABAACwAQABQADQALABUADgAMABMADwAOABEAEAAPABIA"
+        }
+    ]
+}

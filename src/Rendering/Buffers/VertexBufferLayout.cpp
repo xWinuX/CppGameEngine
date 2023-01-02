@@ -8,6 +8,11 @@ VertexBufferLayout::VertexBufferLayout(VertexBufferAttribute* pVertexBufferAttri
     _numVertexBufferAttributes = numVertexBufferAttributes;
 }
 
+VertexBufferLayout::~VertexBufferLayout()
+{
+    delete[] _pVertexBufferAttributes;
+}
+
 void VertexBufferLayout::Bind() const
 {
     for (unsigned int i = 0; i < _numVertexBufferAttributes; i++)

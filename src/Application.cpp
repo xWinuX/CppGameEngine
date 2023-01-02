@@ -46,8 +46,9 @@ void Application::Run() const
     Texture* theDudeTexture        = new Texture("res/textures/TheDude.png");
     Texture* crateTexture          = new Texture("res/textures/Crate.jpg");
     Texture* crateNormalMapTexture = new Texture("res/textures/CrateNormalMap.png");
-    
+
     Model cubeModel       = Model("res/models/Cube.obj");
+    Model cubeGLTFModel   = Model("res/models/cube.gltf");
     Model suzanneModel    = Model("res/models/Suzanne.obj");
     Model theMissingModel = Model("res/models/TheMissing.obj");
     Model sphereModel     = Model("res/models/Sphere.obj");
@@ -191,8 +192,8 @@ void Application::Run() const
                                                                            Math::Sin01(Time::GetTimeSinceStart() + 750),
                                                                            1.0f
                                                                           ));
-        
-        crateTransform->SetEulerAngles(glm::vec3(Time::GetTimeSinceStart()*10.0f));
+
+        crateTransform->SetEulerAngles(glm::vec3(Time::GetTimeSinceStart() * 10.0f));
 
 
         cubeTransform->Rotate(glm::vec3(0.0f, 0.0f, 45.0f * Time::GetDeltaTime()));
