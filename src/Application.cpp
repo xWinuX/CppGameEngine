@@ -49,10 +49,13 @@ void Application::Run() const
 
     Model cubeModel       = Model("res/models/Cube.obj");
     Model cubeGLTFModel   = Model("res/models/cube.gltf");
+    Debug::Log::Message("After cube import");
     Model suzanneModel    = Model("res/models/Suzanne.obj");
     Model theMissingModel = Model("res/models/TheMissing.obj");
     Model sphereModel     = Model("res/models/Sphere.obj");
 
+    Debug::Log::Message("After model imports");
+    
     Shader defaultShader = Shader("res/shaders/DefaultShader.vsh", "res/shaders/DefaultShader.fsh");
 
     // Matrices
