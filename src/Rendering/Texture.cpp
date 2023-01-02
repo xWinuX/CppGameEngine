@@ -5,7 +5,6 @@
 #include <glm/gtc/constants.hpp>
 #include <stb_image.h>
 
-#include "../Debug/Log.h"
 
 Texture::Texture(std::string filePath) :
     _textureID(0),
@@ -39,8 +38,6 @@ Texture::~Texture()
 
 void Texture::Bind(const unsigned slot = 0) const
 {
-    Debug::Log::Message(std::to_string(_textureID));
-    Debug::Log::Message(_filePath);
     glActiveTexture(GL_TEXTURE0 + slot);
     glBindTexture(GL_TEXTURE_2D, _textureID);
 }

@@ -6,10 +6,6 @@ in vec3 v_Position;
 
 out vec4 fragColor;
 
-uniform mat4 u_View;
-uniform mat4 u_Projection;
-uniform mat4 u_Transform;
-
 uniform vec4 u_ColorTint;
 uniform sampler2D u_Texture;
 uniform sampler2D u_NormalMap;

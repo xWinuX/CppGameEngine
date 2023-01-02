@@ -6,7 +6,6 @@
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 
-#include "../Core/Window.h"
 
 class Camera final : public Component
 {

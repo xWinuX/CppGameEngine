@@ -99,6 +99,18 @@
     <ClCompile Include="vendor\glm\include\glm\detail\glm.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
+    <ClCompile Include="src\Components\Light.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Components\PointLight.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Rendering\Buffers\UniformBuffer.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
+    <ClCompile Include="vendor\tinygltf\src\tiny_gltf.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Application.h">
@@ -1452,6 +1464,21 @@
       <Filter>Headerdateien</Filter>
     </ClInclude>
     <ClInclude Include="vendor\glm\include\glm\vector_relational.hpp">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Components\Light.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Components\PointLight.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Rendering\Buffers\UniformBuffer.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Rendering\Uniform.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="vendor\tinygltf\include\tiny_gltf.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
   </ItemGroup>

@@ -2,6 +2,8 @@
 #include <GLFW/glfw3.h>
 #include "Application.h"
 #include <glm/ext/quaternion_common.hpp>
+
+#include "tiny_gltf.h"
 #include "Components/Camera.h"
 #include "Components/MeshRenderer.h"
 #include "Components/PointLight.h"
@@ -44,7 +46,7 @@ void Application::Run() const
     Texture* theDudeTexture        = new Texture("res/textures/TheDude.png");
     Texture* crateTexture          = new Texture("res/textures/Crate.jpg");
     Texture* crateNormalMapTexture = new Texture("res/textures/CrateNormalMap.png");
-
+    
     Model cubeModel       = Model("res/models/Cube.obj");
     Model suzanneModel    = Model("res/models/Suzanne.obj");
     Model theMissingModel = Model("res/models/TheMissing.obj");
@@ -55,7 +57,7 @@ void Application::Run() const
     // Matrices
     defaultShader.InitializeUniform<glm::mat4>("u_ViewProjection", glm::identity<glm::mat4>(), false);
     defaultShader.InitializeUniform<glm::mat4>("u_Transform", glm::identity<glm::mat4>(), false);
-    defaultShader.InitializeUniform<glm::mat4>("u_TransposedInverseTransform", glm::identity<glm::mat4>(), false);
+    //defaultShader.InitializeUniform<glm::mat4>("u_TransposedInverseTransform", glm::identity<glm::mat4>(), false);
 
     // Lighting
     defaultShader.InitializeUniform<int>("u_NumPointLights", 0, false);
@@ -80,7 +82,7 @@ void Application::Run() const
     Material crateMaterial = Material(&defaultShader);
     crateMaterial.GetUniformBuffer()->SetUniform("u_Texture", crateTexture);
     crateMaterial.GetUniformBuffer()->SetUniform("u_NormalMap", crateNormalMapTexture);
-    crateMaterial.GetUniformBuffer()->SetUniform("u_NormalMapIntensity", 10.0f);
+    crateMaterial.GetUniformBuffer()->SetUniform("u_NormalMapIntensity", 1.0f);
 
     // Camera
     GameObject* cameraObject    = new GameObject();

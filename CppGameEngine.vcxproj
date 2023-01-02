@@ -23,9 +23,9 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);$(SolutionDir)\vendor\GLFW\include;$(SolutionDir)\vendor\stb_image\include;$(SolutionDir)\vendor\glm\include;$(SolutionDir)\vendor\GLAD\include</IncludePath>
+    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);$(SolutionDir)\vendor\GLFW\include;$(SolutionDir)\vendor\stb_image\include;$(SolutionDir)\vendor\glm\include;$(SolutionDir)\vendor\GLAD\include;$(SolutionDir)\vendor\tinygltf\include</IncludePath>
     <LibraryPath>$(VC_LibraryPath_x86);$(WindowsSDK_LibraryPath_x86);$(SolutionDir)\vendor\GLFW\libs</LibraryPath>
-    <SourcePath>$(VC_SourcePath);$(SolutionDir)\vendor\stb_image\include\src;$(SolutionDir)\vendor\GLAD\src</SourcePath>
+    <SourcePath>$(VC_SourcePath);$(SolutionDir)\vendor\stb_image\include\src;$(SolutionDir)\vendor\GLAD\src;$(SolutionDir)\vendor\tinygltf\src</SourcePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <Link>
@@ -725,6 +725,7 @@
       <OmitFramePointers>false</OmitFramePointers>
       <LinkCompiled>true</LinkCompiled>
     </ClCompile>
+    <ClCompile Include="vendor\tinygltf\src\tiny_gltf.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Application.h" />
@@ -1182,8 +1183,12 @@
     <ClInclude Include="vendor\glm\include\glm\vec4.hpp" />
     <ClInclude Include="vendor\glm\include\glm\vector_relational.hpp" />
     <ClInclude Include="vendor\stb_image\include\stb_image.h" />
+    <ClInclude Include="vendor\stb_image\include\stb_image_write.h" />
+    <ClInclude Include="vendor\tinygltf\include\json.hpp" />
+    <ClInclude Include="vendor\tinygltf\include\tiny_gltf.h" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="res\models\cube.glb" />
     <Content Include="res\models\Cube.obj" />
     <Content Include="res\shaders\DefaultShader.fsh" />
     <Content Include="res\shaders\DefaultShader.vsh" />

@@ -31,5 +31,7 @@ class Model
         ~Model();
         Mesh* GetMesh(unsigned int index) const;
         GameObject* CreateGameObject();
-        void  ImportObjModel(const std::string& filePath);
+        void ImportObjModel(const std::string& filePath);
+        void ImportGLTFModel(const std::string& filePath);
+
 };

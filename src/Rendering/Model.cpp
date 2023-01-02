@@ -11,6 +11,7 @@
 #include "../Components/Camera.h"
 #include "../Debug/Log.h"
 #include "../IO/Stream.h"
+#include "tiny_gltf.h"
 
 std::vector<std::string> splitString(const std::string& str, const char delimiter, const unsigned int baseOffset)
 {
@@ -95,6 +96,98 @@ void Model::AddMesh(
     uvList.clear();
     normalList.clear();
     colorList.clear();
+}
+
+
+struct TinyGLTFTypeLookupEntry
+{
+    public:
+        GLint NumComponents;
+};
+
+std::map<int, TinyGLTFTypeLookupEntry> tinyGltfTypeLookup = {
+    {TINYGLTF_TYPE_VEC4, {4}},
+    {TINYGLTF_TYPE_VEC2, {3}},
+    {TINYGLTF_TYPE_VEC3, {2}},
+    {TINYGLTF_TYPE_SCALAR, {2}},
+};
+
+
+struct TinyGLTFComponentTypeLookupEntry
+{
+    public:
+        GLenum       Enum;
+        unsigned int Size;
+};
+
+std::map<int, TinyGLTFComponentTypeLookupEntry> tinyGltfComponentTypeLookup = {
+    {TINYGLTF_COMPONENT_TYPE_FLOAT, {GL_FLOAT, sizeof(GLfloat)}},
+    {TINYGLTF_COMPONENT_TYPE_INT, {GL_INT, sizeof(GLint)}},
+    {TINYGLTF_COMPONENT_TYPE_UNSIGNED_SHORT, {GL_SHORT, sizeof(GLshort)}},
+};
+
+void Model::ImportGLTFModel(const std::string& filePath)
+{
+    tinygltf::TinyGLTF loader;
+    tinygltf::Model    model;
+    std::string        error;
+    std::string        warning;
+
+    const bool result = loader.LoadASCIIFromFile(&model, &error, &warning, filePath);
+
+    if (!warning.empty()) { Debug::Log::Error("GLTF Import Warning: " + warning); }
+
+    if (!error.empty()) { Debug::Log::Error("GLTF Import Error: " + error); }
+
+    if (!result)
+    {
+        Debug::Log::Error("GLTF Import Error: Failed to parse gltf file");
+        return;
+    }
+
+    for (tinygltf::Mesh mesh : model.meshes)
+    {
+        for (const tinygltf::Primitive& primitive : mesh.primitives)
+        {
+            std::vector<VertexBufferAttribute> attributes;
+
+            // Calculate final stride
+            unsigned int stride = 0;
+            for (const std::pair<const std::string, int>& attribute : primitive.attributes)
+            {
+                const tinygltf::Accessor accessor      = model.accessors[attribute.second];
+                const GLint              attributeSize = tinyGltfTypeLookup[accessor.type].NumComponents;
+
+                stride += tinyGltfComponentTypeLookup[accessor.componentType].Size * attributeSize;
+            }
+
+            // Create Vertex Buffer Layout
+            unsigned int offset = 0;
+            for (const std::pair<const std::string, int>& attribute : primitive.attributes)
+            {
+                const tinygltf::Accessor         accessor      = model.accessors[attribute.second];
+                TinyGLTFTypeLookupEntry          type          = tinyGltfTypeLookup[accessor.type];
+                TinyGLTFComponentTypeLookupEntry typeComponent = tinyGltfComponentTypeLookup[accessor.componentType];
+                
+                attributes.emplace_back(type.NumComponents, typeComponent.Enum, stride, accessor.normalized, reinterpret_cast<GLvoid*>(offset));
+                offset += typeComponent.Size * type.NumComponents;
+            }
+
+            VertexBufferAttribute* vertexBufferAttributes = new VertexBufferAttribute[attributes.size()];
+            std::copy(attributes.begin(), attributes.end(), vertexBufferAttributes);
+            
+            VertexBufferLayout vertexBufferLayout = VertexBufferLayout(vertexBufferAttributes, attributes.size());
+
+
+            
+        }
+    }
+
+    const tinygltf::Mesh&       mesh             = model.meshes[0];
+    const tinygltf::Accessor&   positionAccessor = model.accessors[mesh.primitives[0].attributes.at("POSITION")];
+    const tinygltf::BufferView& positionView     = model.bufferViews[positionAccessor.bufferView];
+    const tinygltf::Buffer&     positionBuffer   = model.buffers[positionView.buffer];
+    const void*                 positionData     = &positionBuffer.data[positionView.byteOffset + positionAccessor.byteOffset];
 }
 
 void Model::ImportObjModel(const std::string& filePath)

@@ -24,7 +24,7 @@ void MeshRenderer::OnBeforeDraw()
 {
     const glm::mat4 trs = _transform->GetTRS();
     _pMaterial->GetUniformBuffer()->SetUniformInstant<glm::mat4>("u_Transform", trs);
-    _pMaterial->GetUniformBuffer()->SetUniformInstant<glm::mat4>("u_TransposedInverseTransform", inverse(transpose(trs)));
+    //_pMaterial->GetUniformBuffer()->SetUniformInstant<glm::mat4>("u_TransposedInverseTransform", transpose(inverse(trs)));
 }
 
 void MeshRenderer::OnDraw()
