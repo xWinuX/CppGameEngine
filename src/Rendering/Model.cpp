@@ -89,8 +89,8 @@ void Model::AddMesh(
 
     _meshes.push_back(new Mesh(
                                new VertexBuffer(reinterpret_cast<unsigned char*>(vertices), sizeof(VertexPositionUVNormal), vertexBuffer.size()),
-                               new IndexBuffer(indices, indexBuffer.size()),
-                               _vertexBufferLayout));
+                               new IndexBuffer(reinterpret_cast<unsigned char*>(indices), indexBuffer.size(), GL_UNSIGNED_INT),
+                               new VertexBufferLayout(_vertexBufferLayout)));
 
     vertexBuffer.clear();
     indexBuffer.clear();
@@ -126,6 +126,8 @@ std::map<int, TinyGLTFComponentTypeLookupEntry> tinyGltfComponentTypeLookup = {
     {TINYGLTF_COMPONENT_TYPE_FLOAT, {GL_FLOAT, sizeof(GLfloat)}},
     {TINYGLTF_COMPONENT_TYPE_INT, {GL_INT, sizeof(GLint)}},
     {TINYGLTF_COMPONENT_TYPE_UNSIGNED_SHORT, {GL_SHORT, sizeof(GLshort)}},
+    {TINYGLTF_COMPONENT_TYPE_UNSIGNED_INT, {GL_UNSIGNED_INT, sizeof(GLint)}},
+    {TINYGLTF_COMPONENT_TYPE_SHORT, {GL_SHORT, sizeof(GLshort)}},
 };
 
 struct BufferInfo
@@ -168,7 +170,7 @@ void Model::ImportGLTFModel(const std::string& filePath)
             std::vector<unsigned int>          bufferElementSize = std::vector<unsigned int>();
             std::vector<VertexBufferAttribute> attributes;
 
-            unsigned int numVertices           = 0;
+            unsigned int numVertices = 0;
 
             // Calculate final stride
             unsigned int vertexSize = 0;
@@ -208,10 +210,10 @@ void Model::ImportGLTFModel(const std::string& filePath)
 
             // Create vertex buffer layout
             Debug::Log::Message("--Create Vertex Buffer Layout");
-            VertexBufferAttribute* vertexBufferAttributes = new VertexBufferAttribute[attributes.size()];
-            std::copy(attributes.begin(), attributes.end(), vertexBufferAttributes);
+            VertexBufferAttribute* pVertexBufferAttributes = new VertexBufferAttribute[attributes.size()];
+            std::copy(attributes.begin(), attributes.end(), pVertexBufferAttributes);
 
-            VertexBufferLayout vertexBufferLayout = VertexBufferLayout(vertexBufferAttributes, attributes.size());
+            VertexBufferLayout* pVertexBufferLayout = new VertexBufferLayout(pVertexBufferAttributes, attributes.size());
 
             // Create interleaved buffer
             Debug::Log::Message("--Calculate final buffer size");
@@ -231,7 +233,8 @@ void Model::ImportGLTFModel(const std::string& filePath)
                     // Add the amount of bytes that each attribute contains
                     {
                         Debug::Log::Message("-----Foreach element byte " + std::to_string(elementSubOffset));
-                        Debug::Log::Message("-----Foreach element byte offset " + std::to_string(bufferInfo.BufferByteOffset + (vertex * bufferInfo.BufferElementSize) + elementOffset + elementSubOffset));
+                        Debug::Log::Message("-----Foreach element byte offset " +
+                                            std::to_string(bufferInfo.BufferByteOffset + (vertex * bufferInfo.BufferElementSize) + elementOffset + elementSubOffset));
                         // To the buffer
                         vertexBufferData[bufferOffset] = bufferInfo.PBuffer->data[bufferInfo.BufferByteOffset];
 
@@ -241,24 +244,25 @@ void Model::ImportGLTFModel(const std::string& filePath)
                     elementOffset += bufferInfo.BufferElementSize;
                 }
             }
-            
+
             tinygltf::Accessor   indicesAccessor   = model.accessors[primitive.indices];
             tinygltf::BufferView indicesBufferView = model.bufferViews[indicesAccessor.bufferView];
             tinygltf::Buffer     indicesBuffer     = model.buffers[indicesBufferView.buffer];
 
-            unsigned char* indices = new unsigned char[indicesAccessor.count];
+            unsigned int   indexSize = tinyGltfComponentTypeLookup[indicesAccessor.componentType].Size;
+            unsigned char* indices   = new unsigned char[indicesAccessor.count * indexSize];
 
+            Debug::Log::Message("Index component size is: " + std::to_string(indexSize));
             auto start = indicesBuffer.data.begin() + indicesAccessor.byteOffset + indicesBufferView.byteOffset;
-            std::copy(start, start + )
-            
-            memcpy(indices, indicesBuffer.data.data()+indicesAccessor.byteOffset+indicesBufferView.byteOffset, indicesBuffer.data.size());
-            /*
+            std::copy_n(start, (indicesAccessor.count * indexSize), indices);
+
+
             Debug::Log::Message("--Create Mesh");
             _meshes.push_back(new Mesh(
-                new VertexBuffer(vertexBufferData, vertexSize, size),
-                new IndexBuffer(indices, indicesAccessor.count),
-                vertexBufferLayout
-                ));*/
+                                       new VertexBuffer(vertexBufferData, vertexSize, size),
+                                       new IndexBuffer(indices, indicesAccessor.count, tinyGltfComponentTypeLookup[indicesAccessor.componentType].Enum),
+                                       pVertexBufferLayout
+                                      ));
         }
     }
 }

@@ -4,13 +4,13 @@
 class IndexBuffer
 {
     private:
-        GLuint        _indexBufferID = 0;
-        unsigned int* _pIndices;
-        unsigned int  _numIndices;
+        GLuint         _indexBufferID = 0;
+        unsigned char* _pIndices;
+        unsigned int   _numIndices;
+        GLenum         _indicesType;
     public:
-        IndexBuffer(unsigned int* pIndices, unsigned int numIndices);
+        IndexBuffer(unsigned char* pIndices, unsigned int numIndices, GLenum indicesType);
         ~IndexBuffer();
         unsigned int GetNumIndices() const;
         void         Bind() const;
-        static void  Unbind();
 };

@@ -1,7 +1,7 @@
 ﻿#include "VertexArrayObject.h"
 #include <glad/glad.h>
 
-VertexArrayObject::VertexArrayObject(const Mesh* pMesh) : VertexArrayObject(&pMesh->GetVertexBufferLayout())
+VertexArrayObject::VertexArrayObject(const Mesh* pMesh) : VertexArrayObject(pMesh->GetVertexBufferLayout())
 {
     AddVertexBuffer(pMesh->GetVertexBuffer());
     SetIndexBuffer(pMesh->GetIndexBuffer());

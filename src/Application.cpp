@@ -49,7 +49,6 @@ void Application::Run() const
 
     Model cubeModel       = Model("res/models/Cube.obj");
     Model cubeGLTFModel   = Model("res/models/cube.gltf");
-    Debug::Log::Message("After cube import");
     Model suzanneModel    = Model("res/models/Suzanne.obj");
     Model theMissingModel = Model("res/models/TheMissing.obj");
     Model sphereModel     = Model("res/models/Sphere.obj");
@@ -131,7 +130,7 @@ void Application::Run() const
     // Crate
     GameObject* crateObject    = new GameObject();
     Transform*  crateTransform = crateObject->GetTransform();
-    crateObject->AddComponent(new MeshRenderer(cubeModel.GetMesh(0), &crateMaterial));
+    crateObject->AddComponent(new MeshRenderer(cubeGLTFModel.GetMesh(0), &crateMaterial));
     crateTransform->SetPosition(glm::vec3(0.0f, 0.0f, 0.0f));
 
     scene.AddGameObject(crateObject);
