@@ -8,12 +8,14 @@
 class MeshRenderer final : public Component, public Renderable
 {
     private:
-        Mesh*             _pMesh;
-        Material*         _pMaterial;
-        VertexArrayObject _vertexArrayObject;
-        bool              _visible = true;
+        Mesh*              _pMesh;
+        Material*          _pMaterial;
+        VertexArrayObject* _pVertexArrayObject;
+        bool               _visible = true;
+
     public:
         MeshRenderer(Mesh* pMesh, Material* pMaterial);
+        ~MeshRenderer() override;
         Mesh*     GetMesh() const;
         Material* GetMaterial() override;
         void      OnBeforeRender() override;

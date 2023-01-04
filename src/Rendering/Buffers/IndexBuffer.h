@@ -15,4 +15,5 @@ class IndexBuffer
         unsigned int GetNumIndices() const;
         GLenum       GetIndicesType() const;
         void         Bind() const;
+        static void  Unbind();
 };

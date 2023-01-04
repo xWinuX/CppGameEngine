@@ -1,13 +1,16 @@
 ﻿#include "MeshRenderer.h"
 
-#include <iostream>
-
 #include "../Rendering/Renderer.h"
 
 MeshRenderer::MeshRenderer(Mesh* pMesh, Material* pMaterial) :
     _pMesh(pMesh),
     _pMaterial(pMaterial),
-    _vertexArrayObject(pMesh) { _vertexArrayObject.Finalize(); }
+    _pVertexArrayObject(new VertexArrayObject(pMesh)) { _pVertexArrayObject->Finalize(); }
+
+MeshRenderer::~MeshRenderer()
+{
+    delete _pVertexArrayObject;
+}
 
 Mesh* MeshRenderer::GetMesh() const { return _pMesh; }
 
@@ -29,8 +32,8 @@ void MeshRenderer::OnBeforeDraw()
 
 void MeshRenderer::OnDraw()
 {
-    _vertexArrayObject.Bind();
-    _vertexArrayObject.Render();
+    _pVertexArrayObject->Bind();
+    _pVertexArrayObject->Render();
 }
 
 void MeshRenderer::OnStart()

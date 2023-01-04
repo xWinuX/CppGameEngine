@@ -1,7 +1,6 @@
 #version 400 core
 
 in vec2 v_TexCoords;
-in vec3 v_Normal;
 in vec3 v_Position;
 in mat3 v_TBN;
 
@@ -23,10 +22,10 @@ void main()
     vec4 diffuseSum = vec4(0.0, 0.0, 0.0, 0.0);
     for (int i = 0; i < u_NumPointLights; i++)
     {
-        vec3 normalMapValue = vec3(texture(u_NormalMap, v_TexCoords));
-        normalMapValue = normalMapValue * 2.0 - 1.0;
-        normalMapValue = normalize(v_TBN * normalMapValue);
-        vec3 normal = normalize(v_Normal + (normalMapValue * u_NormalMapIntensity));
+        vec3 normal = vec3(texture(u_NormalMap, v_TexCoords));
+        normal = normal * 2.0 - 1.0;
+        normal = normal * u_NormalMapIntensity;
+        normal = normalize(v_TBN * normal);
 
         float distance = length(u_PointLightPositions[i] - v_Position);
         vec3 lightVector = normalize(u_PointLightPositions[i] - v_Position);

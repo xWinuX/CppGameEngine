@@ -3,7 +3,10 @@
 #include <GLFW/glfw3.h>
 
 #include "Shader.h"
+#include "VertexArrayObject.h"
 #include "../Application.h"
+#include "Buffers/IndexBuffer.h"
+#include "Buffers/VertexBuffer.h"
 #include "glm/ext/matrix_transform.hpp"
 
 std::vector<Light*>                           Renderer::_lights           = std::vector<Light*>();

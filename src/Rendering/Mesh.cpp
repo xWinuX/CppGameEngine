@@ -12,6 +12,6 @@ Mesh::~Mesh()
     delete _pVertexBufferLayout;
 }
 
-VertexBuffer*      Mesh::GetVertexBuffer() const { return _pVertexBuffer; }
-IndexBuffer*       Mesh::GetIndexBuffer() const { return _pIndexBuffer; }
+VertexBuffer*       Mesh::GetVertexBuffer() const { return _pVertexBuffer; }
+IndexBuffer*        Mesh::GetIndexBuffer() const { return _pIndexBuffer; }
 VertexBufferLayout* Mesh::GetVertexBufferLayout() const { return _pVertexBufferLayout; }

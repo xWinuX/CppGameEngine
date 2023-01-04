@@ -1196,6 +1196,7 @@
     <Content Include="res\textures\Black.png" />
     <Content Include="res\textures\Crate.jpg" />
     <Content Include="res\textures\CrateNormalMap.png" />
+    <Content Include="res\textures\NormalMapDefault.png" />
     <Content Include="res\textures\NoTexture.png" />
     <Content Include="res\textures\TheDude.png" />
     <Content Include="res\textures\white.png" />

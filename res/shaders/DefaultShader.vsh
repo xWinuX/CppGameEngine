@@ -10,7 +10,6 @@ uniform mat4 u_Transform;
 
 out vec3 v_Position;
 out vec2 v_TexCoords;
-out vec3 v_Normal;
 out mat3 v_TBN;
 
 void main()
@@ -24,8 +23,6 @@ void main()
     vec3 N = normalize(vec3(u_Transform * vec4(a_Normals.xyz, 0.0)));
     
     v_TBN = mat3(T, B, N);
-    
     v_Position = vec3(u_Transform * vec4(a_Position, 1.0));
-    v_Normal = vec3(transpose(inverse(u_Transform)) * vec4(a_Normals, 1.0));
     v_TexCoords = a_TextureCoords;
 }

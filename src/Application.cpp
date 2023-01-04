@@ -39,13 +39,13 @@ void Application::Run() const
 {
     Scene scene = Scene();
 
-    Texture* noTexture    = new Texture("res/textures/NoTexture.png");
-    Texture* blackTexture = new Texture("res/textures/Black.png");
-    Texture* whiteTexture = new Texture("res/textures/White.png");
-
-    Texture* theDudeTexture        = new Texture("res/textures/TheDude.png");
-    Texture* crateTexture          = new Texture("res/textures/Crate.jpg");
-    Texture* crateNormalMapTexture = new Texture("res/textures/CrateNormalMap.png");
+    Texture* noTexture               = new Texture("res/textures/NoTexture.png");
+    Texture* blackTexture            = new Texture("res/textures/Black.png");
+    Texture* whiteTexture            = new Texture("res/textures/White.png");
+    Texture* normalMapDefaultTexture = new Texture("res/textures/NormalMapDefault.png");
+    Texture* theDudeTexture          = new Texture("res/textures/TheDude.png");
+    Texture* crateTexture            = new Texture("res/textures/Crate.jpg");
+    Texture* crateNormalMapTexture   = new Texture("res/textures/CrateNormalMap.png");
 
     Model cubeModel       = Model("res/models/Cube.obj");
     Model cubeGLTFModel   = Model("res/models/cube.gltf");
@@ -70,8 +70,8 @@ void Application::Run() const
     // Other
     defaultShader.InitializeUniform<glm::vec4>("u_ColorTint", glm::vec4(1.0f));
     defaultShader.InitializeUniform<Texture*>("u_Texture", noTexture);
-    defaultShader.InitializeUniform<Texture*>("u_NormalMap", blackTexture);
-    defaultShader.InitializeUniform<float>("u_NormalMapIntensity", 5.0f);
+    defaultShader.InitializeUniform<Texture*>("u_NormalMap", normalMapDefaultTexture);
+    defaultShader.InitializeUniform<float>("u_NormalMapIntensity", 1.0f);
 
     Material defaultMaterial = Material(&defaultShader);
 
@@ -83,7 +83,7 @@ void Application::Run() const
     Material crateMaterial = Material(&defaultShader);
     crateMaterial.GetUniformBuffer()->SetUniform("u_Texture", crateTexture);
     crateMaterial.GetUniformBuffer()->SetUniform("u_NormalMap", crateNormalMapTexture);
-    crateMaterial.GetUniformBuffer()->SetUniform("u_NormalMapIntensity", 1.0f);
+    crateMaterial.GetUniformBuffer()->SetUniform("u_NormalMapIntensity", 0.01f);
 
     // Camera
     GameObject* cameraObject    = new GameObject();
@@ -206,7 +206,11 @@ void Application::Run() const
         Renderer::Draw();
     }
 
+    // Cleanup textures
     delete noTexture;
+    delete blackTexture;
+    delete normalMapDefaultTexture;
+    delete whiteTexture;
     delete theDudeTexture;
     delete crateTexture;
     delete crateNormalMapTexture;

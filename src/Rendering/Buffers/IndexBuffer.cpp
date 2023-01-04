@@ -1,7 +1,5 @@
 ﻿#include "IndexBuffer.h"
-
 #include "../OpenGL.h"
-#include "../../Debug/Log.h"
 
 IndexBuffer::IndexBuffer(unsigned char* pIndices, const unsigned numIndices, const GLenum indicesType):
     _pIndices(pIndices),
@@ -13,7 +11,8 @@ IndexBuffer::IndexBuffer(unsigned char* pIndices, const unsigned numIndices, con
 
 IndexBuffer::~IndexBuffer()
 {
-    glDeleteBuffers(GL_ELEMENT_ARRAY_BUFFER, &_indexBufferID);
+    glDeleteBuffers(1, &_indexBufferID);
+    delete[] _pIndices;
 }
 
 unsigned int IndexBuffer::GetNumIndices() const { return _numIndices; }
@@ -23,4 +22,9 @@ void IndexBuffer::Bind() const
 {
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, _indexBufferID);
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, _numIndices * OpenGL::TypeEnumLookup.at(_indicesType).Size, _pIndices, GL_STATIC_DRAW);
+}
+
+void IndexBuffer::Unbind()
+{
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 }
