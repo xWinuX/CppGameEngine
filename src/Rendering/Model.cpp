@@ -111,7 +111,7 @@ std::map<int, TinyGLTFTypeLookupEntry> tinyGltfTypeLookup = {
     {TINYGLTF_TYPE_VEC4, {4}},
     {TINYGLTF_TYPE_VEC3, {3}},
     {TINYGLTF_TYPE_VEC2, {2}},
-    {TINYGLTF_TYPE_SCALAR, {2}},
+    {TINYGLTF_TYPE_SCALAR, {1}},
 };
 
 
@@ -124,10 +124,12 @@ struct TinyGLTFComponentTypeLookupEntry
 
 std::map<int, TinyGLTFComponentTypeLookupEntry> tinyGltfComponentTypeLookup = {
     {TINYGLTF_COMPONENT_TYPE_FLOAT, {GL_FLOAT, sizeof(GLfloat)}},
+    {TINYGLTF_COMPONENT_TYPE_BYTE, {GL_BYTE, sizeof(GLbyte)}},
+    {TINYGLTF_COMPONENT_TYPE_UNSIGNED_BYTE, {GL_UNSIGNED_BYTE, sizeof(GLubyte)}},
     {TINYGLTF_COMPONENT_TYPE_INT, {GL_INT, sizeof(GLint)}},
-    {TINYGLTF_COMPONENT_TYPE_UNSIGNED_SHORT, {GL_SHORT, sizeof(GLshort)}},
-    {TINYGLTF_COMPONENT_TYPE_UNSIGNED_INT, {GL_UNSIGNED_INT, sizeof(GLint)}},
+    {TINYGLTF_COMPONENT_TYPE_UNSIGNED_INT, {GL_UNSIGNED_INT, sizeof(GLuint)}},
     {TINYGLTF_COMPONENT_TYPE_SHORT, {GL_SHORT, sizeof(GLshort)}},
+    {TINYGLTF_COMPONENT_TYPE_UNSIGNED_SHORT, {GL_UNSIGNED_SHORT, sizeof(GLushort)}},
 };
 
 struct BufferInfo
@@ -176,32 +178,31 @@ void Model::ImportGLTFModel(const std::string& filePath)
             unsigned int vertexSize = 0;
             for (const std::pair<const std::string, int>& attribute : primitive.attributes)
             {
-                Debug::Log::Message("---Foreach attribute (Calc VertexSize)");
+                Debug::Log::Message("---Foreach attribute (Calc VertexSize) " + attribute.first);
 
                 const tinygltf::Accessor accessor      = model.accessors[attribute.second];
                 const GLint              attributeSize = tinyGltfTypeLookup[accessor.type].NumComponents;
 
                 vertexSize += tinyGltfComponentTypeLookup[accessor.componentType].Size * attributeSize;
             }
-
-
+            
             Debug::Log::Message("Vertex size is: " + std::to_string(vertexSize));
 
             unsigned int offset = 0;
             for (const std::pair<const std::string, int>& attribute : primitive.attributes)
             {
-                Debug::Log::Message("---Foreach attribute");
+                Debug::Log::Message("---Foreach attribute: " + attribute.first);
 
                 const tinygltf::Accessor         accessor      = model.accessors[attribute.second];
                 TinyGLTFTypeLookupEntry          type          = tinyGltfTypeLookup[accessor.type];
                 TinyGLTFComponentTypeLookupEntry typeComponent = tinyGltfComponentTypeLookup[accessor.componentType];
 
-                attributes.emplace_back(type.NumComponents, typeComponent.Enum, vertexSize, accessor.normalized, reinterpret_cast<GLvoid*>(offset));
+                attributes.emplace_back(type.NumComponents, typeComponent.Enum, accessor.normalized, vertexSize, reinterpret_cast<GLvoid*>(offset));
 
                 unsigned int size = typeComponent.Size * type.NumComponents;
                 Debug::Log::Message("---Attribute size is: " + std::to_string(size));
                 offset += size;
-
+                
                 const tinygltf::BufferView view = model.bufferViews[accessor.bufferView];
                 bufferInfos.push_back({&model.buffers[view.buffer], size, accessor.byteOffset + view.byteOffset});
 
@@ -219,32 +220,34 @@ void Model::ImportGLTFModel(const std::string& filePath)
             Debug::Log::Message("--Calculate final buffer size");
             unsigned int size = numVertices * vertexSize;
             Debug::Log::Message("--Final buffer size is: " + std::to_string(size));
+            Debug::Log::Message("--Final vertex num is: " + std::to_string(numVertices));
+            
             unsigned char* vertexBufferData = new unsigned char[size];
 
             unsigned int bufferOffset = 0;
             for (unsigned int vertex = 0; vertex < numVertices; vertex++) // For each vertex
             {
                 Debug::Log::Message("---Foreach vertex " + std::to_string(vertex));
-                unsigned int elementOffset = 0;            // Size of each previous element
                 for (BufferInfo& bufferInfo : bufferInfos) // Go trough each buffer
                 {
-                    Debug::Log::Message("----Foreach buffer " + std::to_string(elementOffset));
                     for (unsigned int elementSubOffset = 0; elementSubOffset < bufferInfo.BufferElementSize; elementSubOffset++)
                     // Add the amount of bytes that each attribute contains
                     {
                         Debug::Log::Message("-----Foreach element byte " + std::to_string(elementSubOffset));
                         Debug::Log::Message("-----Foreach element byte offset " +
-                                            std::to_string(bufferInfo.BufferByteOffset + (vertex * bufferInfo.BufferElementSize) + elementOffset + elementSubOffset));
+                                            std::to_string(bufferInfo.BufferByteOffset + (vertex * bufferInfo.BufferElementSize) + elementSubOffset));
                         // To the buffer
-                        vertexBufferData[bufferOffset] = bufferInfo.PBuffer->data[bufferInfo.BufferByteOffset];
+                        vertexBufferData[bufferOffset] = bufferInfo.PBuffer->data[bufferInfo.BufferByteOffset + (vertex * bufferInfo.BufferElementSize) + elementSubOffset];
 
                         bufferOffset++;
                         Debug::Log::Message("BufferOffset is: " + std::to_string(bufferOffset));
                     }
-                    elementOffset += bufferInfo.BufferElementSize;
                 }
             }
 
+            Debug::Log::Message("FINAL BufferOffset is: " + std::to_string(bufferOffset));
+
+            
             tinygltf::Accessor   indicesAccessor   = model.accessors[primitive.indices];
             tinygltf::BufferView indicesBufferView = model.bufferViews[indicesAccessor.bufferView];
             tinygltf::Buffer     indicesBuffer     = model.buffers[indicesBufferView.buffer];
@@ -252,14 +255,18 @@ void Model::ImportGLTFModel(const std::string& filePath)
             unsigned int   indexSize = tinyGltfComponentTypeLookup[indicesAccessor.componentType].Size;
             unsigned char* indices   = new unsigned char[indicesAccessor.count * indexSize];
 
+            Debug::Log::Message("Index accesor count is: " + std::to_string(indicesAccessor.count));
             Debug::Log::Message("Index component size is: " + std::to_string(indexSize));
             auto start = indicesBuffer.data.begin() + indicesAccessor.byteOffset + indicesBufferView.byteOffset;
             std::copy_n(start, (indicesAccessor.count * indexSize), indices);
 
+            GLenum typeenum = tinyGltfComponentTypeLookup[indicesAccessor.componentType].Enum;
 
+            Debug::Log::Message("ENUM: " + std::to_string(typeenum));
+            
             Debug::Log::Message("--Create Mesh");
             _meshes.push_back(new Mesh(
-                                       new VertexBuffer(vertexBufferData, vertexSize, size),
+                                       new VertexBuffer(vertexBufferData, vertexSize, numVertices),
                                        new IndexBuffer(indices, indicesAccessor.count, tinyGltfComponentTypeLookup[indicesAccessor.componentType].Enum),
                                        pVertexBufferLayout
                                       ));

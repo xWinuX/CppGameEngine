@@ -8,9 +8,11 @@ class IndexBuffer
         unsigned char* _pIndices;
         unsigned int   _numIndices;
         GLenum         _indicesType;
+
     public:
         IndexBuffer(unsigned char* pIndices, unsigned int numIndices, GLenum indicesType);
         ~IndexBuffer();
         unsigned int GetNumIndices() const;
+        GLenum       GetIndicesType() const;
         void         Bind() const;
 };

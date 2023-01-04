@@ -1,6 +1,8 @@
 ﻿#include "VertexArrayObject.h"
 #include <glad/glad.h>
 
+#include "../Debug/Log.h"
+
 VertexArrayObject::VertexArrayObject(const Mesh* pMesh) : VertexArrayObject(pMesh->GetVertexBufferLayout())
 {
     AddVertexBuffer(pMesh->GetVertexBuffer());
@@ -43,7 +45,8 @@ void VertexArrayObject::Bind() const
 
 void VertexArrayObject::Render() const
 {
-    glDrawElements(GL_TRIANGLES, static_cast<int>(_pIndexBuffer->GetNumIndices()), GL_UNSIGNED_INT, static_cast<void*>(nullptr));
+    Debug::Log::Message("RENDER OPERATION: num indices =" + std::to_string(_pIndexBuffer->GetNumIndices()));
+    glDrawElements(GL_TRIANGLES, static_cast<int>(_pIndexBuffer->GetNumIndices()), _pIndexBuffer->GetIndicesType(), static_cast<void*>(nullptr));
 }
 
 void VertexArrayObject::Unbind()
