@@ -30,7 +30,7 @@ Application::Application()
 
     _window.CreateContext();
 
-    if (!gladLoadGLLoader(reinterpret_cast<GLADloadproc>(glfwGetProcAddress))) { std::cout << "Failed to initialize GLAD" << std::endl; }
+    if (!gladLoadGLLoader(reinterpret_cast<GLADloadproc>(glfwGetProcAddress))) { Debug::Log::Error("Failed to initialize GLAD"); }
 
     Renderer::Initialize();
 }
@@ -53,8 +53,6 @@ void Application::Run() const
     Model theMissingModel = Model("res/models/TheMissing.obj");
     Model sphereModel     = Model("res/models/Sphere.obj");
 
-    Debug::Log::Message("After model imports");
-    
     Shader defaultShader = Shader("res/shaders/DefaultShader.vsh", "res/shaders/DefaultShader.fsh");
 
     // Matrices
@@ -73,7 +71,7 @@ void Application::Run() const
     defaultShader.InitializeUniform<glm::vec4>("u_ColorTint", glm::vec4(1.0f));
     defaultShader.InitializeUniform<Texture*>("u_Texture", noTexture);
     defaultShader.InitializeUniform<Texture*>("u_NormalMap", blackTexture);
-    defaultShader.InitializeUniform<float>("u_NormalMapIntensity", 1.0f);
+    defaultShader.InitializeUniform<float>("u_NormalMapIntensity", 5.0f);
 
     Material defaultMaterial = Material(&defaultShader);
 
@@ -138,7 +136,7 @@ void Application::Run() const
     // Floor
     GameObject* floorObject    = new GameObject();
     Transform*  floorTransform = floorObject->GetTransform();
-    floorObject->AddComponent(new MeshRenderer(cubeModel.GetMesh(0), &crateMaterial));
+    floorObject->AddComponent(new MeshRenderer(cubeGLTFModel.GetMesh(0), &crateMaterial));
     floorTransform->SetPosition(glm::vec3(0.0f, -21.0f, 0.0f));
     floorTransform->SetScale(glm::vec3(20.0f));
     scene.AddGameObject(floorObject);

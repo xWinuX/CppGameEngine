@@ -9,12 +9,11 @@
 class Model
 {
     private:
-        VertexBufferAttribute* _pVertexBufferAttributes = new VertexBufferAttribute[3] {
+        const std::vector<VertexBufferAttribute> _vertexBufferAttributes = {
             VertexBufferAttribute(3, GL_FLOAT, GL_FALSE, sizeof(VertexPositionUVNormal), nullptr),
             VertexBufferAttribute(2, GL_FLOAT, GL_FALSE, sizeof(VertexPositionUVNormal), reinterpret_cast<GLvoid*>(3 * sizeof(float))),
             VertexBufferAttribute(3, GL_FLOAT, GL_FALSE, sizeof(VertexPositionUVNormal), reinterpret_cast<GLvoid*>(5 * sizeof(float)))
         };
-        VertexBufferLayout _vertexBufferLayout = VertexBufferLayout(_pVertexBufferAttributes, 3);
         std::vector<Mesh*> _meshes;
 
         void AddMesh(

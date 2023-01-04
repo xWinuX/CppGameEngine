@@ -45,7 +45,6 @@ void VertexArrayObject::Bind() const
 
 void VertexArrayObject::Render() const
 {
-    Debug::Log::Message("RENDER OPERATION: num indices =" + std::to_string(_pIndexBuffer->GetNumIndices()));
     glDrawElements(GL_TRIANGLES, static_cast<int>(_pIndexBuffer->GetNumIndices()), _pIndexBuffer->GetIndicesType(), static_cast<void*>(nullptr));
 }
 

@@ -19,7 +19,7 @@ GLuint Shader::CompileShader(const std::string& shaderSource, const int type)
     {
         char infoLog[512];
         glGetShaderInfoLog(shaderID, 512, nullptr, infoLog);
-        std::cout << "Exception: Vertex shader compilation failed.\n" << infoLog << std::endl;
+        Debug::Log::Error(" Exception: shader compilation failed.\\n" + std::string(infoLog));
     }
 
     return shaderID;
@@ -57,7 +57,7 @@ Shader::Shader(const char* vertexShaderSource, const char* fragmentShaderSource,
     {
         char infoLog[512];
         glGetProgramInfoLog(_programID, 512, nullptr, infoLog);
-        std::cout << " Exception: Program linking failed.\\n" << infoLog << std::endl;
+        Debug::Log::Error(" Exception: Program linking failed.\\n" + std::string(infoLog));
     }
 
     // Free allocated memory for shaders

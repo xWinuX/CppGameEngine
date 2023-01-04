@@ -3,6 +3,7 @@
 in vec2 v_TexCoords;
 in vec3 v_Normal;
 in vec3 v_Position;
+in mat3 v_TBN;
 
 out vec4 fragColor;
 
@@ -22,9 +23,11 @@ void main()
     vec4 diffuseSum = vec4(0.0, 0.0, 0.0, 0.0);
     for (int i = 0; i < u_NumPointLights; i++)
     {
-        vec3 normalMapValue = vec3(texture(u_NormalMap, v_TexCoords)) * u_NormalMapIntensity;
+        vec3 normalMapValue = vec3(texture(u_NormalMap, v_TexCoords));
+        normalMapValue = normalMapValue * 2.0 - 1.0;
+        normalMapValue = normalize(v_TBN * normalMapValue);
         vec3 normal = normalize(v_Normal + (normalMapValue * u_NormalMapIntensity));
-        
+
         float distance = length(u_PointLightPositions[i] - v_Position);
         vec3 lightVector = normalize(u_PointLightPositions[i] - v_Position);
         float diffuse = max(dot(normal, lightVector), 0.1);
@@ -32,6 +35,6 @@ void main()
         diffuse = diffuse * clamp(1.0 - distance*distance/(u_PointLightRanges[i]*u_PointLightRanges[i]), 0.0, 1.0);
         diffuseSum += u_PointLightColors[i] * u_PointLightIntensities[i] * diffuse;
     }
-    
+
     fragColor = texture2D(u_Texture, v_TexCoords) * u_ColorTint * diffuseSum;
 }

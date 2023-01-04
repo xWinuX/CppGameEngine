@@ -35,6 +35,5 @@ void MeshRenderer::OnDraw()
 
 void MeshRenderer::OnStart()
 {
-    std::cout << "Start" << std::endl;
     Renderer::SubmitRenderable(this);
 }

@@ -2,6 +2,8 @@
 #include "Window.h"
 #include <iostream>
 
+#include "../Debug/Log.h"
+
 Window::Window(const glm::ivec2 initialSize) { _size = initialSize; }
 
 void Window::DestroyGLWindow() const { if (_glWindow != nullptr) { glfwDestroyWindow(_glWindow); } }
@@ -29,7 +31,7 @@ void Window::CreateContext()
     _glWindow = glfwCreateWindow(_size.x, _size.y, "SAE OpenGL", nullptr, nullptr);
     if (_glWindow == nullptr)
     {
-        std::cout << "Failed to create GLFW window" << std::endl;
+        Debug::Log::Error("Failed to create GLFW window");
         glfwTerminate();
     }
 
