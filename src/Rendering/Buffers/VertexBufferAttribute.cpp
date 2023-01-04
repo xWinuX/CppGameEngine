@@ -1,5 +1,7 @@
 ﻿#include "VertexBufferAttribute.h"
 
+using namespace GameEngine::Rendering;
+
 VertexBufferAttribute::VertexBufferAttribute(const GLint size, const GLenum type, const GLboolean normalized, const GLsizei stride, const void* pointer)
 {
     _size       = size;

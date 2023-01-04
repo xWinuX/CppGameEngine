@@ -1,12 +1,18 @@
 ﻿#pragma once
 
-class Renderable
+namespace GameEngine
 {
-    public:
-        virtual ~Renderable() = default;
+    namespace Rendering
+    {
+        class Renderable
+        {
+            public:
+            virtual ~Renderable() = default;
     
-        virtual void OnBeforeDraw() {}
-        virtual void OnDraw() {}
+            virtual void OnBeforeDraw() {}
+            virtual void OnDraw() {}
 
-        virtual Material* GetMaterial() { return nullptr; }
-};
+            virtual Material* GetMaterial() { return nullptr; }
+        };
+    }
+}

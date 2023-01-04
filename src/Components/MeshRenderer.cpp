@@ -2,6 +2,9 @@
 
 #include "../Rendering/Renderer.h"
 
+using namespace GameEngine::Components;
+using namespace GameEngine::Rendering;
+
 MeshRenderer::MeshRenderer(Mesh* pMesh, Material* pMaterial) :
     _pMesh(pMesh),
     _pMaterial(pMaterial),

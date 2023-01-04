@@ -1,5 +1,7 @@
 ﻿#include "Mesh.h"
 
+using namespace GameEngine::Rendering;
+
 Mesh::Mesh(VertexBuffer* pVertexBuffer, IndexBuffer* pIndexBuffer, VertexBufferLayout* pVertexBufferLayout):
     _pVertexBuffer(pVertexBuffer),
     _pIndexBuffer(pIndexBuffer),

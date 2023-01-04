@@ -2,6 +2,8 @@
 
 #include <iostream>
 
+using namespace GameEngine::Core;
+
 Scene::~Scene()
 {
     for (const GameObject* gameObject : _gameObjects)

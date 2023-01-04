@@ -2,14 +2,21 @@
 
 #include "Buffers/UniformBuffer.h"
 
-class Material
+namespace GameEngine
 {
-    private:
-        Shader*   _shader;
-        UniformBuffer* _uniformBuffer;
-    public:
-        explicit    Material(Shader* shader);
-        ~Material();
-        Shader* GetShader() const;
-        UniformBuffer* GetUniformBuffer() const;
-};
+    namespace Rendering
+    {
+        class Material
+        {
+            private:
+            Shader*        _shader;
+            UniformBuffer* _uniformBuffer;
+
+            public:
+            explicit Material(Shader* shader);
+            ~Material();
+            Shader*        GetShader() const;
+            UniformBuffer* GetUniformBuffer() const;
+        };
+    }
+}

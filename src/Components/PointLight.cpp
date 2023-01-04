@@ -1,5 +1,7 @@
 ﻿#include "PointLight.h"
 
+using namespace GameEngine::Components;
+
 std::vector<glm::vec3> PointLight::_positions   = std::vector<glm::vec3>();
 std::vector<glm::vec4> PointLight::_colors      = std::vector<glm::vec4>();
 std::vector<float>     PointLight::_intensities = std::vector<float>();

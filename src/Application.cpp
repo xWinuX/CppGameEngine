@@ -1,24 +1,28 @@
-﻿#include <glad/glad.h>
-#include <GLFW/glfw3.h>
-#include "Application.h"
+﻿#include "Application.h"
+
 #include <glm/ext/quaternion_common.hpp>
+#include <reactphysics3d/engine/Material.h>
 
 #include "tiny_gltf.h"
 #include "Components/Camera.h"
 #include "Components/MeshRenderer.h"
 #include "Components/PointLight.h"
-#include "Core/Window.h"
 #include "Components/TransformComponent.h"
 #include "Core/Scene.h"
+#include "Core/Window.h"
 #include "Input/Input.h"
 #include "Rendering/Material.h"
 #include "Rendering/Model.h"
 #include "Rendering/Renderer.h"
 #include "Rendering/Shader.h"
 #include "Rendering/Texture.h"
-#include "Rendering/Buffers/VertexBuffer.h"
 #include "Utils/Math.h"
 #include "Utils/Time.h"
+
+
+using namespace GameEngine::Core;
+using namespace GameEngine::Rendering;
+using namespace GameEngine::Components;
 
 Window Application::_window = Window(glm::ivec2(800, 600));
 

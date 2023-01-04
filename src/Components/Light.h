@@ -2,13 +2,20 @@
 #include "Component.h"
 #include "../Rendering/Shader.h"
 
-class Light : public Component
+
+namespace GameEngine
 {
-    protected:
-        Shader* _shader;
-    public:
-        explicit Light(Shader* shader);
-        void OnBeforeRender() override;
-        virtual void OnShaderUse() = 0;
-        virtual void OnFrameEnd() = 0;
-};
+    namespace Components
+    {
+        class Light : public Component
+        {
+            protected:
+            GameEngine::Rendering::Shader* _shader;
+            public:
+            explicit Light(GameEngine::Rendering::Shader* shader);
+            void OnBeforeRender() override;
+            virtual void OnShaderUse() = 0;
+            virtual void OnFrameEnd() = 0;
+        };
+    }
+}

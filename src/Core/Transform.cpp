@@ -3,6 +3,8 @@
 #include <glm/fwd.hpp>
 #include <glm/gtc/quaternion.hpp>
 
+using namespace GameEngine::Core;
+
 glm::vec3 Transform::GetPosition() const { return _position; }
 glm::vec3 Transform::GetEulerAngles() const { return _eulerAngles; }
 glm::vec3 Transform::GetScale() const { return _scale; }

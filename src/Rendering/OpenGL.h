@@ -3,15 +3,21 @@
 
 #include "glad/glad.h"
 
-class OpenGL
+namespace GameEngine
 {
-    private:
-    struct TypeEnumLookupEntry
+    namespace Rendering
     {
-        public:
-        unsigned int Size;
-    };
+        class OpenGL
+        {
+            private:
+            struct TypeEnumLookupEntry
+            {
+                public:
+                unsigned int Size;
+            };
 
-    public:
-    static const std::map<GLenum, OpenGL::TypeEnumLookupEntry> TypeEnumLookup;
-};
+            public:
+            static const std::map<GLenum, OpenGL::TypeEnumLookupEntry> TypeEnumLookup;
+        };
+    }
+}

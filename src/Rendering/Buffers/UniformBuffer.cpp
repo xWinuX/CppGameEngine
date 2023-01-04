@@ -1,5 +1,8 @@
 ﻿#include "UniformBuffer.h"
 
+using namespace GameEngine::Rendering;
+
+
 #define APPLY_UNIFORM(suffix) \
 for (auto& uniform##suffix : _uniform##suffix##s) \
 { \

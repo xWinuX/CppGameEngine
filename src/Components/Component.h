@@ -2,27 +2,39 @@
 
 #include "../Core/Transform.h"
 
-class GameObject;
-
-class Component
+namespace GameEngine
 {
-    friend GameObject;
+    namespace Core {
+        class GameObject;
+    }
+}
 
-    protected:
-        const GameObject* _gameObject;
-        const Transform*  _transform;
+namespace GameEngine
+{
+    namespace Components
+    {
 
-    public:
-        Component():
-            _gameObject(nullptr),
-            _transform(nullptr) {}
+        class Component
+        {
+            friend GameEngine::Core::GameObject;
 
-        virtual ~Component() = default;
+            protected:
+            const GameEngine::Core::GameObject* _gameObject;
+            const Core::Transform*  _transform;
 
-        virtual void OnStart() {}
-        virtual void OnUpdate() {}
-        virtual void OnLateUpdate() {}
-        virtual void OnBeforeRender() {}
+            public:
+            Component():
+                _gameObject(nullptr),
+                _transform(nullptr) {}
 
-        const Transform* GetTransform() const { return _transform; }
-};
+            virtual ~Component() = default;
+
+            virtual void OnStart() {}
+            virtual void OnUpdate() {}
+            virtual void OnLateUpdate() {}
+            virtual void OnBeforeRender() {}
+
+            const Core::Transform* GetTransform() const { return _transform; }
+        };
+    }
+}

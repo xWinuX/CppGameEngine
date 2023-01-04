@@ -1,5 +1,10 @@
 ﻿#pragma once
 #include "../Core/Transform.h"
 #include "Component.h"
-
-class TransformComponent final : public Component, public Transform {};
+namespace GameEngine
+{
+    namespace Components
+    {
+        class TransformComponent final : public Component, public Core::Transform {};
+    }
+}

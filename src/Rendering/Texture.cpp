@@ -5,6 +5,7 @@
 #include <glm/gtc/constants.hpp>
 #include <stb_image.h>
 
+using namespace GameEngine::Rendering;
 
 Texture::Texture(std::string filePath) :
     _textureID(0),

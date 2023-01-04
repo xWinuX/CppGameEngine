@@ -1,5 +1,7 @@
 ﻿#include "VertexBufferLayout.h"
 
+using namespace GameEngine::Rendering;
+
 VertexBufferLayout::VertexBufferLayout(VertexBufferAttribute* pVertexBufferAttributes, const unsigned int numVertexBufferAttributes)
 {
     _pVertexBufferAttributes   = pVertexBufferAttributes;

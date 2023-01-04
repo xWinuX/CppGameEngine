@@ -1,5 +1,6 @@
 ﻿#include "OpenGL.h"
 
+using namespace GameEngine::Rendering;
 
 const std::map<GLenum, OpenGL::TypeEnumLookupEntry> OpenGL::TypeEnumLookup = {
     {GL_BYTE, {sizeof(GLbyte)}},

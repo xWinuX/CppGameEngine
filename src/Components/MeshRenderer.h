@@ -5,24 +5,30 @@
 #include "../Rendering/Renderable.h"
 #include "../Rendering/VertexArrayObject.h"
 
-class MeshRenderer final : public Component, public Renderable
+namespace GameEngine
 {
-    private:
-        Mesh*              _pMesh;
-        Material*          _pMaterial;
-        VertexArrayObject* _pVertexArrayObject;
-        bool               _visible = true;
+    namespace Components
+    {
+        class MeshRenderer final : public Component, public GameEngine::Rendering::Renderable
+        {
+            private:
+                GameEngine::Rendering::Mesh*              _pMesh;
+                GameEngine::Rendering::Material*          _pMaterial;
+                GameEngine::Rendering::VertexArrayObject* _pVertexArrayObject;
+                bool                                      _visible = true;
 
-    public:
-        MeshRenderer(Mesh* pMesh, Material* pMaterial);
-        ~MeshRenderer() override;
-        Mesh*     GetMesh() const;
-        Material* GetMaterial() override;
-        void      OnBeforeRender() override;
-        void      OnDraw() override;
-        void      OnBeforeDraw() override;
-        void      OnStart() override;
+            public:
+                MeshRenderer(GameEngine::Rendering::Mesh* pMesh, GameEngine::Rendering::Material* pMaterial);
+                ~MeshRenderer() override;
+                GameEngine::Rendering::Mesh*     GetMesh() const;
+                GameEngine::Rendering::Material* GetMaterial() override;
+                void                             OnBeforeRender() override;
+                void                             OnDraw() override;
+                void                             OnBeforeDraw() override;
+                void                             OnStart() override;
 
-        bool GetVisible() const { return _visible; }
-        void SetVisible(const bool value) { _visible = value; }
-};
+                bool GetVisible() const { return _visible; }
+                void SetVisible(const bool value) { _visible = value; }
+        };
+    }
+}

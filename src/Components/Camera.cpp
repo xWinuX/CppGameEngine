@@ -5,6 +5,10 @@
 #include "../Application.h"
 #include "../Rendering/Renderer.h"
 
+using namespace GameEngine::Components;
+using namespace GameEngine::Rendering;
+using namespace GameEngine::Core;
+
 Camera::Camera(const float fovInDegrees, const float zNear, const float zFar) :
     _fovInDegrees(fovInDegrees),
     _zNear(zNear),

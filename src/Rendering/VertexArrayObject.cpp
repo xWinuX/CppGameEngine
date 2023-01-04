@@ -1,7 +1,6 @@
 ﻿#include "VertexArrayObject.h"
-#include <glad/glad.h>
 
-#include "../Debug/Log.h"
+using namespace GameEngine::Rendering;
 
 VertexArrayObject::VertexArrayObject(const Mesh* pMesh) : VertexArrayObject(pMesh->GetVertexBufferLayout())
 {

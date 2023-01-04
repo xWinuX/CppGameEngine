@@ -1,6 +1,8 @@
 ﻿#include "Material.h"
 #include "Shader.h"
 
+using namespace GameEngine::Rendering;
+
 Material::Material(Shader* shader) :
     _shader(shader),
     _uniformBuffer(shader->GetUniformBufferCopy()) {}

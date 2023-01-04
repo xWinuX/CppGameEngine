@@ -3,17 +3,23 @@
 #include "Buffers/IndexBuffer.h"
 #include "Buffers/VertexBufferLayout.h"
 
-class Mesh
+namespace GameEngine
 {
-    VertexBuffer*       _pVertexBuffer;
-    IndexBuffer*        _pIndexBuffer;
-    VertexBufferLayout* _pVertexBufferLayout;
+    namespace Rendering
+    {
+        class Mesh
+        {
+            VertexBuffer*       _pVertexBuffer;
+            IndexBuffer*        _pIndexBuffer;
+            VertexBufferLayout* _pVertexBufferLayout;
 
-    public:
-        Mesh(VertexBuffer* pVertexBuffer, IndexBuffer* pIndexBuffer, VertexBufferLayout* pVertexBufferLayout);
-        ~Mesh();
+            public:
+            Mesh(VertexBuffer* pVertexBuffer, IndexBuffer* pIndexBuffer, VertexBufferLayout* pVertexBufferLayout);
+            ~Mesh();
 
-        VertexBuffer*       GetVertexBuffer() const;
-        IndexBuffer*        GetIndexBuffer() const;
-        VertexBufferLayout* GetVertexBufferLayout() const;
-};
+            VertexBuffer*       GetVertexBuffer() const;
+            IndexBuffer*        GetIndexBuffer() const;
+            VertexBufferLayout* GetVertexBufferLayout() const;
+        };
+    }
+}

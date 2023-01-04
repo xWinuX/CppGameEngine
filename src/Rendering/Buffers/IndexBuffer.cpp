@@ -1,6 +1,8 @@
 ﻿#include "IndexBuffer.h"
 #include "../OpenGL.h"
 
+using namespace GameEngine::Rendering;
+
 IndexBuffer::IndexBuffer(unsigned char* pIndices, const unsigned numIndices, const GLenum indicesType):
     _pIndices(pIndices),
     _numIndices(numIndices),

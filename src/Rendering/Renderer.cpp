@@ -9,7 +9,10 @@
 #include "Buffers/VertexBuffer.h"
 #include "glm/ext/matrix_transform.hpp"
 
-std::vector<Light*>                           Renderer::_lights           = std::vector<Light*>();
+using namespace GameEngine::Rendering;
+
+
+std::vector<GameEngine::Components::Light*>   Renderer::_lights           = std::vector<GameEngine::Components::Light*>();
 std::map<Material*, std::vector<Renderable*>> Renderer::_renderables      = std::map<Material*, std::vector<Renderable*>>();
 glm::mat4                                     Renderer::_projectionMatrix = glm::identity<glm::mat4>();
 glm::mat4                                     Renderer::_viewMatrix       = glm::identity<glm::mat4>();
@@ -22,7 +25,7 @@ void Renderer::Initialize()
     glDepthRange(0.0, 1.0);
 }
 
-void Renderer::SubmitLight(Light* light) { _lights.push_back(light); }
+void Renderer::SubmitLight(GameEngine::Components::Light* light) { _lights.push_back(light); }
 
 void Renderer::SubmitRenderable(Renderable* renderable) { _renderables[renderable->GetMaterial()].push_back(renderable); }
 
@@ -51,7 +54,7 @@ void Renderer::Draw()
             shader = newShader;
             shader->Use();
 
-            for (Light*& light : _lights) { light->OnShaderUse(); }
+            for (GameEngine::Components::Light*& light : _lights) { light->OnShaderUse(); }
 
             // TODO: Somehow abstract this away
             material->GetUniformBuffer()->SetUniformInstant<glm::mat4>("u_ViewProjection", _projectionMatrix * _viewMatrix);
@@ -75,7 +78,7 @@ void Renderer::Draw()
     glfwSwapBuffers(Application::GetWindow().GetGlWindow());
 
     // Cleanup lights
-    for (Light* light : _lights) { light->OnFrameEnd(); }
+    for (GameEngine::Components::Light* light : _lights) { light->OnFrameEnd(); }
     _lights.clear();
 
     // Cleanup renderables

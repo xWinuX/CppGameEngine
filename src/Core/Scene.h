@@ -4,14 +4,20 @@
 
 #include "GameObject.h"
 
-class Scene
+namespace GameEngine
 {
-    private:
-        std::vector<GameObject*> _gameObjects;
-    public:
-        Scene() = default;
-        virtual ~Scene();
-        virtual void InitializeScene() const;
-        virtual void Update() const;
-        void         AddGameObject(GameObject* gameObject);
-};
+    namespace Core
+    {
+        class Scene
+        {
+            private:
+            std::vector<GameObject*> _gameObjects;
+            public:
+            Scene() = default;
+            virtual ~Scene();
+            virtual void InitializeScene() const;
+            virtual void Update() const;
+            void         AddGameObject(GameObject* gameObject);
+        };
+    }
+}

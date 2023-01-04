@@ -1,13 +1,19 @@
 ﻿#pragma once
 #include "VertexBufferAttribute.h"
 
-class VertexBufferLayout
+namespace GameEngine
 {
-    private:
-        VertexBufferAttribute* _pVertexBufferAttributes;
-        unsigned int _numVertexBufferAttributes;
-    public:
-        explicit VertexBufferLayout(VertexBufferAttribute* pVertexBufferAttributes, unsigned int numVertexBufferAttributes);
-        ~VertexBufferLayout();
-        void Bind() const;
-};
+    namespace Rendering
+    {
+        class VertexBufferLayout
+        {
+            private:
+            VertexBufferAttribute* _pVertexBufferAttributes;
+            unsigned int _numVertexBufferAttributes;
+            public:
+            explicit VertexBufferLayout(VertexBufferAttribute* pVertexBufferAttributes, unsigned int numVertexBufferAttributes);
+            ~VertexBufferLayout();
+            void Bind() const;
+        };
+    }
+}

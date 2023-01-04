@@ -2,7 +2,7 @@
 #include <iostream>
 #include <fstream>
 
-GLuint Shader::CompileShader(const std::string& shaderSource, const int type)
+GLuint GameEngine::Rendering::Shader::CompileShader(const std::string& shaderSource, const int type)
 {
     // Create shader
     const GLuint shaderID      = glCreateShader(type);
@@ -25,7 +25,7 @@ GLuint Shader::CompileShader(const std::string& shaderSource, const int type)
     return shaderID;
 }
 
-Shader::Shader(const char* vertexShaderSource, const char* fragmentShaderSource, const char* geometryShaderSource)
+GameEngine::Rendering::Shader::Shader(const char* vertexShaderSource, const char* fragmentShaderSource, const char* geometryShaderSource)
 {
     _programID = glCreateProgram();
 
@@ -68,17 +68,17 @@ Shader::Shader(const char* vertexShaderSource, const char* fragmentShaderSource,
     _uniformBuffer = new UniformBuffer(_programID);
 }
 
-Shader::~Shader()
+GameEngine::Rendering::Shader::~Shader()
 {
     glDeleteProgram(_programID);
     delete _uniformBuffer;
 }
 
-void Shader::Use() const
+void GameEngine::Rendering::Shader::Use() const
 {
     glUseProgram(_programID);
 }
 
-GLuint         Shader::GetProgramID() const { return _programID; }
-UniformBuffer* Shader::GetUniformBuffer() const { return _uniformBuffer; }
-UniformBuffer* Shader::GetUniformBufferCopy() const { return  new UniformBuffer(*_uniformBuffer); }
+GLuint                                GameEngine::Rendering::Shader::GetProgramID() const { return _programID; }
+GameEngine::Rendering::UniformBuffer* GameEngine::Rendering::Shader::GetUniformBuffer() const { return _uniformBuffer; }
+GameEngine::Rendering::UniformBuffer* GameEngine::Rendering::Shader::GetUniformBufferCopy() const { return new UniformBuffer(*_uniformBuffer); }

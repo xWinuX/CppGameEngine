@@ -14,6 +14,8 @@
 #include "../IO/Stream.h"
 #include "tiny_gltf.h"
 
+using namespace GameEngine::Rendering;
+
 std::vector<std::string> splitString(const std::string& str, const char delimiter, const unsigned int baseOffset)
 {
     std::vector<std::string> split;

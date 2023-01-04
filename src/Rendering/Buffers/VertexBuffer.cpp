@@ -1,5 +1,7 @@
 ﻿#include "VertexBuffer.h"
 
+using namespace GameEngine::Rendering;
+
 VertexBuffer::VertexBuffer(unsigned char* pVertices, const unsigned int stride, const unsigned int numVertices):
     _pVertices(pVertices),
     _stride(stride),

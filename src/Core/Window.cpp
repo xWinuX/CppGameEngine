@@ -1,8 +1,8 @@
-﻿#include <glad/glad.h>
-#include "Window.h"
-#include <iostream>
+﻿#include "Window.h"
 
 #include "../Debug/Log.h"
+
+using namespace GameEngine::Core;
 
 Window::Window(const glm::ivec2 initialSize) { _size = initialSize; }
 
