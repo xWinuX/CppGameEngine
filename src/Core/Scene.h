@@ -11,13 +11,14 @@ namespace GameEngine
         class Scene
         {
             private:
-            std::vector<GameObject*> _gameObjects;
+                std::vector<GameObject*>      _gameObjects;
             public:
-            Scene() = default;
-            virtual ~Scene();
-            virtual void InitializeScene() const;
-            virtual void Update() const;
-            void         AddGameObject(GameObject* gameObject);
+                Scene() = default;
+                virtual      ~Scene();
+                virtual void InitializeScene() const;
+                virtual void Update() const;
+                virtual void PhysicsUpdate() const;
+                void         AddGameObject(GameObject* gameObject);
         };
     }
 }

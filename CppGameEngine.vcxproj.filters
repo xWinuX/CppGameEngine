@@ -54,9 +54,6 @@
     <ClCompile Include="src\Rendering\Shader.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
-    <ClCompile Include="src\Rendering\Shapes\Cube.cpp">
-      <Filter>Quelldateien</Filter>
-    </ClCompile>
     <ClCompile Include="src\Rendering\VertexArrayObject.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
@@ -111,6 +108,15 @@
     <ClCompile Include="vendor\tinygltf\src\tiny_gltf.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
+    <ClCompile Include="src\Components\RigidbodyComponent.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Physics\Physics.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Rendering\OpenGL.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Application.h">
@@ -159,9 +165,6 @@
       <Filter>Headerdateien</Filter>
     </ClInclude>
     <ClInclude Include="src\Rendering\Shader.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Rendering\Shapes\Cube.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
     <ClInclude Include="src\Rendering\VertexArrayObject.h">
@@ -1479,6 +1482,339 @@
       <Filter>Headerdateien</Filter>
     </ClInclude>
     <ClInclude Include="vendor\tinygltf\include\tiny_gltf.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Components\RigidbodyComponent.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Physics\Physics.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Rendering\OpenGL.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="vendor\reactphysics3d\include\reactphysics3d\body\CollisionBody.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="vendor\reactphysics3d\include\reactphysics3d\body\RigidBody.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="vendor\reactphysics3d\include\reactphysics3d\collision\broadphase\DynamicAABBTree.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="vendor\reactphysics3d\include\reactphysics3d\collision\Collider.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="vendor\reactphysics3d\include\reactphysics3d\collision\CollisionCallback.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="vendor\reactphysics3d\include\reactphysics3d\collision\ContactManifold.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="vendor\reactphysics3d\include\reactphysics3d\collision\ContactManifoldInfo.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="vendor\reactphysics3d\include\reactphysics3d\collision\ContactPair.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="vendor\reactphysics3d\include\reactphysics3d\collision\ContactPointInfo.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="vendor\reactphysics3d\include\reactphysics3d\collision\HalfEdgeStructure.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="vendor\reactphysics3d\include\reactphysics3d\collision\narrowphase\CapsuleVsCapsuleAlgorithm.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="vendor\reactphysics3d\include\reactphysics3d\collision\narrowphase\CapsuleVsConvexPolyhedronAlgorithm.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="vendor\reactphysics3d\include\reactphysics3d\collision\narrowphase\CollisionDispatch.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="vendor\reactphysics3d\include\reactphysics3d\collision\narrowphase\ConvexPolyhedronVsConvexPolyhedronAlgorithm.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="vendor\reactphysics3d\include\reactphysics3d\collision\narrowphase\GJK\GJKAlgorithm.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="vendor\reactphysics3d\include\reactphysics3d\collision\narrowphase\GJK\VoronoiSimplex.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="vendor\reactphysics3d\include\reactphysics3d\collision\narrowphase\NarrowPhaseAlgorithm.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="vendor\reactphysics3d\include\reactphysics3d\collision\narrowphase\NarrowPhaseInfoBatch.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="vendor\reactphysics3d\include\reactphysics3d\collision\narrowphase\NarrowPhaseInput.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="vendor\reactphysics3d\include\reactphysics3d\collision\narrowphase\SAT\SATAlgorithm.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="vendor\reactphysics3d\include\reactphysics3d\collision\narrowphase\SphereVsCapsuleAlgorithm.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="vendor\reactphysics3d\include\reactphysics3d\collision\narrowphase\SphereVsConvexPolyhedronAlgorithm.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="vendor\reactphysics3d\include\reactphysics3d\collision\narrowphase\SphereVsSphereAlgorithm.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="vendor\reactphysics3d\include\reactphysics3d\collision\OverlapCallback.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="vendor\reactphysics3d\include\reactphysics3d\collision\PolygonVertexArray.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="vendor\reactphysics3d\include\reactphysics3d\collision\PolyhedronMesh.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="vendor\reactphysics3d\include\reactphysics3d\collision\RaycastInfo.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="vendor\reactphysics3d\include\reactphysics3d\collision\shapes\AABB.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="vendor\reactphysics3d\include\reactphysics3d\collision\shapes\BoxShape.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="vendor\reactphysics3d\include\reactphysics3d\collision\shapes\CapsuleShape.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="vendor\reactphysics3d\include\reactphysics3d\collision\shapes\CollisionShape.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="vendor\reactphysics3d\include\reactphysics3d\collision\shapes\ConcaveMeshShape.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="vendor\reactphysics3d\include\reactphysics3d\collision\shapes\ConcaveShape.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="vendor\reactphysics3d\include\reactphysics3d\collision\shapes\ConvexMeshShape.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="vendor\reactphysics3d\include\reactphysics3d\collision\shapes\ConvexPolyhedronShape.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="vendor\reactphysics3d\include\reactphysics3d\collision\shapes\ConvexShape.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="vendor\reactphysics3d\include\reactphysics3d\collision\shapes\HeightFieldShape.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="vendor\reactphysics3d\include\reactphysics3d\collision\shapes\SphereShape.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="vendor\reactphysics3d\include\reactphysics3d\collision\shapes\TriangleShape.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="vendor\reactphysics3d\include\reactphysics3d\collision\TriangleMesh.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="vendor\reactphysics3d\include\reactphysics3d\collision\TriangleVertexArray.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="vendor\reactphysics3d\include\reactphysics3d\components\BallAndSocketJointComponents.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="vendor\reactphysics3d\include\reactphysics3d\components\ColliderComponents.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="vendor\reactphysics3d\include\reactphysics3d\components\CollisionBodyComponents.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="vendor\reactphysics3d\include\reactphysics3d\components\Components.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="vendor\reactphysics3d\include\reactphysics3d\components\FixedJointComponents.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="vendor\reactphysics3d\include\reactphysics3d\components\HingeJointComponents.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="vendor\reactphysics3d\include\reactphysics3d\components\JointComponents.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="vendor\reactphysics3d\include\reactphysics3d\components\RigidBodyComponents.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="vendor\reactphysics3d\include\reactphysics3d\components\SliderJointComponents.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="vendor\reactphysics3d\include\reactphysics3d\components\TransformComponents.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="vendor\reactphysics3d\include\reactphysics3d\configuration.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="vendor\reactphysics3d\include\reactphysics3d\constraint\BallAndSocketJoint.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="vendor\reactphysics3d\include\reactphysics3d\constraint\ContactPoint.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="vendor\reactphysics3d\include\reactphysics3d\constraint\FixedJoint.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="vendor\reactphysics3d\include\reactphysics3d\constraint\HingeJoint.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="vendor\reactphysics3d\include\reactphysics3d\constraint\Joint.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="vendor\reactphysics3d\include\reactphysics3d\constraint\SliderJoint.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="vendor\reactphysics3d\include\reactphysics3d\containers\Array.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="vendor\reactphysics3d\include\reactphysics3d\containers\containers_common.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="vendor\reactphysics3d\include\reactphysics3d\containers\Deque.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="vendor\reactphysics3d\include\reactphysics3d\containers\LinkedList.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="vendor\reactphysics3d\include\reactphysics3d\containers\Map.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="vendor\reactphysics3d\include\reactphysics3d\containers\Pair.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="vendor\reactphysics3d\include\reactphysics3d\containers\Set.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="vendor\reactphysics3d\include\reactphysics3d\containers\Stack.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="vendor\reactphysics3d\include\reactphysics3d\decimal.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="vendor\reactphysics3d\include\reactphysics3d\engine\Entity.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="vendor\reactphysics3d\include\reactphysics3d\engine\EntityManager.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="vendor\reactphysics3d\include\reactphysics3d\engine\EventListener.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="vendor\reactphysics3d\include\reactphysics3d\engine\Island.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="vendor\reactphysics3d\include\reactphysics3d\engine\Islands.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="vendor\reactphysics3d\include\reactphysics3d\engine\Material.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="vendor\reactphysics3d\include\reactphysics3d\engine\OverlappingPairs.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="vendor\reactphysics3d\include\reactphysics3d\engine\PhysicsCommon.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="vendor\reactphysics3d\include\reactphysics3d\engine\PhysicsWorld.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="vendor\reactphysics3d\include\reactphysics3d\mathematics\mathematics.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="vendor\reactphysics3d\include\reactphysics3d\mathematics\mathematics_common.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="vendor\reactphysics3d\include\reactphysics3d\mathematics\mathematics_functions.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="vendor\reactphysics3d\include\reactphysics3d\mathematics\Matrix2x2.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="vendor\reactphysics3d\include\reactphysics3d\mathematics\Matrix3x3.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="vendor\reactphysics3d\include\reactphysics3d\mathematics\Quaternion.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="vendor\reactphysics3d\include\reactphysics3d\mathematics\Ray.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="vendor\reactphysics3d\include\reactphysics3d\mathematics\Transform.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="vendor\reactphysics3d\include\reactphysics3d\mathematics\Vector2.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="vendor\reactphysics3d\include\reactphysics3d\mathematics\Vector3.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="vendor\reactphysics3d\include\reactphysics3d\memory\DefaultAllocator.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="vendor\reactphysics3d\include\reactphysics3d\memory\HeapAllocator.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="vendor\reactphysics3d\include\reactphysics3d\memory\MemoryAllocator.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="vendor\reactphysics3d\include\reactphysics3d\memory\MemoryManager.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="vendor\reactphysics3d\include\reactphysics3d\memory\PoolAllocator.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="vendor\reactphysics3d\include\reactphysics3d\memory\SingleFrameAllocator.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="vendor\reactphysics3d\include\reactphysics3d\reactphysics3d.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="vendor\reactphysics3d\include\reactphysics3d\systems\BroadPhaseSystem.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="vendor\reactphysics3d\include\reactphysics3d\systems\CollisionDetectionSystem.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="vendor\reactphysics3d\include\reactphysics3d\systems\ConstraintSolverSystem.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="vendor\reactphysics3d\include\reactphysics3d\systems\ContactSolverSystem.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="vendor\reactphysics3d\include\reactphysics3d\systems\DynamicsSystem.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="vendor\reactphysics3d\include\reactphysics3d\systems\SolveBallAndSocketJointSystem.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="vendor\reactphysics3d\include\reactphysics3d\systems\SolveFixedJointSystem.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="vendor\reactphysics3d\include\reactphysics3d\systems\SolveHingeJointSystem.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="vendor\reactphysics3d\include\reactphysics3d\systems\SolveSliderJointSystem.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="vendor\reactphysics3d\include\reactphysics3d\utils\DebugRenderer.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="vendor\reactphysics3d\include\reactphysics3d\utils\DefaultLogger.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="vendor\reactphysics3d\include\reactphysics3d\utils\Logger.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="vendor\reactphysics3d\include\reactphysics3d\utils\Profiler.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="vendor\stb_image\include\stb_image_write.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="vendor\tinygltf\include\json.hpp">
       <Filter>Headerdateien</Filter>
     </ClInclude>
   </ItemGroup>

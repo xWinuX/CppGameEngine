@@ -25,11 +25,12 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);$(SolutionDir)\vendor\GLFW\include;$(SolutionDir)\vendor\stb_image\include;$(SolutionDir)\vendor\glm\include;$(SolutionDir)\vendor\GLAD\include;$(SolutionDir)\vendor\tinygltf\include;$(SolutionDir)\vendor\reactphysics3d\include</IncludePath>
     <LibraryPath>$(VC_LibraryPath_x86);$(WindowsSDK_LibraryPath_x86);$(SolutionDir)\vendor\GLFW\libs;$(SolutionDir)\vendor\reactphysics3d\libs</LibraryPath>
-    <SourcePath>$(VC_SourcePath);$(SolutionDir)\vendor\stb_image\include\src;$(SolutionDir)\vendor\GLAD\src;$(SolutionDir)\vendor\tinygltf\src</SourcePath>
+    <SourcePath>$(VC_SourcePath);$(SolutionDir)\vendor\stb_image\src;$(SolutionDir)\vendor\GLAD\src;$(SolutionDir)\vendor\tinygltf\src</SourcePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <Link>
-      <AdditionalDependencies>$(CoreLibraryDependencies);$(SolutionDir)vendor\GLFW\libs\glfw3.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>$(CoreLibraryDependencies);$(SolutionDir)vendor\GLFW\libs\glfw3.lib;$(SolutionDir)vendor\reactphysics3d\libs\reactphysics3d.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(SolutionDir)vendor\reactphysics3d\libs\reactphysics3d.lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
     <ClCompile>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
@@ -112,7 +113,9 @@
       <SDLCheck>true</SDLCheck>
       <LinkCompiled>true</LinkCompiled>
     </ClCompile>
+    <ClCompile Include="src\Components\BoxCollider.cpp" />
     <ClCompile Include="src\Components\Camera.cpp" />
+    <ClCompile Include="src\Components\CapsuleCollider.cpp" />
     <ClCompile Include="src\Components\Light.cpp">
       <AssemblerOutput>NoListing</AssemblerOutput>
       <AssemblerListingLocation>Debug\</AssemblerListingLocation>
@@ -188,6 +191,7 @@
     </ClCompile>
     <ClCompile Include="src\Components\MeshRenderer.cpp" />
     <ClCompile Include="src\Components\PointLight.cpp" />
+    <ClCompile Include="src\Components\Rigidbody.cpp" />
     <ClCompile Include="src\Core\GameObject.cpp" />
     <ClCompile Include="src\Core\Scene.cpp" />
     <ClCompile Include="src\Core\Transform.cpp" />
@@ -195,6 +199,7 @@
     <ClCompile Include="src\Debug\Log.cpp" />
     <ClCompile Include="src\Input\Input.cpp" />
     <ClCompile Include="src\IO\Stream.cpp" />
+    <ClCompile Include="src\Physics\Physics.cpp" />
     <ClCompile Include="src\Rendering\Buffers\IndexBuffer.cpp">
       <RuntimeLibrary>MultiThreadedDebugDll</RuntimeLibrary>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
@@ -729,11 +734,15 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Application.h" />
+    <ClInclude Include="src\Components\BoxCollider.h" />
     <ClInclude Include="src\Components\Camera.h" />
+    <ClInclude Include="src\Components\CapsuleCollider.h" />
+    <ClInclude Include="src\Components\Collider.h" />
     <ClInclude Include="src\Components\Component.h" />
     <ClInclude Include="src\Components\Light.h" />
     <ClInclude Include="src\Components\MeshRenderer.h" />
     <ClInclude Include="src\Components\PointLight.h" />
+    <ClInclude Include="src\Components\Rigidbody.h" />
     <ClInclude Include="src\Components\TransformComponent.h" />
     <ClInclude Include="src\Core\GameObject.h" />
     <ClInclude Include="src\Core\Scene.h" />
@@ -742,6 +751,7 @@
     <ClInclude Include="src\Debug\Log.h" />
     <ClInclude Include="src\Input\Input.h" />
     <ClInclude Include="src\IO\Stream.h" />
+    <ClInclude Include="src\Physics\Physics.h" />
     <ClInclude Include="src\Rendering\Buffers\IndexBuffer.h" />
     <ClInclude Include="src\Rendering\Buffers\UniformBuffer.h" />
     <ClInclude Include="src\Rendering\Buffers\VertexBuffer.h" />
@@ -1299,6 +1309,7 @@
     <Content Include="res\models\TheMissing.gltf" />
     <Content Include="res\shaders\DefaultShader.fsh" />
     <Content Include="res\shaders\DefaultShader.vsh" />
+    <Content Include="res\shaders\PhysicsDebugShader.fsh" />
     <Content Include="res\textures\Black.png" />
     <Content Include="res\textures\Crate.jpg" />
     <Content Include="res\textures\CrateNormalMap.png" />
@@ -1311,9 +1322,6 @@
     <Content Include="vendor\reactphysics3d\include\reactphysics3d\collision\.DS_Store" />
     <Content Include="vendor\reactphysics3d\include\reactphysics3d\collision\narrowphase\.DS_Store" />
     <Content Include="vendor\reactphysics3d\libs\reactphysics3d.lib" />
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="src\Physics" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

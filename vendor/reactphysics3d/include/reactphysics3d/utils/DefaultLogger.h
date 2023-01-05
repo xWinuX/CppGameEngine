@@ -22,6 +22,7 @@
 * 3. This notice may not be removed or altered from any source distribution.    *
 *                                                                               *
 ********************************************************************************/
+#define _CRT_SECURE_NO_WARNINGS
 
 #ifndef REACTPHYSICS3D_DEFAULT_LOGGER_H
 #define REACTPHYSICS3D_DEFAULT_LOGGER_H
@@ -106,7 +107,7 @@ class DefaultLogger : public Logger {
                     std::stringstream ss;
                     ss << "ReactPhysics3D Logs" << std::endl;
                     ss << "ReactPhysics3D Version: " << RP3D_VERSION << std::endl;
-                    ss << "Date: " << std::put_time(std::localtime(&time), "%Y-%m-%d") << std::endl;
+                    //ss << "Date: " << std::put_time(std::localtime(&time), "%Y-%m-%d") << std::endl;
                     ss << "---------------------------------------------------------" << std::endl;
 
                     return ss.str();
@@ -118,7 +119,7 @@ class DefaultLogger : public Logger {
                     std::stringstream ss;
 
                     // Time
-                    ss << std::put_time(std::localtime(&time), "%X") << " ";
+                    //ss << std::put_time(std::localtime(&time), "%X") << " ";
 
                     // World
                     ss << "World:" << physicsWorldName << std::endl;
@@ -164,7 +165,7 @@ class DefaultLogger : public Logger {
                     ss << "<h1>ReactPhysics3D Logs</h1>" << std::endl;
                     ss << "<div class='general_info'>" << std::endl;
                     ss << "<p>ReactPhysics3D version: " << RP3D_VERSION << "</p>" << std::endl;
-                    ss << "<p>Date: " << std::put_time(std::localtime(&time), "%Y-%m-%d") << "</p>" << std::endl;
+                   // ss << "<p>Date: " << std::put_time(std::localtime(&time), "%Y-%m-%d") << "</p>" << std::endl;
                     ss << "</div>" << std::endl;
                     ss << "<hr>";
 
@@ -279,7 +280,7 @@ class DefaultLogger : public Logger {
 
                     // Time
                     ss << "<div class='time'>";
-                    ss << std::put_time(std::localtime(&time), "%X");
+                    //ss << std::put_time(std::localtime(&time), "%X");
                     ss << "</div>";
 
                     // Message

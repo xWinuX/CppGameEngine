@@ -1,16 +1,20 @@
-﻿#include "Application.h"
+﻿#include <reactphysics3d/reactphysics3d.h>
+#include "Application.h"
 
 #include <glm/ext/quaternion_common.hpp>
-#include <reactphysics3d/engine/Material.h>
 
 #include "tiny_gltf.h"
+#include "Components/BoxCollider.h"
 #include "Components/Camera.h"
+#include "Components/CapsuleCollider.h"
 #include "Components/MeshRenderer.h"
 #include "Components/PointLight.h"
+#include "Components/Rigidbody.h"
 #include "Components/TransformComponent.h"
 #include "Core/Scene.h"
 #include "Core/Window.h"
 #include "Input/Input.h"
+#include "Physics/Physics.h"
 #include "Rendering/Material.h"
 #include "Rendering/Model.h"
 #include "Rendering/Renderer.h"
@@ -18,7 +22,6 @@
 #include "Rendering/Texture.h"
 #include "Utils/Math.h"
 #include "Utils/Time.h"
-
 
 using namespace GameEngine::Core;
 using namespace GameEngine::Rendering;
@@ -58,7 +61,6 @@ void Application::Run() const
     Model sphereModel     = Model("res/models/Sphere.obj");
 
     Shader defaultShader = Shader("res/shaders/DefaultShader.vsh", "res/shaders/DefaultShader.fsh");
-
     // Matrices
     defaultShader.InitializeUniform<glm::mat4>("u_ViewProjection", glm::identity<glm::mat4>(), false);
     defaultShader.InitializeUniform<glm::mat4>("u_Transform", glm::identity<glm::mat4>(), false);
@@ -82,6 +84,7 @@ void Application::Run() const
     defaultMaterial.GetUniformBuffer()->SetUniform("u_Texture", theDudeTexture);
     //defaultMaterial.SetUniformTextureSampler2D("u_Texture", &theDudeTexture);
 
+
     Material redMaterial = Material(&defaultShader);
 
     Material crateMaterial = Material(&defaultShader);
@@ -89,10 +92,17 @@ void Application::Run() const
     crateMaterial.GetUniformBuffer()->SetUniform("u_NormalMap", crateNormalMapTexture);
     crateMaterial.GetUniformBuffer()->SetUniform("u_NormalMapIntensity", 0.01f);
 
+    // Physics Debug
+    Shader physicsDebugShader = Shader("res/shaders/PhysicsDebugShader.vsh", "res/shaders/PhysicsDebugShader.fsh");
+    physicsDebugShader.InitializeUniform<glm::mat4>("u_ViewProjection", glm::identity<glm::mat4>(), false);
+    physicsDebugShader.InitializeUniform<glm::mat4>("u_Transform", glm::identity<glm::mat4>(), false);
+
+    Material physicsMaterial = Material(&physicsDebugShader);
+
     // Camera
     GameObject* cameraObject    = new GameObject();
     Transform*  cameraTransform = cameraObject->GetTransform();
-    cameraTransform->SetPosition(glm::vec3(0.0f, 0.0f, 5.0f));
+    cameraTransform->SetPosition(glm::vec3(0.0f, 0.0f, 8.0f));
     cameraObject->AddComponent(new Camera(60, 0.01f, 100.0f));
     scene.AddGameObject(cameraObject);
 
@@ -132,35 +142,74 @@ void Application::Run() const
     // Crate
     GameObject* crateObject    = new GameObject();
     Transform*  crateTransform = crateObject->GetTransform();
-    crateObject->AddComponent(new MeshRenderer(cubeGLTFModel.GetMesh(0), &crateMaterial));
-    crateTransform->SetPosition(glm::vec3(0.0f, 0.0f, 0.0f));
+    crateTransform->SetPosition(glm::vec3(0.2f, 5.0f, 0.0f));
+    crateObject->AddComponent(new MeshRenderer(cubeGLTFModel.GetMesh(0), &defaultMaterial));
+    crateObject->AddComponent(new CapsuleCollider());
+    crateObject->AddComponent(new Rigidbody(reactphysics3d::BodyType::DYNAMIC));
 
     scene.AddGameObject(crateObject);
 
     // Floor
     GameObject* floorObject    = new GameObject();
     Transform*  floorTransform = floorObject->GetTransform();
-    floorObject->AddComponent(new MeshRenderer(cubeGLTFModel.GetMesh(0), &crateMaterial));
-    floorTransform->SetPosition(glm::vec3(0.0f, -21.0f, 0.0f));
-    floorTransform->SetScale(glm::vec3(20.0f));
+    floorTransform->SetPosition(glm::vec3(1.0f, 1.5f, 0.0f));
+    floorTransform->SetScale(glm::vec3(3.0f));
+    floorObject->AddComponent(new MeshRenderer(cubeGLTFModel.GetMesh(0), &defaultMaterial));
+    floorObject->AddComponent(new BoxCollider(glm::vec3(1.0f, 1.0f, 1.0f)));
+    floorObject->AddComponent(new Rigidbody(reactphysics3d::BodyType::STATIC));
     scene.AddGameObject(floorObject);
-
+    
     scene.InitializeScene();
 
     while (!_window.ShouldClose())
     {
-        // Update engine internal systems
-        Input::Update();
+        // Update delta time
         Time::Update();
 
-        // Gameplay
-        scene.Update();
+        // Update the new input state
+        Input::Update();
 
-        if (Input::GetKeyPressed(GLFW_KEY_0))
+        // Execute the physics update on all objects if needed
+        Physics::Update(&scene);
+
+        reactphysics3d::DebugRenderer debugRenderer = Physics::GetPhysicsWorld()->getDebugRenderer();
+
+        reactphysics3d::DebugRenderer::DebugTriangle* t = const_cast<reactphysics3d::DebugRenderer::DebugTriangle*>(debugRenderer.getTrianglesArray());
+
+        unsigned int  numVertices  = debugRenderer.getNbTriangles() * 3;
+        unsigned int  vertexSize   = sizeof(reactphysics3d::DebugRenderer::DebugTriangle) / 3;
+        unsigned char* vertices = new unsigned char [numVertices*vertexSize];
+
+        memcpy(vertices, reinterpret_cast<unsigned char*>(t), numVertices*vertexSize);
+        
+        VertexBuffer* vertexBuffer = new VertexBuffer(vertices, vertexSize, numVertices);
+        unsigned int* pIndices     = new unsigned int[numVertices];
+        for (unsigned int i = 0; i < numVertices; i++) { pIndices[i] = i; }
+        IndexBuffer* indexBuffer = new IndexBuffer(reinterpret_cast<unsigned char*>(pIndices), numVertices, GL_UNSIGNED_INT);
+
+        VertexBufferAttribute* attributes = new VertexBufferAttribute[2]
         {
-            MeshRenderer* meshRenderer = suzanneObject->GetComponent<MeshRenderer>();
-            meshRenderer->SetVisible(!meshRenderer->GetVisible());
-        }
+            VertexBufferAttribute(3, GL_FLOAT, GL_FALSE, vertexSize, nullptr),
+            VertexBufferAttribute(1, GL_UNSIGNED_INT, GL_FALSE, vertexSize, reinterpret_cast<GLvoid*>(3 * sizeof(float))),
+        };
+        VertexBufferLayout* layout = new VertexBufferLayout(attributes, 2);
+
+        Debug::Log::Message("before Mesh");
+
+        Mesh mesh = Mesh(vertexBuffer, indexBuffer, layout);
+
+        Debug::Log::Message("AFter Mesh");
+
+        Transform transform = Transform();
+        MeshRenderer meshRenderer = MeshRenderer(&mesh, &physicsMaterial);
+        meshRenderer._transform = &transform;
+        meshRenderer.OnBeforeRender();
+        
+        
+        Debug::Log::Message("AFter rendering");
+        
+        // Execute Update calls on each game object in the current scene
+        scene.Update();
 
         glm::vec4 wasdVelocity = glm::vec4(0.0f);
         if (Input::GetKeyDown(GLFW_KEY_D)) { wasdVelocity.x += 5.0f * Time::GetDeltaTime(); }
@@ -189,7 +238,7 @@ void Application::Run() const
             if (cull) { glEnable(GL_CULL_FACE); }
             else { glDisable(GL_CULL_FACE); }
         }
-
+        
         rainbowLightObject->GetComponent<PointLight>()->SetColor(glm::vec4(
                                                                            Math::Sin01(Time::GetTimeSinceStart() + 250),
                                                                            Math::Sin01(Time::GetTimeSinceStart() + 500),
@@ -197,7 +246,7 @@ void Application::Run() const
                                                                            1.0f
                                                                           ));
 
-        crateTransform->SetEulerAngles(glm::vec3(Time::GetTimeSinceStart() * 10.0f));
+        //crateTransform->SetEulerAngles(glm::vec3(Time::GetTimeSinceStart() * 10.0f));
 
 
         cubeTransform->Rotate(glm::vec3(0.0f, 0.0f, 45.0f * Time::GetDeltaTime()));

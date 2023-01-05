@@ -27,6 +27,13 @@ glm::mat4 Transform::GetTRS() const
 void Transform::Move(const glm::vec3& vector3) { SetPosition(_position + vector3); }
 void Transform::Rotate(const glm::vec3& eulerAngles) { SetEulerAngles(_eulerAngles + eulerAngles); }
 
-void Transform::SetPosition(const glm::vec3& position) { _position = position; }
+void Transform::SetPosition(const glm::vec3& position)
+{
+    _position = position;
+    _physicsTransform.setPosition(reactphysics3d::Vector3(_position.x, _position.y, _position.z));
+}
+
 void Transform::SetEulerAngles(const glm::vec3& eulerAngles) { _eulerAngles = eulerAngles; }
 void Transform::SetScale(const glm::vec3& scale) { _scale = scale; }
+
+reactphysics3d::Transform& Transform::GetPhysicsTransform() { return _physicsTransform; }

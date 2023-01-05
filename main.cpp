@@ -1,5 +1,4 @@
 #include "src/Application.h"
-
 int main()
 {
     const Application application = Application();

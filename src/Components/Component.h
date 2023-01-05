@@ -4,7 +4,8 @@
 
 namespace GameEngine
 {
-    namespace Core {
+    namespace Core
+    {
         class GameObject;
     }
 }
@@ -13,28 +14,29 @@ namespace GameEngine
 {
     namespace Components
     {
-
         class Component
         {
             friend GameEngine::Core::GameObject;
 
             protected:
-            const GameEngine::Core::GameObject* _gameObject;
-            const Core::Transform*  _transform;
-
+                GameEngine::Core::GameObject* _gameObject;
             public:
-            Component():
-                _gameObject(nullptr),
-                _transform(nullptr) {}
+                Core::Transform*              _transform;
+                Component():
+                    _gameObject(nullptr),
+                    _transform(nullptr) {}
 
-            virtual ~Component() = default;
+                virtual ~Component() = default;
 
-            virtual void OnStart() {}
-            virtual void OnUpdate() {}
-            virtual void OnLateUpdate() {}
-            virtual void OnBeforeRender() {}
+                virtual void OnStart() {}
+                virtual void OnUpdate() {}
+                virtual void OnPhysicsUpdate() {}
+                virtual void OnLateUpdate() {}
+                virtual void OnBeforeRender() {}
+            
+                virtual void OnComponentAdded(Component* component) {}
 
-            const Core::Transform* GetTransform() const { return _transform; }
+                const Core::Transform* GetTransform() const { return _transform; }
         };
     }
 }
