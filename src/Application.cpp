@@ -142,7 +142,7 @@ void Application::Run() const
     // Crate
     GameObject* crateObject    = new GameObject();
     Transform*  crateTransform = crateObject->GetTransform();
-    crateTransform->SetPosition(glm::vec3(0.2f, 5.0f, 0.0f));
+    crateTransform->SetPosition(glm::vec3(0.0f, 0.0f, 0.0f));
     crateObject->AddComponent(new MeshRenderer(cubeGLTFModel.GetMesh(0), &defaultMaterial));
     crateObject->AddComponent(new CapsuleCollider());
     crateObject->AddComponent(new Rigidbody(reactphysics3d::BodyType::DYNAMIC));
@@ -152,13 +152,13 @@ void Application::Run() const
     // Floor
     GameObject* floorObject    = new GameObject();
     Transform*  floorTransform = floorObject->GetTransform();
-    floorTransform->SetPosition(glm::vec3(1.0f, 1.5f, 0.0f));
-    floorTransform->SetScale(glm::vec3(3.0f));
+    floorTransform->SetPosition(glm::vec3(2.0f, -2.0f, 0.0f));
+    floorTransform->SetScale(glm::vec3(5.0f, -1.0f, 5.0f));
     floorObject->AddComponent(new MeshRenderer(cubeGLTFModel.GetMesh(0), &defaultMaterial));
-    floorObject->AddComponent(new BoxCollider(glm::vec3(1.0f, 1.0f, 1.0f)));
+    floorObject->AddComponent(new BoxCollider(glm::vec3(2.5f, 0.5f, 2.5f)));
     floorObject->AddComponent(new Rigidbody(reactphysics3d::BodyType::STATIC));
     scene.AddGameObject(floorObject);
-    
+
     scene.InitializeScene();
 
     while (!_window.ShouldClose())
@@ -176,12 +176,12 @@ void Application::Run() const
 
         reactphysics3d::DebugRenderer::DebugTriangle* t = const_cast<reactphysics3d::DebugRenderer::DebugTriangle*>(debugRenderer.getTrianglesArray());
 
-        unsigned int  numVertices  = debugRenderer.getNbTriangles() * 3;
-        unsigned int  vertexSize   = sizeof(reactphysics3d::DebugRenderer::DebugTriangle) / 3;
-        unsigned char* vertices = new unsigned char [numVertices*vertexSize];
+        unsigned int   numVertices = debugRenderer.getNbTriangles() * 3;
+        unsigned int   vertexSize  = sizeof(reactphysics3d::DebugRenderer::DebugTriangle) / 3;
+        unsigned char* vertices    = new unsigned char [numVertices * vertexSize];
 
-        memcpy(vertices, reinterpret_cast<unsigned char*>(t), numVertices*vertexSize);
-        
+        memcpy(vertices, t, numVertices * vertexSize);
+
         VertexBuffer* vertexBuffer = new VertexBuffer(vertices, vertexSize, numVertices);
         unsigned int* pIndices     = new unsigned int[numVertices];
         for (unsigned int i = 0; i < numVertices; i++) { pIndices[i] = i; }
@@ -200,14 +200,14 @@ void Application::Run() const
 
         Debug::Log::Message("AFter Mesh");
 
-        Transform transform = Transform();
+        Transform    transform    = Transform();
         MeshRenderer meshRenderer = MeshRenderer(&mesh, &physicsMaterial);
-        meshRenderer._transform = &transform;
+        meshRenderer._transform   = &transform;
         meshRenderer.OnBeforeRender();
-        
-        
+
+
         Debug::Log::Message("AFter rendering");
-        
+
         // Execute Update calls on each game object in the current scene
         scene.Update();
 
@@ -216,6 +216,8 @@ void Application::Run() const
         if (Input::GetKeyDown(GLFW_KEY_A)) { wasdVelocity.x -= 5.0f * Time::GetDeltaTime(); }
         if (Input::GetKeyDown(GLFW_KEY_W)) { wasdVelocity.z -= 5.0f * Time::GetDeltaTime(); }
         if (Input::GetKeyDown(GLFW_KEY_S)) { wasdVelocity.z += 5.0f * Time::GetDeltaTime(); }
+        if (Input::GetKeyDown(GLFW_KEY_LEFT_SHIFT)) { wasdVelocity.y -= 5.0f * Time::GetDeltaTime(); }
+        if (Input::GetKeyDown(GLFW_KEY_SPACE)) { wasdVelocity.y += 5.0f * Time::GetDeltaTime(); }
 
         glm::vec4 arrowVelocity = glm::vec4(0.0f);
         if (Input::GetKeyDown(GLFW_KEY_RIGHT)) { arrowVelocity.x += 5.0f * Time::GetDeltaTime(); }
@@ -238,7 +240,7 @@ void Application::Run() const
             if (cull) { glEnable(GL_CULL_FACE); }
             else { glDisable(GL_CULL_FACE); }
         }
-        
+
         rainbowLightObject->GetComponent<PointLight>()->SetColor(glm::vec4(
                                                                            Math::Sin01(Time::GetTimeSinceStart() + 250),
                                                                            Math::Sin01(Time::GetTimeSinceStart() + 500),
@@ -252,8 +254,8 @@ void Application::Run() const
         cubeTransform->Rotate(glm::vec3(0.0f, 0.0f, 45.0f * Time::GetDeltaTime()));
         suzanneTransform->Rotate(glm::vec3(0.0f, 45.0f * Time::GetDeltaTime(), 0.0f));
 
-        rainbowLight->Move(arrowVelocity);
-        redLight->Move(wasdVelocity);
+        floorTransform->GetPhysicsTransform().setPosition(floorTransform->GetPhysicsTransform().getPosition() + reactphysics3d::Vector3(arrowVelocity.x, arrowVelocity.y, arrowVelocity.z));
+        cameraTransform->Move(wasdVelocity);
 
         // Render
         Renderer::Draw();

@@ -10,6 +10,6 @@ out vec3 v_Color;
 
 void main()
 {
-    gl_Position = u_ViewProjection * vec4(a_Position, 1.0);
+    gl_Position = u_ViewProjection * u_Transform * vec4(a_Position, 1.0);
     v_Color = a_Colors;    
 }

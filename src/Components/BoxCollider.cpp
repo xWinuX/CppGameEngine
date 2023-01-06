@@ -3,7 +3,9 @@
 #include "../Physics/Physics.h"
 
 BoxCollider::BoxCollider(const glm::vec3 halfExtends):
-    _pBoxShape(Physics::GetPhysicsCommon()->createBoxShape(reactphysics3d::Vector3(halfExtends.x, halfExtends.y, halfExtends.z))) {}
+    _pBoxShape(Physics::GetPhysicsCommon()->createBoxShape(reactphysics3d::Vector3(halfExtends.x, halfExtends.y, halfExtends.z)))
+{
+}
 
 BoxCollider::~BoxCollider()
 {
