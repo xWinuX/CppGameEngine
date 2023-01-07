@@ -199,7 +199,8 @@
     <ClCompile Include="src\Debug\Log.cpp" />
     <ClCompile Include="src\Input\Input.cpp" />
     <ClCompile Include="src\IO\Stream.cpp" />
-    <ClCompile Include="src\Physics\Physics.cpp" />
+    <ClCompile Include="src\Physics\PhysicsDebugRenderer.cpp" />
+    <ClCompile Include="src\Physics\PhysicsManager.cpp" />
     <ClCompile Include="src\Rendering\Buffers\IndexBuffer.cpp">
       <RuntimeLibrary>MultiThreadedDebugDll</RuntimeLibrary>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
@@ -751,7 +752,8 @@
     <ClInclude Include="src\Debug\Log.h" />
     <ClInclude Include="src\Input\Input.h" />
     <ClInclude Include="src\IO\Stream.h" />
-    <ClInclude Include="src\Physics\Physics.h" />
+    <ClInclude Include="src\Physics\PhysicsDebugRenderer.h" />
+    <ClInclude Include="src\Physics\PhysicsManager.h" />
     <ClInclude Include="src\Rendering\Buffers\IndexBuffer.h" />
     <ClInclude Include="src\Rendering\Buffers\UniformBuffer.h" />
     <ClInclude Include="src\Rendering\Buffers\VertexBuffer.h" />

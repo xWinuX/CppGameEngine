@@ -47,6 +47,8 @@ void Renderer::Draw()
     {
         const Material* material = materialRenderables.first;
 
+        glPolygonMode(material->GetCullFace(), material->GetRenderMode());
+
         // Choose if new shader should get activated
         const Shader* newShader = material->GetShader();
         if (shader == nullptr || shader != newShader)
@@ -82,5 +84,7 @@ void Renderer::Draw()
     _lights.clear();
 
     // Cleanup renderables
+    for (std::pair<Material* const, std::vector<Renderable*>> materialRenderables : _renderables) { materialRenderables.second.clear(); }
+
     _renderables.clear();
 }

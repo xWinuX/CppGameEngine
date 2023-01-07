@@ -95,7 +95,7 @@ void Model::AddMesh(
     
     _meshes.push_back(new Mesh(
                                new VertexBuffer(reinterpret_cast<unsigned char*>(vertices), sizeof(VertexPositionUVNormal), vertexBuffer.size()),
-                               new IndexBuffer(reinterpret_cast<unsigned char*>(indices), indexBuffer.size(), GL_UNSIGNED_INT),
+                               new IndexBuffer(reinterpret_cast<unsigned char*>(indices), GL_UNSIGNED_INT, indexBuffer.size()),
                                new VertexBufferLayout(pVertexAttributes, 3)));
 
     vertexBuffer.clear();
@@ -259,7 +259,7 @@ void Model::ImportGLTFModel(const std::string& filePath)
             
             _meshes.push_back(new Mesh(
                                        new VertexBuffer(vertexBufferData, vertexSize, numVertices),
-                                       new IndexBuffer(indices, indicesAccessor.count, tinyGltfComponentTypeLookup[indicesAccessor.componentType].Enum),
+                                       new IndexBuffer(indices, tinyGltfComponentTypeLookup[indicesAccessor.componentType].Enum, indicesAccessor.count),
                                        pVertexBufferLayout
                                       ));
         }

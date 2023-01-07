@@ -17,3 +17,7 @@ void VertexBufferAttribute::Bind(const GLuint index) const
     glVertexAttribPointer(index, _size, _type, _normalized, _stride, _pointer);
 }
 
+void VertexBufferAttribute::Unbind(const GLuint index)
+{
+    glDisableVertexAttribArray(index);
+}

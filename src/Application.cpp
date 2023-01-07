@@ -14,7 +14,7 @@
 #include "Core/Scene.h"
 #include "Core/Window.h"
 #include "Input/Input.h"
-#include "Physics/Physics.h"
+#include "Physics/PhysicsManager.h"
 #include "Rendering/Material.h"
 #include "Rendering/Model.h"
 #include "Rendering/Renderer.h"
@@ -26,6 +26,7 @@
 using namespace GameEngine::Core;
 using namespace GameEngine::Rendering;
 using namespace GameEngine::Components;
+using namespace GameEngine::Physics;
 
 Window Application::_window = Window(glm::ivec2(800, 600));
 
@@ -95,9 +96,10 @@ void Application::Run() const
     // Physics Debug
     Shader physicsDebugShader = Shader("res/shaders/PhysicsDebugShader.vsh", "res/shaders/PhysicsDebugShader.fsh");
     physicsDebugShader.InitializeUniform<glm::mat4>("u_ViewProjection", glm::identity<glm::mat4>(), false);
-    physicsDebugShader.InitializeUniform<glm::mat4>("u_Transform", glm::identity<glm::mat4>(), false);
 
     Material physicsMaterial = Material(&physicsDebugShader);
+    physicsMaterial.SetCullFace(Material::None);
+    physicsMaterial.SetRenderMode(Material::Wireframe);
 
     // Camera
     GameObject* cameraObject    = new GameObject();
@@ -111,7 +113,7 @@ void Application::Run() const
     Transform*  redLight       = redLightObject->GetTransform();
     redLight->SetPosition(glm::vec3(2.0f, 0.0f, 0.0f));
     redLight->SetScale(glm::vec3(0.1f));
-    redLightObject->AddComponent(new MeshRenderer(sphereModel.GetMesh(0), &defaultMaterial));
+    //redLightObject->AddComponent(new MeshRenderer(sphereModel.GetMesh(0), &defaultMaterial));
     redLightObject->AddComponent(new PointLight(&defaultShader, glm::vec4(1.0f, 0.0f, 0.0f, -5.0f)));
     scene.AddGameObject(redLightObject);
 
@@ -120,47 +122,48 @@ void Application::Run() const
     Transform*  rainbowLight       = rainbowLightObject->GetTransform();
     rainbowLight->SetPosition(glm::vec3(-2.0f, 0.0f, 0.0f));
     rainbowLight->SetScale(glm::vec3(0.1f));
-    rainbowLightObject->AddComponent(new MeshRenderer(sphereModel.GetMesh(0), &defaultMaterial));
+    //rainbowLightObject->AddComponent(new MeshRenderer(sphereModel.GetMesh(0), &defaultMaterial));
     rainbowLightObject->AddComponent(new PointLight(&defaultShader, glm::vec4(1.0f, 1.0f, 1.0f, 1.0f), 5.0f, 2.0f));
     scene.AddGameObject(rainbowLightObject);
 
     // Suzanne
     GameObject* suzanneObject    = new GameObject();
     Transform*  suzanneTransform = suzanneObject->GetTransform();
-    suzanneObject->AddComponent(new MeshRenderer(suzanneModel.GetMesh(0), &redMaterial));
+    //suzanneObject->AddComponent(new MeshRenderer(suzanneModel.GetMesh(0), &redMaterial));
     suzanneTransform->SetPosition(glm::vec3(3.0f, 0.0f, 0.0f));
     scene.AddGameObject(suzanneObject);
 
     // The Missing
     GameObject* cubeObject    = new GameObject();
     Transform*  cubeTransform = cubeObject->GetTransform();
-    cubeObject->AddComponent(new MeshRenderer(theMissingModel.GetMesh(0), &defaultMaterial));
-    cubeObject->AddComponent(new MeshRenderer(theMissingModel.GetMesh(1), &defaultMaterial));
-    cubeObject->AddComponent(new MeshRenderer(theMissingModel.GetMesh(2), &defaultMaterial));
+    //cubeObject->AddComponent(new MeshRenderer(theMissingModel.GetMesh(0), &defaultMaterial));
+    //cubeObject->AddComponent(new MeshRenderer(theMissingModel.GetMesh(1), &defaultMaterial));
+    //cubeObject->AddComponent(new MeshRenderer(theMissingModel.GetMesh(2), &defaultMaterial));
     scene.AddGameObject(cubeObject);
 
     // Crate
     GameObject* crateObject    = new GameObject();
     Transform*  crateTransform = crateObject->GetTransform();
-    crateTransform->SetPosition(glm::vec3(0.0f, 0.0f, 0.0f));
+    crateTransform->SetPosition(glm::vec3(0.0f, 4.0f, 0.0f));
     crateObject->AddComponent(new MeshRenderer(cubeGLTFModel.GetMesh(0), &defaultMaterial));
     crateObject->AddComponent(new CapsuleCollider());
     crateObject->AddComponent(new Rigidbody(reactphysics3d::BodyType::DYNAMIC));
-
     scene.AddGameObject(crateObject);
 
     // Floor
     GameObject* floorObject    = new GameObject();
     Transform*  floorTransform = floorObject->GetTransform();
     floorTransform->SetPosition(glm::vec3(2.0f, -2.0f, 0.0f));
-    floorTransform->SetScale(glm::vec3(5.0f, -1.0f, 5.0f));
-    floorObject->AddComponent(new MeshRenderer(cubeGLTFModel.GetMesh(0), &defaultMaterial));
+    floorObject->AddComponent(new MeshRenderer(suzanneModel.GetMesh(0), &defaultMaterial));
     floorObject->AddComponent(new BoxCollider(glm::vec3(2.5f, 0.5f, 2.5f)));
     floorObject->AddComponent(new Rigidbody(reactphysics3d::BodyType::STATIC));
     scene.AddGameObject(floorObject);
 
     scene.InitializeScene();
 
+    PhysicsManager::SetDebugRendererMaterial(&physicsMaterial);
+    PhysicsManager::ToggleDebugWireframe();
+    
     while (!_window.ShouldClose())
     {
         // Update delta time
@@ -169,48 +172,18 @@ void Application::Run() const
         // Update the new input state
         Input::Update();
 
-        // Execute the physics update on all objects if needed
-        Physics::Update(&scene);
 
-        reactphysics3d::DebugRenderer debugRenderer = Physics::GetPhysicsWorld()->getDebugRenderer();
-
-        reactphysics3d::DebugRenderer::DebugTriangle* t = const_cast<reactphysics3d::DebugRenderer::DebugTriangle*>(debugRenderer.getTrianglesArray());
-
-        unsigned int   numVertices = debugRenderer.getNbTriangles() * 3;
-        unsigned int   vertexSize  = sizeof(reactphysics3d::DebugRenderer::DebugTriangle) / 3;
-        unsigned char* vertices    = new unsigned char [numVertices * vertexSize];
-
-        memcpy(vertices, t, numVertices * vertexSize);
-
-        VertexBuffer* vertexBuffer = new VertexBuffer(vertices, vertexSize, numVertices);
-        unsigned int* pIndices     = new unsigned int[numVertices];
-        for (unsigned int i = 0; i < numVertices; i++) { pIndices[i] = i; }
-        IndexBuffer* indexBuffer = new IndexBuffer(reinterpret_cast<unsigned char*>(pIndices), numVertices, GL_UNSIGNED_INT);
-
-        VertexBufferAttribute* attributes = new VertexBufferAttribute[2]
+        if (Input::GetKeyPressed(GLFW_KEY_P))
         {
-            VertexBufferAttribute(3, GL_FLOAT, GL_FALSE, vertexSize, nullptr),
-            VertexBufferAttribute(1, GL_UNSIGNED_INT, GL_FALSE, vertexSize, reinterpret_cast<GLvoid*>(3 * sizeof(float))),
-        };
-        VertexBufferLayout* layout = new VertexBufferLayout(attributes, 2);
-
-        Debug::Log::Message("before Mesh");
-
-        Mesh mesh = Mesh(vertexBuffer, indexBuffer, layout);
-
-        Debug::Log::Message("AFter Mesh");
-
-        Transform    transform    = Transform();
-        MeshRenderer meshRenderer = MeshRenderer(&mesh, &physicsMaterial);
-        meshRenderer._transform   = &transform;
-        meshRenderer.OnBeforeRender();
-
-
-        Debug::Log::Message("AFter rendering");
-
+            PhysicsManager::ToggleDebugWireframe();
+        }
+        
+        // Execute the physics update on all objects if needed
+        PhysicsManager::Update(&scene);
+        
         // Execute Update calls on each game object in the current scene
         scene.Update();
-
+        
         glm::vec4 wasdVelocity = glm::vec4(0.0f);
         if (Input::GetKeyDown(GLFW_KEY_D)) { wasdVelocity.x += 5.0f * Time::GetDeltaTime(); }
         if (Input::GetKeyDown(GLFW_KEY_A)) { wasdVelocity.x -= 5.0f * Time::GetDeltaTime(); }
@@ -227,12 +200,7 @@ void Application::Run() const
 
         // Close window if escape key is pressed
         if (Input::GetKeyPressed(GLFW_KEY_ESCAPE)) { glfwSetWindowShouldClose(_window.GetGlWindow(), true); }
-
-        // Change polygon Mode
-        if (Input::GetKeyPressed(GLFW_KEY_P)) { glPolygonMode(GL_FRONT_AND_BACK, GL_POINT); }
-        if (Input::GetKeyPressed(GLFW_KEY_F)) { glPolygonMode(GL_FRONT_AND_BACK, GL_FILL); }
-        if (Input::GetKeyPressed(GLFW_KEY_L)) { glPolygonMode(GL_FRONT_AND_BACK, GL_LINE); }
-
+        
         // Enable/Disable culling
         if (Input::GetKeyPressed(GLFW_KEY_C))
         {
@@ -254,7 +222,7 @@ void Application::Run() const
         cubeTransform->Rotate(glm::vec3(0.0f, 0.0f, 45.0f * Time::GetDeltaTime()));
         suzanneTransform->Rotate(glm::vec3(0.0f, 45.0f * Time::GetDeltaTime(), 0.0f));
 
-        floorTransform->GetPhysicsTransform().setPosition(floorTransform->GetPhysicsTransform().getPosition() + reactphysics3d::Vector3(arrowVelocity.x, arrowVelocity.y, arrowVelocity.z));
+        //floorTransform->GetPhysicsTransform().setPosition(floorTransform->GetPhysicsTransform().getPosition() + reactphysics3d::Vector3(arrowVelocity.x, arrowVelocity.y, arrowVelocity.z));
         cameraTransform->Move(wasdVelocity);
 
         // Render

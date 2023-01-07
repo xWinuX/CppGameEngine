@@ -11,3 +11,5 @@ VertexBufferLayout::VertexBufferLayout(VertexBufferAttribute* pVertexBufferAttri
 VertexBufferLayout::~VertexBufferLayout() { delete[] _pVertexBufferAttributes; }
 
 void VertexBufferLayout::Bind() const { for (unsigned int i = 0; i < _numVertexBufferAttributes; i++) { _pVertexBufferAttributes[i].Bind(i); } }
+
+void VertexBufferLayout::Unbind() const { for (unsigned int i = 0; i < _numVertexBufferAttributes; i++) { _pVertexBufferAttributes[i].Unbind(i); } }

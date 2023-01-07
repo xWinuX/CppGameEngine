@@ -30,13 +30,13 @@ void MeshRenderer::OnBeforeDraw()
 {
     const glm::mat4 trs = _transform->GetTRS();
     _pMaterial->GetUniformBuffer()->SetUniformInstant<glm::mat4>("u_Transform", trs);
-    //_pMaterial->GetUniformBuffer()->SetUniformInstant<glm::mat4>("u_TransposedInverseTransform", transpose(inverse(trs)));
 }
 
 void MeshRenderer::OnDraw()
 {
     _pVertexArrayObject->Bind();
     _pVertexArrayObject->Render();
+    _pVertexArrayObject->Unbind();
 }
 
 void MeshRenderer::OnStart()

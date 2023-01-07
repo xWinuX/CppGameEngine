@@ -14,6 +14,7 @@
         <option value="$PROJECT_DIR$/opengl/include" />
         <option value="$PROJECT_DIR$/opengl/libs" />
         <option value="$PROJECT_DIR$/OpenGL P1/src/GLAD" />
+        <option value="$PROJECT_DIR$/vendor" />
       </list>
     </option>
   </component>

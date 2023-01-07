@@ -9,5 +9,10 @@ Material::Material(Shader* shader) :
 
 Material::~Material() { delete _uniformBuffer; }
 
-Shader*        Material::GetShader() const { return _shader; }
-UniformBuffer* Material::GetUniformBuffer() const { return _uniformBuffer; }
+Shader*              Material::GetShader() const { return _shader; }
+UniformBuffer*       Material::GetUniformBuffer() const { return _uniformBuffer; }
+Material::RenderMode Material::GetRenderMode() const { return _renderMode; }
+Material::CullFace   Material::GetCullFace() const { return _cullFace; }
+
+void Material::SetRenderMode(const RenderMode renderMode) { _renderMode = renderMode; }
+void Material::SetCullFace(const CullFace cullFace) { _cullFace = cullFace; }
