@@ -65,7 +65,6 @@ void Application::Run() const
     // Matrices
     defaultShader.InitializeUniform<glm::mat4>("u_ViewProjection", glm::identity<glm::mat4>(), false);
     defaultShader.InitializeUniform<glm::mat4>("u_Transform", glm::identity<glm::mat4>(), false);
-    //defaultShader.InitializeUniform<glm::mat4>("u_TransposedInverseTransform", glm::identity<glm::mat4>(), false);
 
     // Lighting
     defaultShader.InitializeUniform<int>("u_NumPointLights", 0, false);
@@ -77,12 +76,12 @@ void Application::Run() const
     // Other
     defaultShader.InitializeUniform<glm::vec4>("u_ColorTint", glm::vec4(1.0f));
     defaultShader.InitializeUniform<Texture*>("u_Texture", noTexture);
-    defaultShader.InitializeUniform<Texture*>("u_NormalMap", normalMapDefaultTexture);
+    defaultShader.InitializeUniform<Texture*>("u_NormalMap", crateNormalMapTexture);
     defaultShader.InitializeUniform<float>("u_NormalMapIntensity", 1.0f);
 
     Material defaultMaterial = Material(&defaultShader);
 
-    defaultMaterial.GetUniformBuffer()->SetUniform("u_Texture", theDudeTexture);
+    defaultMaterial.GetUniformBuffer()->SetUniform("u_Texture", crateTexture);
     //defaultMaterial.SetUniformTextureSampler2D("u_Texture", &theDudeTexture);
 
 
@@ -113,7 +112,7 @@ void Application::Run() const
     Transform*  redLight       = redLightObject->GetTransform();
     redLight->SetPosition(glm::vec3(2.0f, 0.0f, 0.0f));
     redLight->SetScale(glm::vec3(0.1f));
-    //redLightObject->AddComponent(new MeshRenderer(sphereModel.GetMesh(0), &defaultMaterial));
+    redLightObject->AddComponent(new MeshRenderer(sphereModel.GetMesh(0), &defaultMaterial));
     redLightObject->AddComponent(new PointLight(&defaultShader, glm::vec4(1.0f, 0.0f, 0.0f, -5.0f)));
     scene.AddGameObject(redLightObject);
 
@@ -122,23 +121,23 @@ void Application::Run() const
     Transform*  rainbowLight       = rainbowLightObject->GetTransform();
     rainbowLight->SetPosition(glm::vec3(-2.0f, 0.0f, 0.0f));
     rainbowLight->SetScale(glm::vec3(0.1f));
-    //rainbowLightObject->AddComponent(new MeshRenderer(sphereModel.GetMesh(0), &defaultMaterial));
+    rainbowLightObject->AddComponent(new MeshRenderer(sphereModel.GetMesh(0), &defaultMaterial));
     rainbowLightObject->AddComponent(new PointLight(&defaultShader, glm::vec4(1.0f, 1.0f, 1.0f, 1.0f), 5.0f, 2.0f));
     scene.AddGameObject(rainbowLightObject);
 
     // Suzanne
     GameObject* suzanneObject    = new GameObject();
     Transform*  suzanneTransform = suzanneObject->GetTransform();
-    //suzanneObject->AddComponent(new MeshRenderer(suzanneModel.GetMesh(0), &redMaterial));
+    suzanneObject->AddComponent(new MeshRenderer(suzanneModel.GetMesh(0), &redMaterial));
     suzanneTransform->SetPosition(glm::vec3(3.0f, 0.0f, 0.0f));
     scene.AddGameObject(suzanneObject);
 
     // The Missing
     GameObject* cubeObject    = new GameObject();
     Transform*  cubeTransform = cubeObject->GetTransform();
-    //cubeObject->AddComponent(new MeshRenderer(theMissingModel.GetMesh(0), &defaultMaterial));
-    //cubeObject->AddComponent(new MeshRenderer(theMissingModel.GetMesh(1), &defaultMaterial));
-    //cubeObject->AddComponent(new MeshRenderer(theMissingModel.GetMesh(2), &defaultMaterial));
+    cubeObject->AddComponent(new MeshRenderer(theMissingModel.GetMesh(0), &defaultMaterial));
+    cubeObject->AddComponent(new MeshRenderer(theMissingModel.GetMesh(1), &defaultMaterial));
+    cubeObject->AddComponent(new MeshRenderer(theMissingModel.GetMesh(2), &defaultMaterial));
     scene.AddGameObject(cubeObject);
 
     // Crate
@@ -146,15 +145,16 @@ void Application::Run() const
     Transform*  crateTransform = crateObject->GetTransform();
     crateTransform->SetPosition(glm::vec3(0.0f, 4.0f, 0.0f));
     crateObject->AddComponent(new MeshRenderer(cubeGLTFModel.GetMesh(0), &defaultMaterial));
-    crateObject->AddComponent(new CapsuleCollider());
+    crateObject->AddComponent(new BoxCollider(glm::vec3(0.5f)));
     crateObject->AddComponent(new Rigidbody(reactphysics3d::BodyType::DYNAMIC));
     scene.AddGameObject(crateObject);
 
     // Floor
     GameObject* floorObject    = new GameObject();
     Transform*  floorTransform = floorObject->GetTransform();
-    floorTransform->SetPosition(glm::vec3(2.0f, -2.0f, 0.0f));
-    floorObject->AddComponent(new MeshRenderer(suzanneModel.GetMesh(0), &defaultMaterial));
+    floorTransform->SetPosition(glm::vec3(0.0f, -2.0f, 0.0f));
+    floorTransform->SetScale(glm::vec3(5.0f, 1.0f, 5.0f));
+    floorObject->AddComponent(new MeshRenderer(cubeGLTFModel.GetMesh(0), &defaultMaterial));
     floorObject->AddComponent(new BoxCollider(glm::vec3(2.5f, 0.5f, 2.5f)));
     floorObject->AddComponent(new Rigidbody(reactphysics3d::BodyType::STATIC));
     scene.AddGameObject(floorObject);
@@ -222,6 +222,8 @@ void Application::Run() const
         cubeTransform->Rotate(glm::vec3(0.0f, 0.0f, 45.0f * Time::GetDeltaTime()));
         suzanneTransform->Rotate(glm::vec3(0.0f, 45.0f * Time::GetDeltaTime(), 0.0f));
 
+        crateObject->GetComponent<Rigidbody>()->ApplyForce(arrowVelocity*100.0f);
+        
         //floorTransform->GetPhysicsTransform().setPosition(floorTransform->GetPhysicsTransform().getPosition() + reactphysics3d::Vector3(arrowVelocity.x, arrowVelocity.y, arrowVelocity.z));
         cameraTransform->Move(wasdVelocity);
 

@@ -11,10 +11,11 @@ namespace GameEngine
         class Transform
         {
             protected:
-                glm::vec3                 _position         = glm::vec3(0.0f, 0.0f, 0.0f);
-                glm::vec3                 _eulerAngles      = glm::vec3(0.0f, 0.0f, 0.0f);
-                glm::vec3                 _scale            = glm::vec3(1.0f, 1.0f, 1.0f);
-            
+                glm::vec3 _position    = glm::vec3(0.0f, 0.0f, 0.0f);
+                glm::vec3 _eulerAngles = glm::vec3(0.0f, 0.0f, 0.0f);
+                glm::vec3 _scale       = glm::vec3(1.0f, 1.0f, 1.0f);
+                glm::quat _rotation = glm::identity<glm::quat>();
+
                 reactphysics3d::Transform _physicsTransform = reactphysics3d::Transform(
                                                                                         reactphysics3d::Vector3(_position.x, _position.y, _position.z),
                                                                                         reactphysics3d::Quaternion::fromEulerAngles(glm::radians(_eulerAngles.x),

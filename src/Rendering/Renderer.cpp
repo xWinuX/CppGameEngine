@@ -5,8 +5,6 @@
 #include "Shader.h"
 #include "VertexArrayObject.h"
 #include "../Application.h"
-#include "Buffers/IndexBuffer.h"
-#include "Buffers/VertexBuffer.h"
 #include "glm/ext/matrix_transform.hpp"
 
 using namespace GameEngine::Rendering;
@@ -23,6 +21,7 @@ void Renderer::Initialize()
     glDepthMask(GL_TRUE);
     glDepthFunc(GL_LEQUAL);
     glDepthRange(0.0, 1.0);
+    glLineWidth(2);
 }
 
 void Renderer::SubmitLight(GameEngine::Components::Light* light) { _lights.push_back(light); }

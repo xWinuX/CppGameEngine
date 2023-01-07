@@ -20,7 +20,7 @@ namespace GameEngine
                 void OnStart() override;
                 void OnPhysicsUpdate() override;
                 void OnComponentAdded(Component* component) override;
-                void ApplyForce();
+                void ApplyForce(glm::vec3 force) const;
         };
     }
 }
