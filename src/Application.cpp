@@ -6,7 +6,6 @@
 #include "tiny_gltf.h"
 #include "Components/BoxCollider.h"
 #include "Components/Camera.h"
-#include "Components/CapsuleCollider.h"
 #include "Components/MeshRenderer.h"
 #include "Components/PointLight.h"
 #include "Components/Rigidbody.h"
@@ -218,11 +217,13 @@ void Application::Run() const
 
         //crateTransform->SetEulerAngles(glm::vec3(Time::GetTimeSinceStart() * 10.0f));
 
-
+        
         cubeTransform->Rotate(glm::vec3(0.0f, 0.0f, 45.0f * Time::GetDeltaTime()));
         suzanneTransform->Rotate(glm::vec3(0.0f, 45.0f * Time::GetDeltaTime(), 0.0f));
 
         crateObject->GetComponent<Rigidbody>()->ApplyForce(arrowVelocity*100.0f);
+
+        rainbowLight->SetPosition(glm::vec3(Math::Sin01(Time::GetTimeSinceStart()) * 5.0f, 1.0f, 0.0f));
         
         //floorTransform->GetPhysicsTransform().setPosition(floorTransform->GetPhysicsTransform().getPosition() + reactphysics3d::Vector3(arrowVelocity.x, arrowVelocity.y, arrowVelocity.z));
         cameraTransform->Move(wasdVelocity);

@@ -24,7 +24,7 @@ namespace GameEngine
 
             public:
                 glm::vec3 GetPosition() const;
-                glm::vec3 GetEulerAngles() const;
+                glm::quat GetRotation() const;
                 glm::vec3 GetScale() const;
 
                 glm::mat4 GetTRS() const;
@@ -34,7 +34,6 @@ namespace GameEngine
 
                 void SetPosition(const glm::vec3& position);
                 void SetRotation(const glm::quat quaternion);
-                void SetEulerAngles(const glm::vec3& eulerAngles);
                 void SetScale(const glm::vec3& scale);
 
                 reactphysics3d::Transform& GetPhysicsTransform();
