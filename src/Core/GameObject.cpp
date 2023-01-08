@@ -19,13 +19,17 @@ void GameObject::AddComponent(GameEngine::Components::Component* addedComponent)
     _components.push_back(addedComponent);
     addedComponent->_transform  = _transform;
     addedComponent->_gameObject = this;
-    
-    for (Components::Component* component : _components) { if (component != addedComponent) { component->OnComponentAdded(addedComponent); } }
+
+    for (Components::Component* component : _components)
+    {
+        if (component == addedComponent) { component->OnComponentAdded(); }
+        else { component->OnOtherComponentAdded(addedComponent); }
+    }
 }
 
 void GameObject::OnStart() const { for (Components::Component* component : _components) { component->OnStart(); } }
 
-void GameObject::OnPhysicsUpdate() const {for (GameEngine::Components::Component* component : _components) { component->OnPhysicsUpdate(); } }
+void GameObject::OnPhysicsUpdate() const { for (GameEngine::Components::Component* component : _components) { component->OnPhysicsUpdate(); } }
 
 void GameObject::OnUpdate() const { for (GameEngine::Components::Component* component : _components) { component->OnUpdate(); } }
 

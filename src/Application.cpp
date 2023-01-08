@@ -57,7 +57,7 @@ void Application::Run() const
     Model cubeModel       = Model("res/models/Cube.obj");
     Model cubeGLTFModel   = Model("res/models/cube.gltf");
     Model suzanneModel    = Model("res/models/Suzanne.obj");
-    Model theMissingModel = Model("res/models/TheMissing.obj");
+    Model theMissingModel = Model("res/models/TheMissing.gltf");
     Model sphereModel     = Model("res/models/Sphere.obj");
 
     Shader defaultShader = Shader("res/shaders/DefaultShader.vsh", "res/shaders/DefaultShader.fsh");
@@ -223,7 +223,7 @@ void Application::Run() const
 
         crateObject->GetComponent<Rigidbody>()->ApplyForce(arrowVelocity*100.0f);
 
-        rainbowLight->SetPosition(glm::vec3(Math::Sin01(Time::GetTimeSinceStart()) * 5.0f, 1.0f, 0.0f));
+        rainbowLight->SetPosition(glm::vec3(sin(Time::GetTimeSinceStart()) * 5.0f, 1.0f, 0.0f));
         
         //floorTransform->GetPhysicsTransform().setPosition(floorTransform->GetPhysicsTransform().getPosition() + reactphysics3d::Vector3(arrowVelocity.x, arrowVelocity.y, arrowVelocity.z));
         cameraTransform->Move(wasdVelocity);

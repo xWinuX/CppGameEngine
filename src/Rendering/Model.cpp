@@ -38,7 +38,6 @@ std::vector<std::string> splitString(const std::string& str, const char delimite
     return split;
 }
 
-
 template <typename T>
 void splitString(const std::string& str, const unsigned int baseOffset, const char delimiter, T** pointerList, const unsigned int pointerListSize)
 {
@@ -92,7 +91,7 @@ void Model::AddMesh(
 
     VertexBufferAttribute* pVertexAttributes = new VertexBufferAttribute[3];
     std::copy(_vertexBufferAttributes.begin(), _vertexBufferAttributes.end(), pVertexAttributes);
-    
+
     _meshes.push_back(new Mesh(
                                new VertexBuffer(reinterpret_cast<unsigned char*>(vertices), sizeof(VertexPositionUVNormal), vertexBuffer.size()),
                                new IndexBuffer(reinterpret_cast<unsigned char*>(indices), GL_UNSIGNED_INT, indexBuffer.size()),
@@ -169,6 +168,7 @@ void Model::ImportGLTFModel(const std::string& filePath)
 
     for (const tinygltf::Mesh& tinyGLTFMesh : model.meshes)
     {
+        Mesh* mesh = new Mesh();
         for (const tinygltf::Primitive& primitive : tinyGLTFMesh.primitives)
         {
             std::vector<BufferInfo> bufferInfos = std::vector<BufferInfo>();
@@ -178,18 +178,15 @@ void Model::ImportGLTFModel(const std::string& filePath)
             std::vector<VertexBufferAttribute> attributes;
 
             unsigned int numVertices = 0;
-            
+
             std::vector<int> sortedAttributeValues;
 
             for (const std::string& key : gltfAttributeOrder)
             {
                 auto it = primitive.attributes.find(key);
-                if (it != primitive.attributes.end())
-                {
-                    sortedAttributeValues.push_back(it->second);
-                }
+                if (it != primitive.attributes.end()) { sortedAttributeValues.push_back(it->second); }
             }
-            
+
             // Calculate final vertex size
             unsigned int vertexSize = 0;
             for (const int attributeValue : sortedAttributeValues)
@@ -199,7 +196,7 @@ void Model::ImportGLTFModel(const std::string& filePath)
 
                 vertexSize += tinyGltfComponentTypeLookup[accessor.componentType].Size * attributeSize;
             }
-            
+
             Debug::Log::Message("Vertex size is: " + std::to_string(vertexSize));
 
             unsigned int offset = 0;
@@ -213,7 +210,7 @@ void Model::ImportGLTFModel(const std::string& filePath)
 
                 unsigned int size = typeComponent.Size * type.NumComponents;
                 offset += size;
-                
+
                 const tinygltf::BufferView view = model.bufferViews[accessor.bufferView];
                 bufferInfos.push_back({&model.buffers[view.buffer], size, accessor.byteOffset + view.byteOffset});
 
@@ -221,10 +218,10 @@ void Model::ImportGLTFModel(const std::string& filePath)
             }
 
             // Create vertex buffer layout
-            VertexBufferAttribute* pVertexBufferAttributes = new VertexBufferAttribute[attributes.size()];
-            std::copy(attributes.begin(), attributes.end(), pVertexBufferAttributes);
+            VertexBufferAttribute* vertexBufferAttributes = new VertexBufferAttribute[attributes.size()];
+            std::copy(attributes.begin(), attributes.end(), vertexBufferAttributes);
 
-            VertexBufferLayout* pVertexBufferLayout = new VertexBufferLayout(pVertexBufferAttributes, attributes.size());
+            VertexBufferLayout* vertexBufferLayout = new VertexBufferLayout(vertexBufferAttributes, attributes.size());
 
             // Create interleaved buffer
             unsigned int size = numVertices * vertexSize;
@@ -246,7 +243,7 @@ void Model::ImportGLTFModel(const std::string& filePath)
                     }
                 }
             }
-            
+
             tinygltf::Accessor   indicesAccessor   = model.accessors[primitive.indices];
             tinygltf::BufferView indicesBufferView = model.bufferViews[indicesAccessor.bufferView];
             tinygltf::Buffer     indicesBuffer     = model.buffers[indicesBufferView.buffer];
@@ -256,13 +253,14 @@ void Model::ImportGLTFModel(const std::string& filePath)
 
             auto start = indicesBuffer.data.begin() + indicesAccessor.byteOffset + indicesBufferView.byteOffset;
             std::copy_n(start, (indicesAccessor.count * indexSize), indices);
-            
-            _meshes.push_back(new Mesh(
-                                       new VertexBuffer(vertexBufferData, vertexSize, numVertices),
-                                       new IndexBuffer(indices, tinyGltfComponentTypeLookup[indicesAccessor.componentType].Enum, indicesAccessor.count),
-                                       pVertexBufferLayout
-                                      ));
+
+            mesh->AddPrimitive(
+                             new VertexBuffer(vertexBufferData, vertexSize, numVertices),
+                             new IndexBuffer(indices, tinyGltfComponentTypeLookup[indicesAccessor.componentType].Enum, indicesAccessor.count),
+                             vertexBufferLayout
+                            );
         }
+        _meshes.push_back(mesh);
     }
 }
 
@@ -312,8 +310,6 @@ void Model::ImportObjModel(const std::string& filePath)
                         float*    pVec2Coords[2] = {&vec2.x, &vec2.y};
                         splitString<float>(line, 3, ' ', pVec2Coords, 2);
 
-                        //Debug::Log::Message(std::to_string(vec2.x) + "," + std::to_string(vec2.y));
-
                         uvList.push_back(vec2);
                         continue;
                     }
@@ -332,14 +328,11 @@ void Model::ImportObjModel(const std::string& filePath)
                         normalList.push_back(vec3);
                     }
 
-                    // Debug::Log::Message(std::to_string(vec3.x) + "," + std::to_string(vec3.y) + "," + std::to_string(vec3.z));
 
                     break;
                 }
             case 'f': // Faces
-                //Debug::Log::Message("before split");
                 std::vector<std::string> vertices = splitString(line, ' ', 2);
-            //Debug::Log::Message("after split");
 
                 for (const std::string& vertex : vertices)
                 {
@@ -351,14 +344,11 @@ void Model::ImportObjModel(const std::string& filePath)
                     unsigned int* pVertexAttributes[] = {&positionIndex, &uvIndex, &normalIndex};
 
 
-                    //Debug::Log::Message(vertex);
                     splitString(vertex, 0, '/', pVertexAttributes, 3);
 
                     positionIndex -= positionIndexOffset;
                     uvIndex -= uvIndexOffset;
                     normalIndex -= normalIndexOffset;
-
-                    //Debug::Log::Message(std::to_string(positionIndex) + "," + std::to_string(uvIndex) + "," + std::to_string(normalIndex));
 
                     vertexBuffer.emplace_back(positionList[positionIndex - 1], uvList[uvIndex - 1], normalList[normalIndex - 1]);
                 }

@@ -2,13 +2,11 @@
 
 using namespace GameEngine::Rendering;
 
-VertexArrayObject::VertexArrayObject(const Mesh* pMesh) : VertexArrayObject(pMesh->GetVertexBufferLayout())
-{
-    AddVertexBuffer(pMesh->GetVertexBuffer());
-    SetIndexBuffer(pMesh->GetIndexBuffer());
-}
+VertexArrayObject::VertexArrayObject(const Mesh::Primitive& pMesh) :
+    VertexArrayObject(pMesh.VertexBuffer, pMesh.IndexBuffer, pMesh.VertexBufferLayout) {}
 
-VertexArrayObject::VertexArrayObject( VertexBuffer* pVertexBuffer,  IndexBuffer* pIndexBuffer, const VertexBufferLayout* pVertexBufferLayout) : VertexArrayObject(pVertexBufferLayout)
+VertexArrayObject::VertexArrayObject(VertexBuffer* pVertexBuffer, IndexBuffer* pIndexBuffer, const VertexBufferLayout* pVertexBufferLayout) :
+    VertexArrayObject(pVertexBufferLayout)
 {
     _vertexBuffers.push_back(pVertexBuffer);
     _pIndexBuffer = pIndexBuffer;
@@ -53,6 +51,11 @@ void VertexArrayObject::Bind() const
 void VertexArrayObject::Render() const
 {
     glDrawElements(GL_TRIANGLES, static_cast<int>(_pIndexBuffer->GetNumIndices()), _pIndexBuffer->GetIndicesType(), static_cast<void*>(nullptr));
+}
+
+void VertexArrayObject::Render(const int numIndices, const unsigned int offset) const
+{
+    glDrawElements(GL_TRIANGLES, numIndices, _pIndexBuffer->GetIndicesType(), (void*)(offset));
 }
 
 void VertexArrayObject::Unbind() const

@@ -2,33 +2,41 @@
 #include "Component.h"
 #include "../Rendering/Mesh.h"
 #include "../Rendering/Material.h"
-#include "../Rendering/Renderable.h"
-#include "../Rendering/VertexArrayObject.h"
+#include "../Rendering/RenderableMeshPrimitive.h"
 
 namespace GameEngine
 {
     namespace Components
     {
-        class MeshRenderer final : public Component, public GameEngine::Rendering::Renderable
+        class MeshRenderer final : public Component
         {
             private:
-                GameEngine::Rendering::Mesh*              _pMesh;
-                GameEngine::Rendering::Material*          _pMaterial;
-                GameEngine::Rendering::VertexArrayObject* _pVertexArrayObject;
-                bool                                      _visible = true;
+                class RenderableMeshPrimitive final : public Rendering::RenderableMeshPrimitive
+                {
+                    private:
+                        Core::Transform* _transform{};
+                    public:
+                        explicit RenderableMeshPrimitive(const Rendering::Mesh::Primitive primitive, Rendering::Material* material = nullptr);
+                        void     OnBeforeDraw() override;
+                        void     SetTransform(Core::Transform* transform);
+                };
 
+                GameEngine::Rendering::Mesh*          _mesh;
+                std::vector<RenderableMeshPrimitive*> _renderableMeshPrimitives;
+
+                bool _visible = true;
             public:
-                MeshRenderer(GameEngine::Rendering::Mesh* pMesh, GameEngine::Rendering::Material* pMaterial);
-                ~MeshRenderer() override;
-                GameEngine::Rendering::Mesh*     GetMesh() const;
-                GameEngine::Rendering::Material* GetMaterial() override;
-                void                             OnBeforeRender() override;
-                void                             OnDraw() override;
-                void                             OnBeforeDraw() override;
-                void                             OnStart() override;
+                explicit MeshRenderer(GameEngine::Rendering::Mesh* mesh);
+                explicit MeshRenderer(GameEngine::Rendering::Mesh* mesh, GameEngine::Rendering::Material* material);
+                explicit MeshRenderer(GameEngine::Rendering::Mesh* mesh, GameEngine::Rendering::Material** materials, unsigned int numMaterials);
 
-                bool GetVisible() const { return _visible; }
-                void SetVisible(const bool value) { _visible = value; }
+                ~MeshRenderer() override;
+
+                void OnComponentAdded() override;
+                void OnBeforeRender() override;
+
+                bool GetVisible() const;
+                void SetVisible(const bool value);
         };
     }
 }

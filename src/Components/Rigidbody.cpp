@@ -36,7 +36,7 @@ void GameEngine::Components::Rigidbody::OnPhysicsUpdate()
     _transform->SetRotation(quaternion);
 }
 
-void GameEngine::Components::Rigidbody::OnComponentAdded(Component* component)
+void GameEngine::Components::Rigidbody::OnOtherComponentAdded(Component* component)
 {
     if (typeid(component) == typeid(CapsuleCollider))
     {

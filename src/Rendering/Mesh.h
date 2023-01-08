@@ -1,4 +1,6 @@
 ﻿#pragma once
+#include <vector>
+
 #include "Buffers/VertexBuffer.h"
 #include "Buffers/IndexBuffer.h"
 #include "Buffers/VertexBufferLayout.h"
@@ -9,18 +11,23 @@ namespace GameEngine
     {
         class Mesh
         {
-            private:
-                VertexBuffer*       _pVertexBuffer;
-                IndexBuffer*        _pIndexBuffer;
-                VertexBufferLayout* _pVertexBufferLayout;
-
             public:
-                Mesh(VertexBuffer* pVertexBuffer, IndexBuffer* pIndexBuffer, VertexBufferLayout* pVertexBufferLayout);
+                struct Primitive
+                {
+                    VertexBuffer*       VertexBuffer;
+                    IndexBuffer*        IndexBuffer;
+                    VertexBufferLayout* VertexBufferLayout;
+                };
+
+                Mesh() = default;
+                Mesh(VertexBuffer* vertexBuffer, IndexBuffer* indexBuffer, VertexBufferLayout* vertexBufferLayout);
                 ~Mesh();
 
-                VertexBuffer*       GetVertexBuffer() const;
-                IndexBuffer*        GetIndexBuffer() const;
-                VertexBufferLayout* GetVertexBufferLayout() const;
+                const std::vector<Primitive>& GetSubMeshes();
+                
+                void AddPrimitive(VertexBuffer* vertexBuffer, IndexBuffer* indexBuffer, VertexBufferLayout* vertexBufferLayout);
+            private:
+                std::vector<Primitive> _subMeshes;
         };
     }
 }

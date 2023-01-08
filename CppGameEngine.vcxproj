@@ -578,6 +578,7 @@
     <ClCompile Include="src\Rendering\Mesh.cpp" />
     <ClCompile Include="src\Rendering\Model.cpp" />
     <ClCompile Include="src\Rendering\OpenGL.cpp" />
+    <ClCompile Include="src\Rendering\RenderableMeshPrimitive.cpp" />
     <ClCompile Include="src\Rendering\Renderer.cpp" />
     <ClCompile Include="src\Rendering\Shader.cpp" />
     <ClCompile Include="src\Rendering\Texture.cpp" />
@@ -764,6 +765,7 @@
     <ClInclude Include="src\Rendering\Model.h" />
     <ClInclude Include="src\Rendering\OpenGL.h" />
     <ClInclude Include="src\Rendering\Renderable.h" />
+    <ClInclude Include="src\Rendering\RenderableMeshPrimitive.h" />
     <ClInclude Include="src\Rendering\Renderer.h" />
     <ClInclude Include="src\Rendering\Shader.h" />
     <ClInclude Include="src\Rendering\Texture.h" />

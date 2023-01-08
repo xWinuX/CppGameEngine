@@ -20,8 +20,8 @@ namespace GameEngine
 
             protected:
                 GameEngine::Core::GameObject* _gameObject;
-            public:
                 Core::Transform*              _transform;
+            public:
                 Component():
                     _gameObject(nullptr),
                     _transform(nullptr) {}
@@ -33,8 +33,9 @@ namespace GameEngine
                 virtual void OnPhysicsUpdate() {}
                 virtual void OnLateUpdate() {}
                 virtual void OnBeforeRender() {}
-            
-                virtual void OnComponentAdded(Component* component) {}
+
+                virtual void OnComponentAdded() {}
+                virtual void OnOtherComponentAdded(Component* component) {}
 
                 const Core::Transform* GetTransform() const { return _transform; }
         };

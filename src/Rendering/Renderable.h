@@ -7,12 +7,12 @@ namespace GameEngine
         class Renderable
         {
             public:
-            virtual ~Renderable() = default;
-    
-            virtual void OnBeforeDraw() {}
-            virtual void OnDraw() {}
+                virtual ~Renderable() = default;
+        
+                virtual void OnBeforeDraw() {}
+                virtual void OnDraw() {}
 
-            virtual Material* GetMaterial() { return nullptr; }
+                virtual Material* GetMaterial() { return nullptr; }
         };
     }
 }

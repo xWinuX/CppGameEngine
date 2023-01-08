@@ -19,7 +19,7 @@ namespace GameEngine
                 ~Rigidbody() override;
                 void OnStart() override;
                 void OnPhysicsUpdate() override;
-                void OnComponentAdded(Component* component) override;
+                void OnOtherComponentAdded(Component* component) override;
                 void ApplyForce(glm::vec3 force) const;
         };
     }

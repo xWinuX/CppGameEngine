@@ -17,7 +17,7 @@ namespace GameEngine
                 std::vector<VertexBuffer*> _vertexBuffers;
 
             public:
-                explicit VertexArrayObject(const Mesh* pMesh);
+                explicit VertexArrayObject(const Mesh::Primitive& pMesh);
                 explicit VertexArrayObject(VertexBuffer* pVertexBuffer, IndexBuffer* pIndexBuffer, const VertexBufferLayout* pVertexBufferLayout);
                 explicit VertexArrayObject(const VertexBufferLayout* pVertexBufferLayout);
                 ~VertexArrayObject();
@@ -27,6 +27,7 @@ namespace GameEngine
                 void Finalize() const;
                 void Bind() const;
                 void Render() const;
+                void Render(int numIndices, unsigned int offset) const;
                 void Unbind() const;
         };
     }
