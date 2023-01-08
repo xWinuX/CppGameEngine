@@ -2,7 +2,7 @@
 
 #include <glm/ext/matrix_clip_space.hpp>
 
-#include "../Application.h"
+#include "../Core/Window.h"
 #include "../Rendering/Renderer.h"
 
 using namespace GameEngine::Components;
@@ -15,7 +15,7 @@ Camera::Camera(const float fovInDegrees, const float zNear, const float zFar) :
     _zFar(zFar)
 {
     UpdateProjectionMatrix();
-    Application::GetWindow().AddFramebufferSizeCallback([this](Window* window) { UpdateProjectionMatrix(); });
+    Window::GetCurrentWindow()->AddFramebufferSizeCallback([this](Window* window) { UpdateProjectionMatrix(); });
 }
 
 void Camera::OnBeforeRender()
@@ -26,7 +26,7 @@ void Camera::OnBeforeRender()
 
 void Camera::UpdateProjectionMatrix()
 {
-    const glm::vec2 windowSize = Application::GetWindow().GetSize();
+    const glm::vec2 windowSize = Window::GetCurrentWindow()->GetSize();
     _projectionMatrix          = glm::perspective(glm::radians(_fovInDegrees), windowSize.x / windowSize.y, _zNear, _zFar);
 }
 

@@ -1,7 +1,7 @@
-#include "src/GameEngine/Core/Application.h"
+#include "src/GraphicDemoApplication.h"
 int main()
 {
-    const Application application = Application();
+    GraphicDemoApplication application = GraphicDemoApplication();
     application.Run();
     
     return 0;

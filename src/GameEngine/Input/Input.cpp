@@ -6,13 +6,13 @@ using namespace GameEngine::Input;
 
 void Input::Update() { glfwPollEvents(); }
 
-bool Input::GetKeyDown(const int key) { return glfwGetKey(Application::GetWindow().GetGlWindow(), key) == GLFW_PRESS; }
+bool Input::GetKeyDown(const int key) { return glfwGetKey(Core::Window::GetCurrentWindow()->GetGlWindow(), key) == GLFW_PRESS; }
 
 bool Input::GetKeyPressed(const int key)
 {
     static std::map<int, bool> keyStates;
     
-    if (glfwGetKey(Application::GetWindow().GetGlWindow(), key) == GLFW_PRESS)
+    if (glfwGetKey(Core::Window::GetCurrentWindow()->GetGlWindow(), key) == GLFW_PRESS)
     {
         if (!keyStates[key])
         {

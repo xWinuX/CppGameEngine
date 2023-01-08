@@ -148,6 +148,7 @@
     <ClCompile Include="src\GameEngine\Utils\Math.cpp" />
     <ClCompile Include="src\GameEngine\Utils\String.cpp" />
     <ClCompile Include="src\GameEngine\Utils\Time.cpp" />
+    <ClCompile Include="src\GraphicDemoApplication.cpp" />
     <ClCompile Include="vendor\GLAD\src\glad.c">
       <AssemblerOutput>NoListing</AssemblerOutput>
       <AssemblerListingLocation>Debug\</AssemblerListingLocation>
@@ -340,6 +341,7 @@
     <ClInclude Include="src\GameEngine\Utils\Math.h" />
     <ClInclude Include="src\GameEngine\Utils\String.h" />
     <ClInclude Include="src\GameEngine\Utils\Time.h" />
+    <ClInclude Include="src\GraphicDemoApplication.h" />
     <ClInclude Include="vendor\GLAD\include\glad\glad.h" />
     <ClInclude Include="vendor\GLAD\include\KHR\khrplatform.h" />
     <ClInclude Include="vendor\GLFW\include\GLFW\glfw3.h" />

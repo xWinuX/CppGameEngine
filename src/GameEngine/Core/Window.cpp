@@ -4,7 +4,17 @@
 
 using namespace GameEngine::Core;
 
-Window::Window(const glm::ivec2 initialSize) { _size = initialSize; }
+Window* Window::_currentWindow = nullptr;
+
+Window::Window(const glm::ivec2 initialSize)
+{
+    if (_currentWindow != nullptr) { _currentWindow->DestroyGLWindow(); }
+    
+    _size          = initialSize;
+    _currentWindow = this;
+}
+
+Window* Window::GetCurrentWindow() { return _currentWindow; }
 
 void Window::DestroyGLWindow() const { if (_glWindow != nullptr) { glfwDestroyWindow(_glWindow); } }
 

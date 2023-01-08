@@ -2,17 +2,22 @@
 
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
-#include <reactphysics3d/reactphysics3d.h> 
+#include <reactphysics3d/reactphysics3d.h>
 
+#include "Scene.h"
 #include "Window.h"
 
 class Application
 {
-    private:
-        static GameEngine::Core::Window _window;
-
+    protected:
+        GameEngine::Core::Window _window = GameEngine::Core::Window(glm::ivec2(800, 600));
     public:
         Application();
-        void                             Run() const;
-        static GameEngine::Core::Window& GetWindow() { return _window; }
+        virtual void Initialize(GameEngine::Core::Scene& scene) {}
+
+        void Run();
+
+        virtual void CustomRun() {}
+        virtual void OnEnd() {}
+
 };

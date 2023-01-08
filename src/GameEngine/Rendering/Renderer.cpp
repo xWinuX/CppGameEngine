@@ -4,7 +4,7 @@
 
 #include "Shader.h"
 #include "VertexArrayObject.h"
-#include "../Application.h"
+#include "../Core/Window.h"
 #include "glm/ext/matrix_transform.hpp"
 
 using namespace GameEngine::Rendering;
@@ -22,6 +22,7 @@ void Renderer::Initialize()
     glDepthFunc(GL_LEQUAL);
     glDepthRange(0.0, 1.0);
     glLineWidth(2);
+    glEnable(GL_CULL_FACE);
 }
 
 void Renderer::SubmitLight(GameEngine::Components::Light* light) { _lights.push_back(light); }
@@ -76,7 +77,7 @@ void Renderer::Draw()
 
     Debug::Log::Message("Draw Calls: " + std::to_string(numDrawCalls));
 
-    glfwSwapBuffers(Application::GetWindow().GetGlWindow());
+    glfwSwapBuffers(Core::Window::GetCurrentWindow()->GetGlWindow());
 
     // Cleanup lights
     for (GameEngine::Components::Light* light : _lights) { light->OnFrameEnd(); }
