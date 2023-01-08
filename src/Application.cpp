@@ -54,18 +54,21 @@ void Application::Run() const
     Texture* crateTexture            = new Texture("res/textures/Crate.jpg");
     Texture* crateNormalMapTexture   = new Texture("res/textures/CrateNormalMap.png");
 
-    Model cubeModel       = Model("res/models/Cube.obj");
-    Model cubeGLTFModel   = Model("res/models/cube.gltf");
-    Model suzanneModel    = Model("res/models/Suzanne.obj");
+    Model cubeModel       = Model("res/models/Cube.gltf");
+    Model suzanneModel    = Model("res/models/Suzanne.gltf");
     Model theMissingModel = Model("res/models/TheMissing.gltf");
-    Model sphereModel     = Model("res/models/Sphere.obj");
+    Model sphereModel     = Model("res/models/Sphere.gltf");
 
     Shader defaultShader = Shader("res/shaders/DefaultShader.vsh", "res/shaders/DefaultShader.fsh");
+
     // Matrices
     defaultShader.InitializeUniform<glm::mat4>("u_ViewProjection", glm::identity<glm::mat4>(), false);
     defaultShader.InitializeUniform<glm::mat4>("u_Transform", glm::identity<glm::mat4>(), false);
 
     // Lighting
+    defaultShader.InitializeUniform<glm::vec4>("u_AmbientLightColor", glm::vec4(1.0));
+    defaultShader.InitializeUniform<float>("u_AmbientLightIntensity", 0.5f);
+
     defaultShader.InitializeUniform<int>("u_NumPointLights", 0, false);
     defaultShader.InitializeUniform<std::vector<glm::vec3>*>("u_PointLightPositions", nullptr, false);
     defaultShader.InitializeUniform<std::vector<glm::vec4>*>("u_PointLightColors", nullptr, false);
@@ -101,28 +104,18 @@ void Application::Run() const
     cameraObject->AddComponent(new Camera(60, 0.01f, 100.0f));
     scene.AddGameObject(cameraObject);
 
-    // TODO: Create actual ambient light and directional light
-    // Ambient Point Light
-    GameObject* ambientLightObject    = new GameObject();
-    Transform*  ambientLightTransform = ambientLightObject->GetTransform();
-    ambientLightTransform->SetScale(glm::vec3(0.1f));
-    ambientLightObject->AddComponent(new MeshRenderer(sphereModel.GetMesh(0), &dudeMaterial));
-    ambientLightObject->AddComponent(new PointLight(&defaultShader, glm::vec4(1.0f, 1.0f, 1.0f, 1.0f), 100, 0.6f));
-    scene.AddGameObject(ambientLightObject);
-
-
     // Red Light
-    GameObject* redLightObject = new GameObject();
-    Transform*  redLightTransform       = redLightObject->GetTransform();
+    GameObject* redLightObject    = new GameObject();
+    Transform*  redLightTransform = redLightObject->GetTransform();
     redLightTransform->SetPosition(glm::vec3(2.0f, 0.0f, 0.0f));
     redLightTransform->SetScale(glm::vec3(0.1f));
     redLightObject->AddComponent(new MeshRenderer(sphereModel.GetMesh(0), &dudeMaterial));
-    redLightObject->AddComponent(new PointLight(&defaultShader, glm::vec4(1.0f, 0.0f, 0.0f, 1.0f)));
+    redLightObject->AddComponent(new PointLight(&defaultShader, glm::vec4(1.0f, 0.0f, 0.0f, 1.0f), 5.0f, 2.0f));
     scene.AddGameObject(redLightObject);
 
     // Rainbow Light
-    GameObject* rainbowLightObject = new GameObject();
-    Transform*  rainbowLightTransform       = rainbowLightObject->GetTransform();
+    GameObject* rainbowLightObject    = new GameObject();
+    Transform*  rainbowLightTransform = rainbowLightObject->GetTransform();
     rainbowLightTransform->SetPosition(glm::vec3(-2.0f, 0.0f, 0.0f));
     rainbowLightTransform->SetScale(glm::vec3(0.1f));
     rainbowLightObject->AddComponent(new MeshRenderer(sphereModel.GetMesh(0), &dudeMaterial));
@@ -148,7 +141,7 @@ void Application::Run() const
     GameObject* crateObject    = new GameObject();
     Transform*  crateTransform = crateObject->GetTransform();
     crateTransform->SetPosition(glm::vec3(0.0f, 4.0f, 0.0f));
-    crateObject->AddComponent(new MeshRenderer(cubeGLTFModel.GetMesh(0), &crateMaterial));
+    crateObject->AddComponent(new MeshRenderer(cubeModel.GetMesh(0), &crateMaterial));
     crateObject->AddComponent(new BoxCollider(glm::vec3(0.5f)));
     crateObject->AddComponent(new Rigidbody(reactphysics3d::BodyType::DYNAMIC));
     scene.AddGameObject(crateObject);
@@ -158,7 +151,7 @@ void Application::Run() const
     Transform*  floorTransform = floorObject->GetTransform();
     floorTransform->SetPosition(glm::vec3(0.0f, -2.0f, 0.0f));
     floorTransform->SetScale(glm::vec3(5.0f, 1.0f, 5.0f));
-    floorObject->AddComponent(new MeshRenderer(cubeGLTFModel.GetMesh(0), &crateMaterial));
+    floorObject->AddComponent(new MeshRenderer(cubeModel.GetMesh(0), &crateMaterial));
     floorObject->AddComponent(new BoxCollider(glm::vec3(2.5f, 0.5f, 2.5f)));
     floorObject->AddComponent(new Rigidbody(reactphysics3d::BodyType::STATIC));
     scene.AddGameObject(floorObject);
@@ -175,7 +168,6 @@ void Application::Run() const
 
         // Update the new input state
         Input::Update();
-
 
         if (Input::GetKeyPressed(GLFW_KEY_P)) { PhysicsManager::ToggleDebugWireframe(); }
 
@@ -217,18 +209,14 @@ void Application::Run() const
                                                                            1.0f
                                                                           ));
 
-        //crateTransform->SetEulerAngles(glm::vec3(Time::GetTimeSinceStart() * 10.0f));
-
-
         cubeTransform->Rotate(glm::vec3(0.0f, 0.0f, 45.0f * Time::GetDeltaTime()));
         suzanneTransform->Rotate(glm::vec3(0.0f, 45.0f * Time::GetDeltaTime(), 0.0f));
 
         crateObject->GetComponent<Rigidbody>()->ApplyForce(arrowVelocity * 100.0f);
 
         rainbowLightTransform->SetPosition(glm::vec3(sin(Time::GetTimeSinceStart()) * 5.0f, 1.0f, 0.0f));
-        ambientLightTransform->SetPosition(glm::vec3(0.0, 0.0f, sin(Time::GetTimeSinceStart()) * 5.0f));
+        redLightTransform->SetPosition(glm::vec3(0.0, 0.0f, sin(Time::GetTimeSinceStart()) * 5.0f));
 
-        //floorTransform->GetPhysicsTransform().setPosition(floorTransform->GetPhysicsTransform().getPosition() + reactphysics3d::Vector3(arrowVelocity.x, arrowVelocity.y, arrowVelocity.z));
         cameraTransform->Move(wasdVelocity);
 
         // Render

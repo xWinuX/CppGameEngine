@@ -11,6 +11,9 @@ uniform sampler2D u_Texture;
 uniform sampler2D u_NormalMap;
 uniform float u_NormalMapIntensity;
 
+uniform vec4 u_AmbientLightColor;
+uniform float u_AmbientLightIntensity;
+
 uniform int u_NumPointLights;
 uniform vec3 u_PointLightPositions[16];
 uniform vec4 u_PointLightColors[16];
@@ -19,7 +22,7 @@ uniform float u_PointLightRanges[16];
 
 void main()
 {
-    vec4 diffuseSum = vec4(0.0, 0.0, 0.0, 0.0);
+    vec4 diffuseSum = u_AmbientLightColor * u_AmbientLightIntensity;
     for (int i = 0; i < u_NumPointLights; i++)
     {
         vec3 normal = vec3(texture(u_NormalMap, v_TexCoords));

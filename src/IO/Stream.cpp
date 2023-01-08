@@ -4,6 +4,8 @@
 #include <fstream>
 #include <sstream>
 
+using namespace GameEngine::IO;
+
 Stream::Stream(const std::string& filePath):
     _stream(std::ifstream(filePath))
 {

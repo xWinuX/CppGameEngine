@@ -198,6 +198,8 @@
     <ClCompile Include="src\Core\Window.cpp" />
     <ClCompile Include="src\Debug\Log.cpp" />
     <ClCompile Include="src\Input\Input.cpp" />
+    <ClCompile Include="src\IO\Importer\GLTF.cpp" />
+    <ClCompile Include="src\IO\Importer\OBJ.cpp" />
     <ClCompile Include="src\IO\Stream.cpp" />
     <ClCompile Include="src\Physics\PhysicsDebugRenderer.cpp" />
     <ClCompile Include="src\Physics\PhysicsManager.cpp" />
@@ -584,6 +586,7 @@
     <ClCompile Include="src\Rendering\Texture.cpp" />
     <ClCompile Include="src\Rendering\VertexArrayObject.cpp" />
     <ClCompile Include="src\Utils\Math.cpp" />
+    <ClCompile Include="src\Utils\String.cpp" />
     <ClCompile Include="src\Utils\Time.cpp" />
     <ClCompile Include="vendor\GLAD\src\glad.c">
       <AssemblerOutput>NoListing</AssemblerOutput>
@@ -752,6 +755,8 @@
     <ClInclude Include="src\Core\Window.h" />
     <ClInclude Include="src\Debug\Log.h" />
     <ClInclude Include="src\Input\Input.h" />
+    <ClInclude Include="src\IO\Importer\GLTF.h" />
+    <ClInclude Include="src\IO\Importer\OBJ.h" />
     <ClInclude Include="src\IO\Stream.h" />
     <ClInclude Include="src\Physics\PhysicsDebugRenderer.h" />
     <ClInclude Include="src\Physics\PhysicsManager.h" />
@@ -773,6 +778,7 @@
     <ClInclude Include="src\Rendering\VertexArrayObject.h" />
     <ClInclude Include="src\Rendering\Vertex.h" />
     <ClInclude Include="src\Utils\Math.h" />
+    <ClInclude Include="src\Utils\String.h" />
     <ClInclude Include="src\Utils\Time.h" />
     <ClInclude Include="vendor\GLAD\include\glad\glad.h" />
     <ClInclude Include="vendor\GLAD\include\KHR\khrplatform.h" />
@@ -1309,7 +1315,6 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="res\models\cube.glb" />
-    <Content Include="res\models\Cube.obj" />
     <Content Include="res\models\TheMissing.gltf" />
     <Content Include="res\shaders\DefaultShader.fsh" />
     <Content Include="res\shaders\DefaultShader.vsh" />
