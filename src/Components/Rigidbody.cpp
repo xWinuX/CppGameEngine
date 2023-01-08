@@ -1,17 +1,22 @@
 ﻿#include "Rigidbody.h"
 
 #include "CapsuleCollider.h"
-#include "../Physics/PhysicsManager.h"
+#include "../Physics/Physics.h"
 #include <glm/gtc/quaternion.hpp>
 
 using namespace GameEngine::Physics;
 
+
 GameEngine::Components::Rigidbody::Rigidbody(const reactphysics3d::BodyType bodyType):
-    _pPhysicsRigidBody(PhysicsManager::GetPhysicsWorld()->createRigidBody(reactphysics3d::Transform())) { _pPhysicsRigidBody->setType(bodyType); }
+    _pPhysicsRigidBody(Physics::Physics::GetPhysicsWorld()->createRigidBody(reactphysics3d::Transform()))
+{
+    
+    _pPhysicsRigidBody->setType(bodyType);
+}
 
 GameEngine::Components::Rigidbody::~Rigidbody()
 {
-    PhysicsManager::GetPhysicsWorld()->destroyRigidBody(_pPhysicsRigidBody);
+    Physics::Physics::GetPhysicsWorld()->destroyRigidBody(_pPhysicsRigidBody);
 }
 
 void GameEngine::Components::Rigidbody::OnStart()

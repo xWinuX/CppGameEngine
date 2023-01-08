@@ -1,12 +1,12 @@
 ﻿#include "CapsuleCollider.h"
-#include "../Physics/PhysicsManager.h"
+#include "../Physics/Physics.h"
 
 using namespace GameEngine::Components;
 using namespace GameEngine::Physics;
 
 
 CapsuleCollider::CapsuleCollider(const float radius, const float height):
-    _pCapsuleShape(PhysicsManager::GetPhysicsCommon()->createCapsuleShape(radius, height))
+    _pCapsuleShape(Physics::Physics::GetPhysicsCommon()->createCapsuleShape(radius, height))
 {
 }
 

@@ -13,7 +13,7 @@
 #include "Core/Scene.h"
 #include "Core/Window.h"
 #include "Input/Input.h"
-#include "Physics/PhysicsManager.h"
+#include "Physics/Physics.h"
 #include "Rendering/Material.h"
 #include "Rendering/Model.h"
 #include "Rendering/Renderer.h"
@@ -26,6 +26,7 @@ using namespace GameEngine::Core;
 using namespace GameEngine::Rendering;
 using namespace GameEngine::Components;
 using namespace GameEngine::Physics;
+using namespace GameEngine::Input;
 
 Window Application::_window = Window(glm::ivec2(800, 600));
 
@@ -158,8 +159,8 @@ void Application::Run() const
 
     scene.InitializeScene();
 
-    PhysicsManager::SetDebugRendererMaterial(&physicsMaterial);
-    PhysicsManager::ToggleDebugWireframe();
+    Physics::SetDebugRendererMaterial(&physicsMaterial);
+    Physics::ToggleDebugWireframe();
 
     while (!_window.ShouldClose())
     {
@@ -169,10 +170,10 @@ void Application::Run() const
         // Update the new input state
         Input::Update();
 
-        if (Input::GetKeyPressed(GLFW_KEY_P)) { PhysicsManager::ToggleDebugWireframe(); }
+        if (Input::GetKeyPressed(GLFW_KEY_P)) { Physics::ToggleDebugWireframe(); }
 
         // Execute the physics update on all objects if needed
-        PhysicsManager::Update(&scene);
+        Physics::Update(&scene);
 
         // Execute Update calls on each game object in the current scene
         scene.Update();

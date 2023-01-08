@@ -5,6 +5,8 @@
 
 #include "../Application.h"
 
+using namespace GameEngine::Input;
+
 void Input::Update() { glfwPollEvents(); }
 
 bool Input::GetKeyDown(const int key) { return glfwGetKey(Application::GetWindow().GetGlWindow(), key) == GLFW_PRESS; }

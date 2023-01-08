@@ -1,8 +1,8 @@
 ﻿#pragma once
 
-#include "Component.h"
 #include <reactphysics3d/body/RigidBody.h>
 
+#include "Component.h"
 #include "reactphysics3d/components/RigidBodyComponents.h"
 
 
@@ -14,6 +14,7 @@ namespace GameEngine
         {
             private:
                 reactphysics3d::RigidBody* _pPhysicsRigidBody;
+
             public:
                 explicit Rigidbody(reactphysics3d::BodyType bodyType = reactphysics3d::BodyType::DYNAMIC);
                 ~Rigidbody() override;

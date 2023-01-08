@@ -10,7 +10,7 @@ namespace GameEngine
     {
         class PhysicsDebugRenderer;
 
-        class PhysicsManager
+        class Physics
         {
             private:
                 static reactphysics3d::PhysicsCommon              _physicsCommon;

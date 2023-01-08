@@ -1,11 +1,12 @@
 ﻿#include "BoxCollider.h"
 
-#include "../Physics/PhysicsManager.h"
+#include "../Physics/Physics.h"
 
+using namespace GameEngine::Components;
 using namespace GameEngine::Physics;
 
 BoxCollider::BoxCollider(const glm::vec3 halfExtends):
-    _pBoxShape(PhysicsManager::GetPhysicsCommon()->createBoxShape(reactphysics3d::Vector3(halfExtends.x, halfExtends.y, halfExtends.z)))
+    _pBoxShape(Physics::Physics::GetPhysicsCommon()->createBoxShape(reactphysics3d::Vector3(halfExtends.x, halfExtends.y, halfExtends.z)))
 {
 }
 
