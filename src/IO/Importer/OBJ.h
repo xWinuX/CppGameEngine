@@ -4,7 +4,7 @@
 #include "../../Rendering/Mesh.h"
 #include "../../Rendering/Model.h"
 #include "../../Rendering/Vertex.h"
-#include "../../Rendering/Buffers/VertexBufferAttribute.h"
+#include "../../Rendering/VertexBufferAttribute.h"
 
 
 

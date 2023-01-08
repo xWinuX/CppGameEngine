@@ -1,9 +1,9 @@
 ﻿#pragma once
 #include <vector>
 
-#include "Buffers/VertexBuffer.h"
-#include "Buffers/IndexBuffer.h"
-#include "Buffers/VertexBufferLayout.h"
+#include "VertexBuffer.h"
+#include "IndexBuffer.h"
+#include "VertexBufferLayout.h"
 
 namespace GameEngine
 {

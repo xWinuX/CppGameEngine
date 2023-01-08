@@ -1,6 +1,6 @@
 ﻿#include "IndexBuffer.h"
-#include "../OpenGL.h"
-#include "../../Debug/Log.h"
+#include "OpenGL.h"
+#include "../Debug/Log.h"
 
 using namespace GameEngine::Rendering;
 

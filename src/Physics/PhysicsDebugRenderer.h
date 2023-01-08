@@ -1,10 +1,10 @@
 ﻿#pragma once
 #include "PhysicsManager.h"
 #include "../Components/MeshRenderer.h"
-#include "../Rendering/Buffers/IndexBuffer.h"
-#include "../Rendering/Buffers/VertexBuffer.h"
-#include "../Rendering/Buffers/VertexBufferAttribute.h"
-#include "../Rendering/Buffers/VertexBufferLayout.h"
+#include "../Rendering/IndexBuffer.h"
+#include "../Rendering/VertexBuffer.h"
+#include "../Rendering/VertexBufferAttribute.h"
+#include "../Rendering/VertexBufferLayout.h"
 #include "reactphysics3d/utils/DebugRenderer.h"
 
 namespace GameEngine

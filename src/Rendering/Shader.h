@@ -2,7 +2,7 @@
 
 #include <glad/glad.h>
 
-#include "Buffers/UniformBuffer.h"
+#include "UniformBuffer.h"
 
 #include "../IO/Stream.h"
 

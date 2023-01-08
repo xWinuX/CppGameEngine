@@ -1,6 +1,6 @@
 ﻿#include "VertexBuffer.h"
 
-#include "../../Debug/Log.h"
+#include "../Debug/Log.h"
 
 using namespace GameEngine::Rendering;
 

@@ -1,6 +1,7 @@
 ﻿#pragma once
 
-#include "Buffers/UniformBuffer.h"
+#include "UniformBuffer.h"
+#include "glad/glad.h"
 
 namespace GameEngine
 {
