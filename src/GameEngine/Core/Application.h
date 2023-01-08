@@ -4,7 +4,7 @@
 #include <GLFW/glfw3.h>
 #include <reactphysics3d/reactphysics3d.h> 
 
-#include "Core/Window.h"
+#include "Window.h"
 
 class Application
 {

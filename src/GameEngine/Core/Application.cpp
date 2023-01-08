@@ -4,24 +4,26 @@
 #include <glm/ext/quaternion_common.hpp>
 
 #include "tiny_gltf.h"
-#include "Components/BoxCollider.h"
-#include "Components/Camera.h"
-#include "Components/MeshRenderer.h"
-#include "Components/PointLight.h"
-#include "Components/Rigidbody.h"
-#include "Components/TransformComponent.h"
-#include "Core/Scene.h"
-#include "Core/Window.h"
-#include "Input/Input.h"
-#include "Physics/Physics.h"
-#include "Rendering/Material.h"
-#include "Rendering/Model.h"
-#include "Rendering/Renderer.h"
-#include "Rendering/Shader.h"
-#include "Rendering/Texture.h"
-#include "Utils/Math.h"
-#include "Utils/Time.h"
+#include "../Components/BoxCollider.h"
+#include "../Components/Camera.h"
+#include "../Components/MeshRenderer.h"
+#include "../Components/PointLight.h"
+#include "../Components/Rigidbody.h"
+#include "../Components/TransformComponent.h"
+#include "../Core/Scene.h"
+#include "../Core/Window.h"
+#include "../Input/Input.h"
+#include "../Physics/Physics.h"
+#include "../Rendering/Material.h"
+#include "../Rendering/Model.h"
+#include "../Rendering/Renderer.h"
+#include "../Rendering/Shader.h"
+#include "../Rendering/Texture.h"
+#include "../Utils/Math.h"
+#include "../Utils/Time.h"
 
+using namespace GameEngine::Debug;
+using namespace GameEngine::Utils;
 using namespace GameEngine::Core;
 using namespace GameEngine::Rendering;
 using namespace GameEngine::Components;
@@ -38,7 +40,7 @@ Application::Application()
 
     _window.CreateContext();
 
-    if (!gladLoadGLLoader(reinterpret_cast<GLADloadproc>(glfwGetProcAddress))) { Debug::Log::Error("Failed to initialize GLAD"); }
+    if (!gladLoadGLLoader(reinterpret_cast<GLADloadproc>(glfwGetProcAddress))) { Log::Error("Failed to initialize GLAD"); }
 
     Renderer::Initialize();
 }

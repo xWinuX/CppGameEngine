@@ -1,9 +1,6 @@
 ﻿#include "Input.h"
 
 #include <map>
-#include <GLFW/glfw3.h>
-
-#include "../Application.h"
 
 using namespace GameEngine::Input;
 
