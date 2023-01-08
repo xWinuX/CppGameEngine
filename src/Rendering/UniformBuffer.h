@@ -14,42 +14,41 @@
         template<> \
         inline void UniformBuffer::InitializeUniform<type>(const GLchar* uniformName, type value, const bool includeInApplyQueue, const bool resetAfterApply) \
         {  \
-        InitializeUniform<type, &UniformBuffer::_uniform##suffix##s>(uniformName, value, includeInApplyQueue, resetAfterApply); \
+            InitializeUniform<type, &UniformBuffer::_uniform##suffix##s>(uniformName, value, includeInApplyQueue, resetAfterApply); \
         } \
         template<> \
         inline void UniformBuffer::SetUniform<type>(const int uniformLocation, type value) \
         { \
-        _uniform##suffix##s[uniformLocation].Uniform.Set(value); \
+            _uniform##suffix##s[uniformLocation].Uniform.Set(value); \
         } \
         template<> \
         inline void UniformBuffer::SetUniform<type>(const GLchar* uniformName, type value) \
         { \
-        const int uniformLocation = GetUniformLocation(uniformName); \
-        if (uniformLocation == -1) \
-        { \
-        Debug::Log::Error("Uniform " + std::string(uniformName) + " was not found! Did you forget to initialize it?"); \
-        return; \
-        } \
-        SetUniform<type>(uniformLocation, value); \
+            const int uniformLocation = GetUniformLocation(uniformName); \
+            if (uniformLocation == -1) \
+            { \
+                Debug::Log::Error("Uniform " + std::string(uniformName) + " was not found! Did you forget to initialize it?"); \
+                return; \
+            } \
+            SetUniform<type>(uniformLocation, value); \
         } \
         template<> \
         inline void UniformBuffer::SetUniformInstant<type>(const int uniformLocation, type value) \
         { \
-        _uniform##suffix##s[uniformLocation].Uniform.Set(value); \
-        _uniform##suffix##s[uniformLocation].Uniform.Apply(); \
+            _uniform##suffix##s[uniformLocation].Uniform.Set(value); \
+            _uniform##suffix##s[uniformLocation].Uniform.Apply(); \
         } \
         template<> \
         inline void UniformBuffer::SetUniformInstant<type>(const GLchar* uniformName, type value) \
         { \
-        const int uniformLocation = GetUniformLocation(uniformName); \
-        if (uniformLocation == -1) \
-        { \
-        Debug::Log::Error("Uniform " + std::string(uniformName) + " was not found! Did you forget to initialize it?"); \
-        return; \
-        } \
-        SetUniformInstant<type>(uniformLocation, value); \
+            const int uniformLocation = GetUniformLocation(uniformName); \
+            if (uniformLocation == -1) \
+            { \
+                Debug::Log::Error("Uniform " + std::string(uniformName) + " was not found! Did you forget to initialize it?"); \
+                return; \
+            } \
+            SetUniformInstant<type>(uniformLocation, value); \
         }
-
 
 
 namespace GameEngine

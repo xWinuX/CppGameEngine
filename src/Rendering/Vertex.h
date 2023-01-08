@@ -4,6 +4,8 @@
 #include <glm/vec4.hpp>
 #include <glm/gtc/constants.hpp>
 
+//TODO: Remove this
+
 namespace GameEngine
 {
     namespace Rendering

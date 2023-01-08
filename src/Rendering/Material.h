@@ -33,7 +33,7 @@ namespace GameEngine
 
                 void SetRenderMode(RenderMode renderMode);
                 void SetCullFace(CullFace cullFace);
-            
+
             private:
                 Shader*        _shader;
                 UniformBuffer* _uniformBuffer;

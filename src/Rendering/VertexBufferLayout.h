@@ -8,13 +8,14 @@ namespace GameEngine
         class VertexBufferLayout
         {
             private:
-            VertexBufferAttribute* _pVertexBufferAttributes;
-            unsigned int _numVertexBufferAttributes;
+                VertexBufferAttribute* _pVertexBufferAttributes;
+                unsigned int           _numVertexBufferAttributes;
+
             public:
-            VertexBufferLayout(VertexBufferAttribute* pVertexBufferAttributes, unsigned int numVertexBufferAttributes);
-            ~VertexBufferLayout();
-            void Bind() const;
-            void Unbind() const;
+                VertexBufferLayout(VertexBufferAttribute* pVertexBufferAttributes, unsigned int numVertexBufferAttributes);
+                ~VertexBufferLayout();
+                void Bind() const;
+                void Unbind() const;
         };
     }
 }

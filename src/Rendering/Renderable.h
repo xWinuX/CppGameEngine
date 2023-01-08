@@ -8,7 +8,7 @@ namespace GameEngine
         {
             public:
                 virtual ~Renderable() = default;
-        
+
                 virtual void OnBeforeDraw() {}
                 virtual void OnDraw() {}
 

@@ -24,8 +24,9 @@ namespace GameEngine
                 ~Mesh();
 
                 const std::vector<Primitive>& GetSubMeshes();
-                
+
                 void AddPrimitive(VertexBuffer* vertexBuffer, IndexBuffer* indexBuffer, VertexBufferLayout* vertexBufferLayout);
+
             private:
                 std::vector<Primitive> _subMeshes;
         };

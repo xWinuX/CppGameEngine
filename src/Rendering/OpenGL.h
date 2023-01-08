@@ -10,14 +10,14 @@ namespace GameEngine
         class OpenGL
         {
             private:
-            struct TypeEnumLookupEntry
-            {
-                public:
-                unsigned int Size;
-            };
+                struct TypeEnumLookupEntry
+                {
+                    public:
+                        unsigned int Size;
+                };
 
             public:
-            static const std::map<GLenum, OpenGL::TypeEnumLookupEntry> TypeEnumLookup;
+                static const std::map<GLenum, OpenGL::TypeEnumLookupEntry> TypeEnumLookup;
         };
     }
 }
