@@ -28,7 +28,7 @@ namespace GameEngine
             public:
                 explicit MeshRenderer(GameEngine::Rendering::Mesh* mesh);
                 explicit MeshRenderer(GameEngine::Rendering::Mesh* mesh, GameEngine::Rendering::Material* material);
-                explicit MeshRenderer(GameEngine::Rendering::Mesh* mesh, GameEngine::Rendering::Material** materials, unsigned int numMaterials);
+                explicit MeshRenderer(GameEngine::Rendering::Mesh* mesh, std::initializer_list<GameEngine::Rendering::Material*> materials, unsigned int numMaterials);
 
                 ~MeshRenderer() override;
 

@@ -23,12 +23,12 @@ MeshRenderer::MeshRenderer(GameEngine::Rendering::Mesh* mesh):
 MeshRenderer::MeshRenderer(Mesh* mesh, Material* material):
     MeshRenderer(mesh) { for (Rendering::RenderableMeshPrimitive* renderableMeshPrimitive : _renderableMeshPrimitives) { renderableMeshPrimitive->SetMaterial(material); } }
 
-MeshRenderer::MeshRenderer(GameEngine::Rendering::Mesh* mesh, GameEngine::Rendering::Material** materials, const unsigned int numMaterials):
+MeshRenderer::MeshRenderer(GameEngine::Rendering::Mesh* mesh, const std::initializer_list<GameEngine::Rendering::Material*> materials, const unsigned int numMaterials):
     MeshRenderer(mesh)
 {
     if (numMaterials != _renderableMeshPrimitives.size()) { Debug::Log::Error("You must pass the same amount of materials as there are mesh primitives!"); }
 
-    for (unsigned int i = 0; i < numMaterials; i++) { _renderableMeshPrimitives[i]->SetMaterial(materials[i]); }
+    for (unsigned int i = 0; i < numMaterials; i++) { _renderableMeshPrimitives[i]->SetMaterial(*(materials.begin()+i)); }
 }
 
 MeshRenderer::~MeshRenderer()
