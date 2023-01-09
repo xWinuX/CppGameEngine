@@ -11,10 +11,11 @@
 using namespace GameEngine::Rendering;
 
 
-std::vector<GameEngine::Components::Light*>   Renderer::_lights           = std::vector<GameEngine::Components::Light*>();
-std::map<Material*, std::vector<Renderable*>> Renderer::_renderables      = std::map<Material*, std::vector<Renderable*>>();
-glm::mat4                                     Renderer::_projectionMatrix = glm::identity<glm::mat4>();
-glm::mat4                                     Renderer::_viewMatrix       = glm::identity<glm::mat4>();
+std::vector<GameEngine::Components::Light*>   Renderer::_lights                 = std::vector<GameEngine::Components::Light*>();
+std::map<Material*, std::vector<Renderable*>> Renderer::_opaqueRenderables      = std::map<Material*, std::vector<Renderable*>>();
+std::map<Material*, std::vector<Renderable*>> Renderer::_transparentRenderables = std::map<Material*, std::vector<Renderable*>>();
+glm::mat4                                     Renderer::_projectionMatrix       = glm::identity<glm::mat4>();
+glm::mat4                                     Renderer::_viewMatrix             = glm::identity<glm::mat4>();
 
 void Renderer::Initialize()
 {
@@ -23,32 +24,42 @@ void Renderer::Initialize()
     glDepthFunc(GL_LEQUAL);
     glDepthRange(0.0, 1.0);
     glLineWidth(2);
-    glEnable(GL_CULL_FACE);
+   // glEnable(GL_CULL_FACE);
 }
 
 void Renderer::SubmitLight(GameEngine::Components::Light* light) { _lights.push_back(light); }
 
-void Renderer::SubmitRenderable(Renderable* renderable) { _renderables[renderable->GetMaterial()].push_back(renderable); }
+void Renderer::SubmitRenderable(Renderable* renderable)
+{
+    if (renderable->GetMaterial()->GetTransparent()) { _transparentRenderables[renderable->GetMaterial()].push_back(renderable); }
+    else { _opaqueRenderables[renderable->GetMaterial()].push_back(renderable); }
+}
 
 void Renderer::SetProjectionMatrix(const glm::mat4 projectionMatrix) { _projectionMatrix = projectionMatrix; }
 
 void Renderer::SetViewMatrix(const glm::mat4 viewMatrix) { _viewMatrix = viewMatrix; }
 
-void Renderer::Draw()
+unsigned int Renderer::RenderRenderables(const std::map<Material*, std::vector<Renderable*>>& map)
 {
-    // Clear
-    glClearColor(0.05f, 0.15f, 0.3f, 1.0f);
-    glClearDepth(1.0);
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    unsigned int         numDrawCalls      = 0;
+    const Shader*        shader            = nullptr;
+    Material::CullFace   currentCullFace   = Material::CullFace::Back;
+    Material::RenderMode currentRenderMode = Material::RenderMode::Fill;
+    bool                 firstLoop         = true;
 
-    const Shader* shader = nullptr;
-
-    unsigned int numDrawCalls = 0;
-    for (const auto& materialRenderables : _renderables)
+    for (const std::pair<Material* const, std::vector<Renderable*>>& materialRenderables : map)
     {
-        const Material* material = materialRenderables.first;
+        const Material*            material   = materialRenderables.first;
+        const Material::CullFace   cullFace   = material->GetCullFace();
+        const Material::RenderMode renderMode = material->GetRenderMode();
 
-        glPolygonMode(material->GetCullFace(), material->GetRenderMode());
+        // Update polygon mode if needed
+        if (cullFace != currentCullFace || renderMode != currentRenderMode || firstLoop)
+        {
+            glPolygonMode(material->GetCullFace(), material->GetRenderMode());
+            currentCullFace   = cullFace;
+            currentRenderMode = renderMode;
+        }
 
         // Choose if new shader should get activated
         const Shader* newShader = material->GetShader();
@@ -75,7 +86,30 @@ void Renderer::Draw()
 
             numDrawCalls++;
         }
+
+        firstLoop = false;
     }
+
+    return numDrawCalls;
+}
+
+void Renderer::Draw()
+{
+    // Clear TODO: Abstract this away
+    glClearColor(0.05f, 0.15f, 0.3f, 1.0f);
+    glClearDepth(1.0);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+    unsigned int numDrawCalls = 0;
+    
+    // Opaque
+    numDrawCalls += RenderRenderables(_opaqueRenderables);
+
+    // Transparent
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    numDrawCalls += RenderRenderables(_transparentRenderables);
+    glDisable(GL_BLEND);
 
     Debug::Log::Message("Draw Calls: " + std::to_string(numDrawCalls));
 
@@ -86,7 +120,9 @@ void Renderer::Draw()
     _lights.clear();
 
     // Cleanup renderables
-    for (std::pair<Material* const, std::vector<Renderable*>> materialRenderables : _renderables) { materialRenderables.second.clear(); }
+    for (std::pair<Material* const, std::vector<Renderable*>> materialRenderables : _opaqueRenderables) { materialRenderables.second.clear(); }
+    for (std::pair<Material* const, std::vector<Renderable*>> materialRenderables : _transparentRenderables) { materialRenderables.second.clear(); }
 
-    _renderables.clear();
+    _opaqueRenderables.clear();
+    _transparentRenderables.clear();
 }

@@ -76,6 +76,7 @@ namespace GameEngine
 
         struct VertexPositionColorUV : VertexPosition, VertexColor, VertexUV
         {
+            VertexPositionColorUV(const glm::vec3 position, const glm::vec4 color, const glm::vec2 uv): VertexPosition(position), VertexColor(color), VertexUV(uv) {} 
         };
     }
 }

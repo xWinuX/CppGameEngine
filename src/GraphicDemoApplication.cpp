@@ -1,25 +1,24 @@
 ﻿#include "GraphicDemoApplication.h"
 
+#include <glm/ext/quaternion_common.hpp>
 #include <reactphysics3d/reactphysics3d.h>
 
-#include <glm/ext/quaternion_common.hpp>
-
-#include "tiny_gltf.h"
-#include "GameEngine//Components/BoxCollider.h"
-#include "GameEngine//Components/Camera.h"
-#include "GameEngine//Components/MeshRenderer.h"
-#include "GameEngine//Components/PointLight.h"
-#include "GameEngine//Components/Rigidbody.h"
-#include "GameEngine//Components/TransformComponent.h"
-#include "GameEngine//Core/Window.h"
-#include "GameEngine//Input/Input.h"
-#include "GameEngine//Physics/Physics.h"
-#include "GameEngine//Rendering/Material.h"
-#include "GameEngine//Rendering/Model.h"
-#include "GameEngine//Rendering/Renderer.h"
-#include "GameEngine//Rendering/Shader.h"
-#include "GameEngine//Rendering/Texture.h"
-#include "GameEngine//Utils/Math.h"
+#include "GameEngine/Components/BoxCollider.h"
+#include "GameEngine/Components/Camera.h"
+#include "GameEngine/Components/MeshRenderer.h"
+#include "GameEngine/Components/PointLight.h"
+#include "GameEngine/Components/Rigidbody.h"
+#include "GameEngine/Components/TransformComponent.h"
+#include "GameEngine/Core/Window.h"
+#include "GameEngine/Input/Input.h"
+#include "GameEngine/Physics/Physics.h"
+#include "GameEngine/Rendering/Material.h"
+#include "GameEngine/Rendering/Model.h"
+#include "GameEngine/Rendering/Renderer.h"
+#include "GameEngine/Rendering/Shader.h"
+#include "GameEngine/Rendering/Texture.h"
+#include "GameEngine/Utils/Math.h"
+#include "GameEngine/Shapes/Cube.h"
 #include "GameEngine/Utils/Time.h"
 
 using namespace GameEngine::Debug;
@@ -29,6 +28,7 @@ using namespace GameEngine::Rendering;
 using namespace GameEngine::Components;
 using namespace GameEngine::Physics;
 using namespace GameEngine::Input;
+using namespace GameEngine::Shapes;
 
 Texture* noTexture;
 Texture* blackTexture;
@@ -44,10 +44,14 @@ Model* theMissingModel;
 Model* sphereModel;
 Model* highPolyPlane;
 
+Mesh* cubeMesh;
+
 Shader* defaultShader;
 Shader* waterShader;
 Shader* physicsDebugShader;
+Shader* vertexColorShader;
 
+Material* vertexColorMaterial;
 Material* dudeMaterial;
 Material* crateMaterial;
 Material* physicsMaterial;
@@ -76,6 +80,8 @@ void GraphicDemoApplication::Initialize(Scene& scene)
     sphereModel     = new Model("res/models/Sphere.gltf");
     highPolyPlane   = new Model("res/models/HighPolyPlane.gltf");
 
+    cubeMesh = Cube().GetMesh();
+    
     #pragma region Default Shader
     defaultShader = new Shader("res/shaders/Default/Default.vert", "res/shaders/Default/Default.frag");
 
@@ -99,9 +105,8 @@ void GraphicDemoApplication::Initialize(Scene& scene)
     defaultShader->InitializeUniform<Texture*>("u_Texture", noTexture);
     defaultShader->InitializeUniform<Texture*>("u_NormalMap", normalMapDefaultTexture);
     defaultShader->InitializeUniform<float>("u_NormalMapIntensity", 1.0f);
-    #pragma endregion
 
-
+    
     dudeMaterial = new Material(defaultShader);
     dudeMaterial->GetUniformBuffer()->SetUniform("u_Texture", theDudeTexture);
 
@@ -109,18 +114,19 @@ void GraphicDemoApplication::Initialize(Scene& scene)
     crateMaterial->GetUniformBuffer()->SetUniform("u_Texture", crateTexture);
     crateMaterial->GetUniformBuffer()->SetUniform("u_NormalMap", crateNormalMapTexture);
     crateMaterial->GetUniformBuffer()->SetUniform("u_NormalMapIntensity", 0.01f);
-
-    // Physics Debug
+    #pragma endregion
+    
+    #pragma region Physics Debug Shader
     physicsDebugShader = new Shader("res/shaders/PhysicsDebugShader.vsh", "res/shaders/PhysicsDebugShader.fsh");
     physicsDebugShader->InitializeUniform<glm::mat4>("u_ViewProjection", glm::identity<glm::mat4>(), false);
 
     physicsMaterial = new Material(physicsDebugShader);
     physicsMaterial->SetCullFace(Material::None);
     physicsMaterial->SetRenderMode(Material::Wireframe);
-
-
-    // Water
-    waterShader = new Shader("res/shaders/Water/Water.vert", "res/shaders/Default/Default.frag");
+    #pragma endregion 
+    
+    #pragma region Water Shader
+    waterShader = new Shader("res/shaders/Water/Water.vert", "res/shaders/Water/Water.frag");
     waterShader->InitializeUniform<float>("u_Time", 0.0f, false);
 
     // Common
@@ -139,13 +145,28 @@ void GraphicDemoApplication::Initialize(Scene& scene)
     waterShader->InitializeUniform<std::vector<float>*>("u_PointLightRanges", nullptr, false);
 
     // Other
-    waterShader->InitializeUniform<glm::vec4>("u_ColorTint", glm::vec4(1.0f));
-    waterShader->InitializeUniform<Texture*>("u_Texture", noTexture);
+    waterShader->InitializeUniform<glm::vec4>("u_ColorTint", glm::vec4(0.0, 0.0, 1.0f, 1.0));
+    waterShader->InitializeUniform<Texture*>("u_Texture", whiteTexture);
     waterShader->InitializeUniform<Texture*>("u_NormalMap", normalMapDefaultTexture);
     waterShader->InitializeUniform<float>("u_NormalMapIntensity", 1.0f);
     
     waterMaterial = new Material(waterShader);
+    waterMaterial->SetTransparent(true);
+    #pragma endregion 
+
+    #pragma region Vertex Color Shader
+    vertexColorShader = new Shader("res/shaders/VertexColor/VertexColor.vert", "res/shaders/VertexColor/VertexColor.frag");
     
+    vertexColorShader->InitializeUniform<float>("u_Time", 0.0f, false);
+    vertexColorShader->InitializeUniform<glm::mat4>("u_ViewProjection", glm::identity<glm::mat4>(), false);
+    vertexColorShader->InitializeUniform<glm::mat4>("u_Transform", glm::identity<glm::mat4>(), false);
+
+    vertexColorShader->InitializeUniform<Texture*>("u_Texture", whiteTexture);
+
+    vertexColorMaterial = new Material(vertexColorShader);
+    vertexColorMaterial->GetUniformBuffer()->SetUniform("u_Texture", crateTexture);
+    #pragma endregion 
+
     // Camera
     cameraObject               = new GameObject();
     Transform* cameraTransform = cameraObject->GetTransform();
@@ -188,8 +209,8 @@ void GraphicDemoApplication::Initialize(Scene& scene)
     // Crate
     crateObject               = new GameObject();
     Transform* crateTransform = crateObject->GetTransform();
-    crateTransform->SetPosition(glm::vec3(0.0f, 4.0f, 0.0f));
-    crateObject->AddComponent(new MeshRenderer(cubeModel->GetMesh(0), crateMaterial));
+    crateTransform->SetPosition(glm::vec3(0.0f, 2.0f, 0.0f));
+    crateObject->AddComponent(new MeshRenderer(cubeMesh, vertexColorMaterial));
     crateObject->AddComponent(new BoxCollider(glm::vec3(0.5f)));
     crateObject->AddComponent(new Rigidbody(reactphysics3d::BodyType::DYNAMIC));
     scene.AddGameObject(crateObject);
@@ -225,7 +246,7 @@ void GraphicDemoApplication::CustomRun()
     if (Input::GetKeyDown(GLFW_KEY_W)) { wasdVelocity.z -= 5.0f * Time::GetDeltaTime(); }
     if (Input::GetKeyDown(GLFW_KEY_S)) { wasdVelocity.z += 5.0f * Time::GetDeltaTime(); }
     if (Input::GetKeyDown(GLFW_KEY_LEFT_SHIFT)) { wasdVelocity.y -= 5.0f * Time::GetDeltaTime(); }
-    if (Input::GetKeyDown(GLFW_KEY_SPACE)) { wasdVelocity.y += 5.0f * Time::GetDeltaTime(); }
+   
 
     glm::vec4 arrowVelocity = glm::vec4(0.0f);
     if (Input::GetKeyDown(GLFW_KEY_RIGHT)) { arrowVelocity.x += 5.0f * Time::GetDeltaTime(); }

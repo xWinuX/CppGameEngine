@@ -145,6 +145,7 @@
     <ClCompile Include="src\GameEngine\Rendering\VertexBuffer.cpp" />
     <ClCompile Include="src\GameEngine\Rendering\VertexBufferAttribute.cpp" />
     <ClCompile Include="src\GameEngine\Rendering\VertexBufferLayout.cpp" />
+    <ClCompile Include="src\GameEngine\Shapes\Cube.cpp" />
     <ClCompile Include="src\GameEngine\Utils\Math.cpp" />
     <ClCompile Include="src\GameEngine\Utils\String.cpp" />
     <ClCompile Include="src\GameEngine\Utils\Time.cpp" />
@@ -338,6 +339,7 @@
     <ClInclude Include="src\GameEngine\Rendering\VertexBuffer.h" />
     <ClInclude Include="src\GameEngine\Rendering\VertexBufferAttribute.h" />
     <ClInclude Include="src\GameEngine\Rendering\VertexBufferLayout.h" />
+    <ClInclude Include="src\GameEngine\Shapes\Cube.h" />
     <ClInclude Include="src\GameEngine\Utils\Math.h" />
     <ClInclude Include="src\GameEngine\Utils\String.h" />
     <ClInclude Include="src\GameEngine\Utils\Time.h" />
@@ -888,6 +890,9 @@
     <Content Include="res\shaders\Default\Default.frag" />
     <Content Include="res\shaders\Default\Default.vert" />
     <Content Include="res\shaders\PhysicsDebugShader.fsh" />
+    <Content Include="res\shaders\VertexColor\VertexColor.frag" />
+    <Content Include="res\shaders\VertexColor\VertexColor.vert" />
+    <Content Include="res\shaders\Water\Water.frag" />
     <Content Include="res\shaders\Water\Water.vert" />
     <Content Include="res\textures\Black.png" />
     <Content Include="res\textures\Crate.jpg" />
@@ -901,9 +906,6 @@
     <Content Include="vendor\reactphysics3d\include\reactphysics3d\collision\.DS_Store" />
     <Content Include="vendor\reactphysics3d\include\reactphysics3d\collision\narrowphase\.DS_Store" />
     <Content Include="vendor\reactphysics3d\libs\reactphysics3d.lib" />
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="src\GameEngine" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
