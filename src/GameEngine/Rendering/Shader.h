@@ -18,13 +18,14 @@ namespace GameEngine
 
                 static GLuint CompileShader(const std::string& shaderSource, const int type);
 
+                static std::string PreprocessShader(std::string shader);
             public:
                 Shader(const char* vertexShaderSource, const char* fragmentShaderSource, const char* geometryShaderSource = nullptr);
 
                 ~Shader();
 
                 void Use() const;
-
+            
                 template <typename T>
                 void InitializeUniform(const GLchar* uniformName, T defaultValue, const bool includeInApplyQueue = true)
                 {

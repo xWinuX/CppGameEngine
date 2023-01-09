@@ -5,6 +5,7 @@
 #include "Shader.h"
 #include "VertexArrayObject.h"
 #include "../Core/Window.h"
+#include "../Utils/Time.h"
 #include "glm/ext/matrix_transform.hpp"
 
 using namespace GameEngine::Rendering;
@@ -59,6 +60,7 @@ void Renderer::Draw()
             for (GameEngine::Components::Light*& light : _lights) { light->OnShaderUse(); }
 
             // TODO: Somehow abstract this away
+            material->GetUniformBuffer()->SetUniformInstant<float>("u_Time", Time::GetTimeSinceStart());
             material->GetUniformBuffer()->SetUniformInstant<glm::mat4>("u_ViewProjection", _projectionMatrix * _viewMatrix);
         }
 

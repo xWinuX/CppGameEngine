@@ -42,13 +42,16 @@ Model* cubeModel;
 Model* suzanneModel;
 Model* theMissingModel;
 Model* sphereModel;
+Model* highPolyPlane;
 
 Shader* defaultShader;
+Shader* waterShader;
 Shader* physicsDebugShader;
 
 Material* dudeMaterial;
 Material* crateMaterial;
 Material* physicsMaterial;
+Material* waterMaterial;
 
 GameObject* cameraObject;
 GameObject* redLightObject;
@@ -71,10 +74,13 @@ void GraphicDemoApplication::Initialize(Scene& scene)
     suzanneModel    = new Model("res/models/Suzanne.gltf");
     theMissingModel = new Model("res/models/TheMissing.gltf");
     sphereModel     = new Model("res/models/Sphere.gltf");
+    highPolyPlane   = new Model("res/models/HighPolyPlane.gltf");
 
-    defaultShader = new Shader("res/shaders/DefaultShader.vsh", "res/shaders/DefaultShader.fsh");
+    #pragma region Default Shader
+    defaultShader = new Shader("res/shaders/Default/Default.vert", "res/shaders/Default/Default.frag");
 
-    // Matrices
+    // Common
+    defaultShader->InitializeUniform<float>("u_Time", 0.0f, false);
     defaultShader->InitializeUniform<glm::mat4>("u_ViewProjection", glm::identity<glm::mat4>(), false);
     defaultShader->InitializeUniform<glm::mat4>("u_Transform", glm::identity<glm::mat4>(), false);
 
@@ -93,6 +99,8 @@ void GraphicDemoApplication::Initialize(Scene& scene)
     defaultShader->InitializeUniform<Texture*>("u_Texture", noTexture);
     defaultShader->InitializeUniform<Texture*>("u_NormalMap", normalMapDefaultTexture);
     defaultShader->InitializeUniform<float>("u_NormalMapIntensity", 1.0f);
+    #pragma endregion
+
 
     dudeMaterial = new Material(defaultShader);
     dudeMaterial->GetUniformBuffer()->SetUniform("u_Texture", theDudeTexture);
@@ -110,16 +118,44 @@ void GraphicDemoApplication::Initialize(Scene& scene)
     physicsMaterial->SetCullFace(Material::None);
     physicsMaterial->SetRenderMode(Material::Wireframe);
 
+
+    // Water
+    waterShader = new Shader("res/shaders/Water/Water.vert", "res/shaders/Default/Default.frag");
+    waterShader->InitializeUniform<float>("u_Time", 0.0f, false);
+
+    // Common
+    waterShader->InitializeUniform<float>("u_Time", 0.0f, false);
+    waterShader->InitializeUniform<glm::mat4>("u_ViewProjection", glm::identity<glm::mat4>(), false);
+    waterShader->InitializeUniform<glm::mat4>("u_Transform", glm::identity<glm::mat4>(), false);
+
+    // Lighting
+    waterShader->InitializeUniform<glm::vec4>("u_AmbientLightColor", glm::vec4(1.0));
+    waterShader->InitializeUniform<float>("u_AmbientLightIntensity", 0.5f);
+
+    waterShader->InitializeUniform<int>("u_NumPointLights", 0, false);
+    waterShader->InitializeUniform<std::vector<glm::vec3>*>("u_PointLightPositions", nullptr, false);
+    waterShader->InitializeUniform<std::vector<glm::vec4>*>("u_PointLightColors", nullptr, false);
+    waterShader->InitializeUniform<std::vector<float>*>("u_PointLightIntensities", nullptr, false);
+    waterShader->InitializeUniform<std::vector<float>*>("u_PointLightRanges", nullptr, false);
+
+    // Other
+    waterShader->InitializeUniform<glm::vec4>("u_ColorTint", glm::vec4(1.0f));
+    waterShader->InitializeUniform<Texture*>("u_Texture", noTexture);
+    waterShader->InitializeUniform<Texture*>("u_NormalMap", normalMapDefaultTexture);
+    waterShader->InitializeUniform<float>("u_NormalMapIntensity", 1.0f);
+    
+    waterMaterial = new Material(waterShader);
+    
     // Camera
-    cameraObject    = new GameObject();
-    Transform*  cameraTransform = cameraObject->GetTransform();
+    cameraObject               = new GameObject();
+    Transform* cameraTransform = cameraObject->GetTransform();
     cameraTransform->SetPosition(glm::vec3(0.0f, 0.0f, 8.0f));
     cameraObject->AddComponent(new Camera(60, 0.01f, 100.0f));
     scene.AddGameObject(cameraObject);
 
     // Red Light
-    redLightObject    = new GameObject();
-    Transform*  redLightTransform = redLightObject->GetTransform();
+    redLightObject               = new GameObject();
+    Transform* redLightTransform = redLightObject->GetTransform();
     redLightTransform->SetPosition(glm::vec3(2.0f, 0.0f, 0.0f));
     redLightTransform->SetScale(glm::vec3(0.1f));
     redLightObject->AddComponent(new MeshRenderer(sphereModel->GetMesh(0), dudeMaterial));
@@ -127,8 +163,8 @@ void GraphicDemoApplication::Initialize(Scene& scene)
     scene.AddGameObject(redLightObject);
 
     // Rainbow Light
-    rainbowLightObject    = new GameObject();
-    Transform*  rainbowLightTransform = rainbowLightObject->GetTransform();
+    rainbowLightObject               = new GameObject();
+    Transform* rainbowLightTransform = rainbowLightObject->GetTransform();
     rainbowLightTransform->SetPosition(glm::vec3(-2.0f, 0.0f, 0.0f));
     rainbowLightTransform->SetScale(glm::vec3(0.1f));
     rainbowLightObject->AddComponent(new MeshRenderer(sphereModel->GetMesh(0), dudeMaterial));
@@ -136,22 +172,22 @@ void GraphicDemoApplication::Initialize(Scene& scene)
     scene.AddGameObject(rainbowLightObject);
 
     // Suzanne
-    suzanneObject    = new GameObject();
-    Transform*  suzanneTransform = suzanneObject->GetTransform();
+    suzanneObject               = new GameObject();
+    Transform* suzanneTransform = suzanneObject->GetTransform();
     suzanneObject->AddComponent(new MeshRenderer(suzanneModel->GetMesh(0), dudeMaterial));
     suzanneTransform->SetPosition(glm::vec3(3.0f, 0.0f, 0.0f));
     scene.AddGameObject(suzanneObject);
 
     // The Missing
-    cubeObject    = new GameObject();
+    cubeObject = new GameObject();
     cubeObject->AddComponent(new MeshRenderer(theMissingModel->GetMesh(0), {dudeMaterial, crateMaterial}, 2));
     cubeObject->AddComponent(new MeshRenderer(theMissingModel->GetMesh(1), dudeMaterial));
     cubeObject->AddComponent(new MeshRenderer(theMissingModel->GetMesh(2), dudeMaterial));
     scene.AddGameObject(cubeObject);
 
     // Crate
-    crateObject    = new GameObject();
-    Transform*  crateTransform = crateObject->GetTransform();
+    crateObject               = new GameObject();
+    Transform* crateTransform = crateObject->GetTransform();
     crateTransform->SetPosition(glm::vec3(0.0f, 4.0f, 0.0f));
     crateObject->AddComponent(new MeshRenderer(cubeModel->GetMesh(0), crateMaterial));
     crateObject->AddComponent(new BoxCollider(glm::vec3(0.5f)));
@@ -167,6 +203,13 @@ void GraphicDemoApplication::Initialize(Scene& scene)
     floorObject->AddComponent(new BoxCollider(glm::vec3(2.5f, 0.5f, 2.5f)));
     floorObject->AddComponent(new Rigidbody(reactphysics3d::BodyType::STATIC));
     scene.AddGameObject(floorObject);
+
+    // Water
+    GameObject* waterObject = new GameObject();
+    Transform* waterTransform = waterObject->GetTransform();
+    waterTransform->SetPosition(glm::vec3(0.0f, -2.0f, 0.0f));
+    waterObject->AddComponent(new MeshRenderer(highPolyPlane->GetMesh(0), waterMaterial));
+    scene.AddGameObject(waterObject);
     
     Physics::SetDebugRendererMaterial(physicsMaterial);
     Physics::ToggleDebugWireframe();

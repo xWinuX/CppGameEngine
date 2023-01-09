@@ -878,9 +878,17 @@
   <ItemGroup>
     <Content Include="res\models\cube.glb" />
     <Content Include="res\models\TheMissing.gltf" />
-    <Content Include="res\shaders\DefaultShader.fsh" />
-    <Content Include="res\shaders\DefaultShader.vsh" />
+    <Content Include="res\shaders\Common\Functions.glsl" />
+    <Content Include="res\shaders\Common\Layout.glsl" />
+    <Content Include="res\shaders\Common\Uniforms.glsl" />
+    <Content Include="res\shaders\Common\Version.glsl" />
+    <Content Include="res\shaders\Default\IO.frag" />
+    <Content Include="res\shaders\Default\IO.vert" />
+    <Content Include="res\shaders\Default\Uniforms.frag" />
+    <Content Include="res\shaders\Default\Default.frag" />
+    <Content Include="res\shaders\Default\Default.vert" />
     <Content Include="res\shaders\PhysicsDebugShader.fsh" />
+    <Content Include="res\shaders\Water\Water.vert" />
     <Content Include="res\textures\Black.png" />
     <Content Include="res\textures\Crate.jpg" />
     <Content Include="res\textures\CrateNormalMap.png" />

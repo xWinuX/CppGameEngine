@@ -27,7 +27,7 @@
             const int uniformLocation = GetUniformLocation(uniformName); \
             if (uniformLocation == -1) \
             { \
-                Debug::Log::Error("Uniform " + std::string(uniformName) + " was not found! Did you forget to initialize it?"); \
+                Debug::Log::Message("Uniform " + std::string(uniformName) + " was not found! Did you forget to initialize it?"); \
                 return; \
             } \
             SetUniform<type>(uniformLocation, value); \
@@ -44,7 +44,7 @@
             const int uniformLocation = GetUniformLocation(uniformName); \
             if (uniformLocation == -1) \
             { \
-                Debug::Log::Error("Uniform " + std::string(uniformName) + " was not found! Did you forget to initialize it?"); \
+                Debug::Log::Message("Uniform " + std::string(uniformName) + " was not found! Did you forget to initialize it?"); \
                 return; \
             } \
             SetUniformInstant<type>(uniformLocation, value); \

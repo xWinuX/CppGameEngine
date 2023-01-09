@@ -2,6 +2,8 @@
 #include <string>
 #include <vector>
 
+
+
 namespace GameEngine
 {
     namespace Utils
@@ -32,6 +34,8 @@ namespace GameEngine
                         previousOffset = offset;
                     }
                 }
+              
+                static std::string ReplaceIncludeMacros(const std::string& filePath);
         };
     }
 }

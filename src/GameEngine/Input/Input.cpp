@@ -11,7 +11,7 @@ bool Input::GetKeyDown(const int key) { return glfwGetKey(Core::Window::GetCurre
 bool Input::GetKeyPressed(const int key)
 {
     static std::map<int, bool> keyStates;
-    
+
     if (glfwGetKey(Core::Window::GetCurrentWindow()->GetGlWindow(), key) == GLFW_PRESS)
     {
         if (!keyStates[key])
@@ -20,10 +20,7 @@ bool Input::GetKeyPressed(const int key)
             return true;
         }
     }
-    else
-    {
-        keyStates[key] = false;
-    }
+    else { keyStates[key] = false; }
 
     return false;
 }

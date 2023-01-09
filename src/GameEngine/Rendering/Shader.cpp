@@ -2,8 +2,11 @@
 #include <iostream>
 #include <fstream>
 
+#include "../Utils/String.h"
+
 using namespace GameEngine::Rendering;
 using namespace GameEngine::IO;
+using namespace GameEngine::Utils;
 
 GLuint Shader::CompileShader(const std::string& shaderSource, const int type)
 {
@@ -28,17 +31,21 @@ GLuint Shader::CompileShader(const std::string& shaderSource, const int type)
     return shaderID;
 }
 
+std::string Shader::PreprocessShader(std::string shader) { return String::ReplaceIncludeMacros(shader); }
+
 Shader::Shader(const char* vertexShaderSource, const char* fragmentShaderSource, const char* geometryShaderSource)
 {
     _programID = glCreateProgram();
 
     // Vertex shader
-    const std::string vertexShader   = Stream(vertexShaderSource).GetFileContent();
-    const GLuint      vertexShaderID = CompileShader(vertexShader, GL_VERTEX_SHADER);
+    const std::string vertexShader = PreprocessShader(vertexShaderSource);
+    Debug::Log::Message("Vertex Shader");
+    Debug::Log::Message(vertexShader);
+    const GLuint vertexShaderID = CompileShader(vertexShader, GL_VERTEX_SHADER);
     glAttachShader(_programID, vertexShaderID);
 
     // Fragment shader
-    const std::string fragmentShader   = Stream(fragmentShaderSource).GetFileContent();
+    const std::string fragmentShader   = PreprocessShader(fragmentShaderSource);
     const GLuint      fragmentShaderID = CompileShader(fragmentShader, GL_FRAGMENT_SHADER);
     glAttachShader(_programID, fragmentShaderID);
 
