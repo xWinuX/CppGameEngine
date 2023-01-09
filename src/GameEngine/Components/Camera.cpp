@@ -2,6 +2,7 @@
 
 #include <glm/ext/matrix_clip_space.hpp>
 
+#include "Transform.h"
 #include "../Core/Window.h"
 #include "../Rendering/Renderer.h"
 

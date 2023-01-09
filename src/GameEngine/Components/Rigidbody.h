@@ -3,6 +3,7 @@
 #include <reactphysics3d/body/RigidBody.h>
 
 #include "Component.h"
+#include "glm/vec3.hpp"
 #include "reactphysics3d/components/RigidBodyComponents.h"
 
 

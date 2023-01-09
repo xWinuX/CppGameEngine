@@ -8,7 +8,7 @@
 #include "GameEngine/Components/MeshRenderer.h"
 #include "GameEngine/Components/PointLight.h"
 #include "GameEngine/Components/Rigidbody.h"
-#include "GameEngine/Components/TransformComponent.h"
+#include "GameEngine/Components/Transform.h"
 #include "GameEngine/Core/Window.h"
 #include "GameEngine/Input/Input.h"
 #include "GameEngine/Physics/Physics.h"
@@ -169,14 +169,14 @@ void GraphicDemoApplication::Initialize(Scene& scene)
 
     // Camera
     cameraObject               = new GameObject();
-    Transform* cameraTransform = cameraObject->GetTransform();
+    GameEngine::Components::Transform* cameraTransform = cameraObject->GetTransform();
     cameraTransform->SetPosition(glm::vec3(0.0f, 0.0f, 8.0f));
     cameraObject->AddComponent(new Camera(60, 0.01f, 100.0f));
     scene.AddGameObject(cameraObject);
 
     // Red Light
     redLightObject               = new GameObject();
-    Transform* redLightTransform = redLightObject->GetTransform();
+    GameEngine::Components::Transform* redLightTransform = redLightObject->GetTransform();
     redLightTransform->SetPosition(glm::vec3(2.0f, 0.0f, 0.0f));
     redLightTransform->SetScale(glm::vec3(0.1f));
     redLightObject->AddComponent(new MeshRenderer(sphereModel->GetMesh(0), dudeMaterial));
@@ -185,7 +185,7 @@ void GraphicDemoApplication::Initialize(Scene& scene)
 
     // Rainbow Light
     rainbowLightObject               = new GameObject();
-    Transform* rainbowLightTransform = rainbowLightObject->GetTransform();
+    GameEngine::Components::Transform* rainbowLightTransform = rainbowLightObject->GetTransform();
     rainbowLightTransform->SetPosition(glm::vec3(-2.0f, 0.0f, 0.0f));
     rainbowLightTransform->SetScale(glm::vec3(0.1f));
     rainbowLightObject->AddComponent(new MeshRenderer(sphereModel->GetMesh(0), dudeMaterial));
@@ -194,7 +194,7 @@ void GraphicDemoApplication::Initialize(Scene& scene)
 
     // Suzanne
     suzanneObject               = new GameObject();
-    Transform* suzanneTransform = suzanneObject->GetTransform();
+    GameEngine::Components::Transform* suzanneTransform = suzanneObject->GetTransform();
     suzanneObject->AddComponent(new MeshRenderer(suzanneModel->GetMesh(0), dudeMaterial));
     suzanneTransform->SetPosition(glm::vec3(3.0f, 0.0f, 0.0f));
     scene.AddGameObject(suzanneObject);
@@ -208,7 +208,7 @@ void GraphicDemoApplication::Initialize(Scene& scene)
 
     // Crate
     crateObject               = new GameObject();
-    Transform* crateTransform = crateObject->GetTransform();
+    GameEngine::Components::Transform* crateTransform = crateObject->GetTransform();
     crateTransform->SetPosition(glm::vec3(0.0f, 2.0f, 0.0f));
     crateObject->AddComponent(new MeshRenderer(cubeMesh, vertexColorMaterial));
     crateObject->AddComponent(new BoxCollider(glm::vec3(0.5f)));
@@ -217,7 +217,7 @@ void GraphicDemoApplication::Initialize(Scene& scene)
 
     // Floor
     GameObject* floorObject    = new GameObject();
-    Transform*  floorTransform = floorObject->GetTransform();
+    GameEngine::Components::Transform*  floorTransform = floorObject->GetTransform();
     floorTransform->SetPosition(glm::vec3(0.0f, -2.0f, 0.0f));
     floorTransform->SetScale(glm::vec3(5.0f, 1.0f, 5.0f));
     floorObject->AddComponent(new MeshRenderer(cubeModel->GetMesh(0), crateMaterial));
@@ -227,7 +227,7 @@ void GraphicDemoApplication::Initialize(Scene& scene)
 
     // Water
     GameObject* waterObject = new GameObject();
-    Transform* waterTransform = waterObject->GetTransform();
+    GameEngine::Components::Transform* waterTransform = waterObject->GetTransform();
     waterTransform->SetPosition(glm::vec3(0.0f, -2.0f, 0.0f));
     waterObject->AddComponent(new MeshRenderer(highPolyPlane->GetMesh(0), waterMaterial));
     scene.AddGameObject(waterObject);

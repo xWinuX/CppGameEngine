@@ -1,7 +1,5 @@
 ﻿#pragma once
 
-#include "../Core/Transform.h"
-
 namespace GameEngine
 {
     namespace Core
@@ -14,13 +12,15 @@ namespace GameEngine
 {
     namespace Components
     {
+        class Transform;
+
         class Component
         {
             friend GameEngine::Core::GameObject;
 
             protected:
                 GameEngine::Core::GameObject* _gameObject;
-                Core::Transform*              _transform;
+                Transform*              _transform;
             public:
                 Component():
                     _gameObject(nullptr),
@@ -37,7 +37,7 @@ namespace GameEngine
                 virtual void OnComponentAdded() {}
                 virtual void OnOtherComponentAdded(Component* component) {}
 
-                const Core::Transform* GetTransform() const { return _transform; }
+                const Transform* GetTransform() const { return _transform; }
         };
     }
 }

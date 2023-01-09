@@ -1,10 +1,14 @@
 ﻿#pragma once
+#include <list>
 #include <vector>
 #include <glm/vec3.hpp>
-#include "../Components/TransformComponent.h"
+#include "../Components/Component.h"
+#include "../Components/Transform.h"
+
 #include <typeinfo>
 
 #include "../Debug/Log.h"
+
 
 namespace GameEngine
 {
@@ -13,15 +17,18 @@ namespace GameEngine
         class GameObject final
         {
             private:
+                GameObject*                                     _parent = nullptr;
+                std::list<GameEngine::Core::GameObject*>        _children = std::list<GameEngine::Core::GameObject*>();
                 std::vector<GameEngine::Components::Component*> _components;
-                GameEngine::Components::TransformComponent*     _transform;
-
+                GameEngine::Components::Transform*     _transform;
+                void AddChild(GameObject* child);
+                void RemoveChild(GameObject* child);
             public:
                 GameObject();
                 ~GameObject();
                 explicit GameObject(glm::vec3 position);
 
-                GameEngine::Components::TransformComponent*      GetTransform() const { return _transform; }
+                GameEngine::Components::Transform*      GetTransform() const { return _transform; }
                 std::vector<GameEngine::Components::Component*>& GetComponents();
 
                 void AddComponent(GameEngine::Components::Component* addedComponent);
@@ -54,6 +61,11 @@ namespace GameEngine
                     return castedComponents;
                 }
 
+                void SetParent(GameObject* newParent);
+
+                GameObject* GetParent() const;
+
+            
                 void OnStart() const;
                 void OnUpdate() const;
                 void OnPhysicsUpdate() const;

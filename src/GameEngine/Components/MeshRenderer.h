@@ -14,11 +14,11 @@ namespace GameEngine
                 class RenderableMeshPrimitive final : public Rendering::RenderableMeshPrimitive
                 {
                     private:
-                        Core::Transform* _transform{};
+                        Transform* _transform = nullptr;
                     public:
                         explicit RenderableMeshPrimitive(const Rendering::Mesh::Primitive primitive, Rendering::Material* material = nullptr);
                         void     OnBeforeDraw() override;
-                        void     SetTransform(Core::Transform* transform);
+                        void     SetTransform(Transform* transform);
                 };
 
                 GameEngine::Rendering::Mesh*          _mesh;

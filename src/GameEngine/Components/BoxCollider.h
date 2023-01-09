@@ -1,5 +1,6 @@
 ﻿#pragma once
 #include "Collider.h"
+#include "glm/vec3.hpp"
 #include "reactphysics3d/collision/shapes/BoxShape.h"
 
 

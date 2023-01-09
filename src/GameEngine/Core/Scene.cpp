@@ -3,29 +3,17 @@
 using namespace GameEngine::Core;
 
 
-Scene::~Scene()
-{
-    for (const GameObject* gameObject : _gameObjects)
-    {
-        delete gameObject;
-    }
-}
+Scene::~Scene() { delete _sceneRoot; }
 
-void Scene::InitializeScene() const { for (const GameObject* gameObject : _gameObjects) { gameObject->OnStart(); } }
+void Scene::InitializeScene() const { _sceneRoot->OnStart(); }
 
 void Scene::Update() const
 {
-    for (const GameObject* gameObject : _gameObjects) { gameObject->OnUpdate(); }
-    
-    for (const GameObject* gameObject : _gameObjects) { gameObject->OnLateUpdate(); }
-
-    for (const GameObject* gameObject : _gameObjects) { gameObject->OnBeforeRender(); }
+    _sceneRoot->OnUpdate();
+    _sceneRoot->OnLateUpdate();
+    _sceneRoot->OnBeforeRender();
 }
 
-void Scene::PhysicsUpdate() const
-{
-    for (const GameObject* gameObject : _gameObjects) { gameObject->OnPhysicsUpdate(); }
+void Scene::PhysicsUpdate() const { _sceneRoot->OnPhysicsUpdate(); }
 
-}
-
-void Scene::AddGameObject(GameObject* gameObject) { _gameObjects.push_back(gameObject); }
+void Scene::AddGameObject(GameObject* gameObject) const { gameObject->SetParent(_sceneRoot); }

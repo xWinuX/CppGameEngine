@@ -1,6 +1,7 @@
 ﻿#include "MeshRenderer.h"
 
 #include "../Rendering/Renderer.h"
+#include "Transform.h"
 
 using namespace GameEngine::Components;
 using namespace GameEngine::Rendering;
@@ -15,7 +16,7 @@ void MeshRenderer::RenderableMeshPrimitive::OnBeforeDraw()
     _material->GetUniformBuffer()->SetUniformInstant<glm::mat4>("u_Transform", trs);
 }
 
-void MeshRenderer::RenderableMeshPrimitive::SetTransform(Core::Transform* transform) { _transform = transform; }
+void MeshRenderer::RenderableMeshPrimitive::SetTransform(Transform* transform) { _transform = transform; }
 
 MeshRenderer::MeshRenderer(GameEngine::Rendering::Mesh* mesh):
     _mesh(mesh) { for (const Mesh::Primitive& subMesh : _mesh->GetSubMeshes()) { _renderableMeshPrimitives.push_back(new RenderableMeshPrimitive(subMesh)); } }
