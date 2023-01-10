@@ -6,7 +6,6 @@
 using namespace GameEngine::Physics;
 using namespace GameEngine::Rendering;
 
-
 PhysicsDebugRenderer::PhysicsDebugRenderer() { EnableDebugRenderer(true); }
 
 PhysicsDebugRenderer::~PhysicsDebugRenderer()

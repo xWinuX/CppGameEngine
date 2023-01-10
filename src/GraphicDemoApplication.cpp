@@ -44,8 +44,6 @@ Model* theMissingModel;
 Model* sphereModel;
 Model* highPolyPlane;
 
-Mesh* cubeMesh;
-
 Shader* defaultShader;
 Shader* waterShader;
 Shader* physicsDebugShader;
@@ -61,9 +59,10 @@ GameObject* cameraObject;
 GameObject* redLightObject;
 GameObject* rainbowLightObject;
 GameObject* suzanneObject;
-GameObject* cubeObject;
+GameObject* theMissingObject;
 GameObject* crateObject;
-GameObject* subCrateObject;
+GameObject* childCrateObject;
+GameObject* childOfChildCrateObject;
 
 void GraphicDemoApplication::Initialize(Scene& scene)
 {
@@ -80,9 +79,8 @@ void GraphicDemoApplication::Initialize(Scene& scene)
     theMissingModel = new Model("res/models/TheMissing.gltf");
     sphereModel     = new Model("res/models/Sphere.gltf");
     highPolyPlane   = new Model("res/models/HighPolyPlane.gltf");
-
-    cubeMesh = Cube().GetMesh();
     
+    // TODO: somehow make initialized uniforms copyable so i don't have to copy paste code
     #pragma region Default Shader
     defaultShader = new Shader("res/shaders/Default/Default.vert", "res/shaders/Default/Default.frag");
 
@@ -107,25 +105,28 @@ void GraphicDemoApplication::Initialize(Scene& scene)
     defaultShader->InitializeUniform<Texture*>("u_NormalMap", normalMapDefaultTexture);
     defaultShader->InitializeUniform<float>("u_NormalMapIntensity", 1.0f);
 
-    
+
+    // Dude material
     dudeMaterial = new Material(defaultShader);
     dudeMaterial->GetUniformBuffer()->SetUniform("u_Texture", theDudeTexture);
 
+    // Crate material
     crateMaterial = new Material(defaultShader);
     crateMaterial->GetUniformBuffer()->SetUniform("u_Texture", crateTexture);
     crateMaterial->GetUniformBuffer()->SetUniform("u_NormalMap", crateNormalMapTexture);
-    crateMaterial->GetUniformBuffer()->SetUniform("u_NormalMapIntensity", 0.01f);
+    crateMaterial->GetUniformBuffer()->SetUniform("u_NormalMapIntensity", 1.0f);
     #pragma endregion
-    
+
     #pragma region Physics Debug Shader
     physicsDebugShader = new Shader("res/shaders/PhysicsDebugShader.vsh", "res/shaders/PhysicsDebugShader.fsh");
     physicsDebugShader->InitializeUniform<glm::mat4>("u_ViewProjection", glm::identity<glm::mat4>(), false);
 
+    // Material
     physicsMaterial = new Material(physicsDebugShader);
     physicsMaterial->SetCullFace(Material::None);
     physicsMaterial->SetRenderMode(Material::Wireframe);
-    #pragma endregion 
-    
+    #pragma endregion
+
     #pragma region Water Shader
     waterShader = new Shader("res/shaders/Water/Water.vert", "res/shaders/Water/Water.frag");
     waterShader->InitializeUniform<float>("u_Time", 0.0f, false);
@@ -150,14 +151,15 @@ void GraphicDemoApplication::Initialize(Scene& scene)
     waterShader->InitializeUniform<Texture*>("u_Texture", whiteTexture);
     waterShader->InitializeUniform<Texture*>("u_NormalMap", normalMapDefaultTexture);
     waterShader->InitializeUniform<float>("u_NormalMapIntensity", 1.0f);
-    
+
+    // Material
     waterMaterial = new Material(waterShader);
     waterMaterial->SetTransparent(true);
-    #pragma endregion 
+    #pragma endregion
 
     #pragma region Vertex Color Shader
     vertexColorShader = new Shader("res/shaders/VertexColor/VertexColor.vert", "res/shaders/VertexColor/VertexColor.frag");
-    
+
     vertexColorShader->InitializeUniform<float>("u_Time", 0.0f, false);
     vertexColorShader->InitializeUniform<glm::mat4>("u_ViewProjection", glm::identity<glm::mat4>(), false);
     vertexColorShader->InitializeUniform<glm::mat4>("u_Transform", glm::identity<glm::mat4>(), false);
@@ -166,27 +168,26 @@ void GraphicDemoApplication::Initialize(Scene& scene)
 
     vertexColorMaterial = new Material(vertexColorShader);
     vertexColorMaterial->GetUniformBuffer()->SetUniform("u_Texture", crateTexture);
-    #pragma endregion 
+    #pragma endregion
 
     // Camera
-    cameraObject               = new GameObject();
-    GameEngine::Components::Transform* cameraTransform = cameraObject->GetTransform();
-    cameraTransform->SetPosition(glm::vec3(0.0f, 0.0f, 8.0f));
+    cameraObject = new GameObject();
+    cameraObject->GetTransform()->SetPosition(glm::vec3(0.0f, 0.0f, 8.0f));
     cameraObject->AddComponent(new Camera(60, 0.01f, 100.0f));
     scene.AddGameObject(cameraObject);
 
-    // Red Light
+    // Red light
     redLightObject               = new GameObject();
-    GameEngine::Components::Transform* redLightTransform = redLightObject->GetTransform();
+    Transform* redLightTransform = redLightObject->GetTransform();
     redLightTransform->SetPosition(glm::vec3(2.0f, 0.0f, 0.0f));
     redLightTransform->SetScale(glm::vec3(0.1f));
     redLightObject->AddComponent(new MeshRenderer(sphereModel->GetMesh(0), dudeMaterial));
     redLightObject->AddComponent(new PointLight(defaultShader, glm::vec4(1.0f, 0.0f, 0.0f, 1.0f), 5.0f, 2.0f));
     scene.AddGameObject(redLightObject);
 
-    // Rainbow Light
+    // Rainbow light
     rainbowLightObject               = new GameObject();
-    GameEngine::Components::Transform* rainbowLightTransform = rainbowLightObject->GetTransform();
+    Transform* rainbowLightTransform = rainbowLightObject->GetTransform();
     rainbowLightTransform->SetPosition(glm::vec3(-2.0f, 0.0f, 0.0f));
     rainbowLightTransform->SetScale(glm::vec3(0.1f));
     rainbowLightObject->AddComponent(new MeshRenderer(sphereModel->GetMesh(0), dudeMaterial));
@@ -194,38 +195,41 @@ void GraphicDemoApplication::Initialize(Scene& scene)
     scene.AddGameObject(rainbowLightObject);
 
     // Suzanne
-    suzanneObject               = new GameObject();
-    GameEngine::Components::Transform* suzanneTransform = suzanneObject->GetTransform();
+    suzanneObject = new GameObject();
+    suzanneObject->GetTransform()->SetPosition(glm::vec3(3.0f, 0.0f, 0.0f));
     suzanneObject->AddComponent(new MeshRenderer(suzanneModel->GetMesh(0), dudeMaterial));
-    suzanneTransform->SetPosition(glm::vec3(3.0f, 0.0f, 0.0f));
     scene.AddGameObject(suzanneObject);
 
     // The Missing
-    cubeObject = new GameObject();
-    cubeObject->AddComponent(new MeshRenderer(theMissingModel->GetMesh(0), {dudeMaterial, crateMaterial}, 2));
-    cubeObject->AddComponent(new MeshRenderer(theMissingModel->GetMesh(1), dudeMaterial));
-    cubeObject->AddComponent(new MeshRenderer(theMissingModel->GetMesh(2), dudeMaterial));
-    scene.AddGameObject(cubeObject);
+    theMissingObject = new GameObject();
+    theMissingObject->AddComponent(new MeshRenderer(theMissingModel->GetMesh(0), {dudeMaterial, crateMaterial}, 2));
+    theMissingObject->AddComponent(new MeshRenderer(theMissingModel->GetMesh(1), dudeMaterial));
+    theMissingObject->AddComponent(new MeshRenderer(theMissingModel->GetMesh(2), dudeMaterial));
+    scene.AddGameObject(theMissingObject);
 
     // Crate
-    crateObject               = new GameObject();
-    GameEngine::Components::Transform* crateTransform = crateObject->GetTransform();
-    crateTransform->SetPosition(glm::vec3(0.0f, 2.0f, 0.0f));
+    crateObject = new GameObject();
+    crateObject->GetTransform()->SetPosition(glm::vec3(0.0f, 2.0f, 0.0f));
     crateObject->AddComponent(new MeshRenderer(cubeModel->GetMesh(0), crateMaterial));
     crateObject->AddComponent(new BoxCollider(glm::vec3(0.5f)));
     crateObject->AddComponent(new Rigidbody(reactphysics3d::BodyType::DYNAMIC));
     scene.AddGameObject(crateObject);
 
-    // Crate child
-    subCrateObject               = new GameObject();
-    GameEngine::Components::Transform* subCrateTransform = subCrateObject->GetTransform();
-    subCrateTransform->SetPosition(glm::vec3(5.0f, 0.0f, 0.0f));
-    subCrateObject->AddComponent(new MeshRenderer(cubeModel->GetMesh(0), crateMaterial));
-    subCrateObject->SetParent(crateObject);
-    
+    // Child crate
+    childCrateObject = new GameObject();
+    childCrateObject->GetTransform()->SetPosition(glm::vec3(5.0f, 0.0f, 0.0f));
+    childCrateObject->AddComponent(new MeshRenderer(cubeModel->GetMesh(0), crateMaterial));
+    childCrateObject->SetParent(crateObject);
+
+    // Child of child Crate
+    childOfChildCrateObject = new GameObject();
+    childOfChildCrateObject->GetTransform()->SetPosition(glm::vec3(2.0f, 0.0f, 0.0f));
+    childOfChildCrateObject->AddComponent(new MeshRenderer(cubeModel->GetMesh(0), crateMaterial));
+    childOfChildCrateObject->SetParent(childCrateObject);
+
     // Floor
-    GameObject* floorObject    = new GameObject();
-    GameEngine::Components::Transform*  floorTransform = floorObject->GetTransform();
+    GameObject*                        floorObject    = new GameObject();
+    GameEngine::Components::Transform* floorTransform = floorObject->GetTransform();
     floorTransform->SetPosition(glm::vec3(0.0f, -2.0f, 0.0f));
     floorTransform->SetScale(glm::vec3(5.0f, 1.0f, 5.0f));
     floorObject->AddComponent(new MeshRenderer(cubeModel->GetMesh(0), crateMaterial));
@@ -235,37 +239,41 @@ void GraphicDemoApplication::Initialize(Scene& scene)
 
     // Water
     GameObject* waterObject = new GameObject();
-    GameEngine::Components::Transform* waterTransform = waterObject->GetTransform();
-    waterTransform->SetPosition(glm::vec3(0.0f, -2.0f, 0.0f));
+    waterObject->GetTransform()->SetPosition(glm::vec3(0.0f, -2.0f, 0.0f));
     waterObject->AddComponent(new MeshRenderer(highPolyPlane->GetMesh(0), waterMaterial));
     scene.AddGameObject(waterObject);
-    
+
+    // Setup physics debug
     Physics::SetDebugRendererMaterial(physicsMaterial);
     Physics::ToggleDebugWireframe();
 }
 
 void GraphicDemoApplication::CustomRun()
 {
+    // Toggle physics debug wireframe (this causes memory to accumulate each time it's done)
+    // TODO: Fix memory leak
     if (Input::GetKeyPressed(GLFW_KEY_P)) { Physics::ToggleDebugWireframe(); }
 
-    glm::vec4 wasdVelocity = glm::vec4(0.0f);
-    if (Input::GetKeyDown(GLFW_KEY_D)) { wasdVelocity.x += 5.0f * Time::GetDeltaTime(); }
-    if (Input::GetKeyDown(GLFW_KEY_A)) { wasdVelocity.x -= 5.0f * Time::GetDeltaTime(); }
-    if (Input::GetKeyDown(GLFW_KEY_W)) { wasdVelocity.z -= 5.0f * Time::GetDeltaTime(); }
-    if (Input::GetKeyDown(GLFW_KEY_S)) { wasdVelocity.z += 5.0f * Time::GetDeltaTime(); }
-    if (Input::GetKeyDown(GLFW_KEY_LEFT_SHIFT)) { wasdVelocity.y -= 5.0f * Time::GetDeltaTime(); }
-    if (Input::GetKeyDown(GLFW_KEY_SPACE)) { wasdVelocity.y += 5.0f * Time::GetDeltaTime(); }
-   
+    // Camera movement
+    glm::vec4 cameraVelocity = glm::vec4(0.0f);
+    if (Input::GetKeyDown(GLFW_KEY_D)) { cameraVelocity.x += 5.0f * Time::GetDeltaTime(); }
+    if (Input::GetKeyDown(GLFW_KEY_A)) { cameraVelocity.x -= 5.0f * Time::GetDeltaTime(); }
+    if (Input::GetKeyDown(GLFW_KEY_W)) { cameraVelocity.z -= 5.0f * Time::GetDeltaTime(); }
+    if (Input::GetKeyDown(GLFW_KEY_S)) { cameraVelocity.z += 5.0f * Time::GetDeltaTime(); }
+    if (Input::GetKeyDown(GLFW_KEY_LEFT_SHIFT)) { cameraVelocity.y -= 5.0f * Time::GetDeltaTime(); }
+    if (Input::GetKeyDown(GLFW_KEY_SPACE)) { cameraVelocity.y += 5.0f * Time::GetDeltaTime(); }
 
-    glm::vec4 arrowVelocity = glm::vec4(0.0f);
-    if (Input::GetKeyDown(GLFW_KEY_RIGHT)) { arrowVelocity.x += 5.0f * Time::GetDeltaTime(); }
-    if (Input::GetKeyDown(GLFW_KEY_LEFT)) { arrowVelocity.x -= 5.0f * Time::GetDeltaTime(); }
-    if (Input::GetKeyDown(GLFW_KEY_UP)) { arrowVelocity.z -= 5.0f * Time::GetDeltaTime(); }
-    if (Input::GetKeyDown(GLFW_KEY_DOWN)) { arrowVelocity.z += 5.0f * Time::GetDeltaTime(); }
+    // Crate movement
+    glm::vec4 crateVelocity = glm::vec4(0.0f);
+    if (Input::GetKeyDown(GLFW_KEY_RIGHT)) { crateVelocity.x += 5.0f * Time::GetDeltaTime(); }
+    if (Input::GetKeyDown(GLFW_KEY_LEFT)) { crateVelocity.x -= 5.0f * Time::GetDeltaTime(); }
+    if (Input::GetKeyDown(GLFW_KEY_UP)) { crateVelocity.z -= 5.0f * Time::GetDeltaTime(); }
+    if (Input::GetKeyDown(GLFW_KEY_DOWN)) { crateVelocity.z += 5.0f * Time::GetDeltaTime(); }
 
     // Close window if escape key is pressed
     if (Input::GetKeyPressed(GLFW_KEY_ESCAPE)) { glfwSetWindowShouldClose(Application::_window.GetGlWindow(), true); }
 
+    // Change rainbow light color
     rainbowLightObject->GetComponent<PointLight>()->SetColor(glm::vec4(
                                                                        Math::Sin01(Time::GetTimeSinceStart() + 250),
                                                                        Math::Sin01(Time::GetTimeSinceStart() + 500),
@@ -273,13 +281,20 @@ void GraphicDemoApplication::CustomRun()
                                                                        1.0f
                                                                       ));
 
-    cubeObject->GetTransform()->Rotate(glm::vec3(0.0f, 0.0f, 45.0f * Time::GetDeltaTime()));
+    // Rotate 
+    theMissingObject->GetTransform()->Rotate(glm::vec3(0.0f, 0.0f, 45.0f * Time::GetDeltaTime()));
     suzanneObject->GetTransform()->Rotate(glm::vec3(0.0f, 45.0f * Time::GetDeltaTime(), 0.0f));
 
-    crateObject->GetComponent<Rigidbody>()->ApplyForce(arrowVelocity * 100.0f);
+    // Rotate child crate to test hierarchy
+    childCrateObject->GetTransform()->Rotate(glm::vec3(0.0f, 0.0f, 45.0f * Time::GetDeltaTime()));
 
+    // Move lights
     rainbowLightObject->GetTransform()->SetPosition(glm::vec3(sin(Time::GetTimeSinceStart()) * 5.0f, 1.0f, 0.0f));
     redLightObject->GetTransform()->SetPosition(glm::vec3(0.0, 0.0f, sin(Time::GetTimeSinceStart()) * 5.0f));
 
-    cameraObject->GetTransform()->Move(wasdVelocity);
+    // Move crate
+    crateObject->GetComponent<Rigidbody>()->ApplyForce(crateVelocity * 100.0f);
+
+    // Move camera
+    cameraObject->GetTransform()->Move(cameraVelocity);
 }

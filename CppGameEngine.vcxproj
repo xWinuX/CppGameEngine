@@ -899,7 +899,7 @@
     <Content Include="res\textures\NormalMapDefault.png" />
     <Content Include="res\textures\NoTexture.png" />
     <Content Include="res\textures\TheDude.png" />
-    <Content Include="res\textures\white.png" />
+    <Content Include="res\textures\White.png" />
     <Content Include="vendor\GLFW\libs\glfw3.lib" />
     <Content Include="vendor\glm\include\glm\CMakeLists.txt" />
     <Content Include="vendor\reactphysics3d\include\reactphysics3d\collision\.DS_Store" />

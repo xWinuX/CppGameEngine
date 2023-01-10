@@ -9,9 +9,10 @@
 #include "glm/ext/matrix_transform.hpp"
 
 using namespace GameEngine::Rendering;
+using namespace GameEngine::Components;
 
 
-std::vector<GameEngine::Components::Light*>   Renderer::_lights                 = std::vector<GameEngine::Components::Light*>();
+std::vector<Light*>                           Renderer::_lights                 = std::vector<Light*>();
 std::map<Material*, std::vector<Renderable*>> Renderer::_opaqueRenderables      = std::map<Material*, std::vector<Renderable*>>();
 std::map<Material*, std::vector<Renderable*>> Renderer::_transparentRenderables = std::map<Material*, std::vector<Renderable*>>();
 glm::mat4                                     Renderer::_projectionMatrix       = glm::identity<glm::mat4>();
@@ -24,10 +25,10 @@ void Renderer::Initialize()
     glDepthFunc(GL_LEQUAL);
     glDepthRange(0.0, 1.0);
     glLineWidth(2);
-   // glEnable(GL_CULL_FACE);
+    glEnable(GL_CULL_FACE);
 }
 
-void Renderer::SubmitLight(GameEngine::Components::Light* light) { _lights.push_back(light); }
+void Renderer::SubmitLight(Light* light) { _lights.push_back(light); }
 
 void Renderer::SubmitRenderable(Renderable* renderable)
 {
@@ -68,7 +69,7 @@ unsigned int Renderer::RenderRenderables(const std::map<Material*, std::vector<R
             shader = newShader;
             shader->Use();
 
-            for (GameEngine::Components::Light*& light : _lights) { light->OnShaderUse(); }
+            for (Light*& light : _lights) { light->OnShaderUse(); }
 
             // TODO: Somehow abstract this away
             material->GetUniformBuffer()->SetUniformInstant<float>("u_Time", Time::GetTimeSinceStart());
@@ -101,11 +102,12 @@ void Renderer::Draw()
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     unsigned int numDrawCalls = 0;
-    
+
     // Opaque
     numDrawCalls += RenderRenderables(_opaqueRenderables);
 
     // Transparent
+    // TODO: Sort triangles and objects based on distance to camera
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     numDrawCalls += RenderRenderables(_transparentRenderables);
@@ -116,7 +118,7 @@ void Renderer::Draw()
     glfwSwapBuffers(Core::Window::GetCurrentWindow()->GetGlWindow());
 
     // Cleanup lights
-    for (GameEngine::Components::Light* light : _lights) { light->OnFrameEnd(); }
+    for (Light* light : _lights) { light->OnFrameEnd(); }
     _lights.clear();
 
     // Cleanup renderables

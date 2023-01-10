@@ -18,13 +18,13 @@ void MeshRenderer::RenderableMeshPrimitive::OnBeforeDraw()
 
 void MeshRenderer::RenderableMeshPrimitive::SetTransform(Transform* transform) { _transform = transform; }
 
-MeshRenderer::MeshRenderer(GameEngine::Rendering::Mesh* mesh):
+MeshRenderer::MeshRenderer(Mesh* mesh):
     _mesh(mesh) { for (const Mesh::Primitive& subMesh : _mesh->GetSubMeshes()) { _renderableMeshPrimitives.push_back(new RenderableMeshPrimitive(subMesh)); } }
 
 MeshRenderer::MeshRenderer(Mesh* mesh, Material* material):
     MeshRenderer(mesh) { for (Rendering::RenderableMeshPrimitive* renderableMeshPrimitive : _renderableMeshPrimitives) { renderableMeshPrimitive->SetMaterial(material); } }
 
-MeshRenderer::MeshRenderer(GameEngine::Rendering::Mesh* mesh, const std::initializer_list<GameEngine::Rendering::Material*> materials, const unsigned int numMaterials):
+MeshRenderer::MeshRenderer(Mesh* mesh, const std::initializer_list<Material*> materials, const unsigned int numMaterials):
     MeshRenderer(mesh)
 {
     if (numMaterials != _renderableMeshPrimitives.size()) { Debug::Log::Error("You must pass the same amount of materials as there are mesh primitives!"); }

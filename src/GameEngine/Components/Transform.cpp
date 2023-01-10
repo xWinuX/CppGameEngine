@@ -21,10 +21,9 @@ glm::mat4 Transform::GetTRS() const
     glm::mat4 trs = glm::identity<glm::mat4>();
     
     const GameObject* parent = _gameObject->GetParent();
-    while (parent != nullptr)
+    if (parent != nullptr)
     {
         trs *= parent->GetTransform()->GetTRS();
-        parent = parent->GetParent();
     }
 
     trs = glm::translate(trs, _position);
