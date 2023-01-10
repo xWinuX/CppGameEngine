@@ -5,7 +5,7 @@
 using namespace GameEngine::Core;
 
 GameObject::GameObject():
-    _transform(new GameEngine::Components::Transform()) { _components.push_back(_transform); }
+    _transform(new GameEngine::Components::Transform()) { AddComponent(_transform); }
 
 GameObject::~GameObject()
 {
@@ -37,23 +37,18 @@ void GameObject::AddComponent(GameEngine::Components::Component* addedComponent)
     }
 }
 
-void GameObject::AddChild(GameObject* child)
-{
-    Debug::Log::Message("maxs: " + std::to_string(_children.max_size()));
-    Debug::Log::Message("curs: "+std::to_string(_children.size()));
-    _children.push_back(child);
-}
+void GameObject::AddChild(GameObject* child) { _children.push_back(child); }
 
 void GameObject::RemoveChild(GameObject* child) { _children.remove(child); }
 
 void GameObject::SetParent(GameObject* newParent)
 {
     if (newParent == nullptr) { Debug::Log::Message("Given Parent is null!"); }
-    
+
     if (_parent != nullptr) { _parent->RemoveChild(this); }
 
-    _parent->AddChild(this);
     _parent = newParent;
+    newParent->AddChild(this);
 }
 
 GameObject* GameObject::GetParent() const { return _parent; }

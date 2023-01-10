@@ -1,6 +1,7 @@
 ﻿#include "Transform.h"
 
 
+#include <iostream>
 #include <glm/fwd.hpp>
 #include <glm/gtc/quaternion.hpp>
 
@@ -18,17 +19,17 @@ glm::vec3 Transform::GetScale() const { return _scale; }
 glm::mat4 Transform::GetTRS() const
 {
     glm::mat4 trs = glm::identity<glm::mat4>();
-
-    trs = glm::translate(trs, _position);
-    trs = trs * glm::mat4_cast(_rotation);
-    trs = glm::scale(trs, _scale);
-
+    
     const GameObject* parent = _gameObject->GetParent();
     while (parent != nullptr)
     {
         trs *= parent->GetTransform()->GetTRS();
         parent = parent->GetParent();
     }
+
+    trs = glm::translate(trs, _position);
+    trs = trs * glm::mat4_cast(_rotation);
+    trs = glm::scale(trs, _scale);
     
     return trs;
 }

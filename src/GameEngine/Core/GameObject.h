@@ -17,18 +17,19 @@ namespace GameEngine
         class GameObject final
         {
             private:
-                GameObject*                                     _parent = nullptr;
+                GameObject*                                     _parent   = nullptr;
                 std::list<GameEngine::Core::GameObject*>        _children = std::list<GameEngine::Core::GameObject*>();
                 std::vector<GameEngine::Components::Component*> _components;
-                GameEngine::Components::Transform*     _transform;
-                void AddChild(GameObject* child);
-                void RemoveChild(GameObject* child);
+                GameEngine::Components::Transform*              _transform;
+                void                                            AddChild(GameObject* child);
+                void                                            RemoveChild(GameObject* child);
+
             public:
                 GameObject();
                 ~GameObject();
                 explicit GameObject(glm::vec3 position);
 
-                GameEngine::Components::Transform*      GetTransform() const { return _transform; }
+                GameEngine::Components::Transform*               GetTransform() const { return _transform; }
                 std::vector<GameEngine::Components::Component*>& GetComponents();
 
                 void AddComponent(GameEngine::Components::Component* addedComponent);
@@ -65,7 +66,6 @@ namespace GameEngine
 
                 GameObject* GetParent() const;
 
-            
                 void OnStart() const;
                 void OnUpdate() const;
                 void OnPhysicsUpdate() const;

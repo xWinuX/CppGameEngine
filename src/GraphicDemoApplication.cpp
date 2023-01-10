@@ -63,6 +63,7 @@ GameObject* rainbowLightObject;
 GameObject* suzanneObject;
 GameObject* cubeObject;
 GameObject* crateObject;
+GameObject* subCrateObject;
 
 void GraphicDemoApplication::Initialize(Scene& scene)
 {
@@ -210,11 +211,18 @@ void GraphicDemoApplication::Initialize(Scene& scene)
     crateObject               = new GameObject();
     GameEngine::Components::Transform* crateTransform = crateObject->GetTransform();
     crateTransform->SetPosition(glm::vec3(0.0f, 2.0f, 0.0f));
-    crateObject->AddComponent(new MeshRenderer(cubeMesh, vertexColorMaterial));
+    crateObject->AddComponent(new MeshRenderer(cubeModel->GetMesh(0), crateMaterial));
     crateObject->AddComponent(new BoxCollider(glm::vec3(0.5f)));
     crateObject->AddComponent(new Rigidbody(reactphysics3d::BodyType::DYNAMIC));
     scene.AddGameObject(crateObject);
 
+    // Crate child
+    subCrateObject               = new GameObject();
+    GameEngine::Components::Transform* subCrateTransform = subCrateObject->GetTransform();
+    subCrateTransform->SetPosition(glm::vec3(5.0f, 0.0f, 0.0f));
+    subCrateObject->AddComponent(new MeshRenderer(cubeModel->GetMesh(0), crateMaterial));
+    subCrateObject->SetParent(crateObject);
+    
     // Floor
     GameObject* floorObject    = new GameObject();
     GameEngine::Components::Transform*  floorTransform = floorObject->GetTransform();
@@ -246,6 +254,7 @@ void GraphicDemoApplication::CustomRun()
     if (Input::GetKeyDown(GLFW_KEY_W)) { wasdVelocity.z -= 5.0f * Time::GetDeltaTime(); }
     if (Input::GetKeyDown(GLFW_KEY_S)) { wasdVelocity.z += 5.0f * Time::GetDeltaTime(); }
     if (Input::GetKeyDown(GLFW_KEY_LEFT_SHIFT)) { wasdVelocity.y -= 5.0f * Time::GetDeltaTime(); }
+    if (Input::GetKeyDown(GLFW_KEY_SPACE)) { wasdVelocity.y += 5.0f * Time::GetDeltaTime(); }
    
 
     glm::vec4 arrowVelocity = glm::vec4(0.0f);

@@ -27,7 +27,7 @@ namespace GameEngine
                 glm::quat GetRotation() const;
                 glm::vec3 GetScale() const;
 
-                virtual glm::mat4 GetTRS() const;
+                glm::mat4 GetTRS() const;
 
                 void Move(const glm::vec3& vector3);
                 void Rotate(const glm::vec3& eulerAngles);
