@@ -12,8 +12,10 @@ PhysicsDebugRenderer::~PhysicsDebugRenderer()
 {
     EnableDebugRenderer(false);
 
-    delete _indexBuffer;        // Will delete _indices
-    delete _vertexBuffer;       // Will delete _vertices
+    delete _indexBuffer;
+    delete[] _indices;
+    delete _vertexBuffer;
+    delete[] _vertices;
     delete _vertexBufferLayout; // Will delete _vertexBufferAttributes
     delete _vertexArrayObject;
 }

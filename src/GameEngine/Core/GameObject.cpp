@@ -2,6 +2,9 @@
 
 #include <iostream>
 
+#include "../Debug/Log.h"
+
+using namespace GameEngine::Debug;
 using namespace GameEngine::Core;
 
 GameObject::GameObject():
@@ -13,7 +16,13 @@ GameObject::~GameObject()
     for (const GameEngine::Components::Component* component : _components) { delete component; }
 
     // Delete all children
-    for (const GameObject* child : _children) { delete child; }
+    std::list<GameObject*>::iterator i = _children.begin();
+    while (i != _children.end())
+    {
+        const GameObject* child = *i;
+        i = _children.erase(i);
+        delete child;
+    }
 
     // Remove 
     if (_parent != nullptr) { _parent->RemoveChild(this); }
@@ -61,24 +70,40 @@ void GameObject::OnStart() const
 
 void GameObject::OnPhysicsUpdate() const
 {
-    for (GameEngine::Components::Component* component : _components) { component->OnPhysicsUpdate(); }
+    for (GameEngine::Components::Component* component : _components)
+    {
+        if (!component->GetEnabled()) { continue; }
+        component->OnPhysicsUpdate();
+    }
     for (const GameObject* child : _children) { child->OnPhysicsUpdate(); }
 }
 
 void GameObject::OnUpdate() const
 {
-    for (GameEngine::Components::Component* component : _components) { component->OnUpdate(); }
+    for (GameEngine::Components::Component* component : _components)
+    {
+        if (!component->GetEnabled()) { continue; }
+        component->OnUpdate();
+    }
     for (const GameObject* child : _children) { child->OnUpdate(); }
 }
 
 void GameObject::OnLateUpdate() const
 {
-    for (GameEngine::Components::Component* component : _components) { component->OnLateUpdate(); }
+    for (GameEngine::Components::Component* component : _components)
+    {
+        if (!component->GetEnabled()) { continue; }
+        component->OnLateUpdate();
+    }
     for (const GameObject* child : _children) { child->OnLateUpdate(); }
 }
 
 void GameObject::OnBeforeRender() const
 {
-    for (GameEngine::Components::Component* component : _components) { component->OnBeforeRender(); }
+    for (GameEngine::Components::Component* component : _components)
+    {
+        if (!component->GetEnabled()) { continue; }
+        component->OnBeforeRender();
+    }
     for (const GameObject* child : _children) { child->OnBeforeRender(); }
 }

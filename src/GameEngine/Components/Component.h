@@ -20,24 +20,26 @@ namespace GameEngine
 
             protected:
                 GameEngine::Core::GameObject* _gameObject;
-                Transform*              _transform;
-            public:
-                Component():
-                    _gameObject(nullptr),
-                    _transform(nullptr) {}
+                Transform*                    _transform;
+                bool                          _enabled = true;
 
+            public:
+                Component();
                 virtual ~Component() = default;
 
-                virtual void OnStart() {}
-                virtual void OnUpdate() {}
-                virtual void OnPhysicsUpdate() {}
-                virtual void OnLateUpdate() {}
-                virtual void OnBeforeRender() {}
+                virtual void OnStart();
+                virtual void OnUpdate();
+                virtual void OnPhysicsUpdate();
+                virtual void OnLateUpdate();
+                virtual void OnBeforeRender();
 
-                virtual void OnComponentAdded() {}
-                virtual void OnOtherComponentAdded(Component* component) {}
+                virtual void OnComponentAdded();
+                virtual void OnOtherComponentAdded(Component* component);
 
-                const Transform* GetTransform() const { return _transform; }
+                void SetEnabled(const bool enabled);
+                bool GetEnabled() const;
+
+                const Transform* GetTransform() const;
         };
     }
 }

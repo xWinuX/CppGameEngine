@@ -5,10 +5,6 @@
 #include "../Components/Component.h"
 #include "../Components/Transform.h"
 
-#include <typeinfo>
-
-#include "../Debug/Log.h"
-
 
 namespace GameEngine
 {

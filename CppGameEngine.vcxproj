@@ -41,6 +41,7 @@
     <ClCompile Include="src\GameEngine\Components\BoxCollider.cpp" />
     <ClCompile Include="src\GameEngine\Components\Camera.cpp" />
     <ClCompile Include="src\GameEngine\Components\CapsuleCollider.cpp" />
+    <ClCompile Include="src\GameEngine\Components\Component.cpp" />
     <ClCompile Include="src\GameEngine\Components\Light.cpp" />
     <ClCompile Include="src\GameEngine\Components\MeshRenderer.cpp" />
     <ClCompile Include="src\GameEngine\Components\PointLight.cpp" />
