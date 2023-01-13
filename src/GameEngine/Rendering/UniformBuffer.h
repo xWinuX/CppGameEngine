@@ -25,11 +25,7 @@
         inline void UniformBuffer::SetUniform<type>(const GLchar* uniformName, type value) \
         { \
             const int uniformLocation = GetUniformLocation(uniformName); \
-            if (uniformLocation == -1) \
-            { \
-                Debug::Log::Message("Uniform " + std::string(uniformName) + " was not found! Did you forget to initialize it?"); \
-                return; \
-            } \
+            if (uniformLocation == -1) { return; } \
             SetUniform<type>(uniformLocation, value); \
         } \
         template<> \
@@ -42,11 +38,7 @@
         inline void UniformBuffer::SetUniformInstant<type>(const GLchar* uniformName, type value) \
         { \
             const int uniformLocation = GetUniformLocation(uniformName); \
-            if (uniformLocation == -1) \
-            { \
-                Debug::Log::Message("Uniform " + std::string(uniformName) + " was not found! Did you forget to initialize it?"); \
-                return; \
-            } \
+            if (uniformLocation == -1) { return; } \
             SetUniformInstant<type>(uniformLocation, value); \
         }
 

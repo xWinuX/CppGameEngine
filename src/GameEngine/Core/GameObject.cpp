@@ -29,7 +29,7 @@ GameObject::~GameObject()
 }
 
 GameObject::GameObject(const glm::vec3 position) :
-    GameObject() { _transform->SetPosition(position); }
+    GameObject() { _transform->SetLocalPosition(position); }
 
 std::vector<GameEngine::Components::Component*>& GameObject::GetComponents() { return _components; }
 

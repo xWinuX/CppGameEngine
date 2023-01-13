@@ -30,8 +30,8 @@ void Rigidbody::OnPhysicsUpdate()
     //const glm::vec3 degreesEuler = glm::vec3(glm::degrees(euler.x)-90,glm::degrees(euler.y)-90,glm::degrees(euler.z)-90);
     // Debug::Log::Message(std::to_string(degreesEuler.x) + "," + std::to_string(degreesEuler.y) + "," + std::to_string(degreesEuler.z));
 
-    _transform->SetPosition(glm::vec3(physicsTransformPosition.x, physicsTransformPosition.y, physicsTransformPosition.z));
-    _transform->SetRotation(quaternion);
+    _transform->SetLocalPosition(glm::vec3(physicsTransformPosition.x, physicsTransformPosition.y, physicsTransformPosition.z));
+    _transform->SetLocalRotation(quaternion);
 }
 
 void Rigidbody::OnOtherComponentAdded(Component* component)
@@ -46,4 +46,9 @@ void Rigidbody::OnOtherComponentAdded(Component* component)
 void Rigidbody::ApplyForce(const glm::vec3 force) const
 {
     _pPhysicsRigidBody->applyWorldForceAtCenterOfMass(reactphysics3d::Vector3(force.x, force.y, force.z));
+}
+
+void Rigidbody::ApplyTorque(const glm::vec3 torque) const
+{
+    _pPhysicsRigidBody->applyWorldTorque(reactphysics3d::Vector3(torque.x, torque.y, torque.z));
 }

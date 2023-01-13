@@ -16,7 +16,6 @@ reactphysics3d::PhysicsWorld* Physics::_physicsWorld  = Physics::_physicsCommon.
 Material*                     Physics::_debugMaterial = nullptr;
 PhysicsDebugRenderer*         Physics::_debugRenderer = nullptr;
 
-
 float Physics::_physicsTimeStep      = 1.0f / 60.0f;
 float Physics::_frameAccumulator     = 0.0f;
 bool  Physics::_renderDebugWireFrame = false;
@@ -26,7 +25,7 @@ void Physics::Update(const GameEngine::Core::Scene* scene)
     const float deltaTime = std::min(Time::GetDeltaTime(), 0.25f);
 
     _frameAccumulator += deltaTime;
-    
+
     // This executes the physics as many time as needed to catch up to real time again
     while (_frameAccumulator >= _physicsTimeStep)
     {
@@ -43,14 +42,12 @@ void Physics::Update(const GameEngine::Core::Scene* scene)
             _debugRenderer->SetMaterial(_debugMaterial);
         }
 
-        Debug::Log::Message("Rendering physics debug");
         _debugRenderer->Render();
     }
     else
     {
         if (_debugRenderer != nullptr)
         {
-            Debug::Log::Message("destroying physics debug renderer");
             delete _debugRenderer;
             _debugRenderer = nullptr;
         }
