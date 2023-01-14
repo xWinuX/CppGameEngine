@@ -50,12 +50,12 @@ void VertexArrayObject::Bind() const
 
 void VertexArrayObject::Render() const
 {
-    glDrawElements(GL_TRIANGLES, static_cast<int>(_pIndexBuffer->GetNumIndices()), _pIndexBuffer->GetIndicesType(), static_cast<void*>(nullptr));
+    glDrawElements(GL_TRIANGLES, static_cast<int>(_pIndexBuffer->GetNumElements()), _pIndexBuffer->GetIndicesType(), static_cast<void*>(nullptr));
 }
 
 void VertexArrayObject::Render(const int numIndices, const unsigned int offset) const
 {
-    glDrawElements(GL_TRIANGLES, numIndices, _pIndexBuffer->GetIndicesType(), (void*)(offset));
+    glDrawElements(GL_TRIANGLES, numIndices, _pIndexBuffer->GetIndicesType(), reinterpret_cast<void*>(offset));
 }
 
 void VertexArrayObject::Unbind() const

@@ -1,31 +1,39 @@
 ﻿#pragma once
 #include <glad/glad.h>
 
+#include "Buffer.h"
+
 namespace GameEngine
 {
     namespace Rendering
     {
-        // TODO: Probably combine Index and VertexBuffer into a base class since they are basically the same
-        class IndexBuffer
+        class IndexBuffer : public Buffer<GL_ELEMENT_ARRAY_BUFFER>
         {
             private:
-                GLuint         _indexBufferID = 0;
-                unsigned char* _pIndices;
-                unsigned int   _numIndices;
-                GLenum         _indicesType;
-                unsigned int   _indexSize;
-                GLenum         _drawType;
+                GLenum _indicesType;
 
             public:
-                IndexBuffer(unsigned char* pIndices, GLenum indicesType, unsigned int numIndices, GLenum drawType = GL_STATIC_DRAW);
-                ~IndexBuffer();
-                unsigned int GetNumIndices() const;
-                GLenum       GetIndicesType() const;
-                unsigned int GetIndexSize() const;
-                void         Bind() const;
-                void         Unbind();
+                IndexBuffer(unsigned char* buffer, const unsigned int elementSize, const unsigned int numElements, const GLenum drawType = GL_STATIC_DRAW):
+                    Buffer(buffer, elementSize, numElements, drawType)
+                {
+                    switch (_elementSize)
+                    {
+                        case sizeof(GLuint):
+                            _indicesType = GL_UNSIGNED_INT;
+                            break;
+                        case sizeof(GLushort):
+                            _indicesType = GL_UNSIGNED_SHORT;
+                            break;
+                        case sizeof(GLubyte):
+                            _indicesType = GL_UNSIGNED_BYTE;
+                            break;
+                        default:
+                            Debug::Log::Error("Given index buffer element size doesn't match any of the sizes of (GLuint, GLushort, GLubyte)");
+                            break;
+                    }
+                }
 
-                void UpdateData(const unsigned char* data, unsigned int numIndices);
+                GLenum GetIndicesType() const { return _indicesType; }
         };
     }
 }

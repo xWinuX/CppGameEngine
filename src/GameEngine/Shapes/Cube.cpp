@@ -79,7 +79,7 @@ Cube::Cube() :
 {
     _pMesh = new Mesh(
                       new VertexBuffer(reinterpret_cast<unsigned char*>(_pCubeVertices), sizeof(VertexPositionColorUV), _numCubeVertices),
-                      new IndexBuffer(reinterpret_cast<unsigned char*>(_pCubeIndices), GL_UNSIGNED_INT, _numCubeIndices),
+                      new IndexBuffer(reinterpret_cast<unsigned char*>(_pCubeIndices), sizeof(unsigned int), _numCubeIndices),
                       new VertexBufferLayout(_vertexBufferLayout)
                      );
 }

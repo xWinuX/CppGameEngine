@@ -135,7 +135,7 @@ std::vector<GameEngine::Rendering::Mesh*> GLTF::ImportModel(std::string filePath
 
             mesh->AddPrimitive(
                                new VertexBuffer(vertexBufferData, vertexSize, numVertices),
-                               new IndexBuffer(indices, TinyGltfComponentTypeLookup.at(indicesAccessor.componentType).Enum, indicesAccessor.count),
+                               new IndexBuffer(indices, TinyGltfComponentTypeLookup.at(indicesAccessor.componentType).Size, indicesAccessor.count),
                                vertexBufferLayout
                               );
         }

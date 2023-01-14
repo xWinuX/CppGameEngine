@@ -30,7 +30,7 @@ void OBJ::AddMesh(std::vector<Rendering::VertexPositionUVNormal>& vertexBuffer, 
 
     meshes.push_back(new Mesh(
                                new VertexBuffer(reinterpret_cast<unsigned char*>(vertices), sizeof(VertexPositionUVNormal), vertexBuffer.size()),
-                               new IndexBuffer(reinterpret_cast<unsigned char*>(indices), GL_UNSIGNED_INT, indexBuffer.size()),
+                               new IndexBuffer(reinterpret_cast<unsigned char*>(indices), sizeof(unsigned int), indexBuffer.size()),
                                new VertexBufferLayout(pVertexAttributes, 3))
                      );
 }

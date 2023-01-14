@@ -18,7 +18,7 @@ namespace GameEngine
                 const unsigned int _maxVertices = 1024 * 3;
             
                 GameEngine::Rendering::VertexBuffer*          _vertexBuffer = new GameEngine::Rendering::VertexBuffer(nullptr, _vertexSize, _maxVertices, GL_DYNAMIC_DRAW);
-                GameEngine::Rendering::IndexBuffer*           _indexBuffer = new GameEngine::Rendering::IndexBuffer(nullptr, GL_UNSIGNED_INT, _maxVertices, GL_DYNAMIC_DRAW);
+                GameEngine::Rendering::IndexBuffer*           _indexBuffer = new GameEngine::Rendering::IndexBuffer(nullptr, sizeof(unsigned int), _maxVertices, GL_DYNAMIC_DRAW);
                 GameEngine::Rendering::VertexBufferAttribute* _vertexBufferAttributes = new GameEngine::Rendering::VertexBufferAttribute[2]
                 {
                     GameEngine::Rendering::VertexBufferAttribute(3, GL_FLOAT, GL_FALSE, _vertexSize, nullptr),
