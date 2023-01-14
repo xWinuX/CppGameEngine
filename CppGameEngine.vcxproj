@@ -331,7 +331,6 @@
     <ClInclude Include="src\GameEngine\Rendering\Texture.h" />
     <ClInclude Include="src\GameEngine\Rendering\Uniform.h" />
     <ClInclude Include="src\GameEngine\Rendering\UniformBuffer.h" />
-    <ClInclude Include="src\GameEngine\Rendering\Vertex.h" />
     <ClInclude Include="src\GameEngine\Rendering\VertexArrayObject.h" />
     <ClInclude Include="src\GameEngine\Rendering\VertexBuffer.h" />
     <ClInclude Include="src\GameEngine\Rendering\VertexBufferAttribute.h" />

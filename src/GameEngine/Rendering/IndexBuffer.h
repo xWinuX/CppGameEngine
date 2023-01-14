@@ -13,7 +13,7 @@ namespace GameEngine
                 GLenum _indicesType;
 
             public:
-                IndexBuffer(unsigned char* buffer, const unsigned int elementSize, const unsigned int numElements, const GLenum drawType = GL_STATIC_DRAW):
+                IndexBuffer(const unsigned char* buffer, const unsigned int elementSize, const unsigned int numElements, const GLenum drawType = GL_STATIC_DRAW):
                     Buffer(buffer, elementSize, numElements, drawType)
                 {
                     switch (_elementSize)

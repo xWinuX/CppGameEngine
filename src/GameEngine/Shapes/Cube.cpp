@@ -84,4 +84,10 @@ Cube::Cube() :
                      );
 }
 
+Cube::~Cube()
+{
+    delete[] _pCubeVertices;
+    delete[] _pCubeIndices;
+}
+
 Mesh* Cube::GetMesh() const { return _pMesh; }

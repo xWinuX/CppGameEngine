@@ -11,7 +11,7 @@ namespace GameEngine
         class VertexBuffer : public Buffer<GL_ARRAY_BUFFER>
         {
             public:
-                VertexBuffer(unsigned char* buffer, const unsigned elementSize, const unsigned numElements, const GLenum drawType = GL_STATIC_DRAW):
+                VertexBuffer(const unsigned char* buffer, const unsigned elementSize, const unsigned numElements, const GLenum drawType = GL_STATIC_DRAW):
                     Buffer(buffer, elementSize, numElements, drawType) {}
         };
     }

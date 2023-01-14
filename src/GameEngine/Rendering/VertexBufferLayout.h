@@ -1,4 +1,5 @@
 ﻿#pragma once
+
 #include "VertexBufferAttribute.h"
 
 namespace GameEngine
@@ -8,9 +9,8 @@ namespace GameEngine
         class VertexBufferLayout
         {
             private:
-                VertexBufferAttribute* _pVertexBufferAttributes;
-                unsigned int           _numVertexBufferAttributes;
-
+                VertexBufferAttribute*             _pVertexBufferAttributes;
+                unsigned int                       _numVertexBufferAttributes;
             public:
                 VertexBufferLayout(VertexBufferAttribute* pVertexBufferAttributes, unsigned int numVertexBufferAttributes);
                 ~VertexBufferLayout();

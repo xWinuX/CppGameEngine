@@ -138,6 +138,9 @@ std::vector<GameEngine::Rendering::Mesh*> GLTF::ImportModel(std::string filePath
                                new IndexBuffer(indices, TinyGltfComponentTypeLookup.at(indicesAccessor.componentType).Size, indicesAccessor.count),
                                vertexBufferLayout
                               );
+
+            delete[] vertexBufferData;
+            delete[] indices;
         }
         meshes.push_back(mesh);
     }

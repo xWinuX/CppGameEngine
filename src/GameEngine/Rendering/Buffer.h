@@ -11,14 +11,12 @@ namespace GameEngine
         {
             protected:
                 GLuint         _bufferID = 0;
-                unsigned char* _buffer;
                 unsigned int   _elementSize;
                 unsigned int   _numElements;
                 GLenum         _drawType;
 
             public:
-                explicit Buffer(unsigned char* buffer, const unsigned int elementSize, const unsigned int numElements, const GLenum drawType = GL_STATIC_DRAW):
-                    _buffer(buffer),
+                explicit Buffer(const unsigned char* buffer, const unsigned int elementSize, const unsigned int numElements, const GLenum drawType = GL_STATIC_DRAW):
                     _elementSize(elementSize),
                     _numElements(numElements),
                     _drawType(drawType)
@@ -32,7 +30,6 @@ namespace GameEngine
                 ~Buffer()
                 {
                     glDeleteBuffers(1, &_bufferID);
-                    delete[] _buffer;
                 }
 
                 unsigned int GetElementSize() const { return _elementSize; }

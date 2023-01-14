@@ -15,7 +15,7 @@ const std::vector<VertexBufferAttribute>  OBJ::VertexBufferAttributes = {
 };
 
 
-void OBJ::AddMesh(std::vector<Rendering::VertexPositionUVNormal>& vertexBuffer, std::vector<unsigned>& indexBuffer, std::vector<Mesh*>& meshes)
+void OBJ::AddMesh(std::vector<VertexPositionUVNormal>& vertexBuffer, std::vector<unsigned>& indexBuffer, std::vector<Mesh*>& meshes)
 {
     // Create new mesh
     unsigned int* indices = new unsigned int[indexBuffer.size()];
@@ -33,6 +33,9 @@ void OBJ::AddMesh(std::vector<Rendering::VertexPositionUVNormal>& vertexBuffer, 
                                new IndexBuffer(reinterpret_cast<unsigned char*>(indices), sizeof(unsigned int), indexBuffer.size()),
                                new VertexBufferLayout(pVertexAttributes, 3))
                      );
+
+    delete[] vertices;
+    delete[] indices;
 }
 
 std::vector<GameEngine::Rendering::Mesh*> OBJ::ImportModel(const std::string& filePath)
@@ -130,7 +133,7 @@ std::vector<GameEngine::Rendering::Mesh*> OBJ::ImportModel(const std::string& fi
                     uvIndex -= uvIndexOffset;
                     normalIndex -= normalIndexOffset;
 
-                    vertexBuffer.emplace_back(positionList[positionIndex - 1], uvList[uvIndex - 1], normalList[normalIndex - 1]);
+                    vertexBuffer.push_back({positionList[positionIndex - 1], uvList[uvIndex - 1], normalList[normalIndex - 1]});
                 }
 
                 break;
