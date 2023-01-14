@@ -7,7 +7,6 @@
 #include "Uniform.h"
 #include <glm/mat4x4.hpp>
 
-
 #define UNIFORM(type, suffix) std::map<int,  UniformEntry<##type##>> _uniform##suffix##s;
 
 #define ADD_UNIFORM_SPECIALIZATION(type,suffix) \
@@ -25,7 +24,7 @@
         inline void UniformBuffer::SetUniform<type>(const GLchar* uniformName, type value) \
         { \
             const int uniformLocation = GetUniformLocation(uniformName); \
-            if (uniformLocation == -1) { return; } \
+            if (uniformLocation < 0) {  Debug::Log::Message(std::string(uniformName) + " failed"); return; } \
             SetUniform<type>(uniformLocation, value); \
         } \
         template<> \
@@ -38,7 +37,7 @@
         inline void UniformBuffer::SetUniformInstant<type>(const GLchar* uniformName, type value) \
         { \
             const int uniformLocation = GetUniformLocation(uniformName); \
-            if (uniformLocation == -1) { return; } \
+            if (uniformLocation < 0) {Debug::Log::Message(std::string(uniformName) + " failed");  return; } \
             SetUniformInstant<type>(uniformLocation, value); \
         }
 
@@ -66,6 +65,7 @@ namespace GameEngine
                 GLuint                          _programID;
                 std::map<const GLchar*, int>    _uniformNameLocationMap;
                 std::map<int, std::vector<int>> _applyQueue;
+                unsigned int                    _invalidLocationsCounter = 0;
 
                 UNIFORM(glm::mat4, Mat4F)
                 UNIFORM(glm::vec4, 4F)
@@ -80,13 +80,19 @@ namespace GameEngine
                 template <typename T, std::map<int, UniformEntry<T>> UniformBuffer::*MapPtr>
                 void InitializeUniform(const GLchar* uniformName, T defaultVar, const bool includeInApplyQueue = true, const bool resetAfterApply = false)
                 {
-                    const int location = glGetUniformLocation(_programID, uniformName);
-                    if (location != -1)
+                    int location = glGetUniformLocation(_programID, uniformName);
+
+                    if (location == -1)
                     {
-                        _uniformNameLocationMap[uniformName] = location;
-                        (this->*MapPtr).emplace(location, UniformEntry<T>{Uniform<T>{uniformName, location, defaultVar}, includeInApplyQueue, resetAfterApply});
+                        location -= _invalidLocationsCounter;
+                        _invalidLocationsCounter++;
+                        Debug::Log::Message(std::to_string(_invalidLocationsCounter));
                     }
-                    else { Debug::Log::Error("Something went wrong initializing uniform \"" + std::string(uniformName)); }
+
+                    _uniformNameLocationMap[uniformName] = location;
+                    (this->*MapPtr).emplace(location, UniformEntry<T>{Uniform<T>{uniformName, location, defaultVar}, includeInApplyQueue, resetAfterApply});
+
+                    if (location < 0) { Debug::Log::Error("Something went wrong initializing uniform \"" + std::string(uniformName)); }
                 }
 
                 template <typename T>
@@ -101,6 +107,8 @@ namespace GameEngine
                 void Apply();
 
                 int GetUniformLocation(const GLchar* uniformName);
+
+                UniformBuffer* Copy(const GLuint programID) const;
 
                 template <typename T>
                 static void ShowUniformNotSupportedError() { Debug::Log::Error("Uniform type " + std::string(typeid(T).name()) + " is not supported"); }

@@ -1,0 +1,1 @@
+﻿fragColor *= u_ColorTint;

@@ -7,11 +7,11 @@
 
 void main()
 {
-    gl_Position = u_ViewProjection * u_Transform * vec4(a_Position, 1.0);
+    v_Position = calculateWorldSpacePosition(u_Transform, a_Position);
+    
+    gl_Position = calculateNDCPosition(u_ViewProjection, v_Position);
     
     v_TBN = calculateTBN(u_Transform, a_Normals, a_Tangents);
-    
-    v_Position = vec3(u_Transform * vec4(a_Position, 1.0));
     
     v_TexCoords = a_TextureCoords;
 }

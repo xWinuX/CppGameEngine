@@ -27,3 +27,18 @@ vec4 calculatePointLightColor(vec3 fragPosition, vec3 position, vec4 color, floa
 
     return diffuseSum;
 }
+
+vec4 calculateNDCPosition(mat4 viewProjection, mat4 transform, vec3 position)
+{
+    return viewProjection * transform * vec4(position, 1.0);
+}
+
+vec4 calculateNDCPosition(mat4 viewProjection, vec3 worldPosition)
+{
+    return viewProjection * vec4(worldPosition, 1.0);
+}
+
+vec3 calculateWorldSpacePosition(mat4 transform, vec3 position)
+{
+    return vec3(transform * vec4(position, 1.0));
+}

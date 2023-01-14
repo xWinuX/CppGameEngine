@@ -45,7 +45,7 @@ Model* theMissingModel;
 Model* sphereModel;
 Model* highPolyPlane;
 
-Shader* defaultShader;
+Shader* litShader;
 Shader* waterShader;
 Shader* physicsDebugShader;
 Shader* vertexColorShader;
@@ -83,42 +83,58 @@ void GraphicDemoApplication::Initialize(Scene& scene)
     
     // TODO: somehow make initialized uniforms copyable so i don't have to copy paste code
     #pragma region Default Shader
-    defaultShader = new Shader("res/shaders/Default/Default.vert", "res/shaders/Default/Default.frag");
-
+    litShader = new Shader("res/shaders/Lit/Lit.vert", "res/shaders/Lit/Lit.frag");
+    litShader->Use();
+    
     // Common
-    defaultShader->InitializeUniform<float>("u_Time", 0.0f, false);
-    defaultShader->InitializeUniform<glm::mat4>("u_ViewProjection", glm::identity<glm::mat4>(), false);
-    defaultShader->InitializeUniform<glm::mat4>("u_Transform", glm::identity<glm::mat4>(), false);
+    litShader->InitializeUniform<float>("u_Time", 0.0f, false);
+    litShader->InitializeUniform<glm::mat4>("u_ViewProjection", glm::identity<glm::mat4>(), false);
+    litShader->InitializeUniform<glm::mat4>("u_Transform", glm::identity<glm::mat4>(), false);
 
     // Lighting
-    defaultShader->InitializeUniform<glm::vec4>("u_AmbientLightColor", glm::vec4(1.0));
-    defaultShader->InitializeUniform<float>("u_AmbientLightIntensity", 0.5f);
+    litShader->InitializeUniform<glm::vec4>("u_AmbientLightColor", glm::vec4(1.0));
+    litShader->InitializeUniform<float>("u_AmbientLightIntensity", 0.3f);
 
-    defaultShader->InitializeUniform<int>("u_NumPointLights", 0, false);
-    defaultShader->InitializeUniform<std::vector<glm::vec3>*>("u_PointLightPositions", nullptr, false);
-    defaultShader->InitializeUniform<std::vector<glm::vec4>*>("u_PointLightColors", nullptr, false);
-    defaultShader->InitializeUniform<std::vector<float>*>("u_PointLightIntensities", nullptr, false);
-    defaultShader->InitializeUniform<std::vector<float>*>("u_PointLightRanges", nullptr, false);
+    litShader->InitializeUniform<int>("u_NumPointLights", 0, false);
+    litShader->InitializeUniform<std::vector<glm::vec3>*>("u_PointLightPositions", nullptr, false);
+    litShader->InitializeUniform<std::vector<glm::vec4>*>("u_PointLightColors", nullptr, false);
+    litShader->InitializeUniform<std::vector<float>*>("u_PointLightIntensities", nullptr, false);
+    litShader->InitializeUniform<std::vector<float>*>("u_PointLightRanges", nullptr, false);
 
     // Other
-    defaultShader->InitializeUniform<glm::vec4>("u_ColorTint", glm::vec4(1.0f));
-    defaultShader->InitializeUniform<Texture*>("u_Texture", noTexture);
-    defaultShader->InitializeUniform<Texture*>("u_NormalMap", normalMapDefaultTexture);
-    defaultShader->InitializeUniform<float>("u_NormalMapIntensity", 1.0f);
+    litShader->InitializeUniform<glm::vec4>("u_ColorTint", glm::vec4(1.0f));
+    litShader->InitializeUniform<Texture*>("u_Texture", whiteTexture);
+    litShader->InitializeUniform<Texture*>("u_NormalMap", normalMapDefaultTexture);
+    litShader->InitializeUniform<float>("u_NormalMapIntensity", 1.0f);
     
     // Dude material
-    dudeMaterial = new Material(defaultShader);
+    dudeMaterial = new Material(litShader);
     dudeMaterial->GetUniformBuffer()->SetUniform("u_Texture", theDudeTexture);
 
     // Crate material
-    crateMaterial = new Material(defaultShader);
+    crateMaterial = new Material(litShader);
     crateMaterial->GetUniformBuffer()->SetUniform("u_Texture", crateTexture);
     crateMaterial->GetUniformBuffer()->SetUniform("u_NormalMap", crateNormalMapTexture);
     crateMaterial->GetUniformBuffer()->SetUniform("u_NormalMapIntensity", 1.0f);
     #pragma endregion
 
+
+    #pragma region Water Shader
+    waterShader = new Shader("res/shaders/Water/Water.vert", "res/shaders/Water/Water.frag");
+    waterShader->Use();
+    waterShader->UniformBufferFromShader(litShader);
+    
+    // Material
+    waterMaterial = new Material(waterShader);
+    waterMaterial->SetTransparent(true);
+    #pragma endregion
+    
     #pragma region Physics Debug Shader
     physicsDebugShader = new Shader("res/shaders/PhysicsDebugShader.vsh", "res/shaders/PhysicsDebugShader.fsh");
+    physicsDebugShader->Use();
+    physicsDebugShader->Use();
+
+    // Common
     physicsDebugShader->InitializeUniform<glm::mat4>("u_ViewProjection", glm::identity<glm::mat4>(), false);
 
     // Material
@@ -127,39 +143,11 @@ void GraphicDemoApplication::Initialize(Scene& scene)
     physicsMaterial->SetRenderMode(Material::Wireframe);
     #pragma endregion
 
-    #pragma region Water Shader
-    waterShader = new Shader("res/shaders/Water/Water.vert", "res/shaders/Water/Water.frag");
-    waterShader->InitializeUniform<float>("u_Time", 0.0f, false);
-
-    // Common
-    waterShader->InitializeUniform<float>("u_Time", 0.0f, false);
-    waterShader->InitializeUniform<glm::mat4>("u_ViewProjection", glm::identity<glm::mat4>(), false);
-    waterShader->InitializeUniform<glm::mat4>("u_Transform", glm::identity<glm::mat4>(), false);
-
-    // Lighting
-    waterShader->InitializeUniform<glm::vec4>("u_AmbientLightColor", glm::vec4(1.0));
-    waterShader->InitializeUniform<float>("u_AmbientLightIntensity", 0.5f);
-
-    waterShader->InitializeUniform<int>("u_NumPointLights", 0, false);
-    waterShader->InitializeUniform<std::vector<glm::vec3>*>("u_PointLightPositions", nullptr, false);
-    waterShader->InitializeUniform<std::vector<glm::vec4>*>("u_PointLightColors", nullptr, false);
-    waterShader->InitializeUniform<std::vector<float>*>("u_PointLightIntensities", nullptr, false);
-    waterShader->InitializeUniform<std::vector<float>*>("u_PointLightRanges", nullptr, false);
-
-    // Other
-    waterShader->InitializeUniform<glm::vec4>("u_ColorTint", glm::vec4(0.0, 0.0, 1.0f, 1.0));
-    waterShader->InitializeUniform<Texture*>("u_Texture", whiteTexture);
-    waterShader->InitializeUniform<Texture*>("u_NormalMap", normalMapDefaultTexture);
-    waterShader->InitializeUniform<float>("u_NormalMapIntensity", 1.0f);
-
-    // Material
-    waterMaterial = new Material(waterShader);
-    waterMaterial->SetTransparent(true);
-    #pragma endregion
-
     #pragma region Vertex Color Shader
     vertexColorShader = new Shader("res/shaders/VertexColor/VertexColor.vert", "res/shaders/VertexColor/VertexColor.frag");
-
+    vertexColorShader->Use();
+    
+    // Common
     vertexColorShader->InitializeUniform<float>("u_Time", 0.0f, false);
     vertexColorShader->InitializeUniform<glm::mat4>("u_ViewProjection", glm::identity<glm::mat4>(), false);
     vertexColorShader->InitializeUniform<glm::mat4>("u_Transform", glm::identity<glm::mat4>(), false);
@@ -181,8 +169,8 @@ void GraphicDemoApplication::Initialize(Scene& scene)
     Transform* redLightTransform = redLightObject->GetTransform();
     redLightTransform->SetLocalPosition(glm::vec3(2.0f, 0.0f, 0.0f));
     redLightTransform->SetLocalScale(glm::vec3(0.1f));
-    redLightObject->AddComponent(new MeshRenderer(sphereModel->GetMesh(0), dudeMaterial));
-    redLightObject->AddComponent(new PointLight(defaultShader, glm::vec4(1.0f, 0.0f, 0.0f, 1.0f), 5.0f, 2.0f));
+    //redLightObject->AddComponent(new MeshRenderer(sphereModel->GetMesh(0), dudeMaterial));
+    redLightObject->AddComponent(new PointLight(litShader, glm::vec4(1.0f, 0.0f, 0.0f, 1.0f), 5.0f, 2.0f));
     scene.AddGameObject(redLightObject);
 
     // Rainbow light
@@ -191,7 +179,7 @@ void GraphicDemoApplication::Initialize(Scene& scene)
     rainbowLightTransform->SetLocalPosition(glm::vec3(-2.0f, 0.0f, 0.0f));
     rainbowLightTransform->SetLocalScale(glm::vec3(0.1f));
     rainbowLightObject->AddComponent(new MeshRenderer(sphereModel->GetMesh(0), dudeMaterial));
-    rainbowLightObject->AddComponent(new PointLight(defaultShader, glm::vec4(1.0f, 1.0f, 1.0f, 1.0f), 5.0f, 2.0f));
+    rainbowLightObject->AddComponent(new PointLight(litShader, glm::vec4(1.0f, 1.0f, 1.0f, 1.0f), 5.0f, 2.0f));
     scene.AddGameObject(rainbowLightObject);
 
     // Suzanne
@@ -251,8 +239,7 @@ void GraphicDemoApplication::Initialize(Scene& scene)
 
 void GraphicDemoApplication::CustomRun()
 {
-    // Toggle physics debug wireframe (this causes memory to accumulate each time it's done)
-    // TODO: Fix memory leak
+    // Toggle physics debug wireframe
     if (Input::GetKeyPressed(GLFW_KEY_P)) { Physics::ToggleDebugWireframe(); }
 
     // Camera movement
@@ -292,13 +279,12 @@ void GraphicDemoApplication::CustomRun()
     childCrateObject->GetTransform()->RotateLocal(glm::vec3(0.0f, 0.0f, 45.0f * Time::GetDeltaTime()));
 
     // Move lights
-    rainbowLightObject->GetTransform()->SetLocalPosition(glm::vec3(sin(Time::GetTimeSinceStart()) * 5.0f, 0.0f, 0.0f));
-    redLightObject->GetTransform()->SetLocalPosition(glm::vec3(0.0, 0.0f, sin(Time::GetTimeSinceStart()) * 5.0f));
+    rainbowLightObject->GetTransform()->SetLocalPosition(glm::vec3(sin(Time::GetTimeSinceStart()) * 7.0f, -1.0f, 0.0f));
+    redLightObject->GetTransform()->SetLocalPosition(glm::vec3(0.0, -1.0f, sin(Time::GetTimeSinceStart()) * 7.0f));
 
     // Move crate
     crateObject->GetComponent<Rigidbody>()->ApplyForce(crateVelocity * 100.0f);
     crateObject->GetComponent<Rigidbody>()->ApplyTorque(crateVelocity * 100.0f);
-
 
     if (Input::GetKeyPressed(GLFW_KEY_0))
     {

@@ -2,4 +2,4 @@
 in vec3 v_Position;
 in mat3 v_TBN;
 
-out vec4 fragColor;
+layout(location = 0) out vec4 fragColor;

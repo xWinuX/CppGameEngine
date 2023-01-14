@@ -70,8 +70,6 @@ std::string String::ReplaceIncludeMacros(const std::string& filePath)
             result += line + "\n";
         }
     }
-
-
-
+    
     return result;
 }

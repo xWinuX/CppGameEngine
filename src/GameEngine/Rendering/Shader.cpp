@@ -31,22 +31,21 @@ GLuint Shader::CompileShader(const std::string& shaderSource, const int type)
     return shaderID;
 }
 
-std::string Shader::PreprocessShader(std::string shader) { return String::ReplaceIncludeMacros(shader); }
+std::string Shader::PreprocessShader(const std::string& shader) { return String::ReplaceIncludeMacros(shader); }
 
 Shader::Shader(const char* vertexShaderSource, const char* fragmentShaderSource, const char* geometryShaderSource)
 {
     _programID = glCreateProgram();
 
     // Vertex shader
-    const std::string vertexShader = PreprocessShader(vertexShaderSource);
-    Debug::Log::Message("Vertex Shader");
-    Debug::Log::Message(vertexShader);
-    const GLuint vertexShaderID = CompileShader(vertexShader, GL_VERTEX_SHADER);
+    const std::string vertexShader   = PreprocessShader(vertexShaderSource);
+    const GLuint      vertexShaderID = CompileShader(vertexShader, GL_VERTEX_SHADER);
     glAttachShader(_programID, vertexShaderID);
 
     // Fragment shader
     const std::string fragmentShader   = PreprocessShader(fragmentShaderSource);
     const GLuint      fragmentShaderID = CompileShader(fragmentShader, GL_FRAGMENT_SHADER);
+    Debug::Log::Message(fragmentShader);
     glAttachShader(_programID, fragmentShaderID);
 
     // Geometry shader
@@ -89,6 +88,13 @@ void Shader::Use() const
     glUseProgram(_programID);
 }
 
-GLuint         Shader::GetProgramID() const { return _programID; }
+void Shader::UniformBufferFromShader(const Shader* shader)
+{
+    delete _uniformBuffer;
+    _uniformBuffer = shader->GetUniformBuffer()->Copy(_programID);
+}
+
+GLuint Shader::GetProgramID() const { return _programID; }
+
 UniformBuffer* Shader::GetUniformBuffer() const { return _uniformBuffer; }
-UniformBuffer* Shader::GetUniformBufferCopy() const { return new UniformBuffer(*_uniformBuffer); }
+UniformBuffer* Shader::GetUniformBufferCopy() const { return _uniformBuffer->Copy(_programID); }

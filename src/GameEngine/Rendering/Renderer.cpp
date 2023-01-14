@@ -54,14 +54,6 @@ unsigned int Renderer::RenderRenderables(const std::map<Material*, std::vector<R
         const Material::CullFace   cullFace   = material->GetCullFace();
         const Material::RenderMode renderMode = material->GetRenderMode();
 
-        // Update polygon mode if needed
-        if (cullFace != currentCullFace || renderMode != currentRenderMode || firstLoop)
-        {
-            glPolygonMode(material->GetCullFace(), material->GetRenderMode());
-            currentCullFace   = cullFace;
-            currentRenderMode = renderMode;
-        }
-
         // Choose if new shader should get activated
         const Shader* newShader = material->GetShader();
         if (shader == nullptr || shader != newShader)
@@ -76,6 +68,14 @@ unsigned int Renderer::RenderRenderables(const std::map<Material*, std::vector<R
             material->GetUniformBuffer()->SetUniformInstant<glm::mat4>("u_ViewProjection", _projectionMatrix * _viewMatrix);
         }
 
+        // Update polygon mode if needed
+        if (cullFace != currentCullFace || renderMode != currentRenderMode || firstLoop)
+        {
+            glPolygonMode(material->GetCullFace(), material->GetRenderMode());
+            currentCullFace   = cullFace;
+            currentRenderMode = renderMode;
+        }
+        
         // Apply material uniforms that are in the queue
         material->GetUniformBuffer()->Apply();
 

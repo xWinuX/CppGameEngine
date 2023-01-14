@@ -6,6 +6,8 @@
 
 #include "Texture.h"
 
+#define LOCATION_CHECK if (_location < 0) {       Debug::Log::Message(std::string(_name) + " set failed " + std::to_string(_location)); return; }
+
 namespace GameEngine
 {
     namespace Rendering
@@ -36,6 +38,9 @@ namespace GameEngine
                 void Set(T value) { _value = value; }
 
                 void Reset() { _value = _defaultValue; }
+
+                const GLchar* GetName() const { return _name; }
+                T             GetDefaultValue() { return _defaultValue; }
         };
 
 
@@ -62,67 +67,75 @@ namespace GameEngine
                 // ReSharper disable once CppMemberFunctionMayBeStatic (No it's not...)
                 void Apply(const int slot = 0) const
                 {
+                    LOCATION_CHECK
                     _value->Bind(slot);
                     glUniform1i(_location, slot);
                 }
 
                 void Set(const Texture* value) { _value = value; }
 
-                void Reset() { _value = _defaultValue; }
+                void          Reset() { _value = _defaultValue; }
+                const GLchar* GetName() const { return _name; }
+                Texture*      GetDefaultValue() const { return const_cast<Texture*>(_defaultValue); }
         };
 
         template <>
         inline void Uniform<float>::Apply()
         {
+            LOCATION_CHECK
             glUniform1f(_location, _value);
         }
-
 
         template <>
         inline void Uniform<std::vector<float>*>::Apply()
         {
+            LOCATION_CHECK
             glUniform1fv(_location, _value->size(), _value->data());
         }
 
         template <>
         inline void Uniform<glm::vec4>::Apply()
         {
+            LOCATION_CHECK
             glUniform4f(_location, _value.x, _value.y, _value.z, _value.w);
         }
-
 
         template <>
         inline void Uniform<std::vector<glm::vec4>*>::Apply()
         {
+            LOCATION_CHECK
             if (_value == nullptr) { return; }
 
-            glUniform4fv(_location, _value->size() * 4, reinterpret_cast<GLfloat*>(_value->data()));
+            glUniform4fv(_location, _value->size(), reinterpret_cast<GLfloat*>(_value->data()));
         }
 
         template <>
         inline void Uniform<glm::vec3>::Apply()
         {
+            LOCATION_CHECK
             glUniform3f(_location, _value.x, _value.y, _value.z);
         }
 
         template <>
         inline void Uniform<std::vector<glm::vec3>*>::Apply()
         {
+            LOCATION_CHECK
             if (_value == nullptr) { return; }
 
-            glUniform3fv(_location, _value->size() * 3, reinterpret_cast<GLfloat*>(_value->data()));
+            glUniform3fv(_location, _value->size(), reinterpret_cast<GLfloat*>(_value->data()));
         }
-
 
         template <>
         inline void Uniform<glm::mat4>::Apply()
         {
+            LOCATION_CHECK
             glUniformMatrix4fv(_location, 1, GL_FALSE, &_value[0][0]);
         }
 
         template <>
         inline void Uniform<int>::Apply()
         {
+            LOCATION_CHECK
             glUniform1i(_location, _value);
         }
     }
