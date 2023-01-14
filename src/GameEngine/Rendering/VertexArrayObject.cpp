@@ -2,18 +2,18 @@
 
 using namespace GameEngine::Rendering;
 
-VertexArrayObject::VertexArrayObject(const Mesh::Primitive& pMesh) :
-    VertexArrayObject(pMesh.VertexBuffer, pMesh.IndexBuffer, pMesh.VertexBufferLayout) {}
+VertexArrayObject::VertexArrayObject(const Primitive* primitive):
+    VertexArrayObject(primitive->GetVertexBuffer(), primitive->GetIndexBuffer(), primitive->GetVertexBufferLayout()) {}
 
-VertexArrayObject::VertexArrayObject(VertexBuffer* pVertexBuffer, IndexBuffer* pIndexBuffer, const VertexBufferLayout* pVertexBufferLayout) :
-    VertexArrayObject(pVertexBufferLayout)
+VertexArrayObject::VertexArrayObject(VertexBuffer* vertexBuffer, IndexBuffer* indexBuffer, VertexBufferLayout* vertexBufferLayout) :
+    VertexArrayObject(vertexBufferLayout)
 {
-    _vertexBuffers.push_back(pVertexBuffer);
-    _pIndexBuffer = pIndexBuffer;
+    _vertexBuffers.push_back(vertexBuffer);
+    _pIndexBuffer = indexBuffer;
     Finalize();
 }
 
-VertexArrayObject::VertexArrayObject(const VertexBufferLayout* pVertexBufferLayout)
+VertexArrayObject::VertexArrayObject(VertexBufferLayout* pVertexBufferLayout)
 {
     _pVertexBufferLayout = pVertexBufferLayout;
     glGenVertexArrays(1, &_vertexArrayObjectID);

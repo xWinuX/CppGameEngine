@@ -2,29 +2,17 @@
 
 using namespace GameEngine::Rendering;
 
-Mesh::Mesh(VertexBuffer* vertexBuffer, IndexBuffer* indexBuffer, VertexBufferLayout* vertexBufferLayout)
-{
-    AddPrimitive(vertexBuffer, indexBuffer, vertexBufferLayout);
-}
+Mesh::Mesh(VertexBuffer* vertexBuffer, IndexBuffer* indexBuffer, VertexBufferLayout* vertexBufferLayout) { AddPrimitive(vertexBuffer, indexBuffer, vertexBufferLayout); }
 
 Mesh::~Mesh()
 {
-    for (const Primitive subMesh : _subMeshes)
-    {
-        delete subMesh.IndexBuffer;
-        delete subMesh.VertexBuffer;
-        delete subMesh.VertexBufferLayout;
-    }
-
-    _subMeshes.clear();
+    for (const Primitive* primitive : _primitives) { delete primitive; }
+    _primitives.clear();
 }
 
-const std::vector<Mesh::Primitive>& Mesh::GetSubMeshes()
-{
-    return _subMeshes;
-}
+const std::vector<Primitive*>& Mesh::GetPrimitives() { return _primitives; }
 
 void Mesh::AddPrimitive(VertexBuffer* vertexBuffer, IndexBuffer* indexBuffer, VertexBufferLayout* vertexBufferLayout)
 {
-    _subMeshes.push_back({vertexBuffer, indexBuffer, vertexBufferLayout});
+    _primitives.push_back(new Primitive(vertexBuffer, indexBuffer, vertexBufferLayout));
 }

@@ -30,19 +30,19 @@ namespace GameEngine
 
                 RenderMode GetRenderMode() const;
                 CullFace   GetCullFace() const;
-                bool GetTransparent() const;
+                bool       GetTransparent() const;
+
 
                 void SetRenderMode(RenderMode renderMode);
                 void SetCullFace(CullFace cullFace);
                 void SetTransparent(bool transparent);
 
             private:
-                Shader*        _shader;
-                UniformBuffer* _uniformBuffer;
-                CullFace       _cullFace   = CullFace::None;
-                RenderMode     _renderMode = RenderMode::Fill;
-                bool _transparent = false;
-
+                Shader*          _shader;
+                UniformBuffer*   _uniformBuffer;
+                CullFace         _cullFace    = CullFace::None;
+                RenderMode       _renderMode  = RenderMode::Fill;
+                bool             _transparent = false;
         };
     }
 }

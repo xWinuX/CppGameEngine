@@ -2,7 +2,7 @@
 #include "Component.h"
 #include "../Rendering/Mesh.h"
 #include "../Rendering/Material.h"
-#include "../Rendering/RenderableMeshPrimitive.h"
+#include "../Rendering/RenderablePrimitive.h"
 
 namespace GameEngine
 {
@@ -11,27 +11,15 @@ namespace GameEngine
         class MeshRenderer final : public Component
         {
             private:
-                class RenderableMeshPrimitive final : public Rendering::RenderableMeshPrimitive
-                {
-                    private:
-                        Transform* _transform = nullptr;
-                    public:
-                        explicit RenderableMeshPrimitive(const Rendering::Mesh::Primitive primitive, Rendering::Material* material = nullptr);
-                        void     OnBeforeDraw() override;
-                        void     SetTransform(Transform* transform);
-                };
-
-                GameEngine::Rendering::Mesh*          _mesh;
-                std::vector<RenderableMeshPrimitive*> _renderableMeshPrimitives;
+                Rendering::Mesh*                             _mesh;
+                std::vector<Rendering::RenderablePrimitive*> _renderablePrimitives;
 
                 bool _visible = true;
+                explicit MeshRenderer(Rendering::Mesh* mesh);
             public:
-                explicit MeshRenderer(GameEngine::Rendering::Mesh* mesh);
-                explicit MeshRenderer(GameEngine::Rendering::Mesh* mesh, GameEngine::Rendering::Material* material);
-                explicit MeshRenderer(GameEngine::Rendering::Mesh* mesh, std::initializer_list<GameEngine::Rendering::Material*> materials, unsigned int numMaterials);
-
+                explicit MeshRenderer(Rendering::Mesh* mesh, Rendering::Material* material);
+                explicit MeshRenderer(Rendering::Mesh* mesh, std::initializer_list<Rendering::Material*> materials, unsigned int numMaterials);
                 ~MeshRenderer() override;
-
                 void OnComponentAdded() override;
                 void OnBeforeRender() override;
 

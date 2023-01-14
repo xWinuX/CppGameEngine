@@ -1,7 +1,7 @@
 ﻿#pragma once
 
-#include "Mesh.h"
 #include "vector"
+#include "Primitive.h"
 
 namespace GameEngine
 {
@@ -10,16 +10,16 @@ namespace GameEngine
         class VertexArrayObject
         {
             private:
-                const VertexBufferLayout* _pVertexBufferLayout = nullptr;
-                IndexBuffer*              _pIndexBuffer        = nullptr;
+                VertexBufferLayout* _pVertexBufferLayout = nullptr;
+                IndexBuffer*        _pIndexBuffer        = nullptr;
 
                 GLuint                     _vertexArrayObjectID = 0;
                 std::vector<VertexBuffer*> _vertexBuffers;
 
             public:
-                explicit VertexArrayObject(const Mesh::Primitive& pMesh);
-                explicit VertexArrayObject(VertexBuffer* pVertexBuffer, IndexBuffer* pIndexBuffer, const VertexBufferLayout* pVertexBufferLayout);
-                explicit VertexArrayObject(const VertexBufferLayout* pVertexBufferLayout);
+                explicit VertexArrayObject(const Primitive* primitive);
+                explicit VertexArrayObject(VertexBuffer* vertexBuffer, IndexBuffer* indexBuffer, VertexBufferLayout* vertexBufferLayout);
+                explicit VertexArrayObject(VertexBufferLayout* pVertexBufferLayout);
                 ~VertexArrayObject();
 
                 void AddVertexBuffer(VertexBuffer* pVertexBuffer);

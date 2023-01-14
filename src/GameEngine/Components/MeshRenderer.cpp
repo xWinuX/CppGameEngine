@@ -1,55 +1,37 @@
 ﻿#include "MeshRenderer.h"
 
 #include "../Rendering/Renderer.h"
-#include "Transform.h"
 
 using namespace GameEngine::Components;
 using namespace GameEngine::Rendering;
 
-
-MeshRenderer::RenderableMeshPrimitive::RenderableMeshPrimitive(const Rendering::Mesh::Primitive primitive, Rendering::Material* material):
-    Rendering::RenderableMeshPrimitive(primitive, material) {}
-
-void MeshRenderer::RenderableMeshPrimitive::OnBeforeDraw()
-{
-    const glm::mat4 trs = _transform->GetTRS();
-    _material->GetUniformBuffer()->SetUniformInstant<glm::mat4>("u_Transform", trs);
-}
-
-void MeshRenderer::RenderableMeshPrimitive::SetTransform(Transform* transform) { _transform = transform; }
-
-MeshRenderer::MeshRenderer(Mesh* mesh):
-    _mesh(mesh) { for (const Mesh::Primitive& subMesh : _mesh->GetSubMeshes()) { _renderableMeshPrimitives.push_back(new RenderableMeshPrimitive(subMesh)); } }
+MeshRenderer::MeshRenderer(Rendering::Mesh* mesh):
+    _mesh(mesh) { for (Primitive* primitive : mesh->GetPrimitives()) { _renderablePrimitives.push_back(new RenderablePrimitive(primitive)); } }
 
 MeshRenderer::MeshRenderer(Mesh* mesh, Material* material):
-    MeshRenderer(mesh) { for (Rendering::RenderableMeshPrimitive* renderableMeshPrimitive : _renderableMeshPrimitives) { renderableMeshPrimitive->SetMaterial(material); } }
+    MeshRenderer(mesh) { for (RenderablePrimitive* renderablePrimitive : _renderablePrimitives) { renderablePrimitive->SetMaterial(material); } }
 
 MeshRenderer::MeshRenderer(Mesh* mesh, const std::initializer_list<Material*> materials, const unsigned int numMaterials):
-    MeshRenderer(mesh)
-{
-    if (numMaterials != _renderableMeshPrimitives.size()) { Debug::Log::Error("You must pass the same amount of materials as there are mesh primitives!"); }
-
-    for (unsigned int i = 0; i < numMaterials; i++) { _renderableMeshPrimitives[i]->SetMaterial(*(materials.begin()+i)); }
-}
+    MeshRenderer(mesh) { for (unsigned int i = 0; i < numMaterials; i++) { _renderablePrimitives[i]->SetMaterial(*(materials.begin() + 1)); } }
 
 MeshRenderer::~MeshRenderer()
 {
-    for (const Rendering::RenderableMeshPrimitive* renderableMeshPrimitive : _renderableMeshPrimitives) { delete renderableMeshPrimitive; }
+    for (const RenderablePrimitive* renderablePrimitive : _renderablePrimitives) { delete renderablePrimitive; }
 
-    _renderableMeshPrimitives.clear();
+    _renderablePrimitives.clear();
 }
 
-void MeshRenderer::OnComponentAdded() { for (RenderableMeshPrimitive* renderableMeshPrimitive : _renderableMeshPrimitives) { renderableMeshPrimitive->SetTransform(_transform); } }
+void MeshRenderer::OnComponentAdded() { for (RenderablePrimitive* renderablePrimitive : _renderablePrimitives) { renderablePrimitive->SetTransform(_transform); } }
 
 void MeshRenderer::OnBeforeRender()
 {
     if (!_visible) { return; }
 
-    for (RenderableMeshPrimitive* renderableMeshPrimitive : _renderableMeshPrimitives)
+    for (RenderablePrimitive* renderablePrimitive : _renderablePrimitives)
     {
-        if (renderableMeshPrimitive->GetMaterial() == nullptr) { Debug::Log::Error("Can't submit a renderable without an material!"); }
+        if (renderablePrimitive->GetMaterial() == nullptr) { Debug::Log::Error("Can't submit a renderable without an material!"); }
 
-        Renderer::SubmitRenderable(renderableMeshPrimitive);
+        Renderer::SubmitRenderable(renderablePrimitive);
     }
 }
 
