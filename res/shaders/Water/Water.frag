@@ -1,6 +1,6 @@
 #include "../Common/Version.glsl"
 #include "../Common/Uniforms.glsl"
-#include "../Common/Functions.glsl"
+#include "../Common/Functions.frag"
 
 #include "../Lit/Uniforms.frag"
 

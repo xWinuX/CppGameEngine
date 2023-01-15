@@ -69,11 +69,25 @@ unsigned int Renderer::RenderRenderables(const std::map<Material*, std::vector<R
         }
 
         // Update polygon mode if needed
-        if (cullFace != currentCullFace || renderMode != currentRenderMode || firstLoop)
+        if (renderMode != currentRenderMode || firstLoop)
         {
-            glPolygonMode(material->GetCullFace(), material->GetRenderMode());
-            currentCullFace   = cullFace;
+            glPolygonMode(GL_FRONT_AND_BACK, material->GetRenderMode());
             currentRenderMode = renderMode;
+        }
+
+        // Face Culling
+        if (cullFace != currentCullFace || firstLoop)
+        {
+            if(cullFace == Material::CullFace::None)
+            {
+                glDisable(GL_CULL_FACE);
+                glCullFace(GL_BACK);
+            }
+            else
+            {
+                glEnable(GL_CULL_FACE);
+                glCullFace(cullFace);
+            }
         }
         
         // Apply material uniforms that are in the queue

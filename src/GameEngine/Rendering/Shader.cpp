@@ -45,7 +45,6 @@ Shader::Shader(const char* vertexShaderSource, const char* fragmentShaderSource,
     // Fragment shader
     const std::string fragmentShader   = PreprocessShader(fragmentShaderSource);
     const GLuint      fragmentShaderID = CompileShader(fragmentShader, GL_FRAGMENT_SHADER);
-    Debug::Log::Message(fragmentShader);
     glAttachShader(_programID, fragmentShaderID);
 
     // Geometry shader

@@ -1,6 +1,6 @@
 #include "../Common/Version.glsl"
 #include "../Common/Uniforms.glsl"
-#include "../Common/Functions.glsl"
+#include "../Common/Functions.frag"
 
 #include "Uniforms.frag"
 
@@ -14,4 +14,5 @@ void main()
 #include "Passes/PointLight.frag"
 #include "Passes/Texture.frag"
 #include "Passes/ColorTint.frag"
+    
 }

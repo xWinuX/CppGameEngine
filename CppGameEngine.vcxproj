@@ -46,6 +46,7 @@
     <ClCompile Include="src\GameEngine\Components\MeshRenderer.cpp" />
     <ClCompile Include="src\GameEngine\Components\PointLight.cpp" />
     <ClCompile Include="src\GameEngine\Components\Rigidbody.cpp" />
+    <ClCompile Include="src\GameEngine\Components\SpriteRenderer.cpp" />
     <ClCompile Include="src\GameEngine\Components\Transform.cpp" />
     <ClCompile Include="src\GameEngine\Core\Application.cpp">
       <AssemblerOutput>NoListing</AssemblerOutput>
@@ -147,7 +148,6 @@
     <ClCompile Include="src\GameEngine\Rendering\VertexBufferAttribute.cpp" />
     <ClCompile Include="src\GameEngine\Rendering\VertexBufferLayout.cpp" />
     <ClCompile Include="src\GameEngine\Shapes\Cube.cpp" />
-    <ClCompile Include="src\GameEngine\Shapes\SpriteQuad.cpp" />
     <ClCompile Include="src\GameEngine\Utils\Math.cpp" />
     <ClCompile Include="src\GameEngine\Utils\String.cpp" />
     <ClCompile Include="src\GameEngine\Utils\Time.cpp" />
@@ -311,6 +311,7 @@
     <ClInclude Include="src\GameEngine\Components\MeshRenderer.h" />
     <ClInclude Include="src\GameEngine\Components\PointLight.h" />
     <ClInclude Include="src\GameEngine\Components\Rigidbody.h" />
+    <ClInclude Include="src\GameEngine\Components\SpriteRenderer.h" />
     <ClInclude Include="src\GameEngine\Components\Transform.h" />
     <ClInclude Include="src\GameEngine\Core\Application.h" />
     <ClInclude Include="src\GameEngine\Core\GameObject.h" />
@@ -343,7 +344,6 @@
     <ClInclude Include="src\GameEngine\Rendering\VertexBufferAttribute.h" />
     <ClInclude Include="src\GameEngine\Rendering\VertexBufferLayout.h" />
     <ClInclude Include="src\GameEngine\Shapes\Cube.h" />
-    <ClInclude Include="src\GameEngine\Shapes\SpriteQuad.h" />
     <ClInclude Include="src\GameEngine\Utils\Math.h" />
     <ClInclude Include="src\GameEngine\Utils\String.h" />
     <ClInclude Include="src\GameEngine\Utils\Time.h" />
@@ -884,7 +884,8 @@
   <ItemGroup>
     <Content Include="res\models\cube.glb" />
     <Content Include="res\models\TheMissing.gltf" />
-    <Content Include="res\shaders\Common\Functions.glsl" />
+    <Content Include="res\shaders\Common\Functions.frag" />
+    <Content Include="res\shaders\Common\Functions.vert" />
     <Content Include="res\shaders\Common\Layout.glsl" />
     <Content Include="res\shaders\Common\Uniforms.glsl" />
     <Content Include="res\shaders\Common\Version.glsl" />
@@ -898,6 +899,7 @@
     <Content Include="res\shaders\Lit\Lit.frag" />
     <Content Include="res\shaders\Lit\Lit.vert" />
     <Content Include="res\shaders\PhysicsDebugShader.fsh" />
+    <Content Include="res\shaders\SpriteLit\SpriteLit.frag" />
     <Content Include="res\shaders\SpriteLit\SpriteLit.vert" />
     <Content Include="res\shaders\VertexColor\VertexColor.frag" />
     <Content Include="res\shaders\VertexColor\VertexColor.vert" />
@@ -915,6 +917,9 @@
     <Content Include="vendor\reactphysics3d\include\reactphysics3d\collision\.DS_Store" />
     <Content Include="vendor\reactphysics3d\include\reactphysics3d\collision\narrowphase\.DS_Store" />
     <Content Include="vendor\reactphysics3d\libs\reactphysics3d.lib" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="res\sprites" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

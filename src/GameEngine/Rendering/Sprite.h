@@ -23,20 +23,23 @@ namespace GameEngine
                         glm::vec4 Color;
                 };
 
-                static VertexData* CreateSpriteQuad(const float aspectRatio, const glm::vec2 uvStep, const glm::ivec2 offset);
+                void AddSpriteQuad(const float aspectRatio, const glm::vec2 uvStep, const glm::ivec2 offset);
 
-                Texture*                 _texture;
-                glm::vec2                _frameSize;
-                std::vector<VertexData*> _vertexData;
-                SpriteAtlas*             _spriteAtlas = nullptr;
-                unsigned int             _numFrames   = 1;
-                VertexArrayObject*       _vertexArrayObject = nullptr;
+                Texture*                  _texture;
+                glm::vec2                 _frameSize;
+                std::vector<VertexData>   _vertexData;
+                std::vector<unsigned int> _indices;
+                SpriteAtlas*              _spriteAtlas       = nullptr;
+                unsigned int              _numFrames         = 1;
+                VertexArrayObject*        _vertexArrayObject = nullptr;
 
             public:
                 explicit Sprite(Texture* texture);
                 Sprite(Texture* texture, unsigned int numFrames, glm::vec2 frameSize);
 
                 void Finalize();
+
+                VertexArrayObject* GetVertexArrayObject() const;
         };
     }
 }

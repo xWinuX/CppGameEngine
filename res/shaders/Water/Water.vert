@@ -1,6 +1,6 @@
 ﻿#include "../Common/Version.glsl"
 #include "../Common/Layout.glsl"
-#include "../Common/Functions.glsl"
+#include "../Common/Functions.vert"
 #include "../Common/Uniforms.glsl"
 
 #include "../Lit/IO.vert"

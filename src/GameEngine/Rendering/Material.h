@@ -12,9 +12,9 @@ namespace GameEngine
             public:
                 enum CullFace
                 {
-                    Front = GL_BACK,
-                    Back = GL_FRONT,
-                    None = GL_FRONT_AND_BACK,
+                    Front = GL_FRONT,
+                    Back = GL_BACK,
+                    None = 0,
                 };
 
                 enum RenderMode
@@ -40,7 +40,7 @@ namespace GameEngine
             private:
                 Shader*          _shader;
                 UniformBuffer*   _uniformBuffer;
-                CullFace         _cullFace    = CullFace::None;
+                CullFace         _cullFace    = CullFace::Back;
                 RenderMode       _renderMode  = RenderMode::Fill;
                 bool             _transparent = false;
         };

@@ -7,6 +7,7 @@
 #include "GameEngine/Components/MeshRenderer.h"
 #include "GameEngine/Components/PointLight.h"
 #include "GameEngine/Components/Rigidbody.h"
+#include "GameEngine/Components/SpriteRenderer.h"
 #include "GameEngine/Components/Transform.h"
 #include "GameEngine/Core/Window.h"
 #include "GameEngine/Input/Input.h"
@@ -14,6 +15,7 @@
 #include "GameEngine/Rendering/Material.h"
 #include "GameEngine/Rendering/Model.h"
 #include "GameEngine/Rendering/Shader.h"
+#include "GameEngine/Rendering/Sprite.h"
 #include "GameEngine/Rendering/Texture.h"
 #include "GameEngine/Utils/Math.h"
 #include "GameEngine/Shapes/Cube.h"
@@ -29,6 +31,7 @@ using namespace GameEngine::Physics;
 using namespace GameEngine::Input;
 using namespace GameEngine::Shapes;
 
+// Textures 
 Texture* noTexture;
 Texture* blackTexture;
 Texture* whiteTexture;
@@ -37,6 +40,9 @@ Texture* theDudeTexture;
 Texture* crateTexture;
 Texture* crateNormalMapTexture;
 
+// Sprite Textures
+Texture* theDudeSpriteTexture;
+
 Model* cubeModel;
 Model* suzanneModel;
 Model* theMissingModel;
@@ -44,10 +50,12 @@ Model* sphereModel;
 Model* highPolyPlane;
 
 Shader* litShader;
+Shader* spriteLitShader;
 Shader* waterShader;
 Shader* physicsDebugShader;
 Shader* vertexColorShader;
 
+Material* spriteLitMaterial;
 Material* vertexColorMaterial;
 Material* dudeMaterial;
 Material* crateMaterial;
@@ -63,8 +71,11 @@ GameObject* crateObject;
 GameObject* childCrateObject;
 GameObject* childOfChildCrateObject;
 
+Sprite* theDudeSprite;
+
 void GraphicDemoApplication::Initialize(Scene& scene)
 {
+    // Textures
     noTexture               = new Texture("res/textures/NoTexture.png");
     blackTexture            = new Texture("res/textures/Black.png");
     whiteTexture            = new Texture("res/textures/White.png");
@@ -73,6 +84,12 @@ void GraphicDemoApplication::Initialize(Scene& scene)
     crateTexture            = new Texture("res/textures/Crate.jpg");
     crateNormalMapTexture   = new Texture("res/textures/CrateNormalMap.png");
 
+    // Sprite Textures
+    theDudeSpriteTexture = new Texture("res/sprites/TheDudeSprite.png");
+    
+    theDudeSprite = new Sprite(crateTexture);
+    theDudeSprite->Finalize();
+    
     cubeModel       = new Model("res/models/Cube.gltf");
     suzanneModel    = new Model("res/models/Suzanne.gltf");
     theMissingModel = new Model("res/models/TheMissing.gltf");
@@ -81,7 +98,6 @@ void GraphicDemoApplication::Initialize(Scene& scene)
     
     #pragma region Default Shader
     litShader = new Shader("res/shaders/Lit/Lit.vert", "res/shaders/Lit/Lit.frag");
-    litShader->Use();
     
     // Common
     litShader->InitializeUniform<float>("u_Time", 0.0f, false);
@@ -118,18 +134,26 @@ void GraphicDemoApplication::Initialize(Scene& scene)
 
     #pragma region Water Shader
     waterShader = new Shader("res/shaders/Water/Water.vert", "res/shaders/Water/Water.frag");
-    waterShader->Use();
     waterShader->UniformBufferFromShader(litShader);
     
     // Material
     waterMaterial = new Material(waterShader);
     waterMaterial->SetTransparent(true);
     #pragma endregion
+
+    #pragma region Sprite Lit Shader
+    spriteLitShader = new Shader("res/shaders/SpriteLit/SpriteLit.vert", "res/shaders/SpriteLit/SpriteLit.frag");
+    spriteLitShader->UniformBufferFromShader(litShader);
+
+    // Material
+    spriteLitMaterial = new Material(spriteLitShader);
+    spriteLitMaterial->GetUniformBuffer()->SetUniform("u_NormalMap", crateNormalMapTexture);
+    spriteLitMaterial->GetUniformBuffer()->SetUniform<Texture*>("u_Texture", crateTexture);
+    spriteLitMaterial->SetCullFace(Material::None);
+    #pragma endregion
     
     #pragma region Physics Debug Shader
     physicsDebugShader = new Shader("res/shaders/PhysicsDebugShader.vsh", "res/shaders/PhysicsDebugShader.fsh");
-    physicsDebugShader->Use();
-    physicsDebugShader->Use();
 
     // Common
     physicsDebugShader->InitializeUniform<glm::mat4>("u_ViewProjection", glm::identity<glm::mat4>(), false);
@@ -142,7 +166,6 @@ void GraphicDemoApplication::Initialize(Scene& scene)
 
     #pragma region Vertex Color Shader
     vertexColorShader = new Shader("res/shaders/VertexColor/VertexColor.vert", "res/shaders/VertexColor/VertexColor.frag");
-    vertexColorShader->Use();
     
     // Common
     vertexColorShader->InitializeUniform<float>("u_Time", 0.0f, false);
@@ -157,7 +180,7 @@ void GraphicDemoApplication::Initialize(Scene& scene)
 
     // Camera
     cameraObject = new GameObject();
-    cameraObject->GetTransform()->SetLocalPosition(glm::vec3(0.0f, 0.0f, 8.0f));
+    cameraObject->GetTransform()->SetLocalPosition(glm::vec3(0.0f, 0.0f, 3.0f));
     cameraObject->AddComponent(new Camera(60, 0.01f, 100.0f));
     scene.AddGameObject(cameraObject);
 
@@ -166,7 +189,7 @@ void GraphicDemoApplication::Initialize(Scene& scene)
     Transform* redLightTransform = redLightObject->GetTransform();
     redLightTransform->SetLocalPosition(glm::vec3(2.0f, 0.0f, 0.0f));
     redLightTransform->SetLocalScale(glm::vec3(0.1f));
-    //redLightObject->AddComponent(new MeshRenderer(sphereModel->GetMesh(0), dudeMaterial));
+    redLightObject->AddComponent(new MeshRenderer(sphereModel->GetMesh(0), dudeMaterial));
     redLightObject->AddComponent(new PointLight(litShader, glm::vec4(1.0f, 0.0f, 0.0f, 1.0f), 5.0f, 2.0f));
     scene.AddGameObject(redLightObject);
 
@@ -181,8 +204,9 @@ void GraphicDemoApplication::Initialize(Scene& scene)
 
     // Suzanne
     suzanneObject = new GameObject();
-    suzanneObject->GetTransform()->SetLocalPosition(glm::vec3(3.0f, 0.0f, 0.0f));
-    suzanneObject->AddComponent(new MeshRenderer(suzanneModel->GetMesh(0), dudeMaterial));
+    suzanneObject->GetTransform()->SetLocalPosition(glm::vec3(0.0f, 0.0f, 0.0f));
+   // suzanneObject->AddComponent(new MeshRenderer(suzanneModel->GetMesh(0), dudeMaterial));
+    suzanneObject->AddComponent(new SpriteRenderer(theDudeSprite, spriteLitMaterial));
     scene.AddGameObject(suzanneObject);
 
     // The Missing
@@ -276,7 +300,7 @@ void GraphicDemoApplication::CustomRun()
     childCrateObject->GetTransform()->RotateLocal(glm::vec3(0.0f, 0.0f, 45.0f * Time::GetDeltaTime()));
 
     // Move lights
-    rainbowLightObject->GetTransform()->SetLocalPosition(glm::vec3(sin(Time::GetTimeSinceStart()) * 7.0f, -1.0f, 0.0f));
+    //rainbowLightObject->GetTransform()->SetLocalPosition(glm::vec3(sin(Time::GetTimeSinceStart()) * 7.0f, -1.0f, 0.0f));
     redLightObject->GetTransform()->SetLocalPosition(glm::vec3(0.0, -1.0f, sin(Time::GetTimeSinceStart()) * 7.0f));
 
     // Move crate
@@ -298,5 +322,6 @@ void GraphicDemoApplication::CustomRun()
     GameEngine::Debug::Log::Message("crate child child local pos: " + glm::to_string(childOfChildCrateObject->GetTransform()->GetLocalPosition()));
     
     // Move camera
-    cameraObject->GetTransform()->Move(cameraVelocity);
+    rainbowLightObject->GetTransform()->MoveLocal(cameraVelocity);
+    cameraObject->GetTransform()->MoveLocal(crateVelocity);
 }
