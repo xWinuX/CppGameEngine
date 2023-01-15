@@ -1,6 +1,5 @@
 ﻿#include "GraphicDemoApplication.h"
 
-#include <glm/ext/quaternion_common.hpp>
 #include <reactphysics3d/reactphysics3d.h>
 
 #include "GameEngine/Components/BoxCollider.h"
@@ -14,7 +13,6 @@
 #include "GameEngine/Physics/Physics.h"
 #include "GameEngine/Rendering/Material.h"
 #include "GameEngine/Rendering/Model.h"
-#include "GameEngine/Rendering/Renderer.h"
 #include "GameEngine/Rendering/Shader.h"
 #include "GameEngine/Rendering/Texture.h"
 #include "GameEngine/Utils/Math.h"
@@ -81,7 +79,6 @@ void GraphicDemoApplication::Initialize(Scene& scene)
     sphereModel     = new Model("res/models/Sphere.gltf");
     highPolyPlane   = new Model("res/models/HighPolyPlane.gltf");
     
-    // TODO: somehow make initialized uniforms copyable so i don't have to copy paste code
     #pragma region Default Shader
     litShader = new Shader("res/shaders/Lit/Lit.vert", "res/shaders/Lit/Lit.frag");
     litShader->Use();

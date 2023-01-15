@@ -29,7 +29,6 @@ namespace GameEngine
                 bool ShouldClose() const;
 
                 WindowResizeCallbackFunction ResizeCallback(Window* window);
-
                 
                 glm::ivec2                                 GetSize() const;
                 std::vector<std::function<void(Window*)>>& GetResizeCallbacks();
