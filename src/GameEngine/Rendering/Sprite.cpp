@@ -11,8 +11,9 @@ void Sprite::AddSpriteQuad(const float aspectRatio, const glm::vec2 uvStep = glm
     float vStepBegin = uvStep.y * static_cast<float>(offset.y);
     float vStepEnd   = uvStep.y * static_cast<float>(offset.y + 1);
 
-    unsigned int indicesOffset = _vertexData.size() / 4;
-    _indices.insert(_indices.end(), {indicesOffset+2, indicesOffset + 1, indicesOffset, indicesOffset + 1, indicesOffset + 2, indicesOffset + 3});
+    unsigned int indicesOffset = _vertexData.size();
+
+    _indices.insert(_indices.end(), {indicesOffset + 2, indicesOffset + 1, indicesOffset, indicesOffset + 1, indicesOffset + 2, indicesOffset + 3});
 
     // vertexData
     Debug::Log::Message(std::to_string(uStepBegin));
@@ -41,15 +42,12 @@ Sprite::Sprite(Texture* texture, const unsigned int numFrames, const glm::vec2 f
     _numFrames(numFrames)
 {
     const float aspectRatio = _frameSize.x / _frameSize.y;
-    const float uStep       = 1.0f / static_cast<float>(texture->GetSize().x);
+    const float uStep       = 1.0f / static_cast<float>(numFrames);
     for (unsigned int i = 0; i < _numFrames; i++) { AddSpriteQuad(aspectRatio, {uStep, 1.0}, {i, 0}); }
 }
 
 void Sprite::Finalize()
 {
-    Debug::Log::Message("aSDjkaSHDHASDASD JASIITZEIH AS!!!!!!");
-    Debug::Log::Message(std::to_string(_vertexData.size())); 
-    Debug::Log::Message(std::to_string(_indices.size())); 
     VertexBuffer*       vertexBuffer       = new VertexBuffer(reinterpret_cast<unsigned char*>(_vertexData.data()), sizeof(Sprite::VertexData), _vertexData.size());
     IndexBuffer*        indexBuffer        = new IndexBuffer(reinterpret_cast<unsigned char*>(_indices.data()), sizeof(unsigned int), _indices.size());
     VertexBufferLayout* vertexBufferLayout = new VertexBufferLayout(new VertexBufferAttribute[4]
@@ -64,3 +62,5 @@ void Sprite::Finalize()
 }
 
 VertexArrayObject* Sprite::GetVertexArrayObject() const { return _vertexArrayObject; }
+Texture*           Sprite::GetTexture() const { return _texture; }
+unsigned           Sprite::GetNumFrames() const { return _numFrames; }

@@ -17,6 +17,7 @@
 #include "GameEngine/Rendering/Shader.h"
 #include "GameEngine/Rendering/Sprite.h"
 #include "GameEngine/Rendering/Texture.h"
+#include "GameEngine/Rendering/SpriteAtlas.h"
 #include "GameEngine/Utils/Math.h"
 #include "GameEngine/Shapes/Cube.h"
 #include "GameEngine/Utils/Time.h"
@@ -42,6 +43,8 @@ Texture* crateNormalMapTexture;
 
 // Sprite Textures
 Texture* theDudeSpriteTexture;
+Texture* drLSpriteTexture;
+Texture* gamerDudeSpriteTexture;
 
 Model* cubeModel;
 Model* suzanneModel;
@@ -72,6 +75,10 @@ GameObject* childCrateObject;
 GameObject* childOfChildCrateObject;
 
 Sprite* theDudeSprite;
+Sprite* drLSprite;
+Sprite* gamerDudeSprite;
+
+SpriteAtlas* spriteAtlas;
 
 void GraphicDemoApplication::Initialize(Scene& scene)
 {
@@ -85,10 +92,64 @@ void GraphicDemoApplication::Initialize(Scene& scene)
     crateNormalMapTexture   = new Texture("res/textures/CrateNormalMap.png");
 
     // Sprite Textures
-    theDudeSpriteTexture = new Texture("res/sprites/TheDudeSprite.png");
+    Texture::ImportSettings pixelArtTextureImportSettings;
+    pixelArtTextureImportSettings.AnisotropyLevels = 0;
+    pixelArtTextureImportSettings.MipMapLevels = 0;
+    pixelArtTextureImportSettings.FilterMode = Texture::FilterMode::Nearest;
+     
+    theDudeSpriteTexture = new Texture("res/sprites/TheDudeSprite.png", pixelArtTextureImportSettings);
+    drLSpriteTexture = new Texture("res/sprites/DrLSprite.png", pixelArtTextureImportSettings);
+    gamerDudeSpriteTexture = new Texture("res/sprites/GamerDudeSprite.png", pixelArtTextureImportSettings);
     
-    theDudeSprite = new Sprite(crateTexture);
+    theDudeSprite = new Sprite(theDudeSpriteTexture, 2, glm::vec2(30, 49));
     theDudeSprite->Finalize();
+
+    drLSprite = new Sprite(drLSpriteTexture);
+    drLSprite->Finalize();
+
+    gamerDudeSprite = new Sprite(gamerDudeSpriteTexture);
+    gamerDudeSprite->Finalize();
+    
+    spriteAtlas = new SpriteAtlas(glm::ivec2(1024));
+
+    spriteAtlas->AddSprite(gamerDudeSprite);
+    spriteAtlas->AddSprite(theDudeSprite);
+    spriteAtlas->AddSprite(theDudeSprite);
+    spriteAtlas->AddSprite(drLSprite);
+    spriteAtlas->AddSprite(theDudeSprite);
+    spriteAtlas->AddSprite(drLSprite);
+    spriteAtlas->AddSprite(theDudeSprite);
+    spriteAtlas->AddSprite(drLSprite);
+    spriteAtlas->AddSprite(drLSprite);
+    spriteAtlas->AddSprite(drLSprite);
+    spriteAtlas->AddSprite(theDudeSprite);
+    spriteAtlas->AddSprite(theDudeSprite);
+    spriteAtlas->AddSprite(theDudeSprite);
+    spriteAtlas->AddSprite(theDudeSprite);
+    spriteAtlas->AddSprite(drLSprite);
+    spriteAtlas->AddSprite(drLSprite);
+    spriteAtlas->AddSprite(drLSprite);
+    spriteAtlas->AddSprite(theDudeSprite);
+    spriteAtlas->AddSprite(theDudeSprite);
+    spriteAtlas->AddSprite(theDudeSprite);
+    spriteAtlas->AddSprite(theDudeSprite);
+    spriteAtlas->AddSprite(theDudeSprite);
+    spriteAtlas->AddSprite(theDudeSprite);
+    spriteAtlas->AddSprite(drLSprite);
+    spriteAtlas->AddSprite(drLSprite);
+    spriteAtlas->AddSprite(drLSprite);
+    spriteAtlas->AddSprite(drLSprite);
+    spriteAtlas->AddSprite(drLSprite);
+    spriteAtlas->AddSprite(drLSprite);
+    spriteAtlas->AddSprite(drLSprite);
+    spriteAtlas->AddSprite(drLSprite);
+    spriteAtlas->AddSprite(drLSprite);
+    spriteAtlas->AddSprite(drLSprite);
+    spriteAtlas->AddSprite(drLSprite);
+    spriteAtlas->AddSprite(drLSprite);
+    spriteAtlas->AddSprite(theDudeSprite);
+    spriteAtlas->AddSprite(theDudeSprite);
+    spriteAtlas->AddSprite(theDudeSprite);
     
     cubeModel       = new Model("res/models/Cube.gltf");
     suzanneModel    = new Model("res/models/Suzanne.gltf");
@@ -130,8 +191,7 @@ void GraphicDemoApplication::Initialize(Scene& scene)
     crateMaterial->GetUniformBuffer()->SetUniform("u_NormalMap", crateNormalMapTexture);
     crateMaterial->GetUniformBuffer()->SetUniform("u_NormalMapIntensity", 1.0f);
     #pragma endregion
-
-
+    
     #pragma region Water Shader
     waterShader = new Shader("res/shaders/Water/Water.vert", "res/shaders/Water/Water.frag");
     waterShader->UniformBufferFromShader(litShader);
@@ -148,7 +208,7 @@ void GraphicDemoApplication::Initialize(Scene& scene)
     // Material
     spriteLitMaterial = new Material(spriteLitShader);
     spriteLitMaterial->GetUniformBuffer()->SetUniform("u_NormalMap", crateNormalMapTexture);
-    spriteLitMaterial->GetUniformBuffer()->SetUniform<Texture*>("u_Texture", crateTexture);
+    spriteLitMaterial->GetUniformBuffer()->SetUniform<Texture*>("u_Texture", theDudeSpriteTexture);
     spriteLitMaterial->SetCullFace(Material::None);
     #pragma endregion
     
@@ -300,28 +360,13 @@ void GraphicDemoApplication::CustomRun()
     childCrateObject->GetTransform()->RotateLocal(glm::vec3(0.0f, 0.0f, 45.0f * Time::GetDeltaTime()));
 
     // Move lights
-    //rainbowLightObject->GetTransform()->SetLocalPosition(glm::vec3(sin(Time::GetTimeSinceStart()) * 7.0f, -1.0f, 0.0f));
+    rainbowLightObject->GetTransform()->SetLocalPosition(glm::vec3(sin(Time::GetTimeSinceStart()) * 7.0f, -1.0f, 0.0f));
     redLightObject->GetTransform()->SetLocalPosition(glm::vec3(0.0, -1.0f, sin(Time::GetTimeSinceStart()) * 7.0f));
 
     // Move crate
     crateObject->GetComponent<Rigidbody>()->ApplyForce(crateVelocity * 100.0f);
     crateObject->GetComponent<Rigidbody>()->ApplyTorque(crateVelocity * 100.0f);
-
-    if (Input::GetKeyPressed(GLFW_KEY_0))
-    {
-        childCrateObject->GetTransform()->SetPosition(glm::vec3(0.0f, 0.0f, 0.0f));
-    }
-    
-    GameEngine::Debug::Log::Message("crate world pos: " + glm::to_string(crateObject->GetTransform()->GetPosition()));
-    GameEngine::Debug::Log::Message("crate local pos: " + glm::to_string(crateObject->GetTransform()->GetLocalPosition()));
-
-    GameEngine::Debug::Log::Message("crate child world pos: " + glm::to_string(childCrateObject->GetTransform()->GetPosition()));
-    GameEngine::Debug::Log::Message("crate child local pos: " + glm::to_string(childCrateObject->GetTransform()->GetLocalPosition()));
-
-    GameEngine::Debug::Log::Message("crate child child world pos: " + glm::to_string(childOfChildCrateObject->GetTransform()->GetPosition()));
-    GameEngine::Debug::Log::Message("crate child child local pos: " + glm::to_string(childOfChildCrateObject->GetTransform()->GetLocalPosition()));
     
     // Move camera
-    rainbowLightObject->GetTransform()->MoveLocal(cameraVelocity);
-    cameraObject->GetTransform()->MoveLocal(crateVelocity);
+    cameraObject->GetTransform()->MoveLocal(cameraVelocity);
 }

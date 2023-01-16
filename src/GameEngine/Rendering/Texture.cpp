@@ -7,34 +7,38 @@
 
 using namespace GameEngine::Rendering;
 
-Texture::Texture(std::string filePath) :
+Texture::Texture(std::string filePath, const ImportSettings importSettings):
     _textureID(0),
     _filePath(std::move(filePath)),
     _size(glm::zero<glm::ivec2>()),
     _bitsPerPixel(0)
 {
+    int width, height;
     stbi_set_flip_vertically_on_load(1); // Flip texture upside down because opengl origin is bottom left
-    stbi_uc* const localBuffer = stbi_load(_filePath.c_str(), &_size.x, &_size.y, &_bitsPerPixel, 4);
+    stbi_uc* const localBuffer = stbi_load(_filePath.c_str(), &width, &height, &_bitsPerPixel, 4);
 
+    _size.x = width;
+    _size.y = height;
+    
     glGenTextures(1, &_textureID);
 
     glBindTexture(GL_TEXTURE_2D, _textureID);
 
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAX_LEVEL, 3);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAX_ANISOTROPY_EXT, 16);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, importSettings.FilterMode);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, importSettings.FilterMode);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, importSettings.WrapMode);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, importSettings.WrapMode);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAX_LEVEL, importSettings.MipMapLevels);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAX_ANISOTROPY_EXT, importSettings.AnisotropyLevels);
 
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, _size.x, _size.y, 0, GL_RGBA, GL_UNSIGNED_BYTE, localBuffer);
-    
-    // delete local buffer again
-    if (localBuffer) { stbi_image_free(localBuffer); }
+    _buffer = localBuffer;
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, _size.x, _size.y, 0, GL_RGBA, GL_UNSIGNED_BYTE, _buffer);
 }
 
 Texture::~Texture()
 {
     glDeleteTextures(1, &_textureID);
+    if (_buffer) { stbi_image_free(_buffer); }
 }
 
 void Texture::Bind(const unsigned slot = 0) const
@@ -48,4 +52,5 @@ void Texture::Unbind()
     glBindTexture(GL_TEXTURE_2D, 0);
 }
 
-const glm::ivec2& Texture::GetSize() const { return _size; }
+const glm::uvec2& Texture::GetSize() const { return _size; }
+stbi_uc*          Texture::GetBuffer() const { return _buffer; }

@@ -13,12 +13,13 @@ namespace GameEngine
             private:
                 Rendering::Sprite*   _sprite;
                 Rendering::Material* _material;
-
+                float                _animationTimer;
             public:
                 SpriteRenderer(Rendering::Sprite* sprite, Rendering::Material* material);
                 void                 OnBeforeDraw() override;
                 void                 OnDraw() override;
                 void                 OnBeforeRender() override;
+                void                 OnUpdate() override;
                 Rendering::Material* GetMaterial() override;
         };
     }

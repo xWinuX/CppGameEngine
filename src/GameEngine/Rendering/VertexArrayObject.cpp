@@ -55,7 +55,7 @@ void VertexArrayObject::Render() const
 
 void VertexArrayObject::Render(const int numIndices, const unsigned int offset) const
 {
-    glDrawElements(GL_TRIANGLES, numIndices, _pIndexBuffer->GetIndicesType(), reinterpret_cast<void*>(offset));
+    glDrawElements(GL_TRIANGLES, numIndices, _pIndexBuffer->GetIndicesType(), reinterpret_cast<void*>(offset*sizeof _pIndexBuffer->GetElementSize()));
 }
 
 void VertexArrayObject::Unbind() const

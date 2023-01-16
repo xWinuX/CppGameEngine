@@ -1,7 +1,6 @@
 ﻿#pragma once
 #include <vector>
 
-#include "SpriteAtlas.h"
 #include "Texture.h"
 #include "VertexArrayObject.h"
 #include "glm/vec3.hpp"
@@ -11,6 +10,8 @@ namespace GameEngine
 {
     namespace Rendering
     {
+        class SpriteAtlas;
+
         class Sprite
         {
             private:
@@ -40,6 +41,8 @@ namespace GameEngine
                 void Finalize();
 
                 VertexArrayObject* GetVertexArrayObject() const;
+                Texture*           GetTexture() const;
+                unsigned int       GetNumFrames() const;
         };
     }
 }

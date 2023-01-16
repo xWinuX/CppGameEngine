@@ -905,6 +905,7 @@
     <Content Include="res\shaders\VertexColor\VertexColor.vert" />
     <Content Include="res\shaders\Water\Water.frag" />
     <Content Include="res\shaders\Water\Water.vert" />
+    <Content Include="res\sprites\GamerDudeSprite.png" />
     <Content Include="res\textures\Black.png" />
     <Content Include="res\textures\Crate.jpg" />
     <Content Include="res\textures\CrateNormalMap.png" />
@@ -917,9 +918,6 @@
     <Content Include="vendor\reactphysics3d\include\reactphysics3d\collision\.DS_Store" />
     <Content Include="vendor\reactphysics3d\include\reactphysics3d\collision\narrowphase\.DS_Store" />
     <Content Include="vendor\reactphysics3d\libs\reactphysics3d.lib" />
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="res\sprites" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

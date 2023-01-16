@@ -3,26 +3,51 @@
 #include <glad/glad.h>
 #include <glm/vec2.hpp>
 
+#include "stb_image.h"
+
 namespace GameEngine
 {
     namespace Rendering
     {
         class Texture
         {
-            private:
-                GLuint      _textureID;
-                std::string _filePath;
-                glm::ivec2  _size;
-                int         _bitsPerPixel;
-
             public:
-                explicit Texture(std::string filePath);
+                enum FilterMode
+                {
+                    Linear = GL_LINEAR,
+                    Nearest = GL_NEAREST,
+                };
+
+                enum WrapMode
+                {
+                    Clamp = GL_CLAMP,
+                    Repeat = GL_REPEAT,
+                    MirroredRepeat = GL_MIRRORED_REPEAT,
+                };
+
+                struct ImportSettings
+                {
+                    Texture::FilterMode FilterMode       = Texture::FilterMode::Linear;
+                    Texture::WrapMode   WrapMode         = Texture::WrapMode::Repeat;
+                    unsigned int        MipMapLevels     = 3;
+                    unsigned int        AnisotropyLevels = 8;
+                };
+
+                explicit Texture(std::string filePath, ImportSettings importSettings = ImportSettings());
                 ~Texture();
 
                 void        Bind(unsigned int slot) const;
                 static void Unbind();
 
-                const glm::ivec2& GetSize() const;
+                const glm::uvec2& GetSize() const;
+                stbi_uc* GetBuffer() const;
+
+            private:
+                GLuint      _textureID;
+                std::string _filePath;
+                glm::uvec2  _size;
+                int         _bitsPerPixel;
+                stbi_uc*    _buffer;
         };
     }
 }
