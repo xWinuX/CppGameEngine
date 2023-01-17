@@ -107,14 +107,9 @@ void GraphicDemoApplication::Initialize(Scene& scene)
     theDudeSprite = new Sprite(theDudeSpriteTexture, 2, glm::vec2(30, 49));
     theDudeSprite->Finalize();
 
-    drLSprite = new Sprite(drLSpriteTexture);
-    drLSprite->Finalize();
-
+    drLSprite       = new Sprite(drLSpriteTexture);
     gamerDudeSprite = new Sprite(gamerDudeSpriteTexture);
-    gamerDudeSprite->Finalize();
-
-    testSprite = new Sprite(testSpriteTexture, 12, glm::uvec2(32,32));
-    testSprite->Finalize();
+    testSprite      = new Sprite(testSpriteTexture, 12, glm::uvec2(32, 32));
 
     spriteAtlas = new SpriteAtlas(glm::ivec2(1024));
 
