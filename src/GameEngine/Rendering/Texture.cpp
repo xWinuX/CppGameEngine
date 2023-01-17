@@ -2,24 +2,29 @@
 
 #include <iostream>
 #include <glad/glad.h>
-#include <glm/gtc/constants.hpp>
 #include <stb_image.h>
 
 using namespace GameEngine::Rendering;
 
-Texture::Texture(std::string filePath, const ImportSettings importSettings):
-    _textureID(0),
-    _filePath(std::move(filePath)),
-    _size(glm::zero<glm::ivec2>()),
-    _bitsPerPixel(0)
+Texture::Texture(const std::string& filePath, const ImportSettings importSettings)
 {
-    int width, height;
+    int width, height, bitsPerPixel;
+
     stbi_set_flip_vertically_on_load(1); // Flip texture upside down because opengl origin is bottom left
-    stbi_uc* const localBuffer = stbi_load(_filePath.c_str(), &width, &height, &_bitsPerPixel, 4);
+    unsigned char* const buffer = stbi_load(filePath.c_str(), &width, &height, &bitsPerPixel, 4);
 
     _size.x = width;
     _size.y = height;
-    
+
+    GenerateTexture(buffer, importSettings);
+}
+
+Texture::Texture(unsigned char* buffer, const glm::uvec2 size, const ImportSettings importSettings):
+    _size(size) { GenerateTexture(buffer, importSettings); }
+
+
+void Texture::GenerateTexture(unsigned char* buffer, const Texture::ImportSettings importSettings)
+{
     glGenTextures(1, &_textureID);
 
     glBindTexture(GL_TEXTURE_2D, _textureID);
@@ -31,9 +36,10 @@ Texture::Texture(std::string filePath, const ImportSettings importSettings):
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAX_LEVEL, importSettings.MipMapLevels);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAX_ANISOTROPY_EXT, importSettings.AnisotropyLevels);
 
-    _buffer = localBuffer;
+    _buffer = buffer;
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, _size.x, _size.y, 0, GL_RGBA, GL_UNSIGNED_BYTE, _buffer);
 }
+
 
 Texture::~Texture()
 {

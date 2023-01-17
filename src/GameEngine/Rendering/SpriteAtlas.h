@@ -12,14 +12,25 @@ namespace GameEngine
         class SpriteAtlas
         {
             private:
-                unsigned char* _buffer;
-                glm::uvec2 _size;
-                glm::uvec2 _currentPosition = glm::zero<glm::uvec2>();
+                struct PackingSprite
+                {
+                    Sprite*      Sprite;
+                    unsigned int PackedFrames;
+                    bool         WasPacked;
+                };
+
+                std::vector<PackingSprite>  _sprites;
+                std::vector<Texture*>       _pages;
+                std::vector<unsigned char*> _buffers;
+                glm::uvec2                  _size;
+                glm::uvec2                  _currentPosition = glm::zero<glm::uvec2>();
+                glm::vec2                   _uvStep;
             public:
                 explicit SpriteAtlas(glm::uvec2 size);
-                void     ExportImage() const;
-                void     AddSprite(const Sprite* sprite) ;
+                void     ExportPages() const;
+                void     AddSprite(Sprite* sprite);
+                void     CreateNewPage();
+                void     Pack();
         };
     }
 }
-

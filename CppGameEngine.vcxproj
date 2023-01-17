@@ -883,7 +883,14 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="res\models\cube.glb" />
+    <Content Include="res\models\Cube.gltf" />
+    <Content Include="res\models\HighPolyPlane.gltf" />
+    <Content Include="res\models\Sphere.gltf" />
+    <Content Include="res\models\Suzanne.gltf" />
+    <Content Include="res\models\Suzanne.mtl" />
+    <Content Include="res\models\Suzanne.obj" />
     <Content Include="res\models\TheMissing.gltf" />
+    <Content Include="res\models\TheMissingAnim.gltf" />
     <Content Include="res\shaders\Common\Functions.frag" />
     <Content Include="res\shaders\Common\Functions.vert" />
     <Content Include="res\shaders\Common\Layout.glsl" />
@@ -899,13 +906,17 @@
     <Content Include="res\shaders\Lit\Lit.frag" />
     <Content Include="res\shaders\Lit\Lit.vert" />
     <Content Include="res\shaders\PhysicsDebugShader.fsh" />
+    <Content Include="res\shaders\PhysicsDebugShader.vsh" />
     <Content Include="res\shaders\SpriteLit\SpriteLit.frag" />
     <Content Include="res\shaders\SpriteLit\SpriteLit.vert" />
     <Content Include="res\shaders\VertexColor\VertexColor.frag" />
     <Content Include="res\shaders\VertexColor\VertexColor.vert" />
     <Content Include="res\shaders\Water\Water.frag" />
     <Content Include="res\shaders\Water\Water.vert" />
+    <Content Include="res\sprites\DrLSprite.png" />
     <Content Include="res\sprites\GamerDudeSprite.png" />
+    <Content Include="res\sprites\TestSprite.png" />
+    <Content Include="res\sprites\TheDudeSprite.png" />
     <Content Include="res\textures\Black.png" />
     <Content Include="res\textures\Crate.jpg" />
     <Content Include="res\textures\CrateNormalMap.png" />

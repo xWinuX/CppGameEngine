@@ -45,6 +45,7 @@ Texture* crateNormalMapTexture;
 Texture* theDudeSpriteTexture;
 Texture* drLSpriteTexture;
 Texture* gamerDudeSpriteTexture;
+Texture* testSpriteTexture;
 
 Model* cubeModel;
 Model* suzanneModel;
@@ -77,6 +78,7 @@ GameObject* childOfChildCrateObject;
 Sprite* theDudeSprite;
 Sprite* drLSprite;
 Sprite* gamerDudeSprite;
+Sprite* testSprite;
 
 SpriteAtlas* spriteAtlas;
 
@@ -94,13 +96,14 @@ void GraphicDemoApplication::Initialize(Scene& scene)
     // Sprite Textures
     Texture::ImportSettings pixelArtTextureImportSettings;
     pixelArtTextureImportSettings.AnisotropyLevels = 0;
-    pixelArtTextureImportSettings.MipMapLevels = 0;
-    pixelArtTextureImportSettings.FilterMode = Texture::FilterMode::Nearest;
-     
-    theDudeSpriteTexture = new Texture("res/sprites/TheDudeSprite.png", pixelArtTextureImportSettings);
-    drLSpriteTexture = new Texture("res/sprites/DrLSprite.png", pixelArtTextureImportSettings);
+    pixelArtTextureImportSettings.MipMapLevels     = 0;
+    pixelArtTextureImportSettings.FilterMode       = Texture::FilterMode::Nearest;
+
+    theDudeSpriteTexture   = new Texture("res/sprites/TheDudeSprite.png", pixelArtTextureImportSettings);
+    drLSpriteTexture       = new Texture("res/sprites/DrLSprite.png", pixelArtTextureImportSettings);
     gamerDudeSpriteTexture = new Texture("res/sprites/GamerDudeSprite.png", pixelArtTextureImportSettings);
-    
+    testSpriteTexture      = new Texture("res/sprites/TestSprite.png", pixelArtTextureImportSettings);
+
     theDudeSprite = new Sprite(theDudeSpriteTexture, 2, glm::vec2(30, 49));
     theDudeSprite->Finalize();
 
@@ -109,57 +112,92 @@ void GraphicDemoApplication::Initialize(Scene& scene)
 
     gamerDudeSprite = new Sprite(gamerDudeSpriteTexture);
     gamerDudeSprite->Finalize();
-    
+
+    testSprite = new Sprite(testSpriteTexture, 12, glm::uvec2(32,32));
+    testSprite->Finalize();
+
     spriteAtlas = new SpriteAtlas(glm::ivec2(1024));
 
     spriteAtlas->AddSprite(gamerDudeSprite);
     spriteAtlas->AddSprite(theDudeSprite);
     spriteAtlas->AddSprite(theDudeSprite);
-    spriteAtlas->AddSprite(drLSprite);
     spriteAtlas->AddSprite(theDudeSprite);
     spriteAtlas->AddSprite(drLSprite);
     spriteAtlas->AddSprite(theDudeSprite);
-    spriteAtlas->AddSprite(drLSprite);
-    spriteAtlas->AddSprite(drLSprite);
-    spriteAtlas->AddSprite(drLSprite);
+    spriteAtlas->AddSprite(theDudeSprite);
+    spriteAtlas->AddSprite(testSprite);
+    spriteAtlas->AddSprite(testSprite);
+    spriteAtlas->AddSprite(testSprite);
+    spriteAtlas->AddSprite(testSprite);
+    spriteAtlas->AddSprite(testSprite);
+    spriteAtlas->AddSprite(testSprite);
+    spriteAtlas->AddSprite(testSprite);
+    spriteAtlas->AddSprite(testSprite);
+    spriteAtlas->AddSprite(testSprite);
+    spriteAtlas->AddSprite(testSprite);
+    spriteAtlas->AddSprite(testSprite);
+    spriteAtlas->AddSprite(testSprite);
+    spriteAtlas->AddSprite(testSprite);
+    spriteAtlas->AddSprite(testSprite);
+    spriteAtlas->AddSprite(testSprite);
+    spriteAtlas->AddSprite(testSprite);
+    spriteAtlas->AddSprite(testSprite);
+    spriteAtlas->AddSprite(testSprite);
+    spriteAtlas->AddSprite(testSprite);
+    spriteAtlas->AddSprite(testSprite);
+    spriteAtlas->AddSprite(testSprite);
+    spriteAtlas->AddSprite(testSprite);
+    spriteAtlas->AddSprite(testSprite);
+    spriteAtlas->AddSprite(testSprite);
+    spriteAtlas->AddSprite(testSprite);
+    spriteAtlas->AddSprite(testSprite);
+    spriteAtlas->AddSprite(testSprite);
+    spriteAtlas->AddSprite(testSprite);
+    spriteAtlas->AddSprite(testSprite);
+    spriteAtlas->AddSprite(testSprite);
+    spriteAtlas->AddSprite(testSprite);
+    spriteAtlas->AddSprite(testSprite);
+    spriteAtlas->AddSprite(testSprite);
+    spriteAtlas->AddSprite(testSprite);
+    spriteAtlas->AddSprite(testSprite);
+    spriteAtlas->AddSprite(testSprite);
+    spriteAtlas->AddSprite(theDudeSprite);
+    spriteAtlas->AddSprite(testSprite);
     spriteAtlas->AddSprite(theDudeSprite);
     spriteAtlas->AddSprite(theDudeSprite);
-    spriteAtlas->AddSprite(theDudeSprite);
-    spriteAtlas->AddSprite(theDudeSprite);
-    spriteAtlas->AddSprite(drLSprite);
-    spriteAtlas->AddSprite(drLSprite);
-    spriteAtlas->AddSprite(drLSprite);
-    spriteAtlas->AddSprite(theDudeSprite);
-    spriteAtlas->AddSprite(theDudeSprite);
-    spriteAtlas->AddSprite(theDudeSprite);
-    spriteAtlas->AddSprite(theDudeSprite);
-    spriteAtlas->AddSprite(theDudeSprite);
+    spriteAtlas->AddSprite(gamerDudeSprite);
     spriteAtlas->AddSprite(theDudeSprite);
     spriteAtlas->AddSprite(drLSprite);
-    spriteAtlas->AddSprite(drLSprite);
-    spriteAtlas->AddSprite(drLSprite);
-    spriteAtlas->AddSprite(drLSprite);
-    spriteAtlas->AddSprite(drLSprite);
-    spriteAtlas->AddSprite(drLSprite);
-    spriteAtlas->AddSprite(drLSprite);
-    spriteAtlas->AddSprite(drLSprite);
-    spriteAtlas->AddSprite(drLSprite);
-    spriteAtlas->AddSprite(drLSprite);
-    spriteAtlas->AddSprite(drLSprite);
+    spriteAtlas->AddSprite(testSprite);
     spriteAtlas->AddSprite(drLSprite);
     spriteAtlas->AddSprite(theDudeSprite);
+    spriteAtlas->AddSprite(drLSprite);
+    spriteAtlas->AddSprite(testSprite);
+    spriteAtlas->AddSprite(testSprite);
+    spriteAtlas->AddSprite(testSprite);
+    spriteAtlas->AddSprite(testSprite);
     spriteAtlas->AddSprite(theDudeSprite);
-    spriteAtlas->AddSprite(theDudeSprite);
-    
+    spriteAtlas->AddSprite(testSprite);
+    spriteAtlas->AddSprite(gamerDudeSprite);
+    spriteAtlas->AddSprite(testSprite);
+    spriteAtlas->AddSprite(testSprite);
+    spriteAtlas->AddSprite(testSprite);
+    spriteAtlas->AddSprite(testSprite);
+    spriteAtlas->AddSprite(testSprite);
+    spriteAtlas->AddSprite(testSprite);
+
+
+    spriteAtlas->Pack();
+
     cubeModel       = new Model("res/models/Cube.gltf");
     suzanneModel    = new Model("res/models/Suzanne.gltf");
     theMissingModel = new Model("res/models/TheMissing.gltf");
     sphereModel     = new Model("res/models/Sphere.gltf");
     highPolyPlane   = new Model("res/models/HighPolyPlane.gltf");
-    
+
     #pragma region Default Shader
     litShader = new Shader("res/shaders/Lit/Lit.vert", "res/shaders/Lit/Lit.frag");
-    
+
     // Common
     litShader->InitializeUniform<float>("u_Time", 0.0f, false);
     litShader->InitializeUniform<glm::mat4>("u_ViewProjection", glm::identity<glm::mat4>(), false);
@@ -180,7 +218,7 @@ void GraphicDemoApplication::Initialize(Scene& scene)
     litShader->InitializeUniform<Texture*>("u_Texture", whiteTexture);
     litShader->InitializeUniform<Texture*>("u_NormalMap", normalMapDefaultTexture);
     litShader->InitializeUniform<float>("u_NormalMapIntensity", 1.0f);
-    
+
     // Dude material
     dudeMaterial = new Material(litShader);
     dudeMaterial->GetUniformBuffer()->SetUniform("u_Texture", theDudeTexture);
@@ -191,11 +229,11 @@ void GraphicDemoApplication::Initialize(Scene& scene)
     crateMaterial->GetUniformBuffer()->SetUniform("u_NormalMap", crateNormalMapTexture);
     crateMaterial->GetUniformBuffer()->SetUniform("u_NormalMapIntensity", 1.0f);
     #pragma endregion
-    
+
     #pragma region Water Shader
     waterShader = new Shader("res/shaders/Water/Water.vert", "res/shaders/Water/Water.frag");
     waterShader->UniformBufferFromShader(litShader);
-    
+
     // Material
     waterMaterial = new Material(waterShader);
     waterMaterial->SetTransparent(true);
@@ -211,7 +249,7 @@ void GraphicDemoApplication::Initialize(Scene& scene)
     spriteLitMaterial->GetUniformBuffer()->SetUniform<Texture*>("u_Texture", theDudeSpriteTexture);
     spriteLitMaterial->SetCullFace(Material::None);
     #pragma endregion
-    
+
     #pragma region Physics Debug Shader
     physicsDebugShader = new Shader("res/shaders/PhysicsDebugShader.vsh", "res/shaders/PhysicsDebugShader.fsh");
 
@@ -226,7 +264,7 @@ void GraphicDemoApplication::Initialize(Scene& scene)
 
     #pragma region Vertex Color Shader
     vertexColorShader = new Shader("res/shaders/VertexColor/VertexColor.vert", "res/shaders/VertexColor/VertexColor.frag");
-    
+
     // Common
     vertexColorShader->InitializeUniform<float>("u_Time", 0.0f, false);
     vertexColorShader->InitializeUniform<glm::mat4>("u_ViewProjection", glm::identity<glm::mat4>(), false);
@@ -265,7 +303,7 @@ void GraphicDemoApplication::Initialize(Scene& scene)
     // Suzanne
     suzanneObject = new GameObject();
     suzanneObject->GetTransform()->SetLocalPosition(glm::vec3(0.0f, 0.0f, 0.0f));
-   // suzanneObject->AddComponent(new MeshRenderer(suzanneModel->GetMesh(0), dudeMaterial));
+    // suzanneObject->AddComponent(new MeshRenderer(suzanneModel->GetMesh(0), dudeMaterial));
     suzanneObject->AddComponent(new SpriteRenderer(theDudeSprite, spriteLitMaterial));
     scene.AddGameObject(suzanneObject);
 
@@ -351,7 +389,7 @@ void GraphicDemoApplication::CustomRun()
                                                                       ));
 
     childCrateObject->GetTransform()->SetLocalScale(glm::vec3(2.0, 2.0, 2.0));
-    
+
     // Rotate 
     theMissingObject->GetTransform()->Rotate(glm::vec3(0.0f, 0.0f, 45.0f * Time::GetDeltaTime()));
     suzanneObject->GetTransform()->Rotate(glm::vec3(0.0f, 45.0f * Time::GetDeltaTime(), 0.0f));
@@ -366,7 +404,7 @@ void GraphicDemoApplication::CustomRun()
     // Move crate
     crateObject->GetComponent<Rigidbody>()->ApplyForce(crateVelocity * 100.0f);
     crateObject->GetComponent<Rigidbody>()->ApplyTorque(crateVelocity * 100.0f);
-    
+
     // Move camera
     cameraObject->GetTransform()->MoveLocal(cameraVelocity);
 }

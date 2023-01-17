@@ -3,7 +3,7 @@
 #include <glad/glad.h>
 #include <glm/vec2.hpp>
 
-#include "stb_image.h"
+#include "glm/gtc/constants.hpp"
 
 namespace GameEngine
 {
@@ -33,21 +33,22 @@ namespace GameEngine
                     unsigned int        AnisotropyLevels = 8;
                 };
 
-                explicit Texture(std::string filePath, ImportSettings importSettings = ImportSettings());
+                explicit Texture(const std::string& filePath, ImportSettings importSettings = ImportSettings());
+                explicit Texture(unsigned char* buffer, glm::uvec2 size, ImportSettings importSettings = ImportSettings());
                 ~Texture();
 
                 void        Bind(unsigned int slot) const;
                 static void Unbind();
 
                 const glm::uvec2& GetSize() const;
-                stbi_uc* GetBuffer() const;
+                unsigned char*    GetBuffer() const;
 
             private:
-                GLuint      _textureID;
-                std::string _filePath;
-                glm::uvec2  _size;
-                int         _bitsPerPixel;
-                stbi_uc*    _buffer;
+                GLuint         _textureID = 0;
+                glm::uvec2     _size      = glm::zero<glm::uvec2>();
+                unsigned char* _buffer    = nullptr;
+
+                void GenerateTexture(unsigned char* buffer, ImportSettings importSettings);
         };
     }
 }

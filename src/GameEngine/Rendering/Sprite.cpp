@@ -4,7 +4,7 @@
 
 using namespace GameEngine::Rendering;
 
-void Sprite::AddSpriteQuad(const float aspectRatio, const glm::vec2 uvStep = glm::one<glm::vec2>(), const glm::ivec2 offset = glm::zero<glm::vec2>())
+void Sprite::AddSpriteQuad(const float aspectRatio, const glm::vec2 uvStep = glm::one<glm::vec2>(), const glm::uvec2 offset = glm::zero<glm::uvec2>())
 {
     float uStepBegin = uvStep.x * static_cast<float>(offset.x);
     float uStepEnd   = uvStep.x * static_cast<float>(offset.x + 1);
@@ -30,18 +30,20 @@ void Sprite::AddSpriteQuad(const float aspectRatio, const glm::vec2 uvStep = glm
                            {2, aspectRatio, {uStepBegin, vStepBegin}, glm::vec4(1.0)},
                            {3, aspectRatio, {uStepEnd, vStepBegin}, glm::vec4(1.0)}
                        });
+
+    _framePositions.emplace_back(offset.x * _frameSize.x, offset.y * _frameSize.y);
 }
 
 Sprite::Sprite(Texture* texture):
     _texture(texture),
-    _frameSize(texture->GetSize()) { AddSpriteQuad(_frameSize.x / _frameSize.y); }
+    _frameSize(texture->GetSize()) { AddSpriteQuad(static_cast<float>(_frameSize.x) / static_cast<float>(_frameSize.y)); }
 
-Sprite::Sprite(Texture* texture, const unsigned int numFrames, const glm::vec2 frameSize):
+Sprite::Sprite(Texture* texture, const unsigned int numFrames, const glm::uvec2 frameSize):
     _texture(texture),
     _frameSize(frameSize),
     _numFrames(numFrames)
 {
-    const float aspectRatio = _frameSize.x / _frameSize.y;
+    const float aspectRatio = static_cast<float>(_frameSize.x) / static_cast<float>(_frameSize.y);
     const float uStep       = 1.0f / static_cast<float>(numFrames);
     for (unsigned int i = 0; i < _numFrames; i++) { AddSpriteQuad(aspectRatio, {uStep, 1.0}, {i, 0}); }
 }
@@ -61,6 +63,17 @@ void Sprite::Finalize()
     _vertexArrayObject = new VertexArrayObject(vertexBuffer, indexBuffer, vertexBufferLayout);
 }
 
-VertexArrayObject* Sprite::GetVertexArrayObject() const { return _vertexArrayObject; }
-Texture*           Sprite::GetTexture() const { return _texture; }
-unsigned           Sprite::GetNumFrames() const { return _numFrames; }
+void Sprite::ChangeFrameUV(const unsigned int frameIndex, const glm::vec2 topLeftUV, const glm::vec2 bottomRightUV)
+{
+    _vertexData[(frameIndex * 4)].UV     = topLeftUV;
+    _vertexData[(frameIndex * 4) + 1].UV = {topLeftUV.y, bottomRightUV.x};
+    _vertexData[(frameIndex * 4) + 2].UV = {bottomRightUV.y, bottomRightUV.x};
+    _vertexData[(frameIndex * 4) + 3].UV = {bottomRightUV.y, bottomRightUV.x};
+}
+
+
+VertexArrayObject*             Sprite::GetVertexArrayObject() const { return _vertexArrayObject; }
+Texture*                       Sprite::GetTexture() const { return _texture; }
+unsigned int                   Sprite::GetNumFrames() const { return _numFrames; }
+glm::uvec2                     Sprite::GetFrameSize() const { return _frameSize; }
+const std::vector<glm::uvec2>& Sprite::GetFramePositions() { return _framePositions; }
