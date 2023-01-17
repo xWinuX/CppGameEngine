@@ -74,14 +74,14 @@ void Sprite::Finalize()
 void Sprite::ChangeFrameUV(const unsigned int frameIndex, const glm::vec2 topLeftUV, const glm::vec2 bottomRightUV)
 {
     _vertexData[(frameIndex * 4)].UV     = topLeftUV;
-    _vertexData[(frameIndex * 4) + 1].UV = {topLeftUV.x, bottomRightUV.y};
-    _vertexData[(frameIndex * 4) + 2].UV = {bottomRightUV.x, bottomRightUV.y};
-    _vertexData[(frameIndex * 4) + 3].UV = {bottomRightUV.x, bottomRightUV.y};
+    _vertexData[(frameIndex * 4) + 1].UV = {bottomRightUV.x, topLeftUV.y};
+    _vertexData[(frameIndex * 4) + 2].UV = {topLeftUV.x, bottomRightUV.y};
+    _vertexData[(frameIndex * 4) + 3].UV = bottomRightUV;
 }
 
 void Sprite::ChangeFrameTexture(const unsigned frameIndex, Texture* texture) { _textures[frameIndex] = texture; }
 
-unsigned char* Sprite::GetQuadData(const unsigned frameIndex) { return reinterpret_cast<unsigned char*>(_vertexData.data() + frameIndex); }
+unsigned char* Sprite::GetQuadData(const unsigned frameIndex) { return reinterpret_cast<unsigned char*>(_vertexData.data() + frameIndex*4); }
 Texture*       Sprite::GetSourceTexture() const { return _sourceTexture; }
 
 

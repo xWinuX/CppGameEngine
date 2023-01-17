@@ -7,9 +7,10 @@
 
 using namespace GameEngine::Rendering;
 
-GameEngine::Rendering::SpriteAtlas::SpriteAtlas(const glm::uvec2 size):
+GameEngine::Rendering::SpriteAtlas::SpriteAtlas(const glm::uvec2 size, Texture::ImportSettings importSettings):
     _size(size),
-    _uvStep(glm::vec2(1 / size.x, 1 / size.y)) {}
+    _uvStep(glm::vec2(1.0f / size.x, 1.0f / size.y)),
+    _importSettings(importSettings) {}
 
 void SpriteAtlas::ExportPages() const
 {
@@ -86,8 +87,11 @@ void SpriteAtlas::Pack()
                 }
 
                 // Update sprite uvs
-                glm::vec2 topLeftUV = glm::vec2(static_cast<float>(position.x) * _uvStep.x, static_cast<float>(position.y) * _uvStep.y);
-                //sprite->ChangeFrameUV(frameIndex, topLeftUV, topLeftUV + frameUVStep);
+                glm::vec2 topLeftUV = glm::vec2(static_cast<float>(position.x) * _uvStep.x, static_cast<float>(_size.y - position.y) * _uvStep.y);
+                Debug::Log::Message(glm::to_string(_uvStep));
+                Debug::Log::Message(glm::to_string(topLeftUV));
+                Debug::Log::Message(glm::to_string(topLeftUV + frameUVStep));
+                sprite->ChangeFrameUV(frameIndex, topLeftUV, topLeftUV + frameUVStep);
 
                 // Update cursor x position to end of currently inserted sprite 
                 position.x += frameSize.x;
@@ -110,7 +114,7 @@ void SpriteAtlas::Pack()
     ExportPages();
 
     // Create textures out of the buffers and clear the vector since the texture now manages the buffers memory
-    for (unsigned char* buffer : _buffers) { _pages.push_back(new Texture(buffer, _size)); }
+    for (unsigned char* buffer : _buffers) { _pages.push_back(new Texture(buffer, _size, _importSettings)); }
 
     for (PackingSprite packingSprite : _sprites)
     {

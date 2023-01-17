@@ -6,7 +6,7 @@
 
 #include "Texture.h"
 
-#define LOCATION_CHECK if (_location < 0) {       Debug::Log::Message(std::string(_name) + " set failed " + std::to_string(_location)); return; }
+#define LOCATION_CHECK if (_location < 0) { return; }
 
 namespace GameEngine
 {

@@ -109,13 +109,12 @@ void GraphicDemoApplication::Initialize(Scene& scene)
     gamerDudeSprite = new Sprite(gamerDudeSpriteTexture);
     testSprite      = new Sprite(testSpriteTexture, 12, glm::uvec2(32, 32));
 
-    spriteAtlas = new SpriteAtlas(glm::ivec2(1024));
+    spriteAtlas = new SpriteAtlas(glm::ivec2(1024), pixelArtTextureImportSettings);
 
     spriteAtlas->AddSprite(gamerDudeSprite);
     spriteAtlas->AddSprite(drLSprite);
     spriteAtlas->AddSprite(theDudeSprite);
     spriteAtlas->AddSprite(testSprite);
-
 
     spriteAtlas->Pack();
 
@@ -232,7 +231,7 @@ void GraphicDemoApplication::Initialize(Scene& scene)
     suzanneObject = new GameObject();
     suzanneObject->GetTransform()->SetLocalPosition(glm::vec3(0.0f, 0.0f, 0.0f));
     // suzanneObject->AddComponent(new MeshRenderer(suzanneModel->GetMesh(0), dudeMaterial));
-    suzanneObject->AddComponent(new SpriteRenderer(gamerDudeSprite, spriteLitMaterial));
+    suzanneObject->AddComponent(new SpriteRenderer(testSprite, spriteLitMaterial));
     scene.AddGameObject(suzanneObject);
 
     // The Missing
@@ -335,4 +334,6 @@ void GraphicDemoApplication::CustomRun()
 
     // Move camera
     cameraObject->GetTransform()->MoveLocal(cameraVelocity);
+
+    GameEngine::Debug::Log::Message("DeltaTime: " + std::to_string(Time::GetDeltaTime())); 
 }

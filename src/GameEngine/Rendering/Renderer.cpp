@@ -133,7 +133,7 @@ unsigned int Renderer::RenderRenderable2D(const std::map<Material*, std::map<Tex
             unsigned int offset = 0;
             for (Renderable2D* renderable2D : texturePair.second)
             {
-                renderable2D->CopyQuadData(_renderable2DVertexData+offset, 0, 1);
+                renderable2D->CopyQuadData(_renderable2DVertexData+offset);
                 offset += sizeof(Sprite::VertexData)*4;
             }
             

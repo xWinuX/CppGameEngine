@@ -14,20 +14,23 @@ namespace GameEngine
             private:
                 struct PackingSprite
                 {
-                    Sprite*      Sprite;
-                    unsigned int PackedFrames;
-                    bool         WasPacked;
+                    Sprite*                   Sprite;
+                    unsigned int              PackedFrames;
+                    bool                      WasPacked;
                     std::vector<unsigned int> FramePages;
                 };
+
 
                 std::vector<PackingSprite>  _sprites;
                 std::vector<Texture*>       _pages;
                 std::vector<unsigned char*> _buffers;
-                glm::uvec2                  _size;
-                glm::uvec2                  _currentPosition = glm::zero<glm::uvec2>();
-                glm::vec2                   _uvStep;
+
+                Texture::ImportSettings _importSettings;
+                glm::uvec2              _size;
+                glm::uvec2              _currentPosition = glm::zero<glm::uvec2>();
+                glm::vec2               _uvStep;
             public:
-                explicit SpriteAtlas(glm::uvec2 size);
+                explicit SpriteAtlas(glm::uvec2 size, Texture::ImportSettings importSettings);
                 void     ExportPages() const;
                 void     AddSprite(Sprite* sprite);
                 void     CreateNewPage();
