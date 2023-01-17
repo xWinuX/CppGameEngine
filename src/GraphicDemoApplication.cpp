@@ -245,7 +245,8 @@ void GraphicDemoApplication::Initialize(Scene& scene)
     crateObject = new GameObject();
     crateObject->GetTransform()->SetLocalPosition(glm::vec3(0.0f, -1.5f, 0.0f));
     crateObject->GetTransform()->SetLocalScale(glm::vec3(0.5f, 0.5f, 0.5f));
-    crateObject->AddComponent(new MeshRenderer(cubeModel->GetMesh(0), crateMaterial));
+    //crateObject->AddComponent(new MeshRenderer(cubeModel->GetMesh(0), crateMaterial));
+    suzanneObject->AddComponent(new SpriteRenderer(theDudeSprite, spriteLitMaterial));
     crateObject->AddComponent(new BoxCollider(glm::vec3(0.5f)));
     crateObject->AddComponent(new Rigidbody(reactphysics3d::BodyType::DYNAMIC));
     scene.AddGameObject(crateObject);
