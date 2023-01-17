@@ -71,6 +71,11 @@ void Sprite::ChangeFrameUV(const unsigned int frameIndex, const glm::vec2 topLef
     _vertexData[(frameIndex * 4) + 3].UV = {bottomRightUV.y, bottomRightUV.x};
 }
 
+unsigned char* Sprite::GetQuadData(const unsigned frameIndex)
+{
+    return  reinterpret_cast<unsigned char*>(_vertexData.data()+frameIndex);
+}
+
 
 VertexArrayObject*             Sprite::GetVertexArrayObject() const { return _vertexArrayObject; }
 Texture*                       Sprite::GetTexture() const { return _texture; }

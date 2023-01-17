@@ -12,7 +12,7 @@ namespace GameEngine
     {
         class Sprite
         {
-            private:
+            public:
                 struct VertexData
                 {
                     int       VertexIndex;
@@ -21,6 +21,22 @@ namespace GameEngine
                     glm::vec4 Color;
                 };
 
+                explicit Sprite(Texture* texture);
+                Sprite(Texture* texture, unsigned int numFrames, glm::uvec2 frameSize);
+
+                void Finalize();
+
+                void ChangeFrameUV(unsigned int frameIndex, glm::vec2 topLeftUV, glm::vec2 bottomRightUV);
+
+                unsigned char* GetQuadData(unsigned int frameIndex = 0);
+
+                VertexArrayObject*             GetVertexArrayObject() const;
+                Texture*                       GetTexture() const;
+                unsigned int                   GetNumFrames() const;
+                glm::uvec2                     GetFrameSize() const;
+                const std::vector<glm::uvec2>& GetFramePositions();
+
+            private:
                 void AddSpriteQuad(const float aspectRatio, const glm::vec2 uvStep, const glm::uvec2 offset);
 
                 Texture*                  _texture;
@@ -30,19 +46,6 @@ namespace GameEngine
                 std::vector<unsigned int> _indices;
                 unsigned int              _numFrames         = 1;
                 VertexArrayObject*        _vertexArrayObject = nullptr;
-
-            public:
-                explicit Sprite(Texture* texture);
-                Sprite(Texture* texture, unsigned int numFrames, glm::uvec2 frameSize);
-
-                void Finalize();
-
-                VertexArrayObject*             GetVertexArrayObject() const;
-                Texture*                       GetTexture() const;
-                unsigned int                   GetNumFrames() const;
-                glm::uvec2                     GetFrameSize() const;
-                const std::vector<glm::uvec2>& GetFramePositions();
-                void ChangeFrameUV(unsigned int frameIndex, glm::vec2 topLeftUV, glm::vec2 bottomRightUV);
         };
     }
 }

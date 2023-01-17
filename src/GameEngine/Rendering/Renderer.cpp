@@ -11,12 +11,15 @@
 using namespace GameEngine::Rendering;
 using namespace GameEngine::Components;
 
+std::vector<Light*> Renderer::_lights = std::vector<Light*>();
 
-std::vector<Light*>                           Renderer::_lights                 = std::vector<Light*>();
 std::map<Material*, std::vector<Renderable*>> Renderer::_opaqueRenderables      = std::map<Material*, std::vector<Renderable*>>();
 std::map<Material*, std::vector<Renderable*>> Renderer::_transparentRenderables = std::map<Material*, std::vector<Renderable*>>();
-glm::mat4                                     Renderer::_projectionMatrix       = glm::identity<glm::mat4>();
-glm::mat4                                     Renderer::_viewMatrix             = glm::identity<glm::mat4>();
+
+std::map<Material*, std::map<Texture*, std::vector<Renderable2D*>>> Renderer::_opaqueRenderable2Ds = std::map<Material*, std::map<Texture*, std::vector<Renderable2D*>>>();
+
+glm::mat4 Renderer::_projectionMatrix = glm::identity<glm::mat4>();
+glm::mat4 Renderer::_viewMatrix       = glm::identity<glm::mat4>();
 
 void Renderer::Initialize()
 {
@@ -29,6 +32,8 @@ void Renderer::Initialize()
 }
 
 void Renderer::SubmitLight(Light* light) { _lights.push_back(light); }
+
+void Renderer::SubmitRenderable2D(Renderable2D* renderable2D) {}
 
 void Renderer::SubmitRenderable(Renderable* renderable)
 {
@@ -78,7 +83,7 @@ unsigned int Renderer::RenderRenderables(const std::map<Material*, std::vector<R
         // Face Culling
         if (cullFace != currentCullFace || firstLoop)
         {
-            if(cullFace == Material::CullFace::None)
+            if (cullFace == Material::CullFace::None)
             {
                 glDisable(GL_CULL_FACE);
                 glCullFace(GL_BACK);
@@ -88,8 +93,10 @@ unsigned int Renderer::RenderRenderables(const std::map<Material*, std::vector<R
                 glEnable(GL_CULL_FACE);
                 glCullFace(cullFace);
             }
+
+            currentCullFace = cullFace;
         }
-        
+
         // Apply material uniforms that are in the queue
         material->GetUniformBuffer()->Apply();
 

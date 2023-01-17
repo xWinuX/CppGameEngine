@@ -137,7 +137,9 @@
     <ClCompile Include="src\GameEngine\Rendering\Mesh.cpp" />
     <ClCompile Include="src\GameEngine\Rendering\Model.cpp" />
     <ClCompile Include="src\GameEngine\Rendering\Primitive.cpp" />
+    <ClCompile Include="src\GameEngine\Rendering\Renderable2D.cpp" />
     <ClCompile Include="src\GameEngine\Rendering\RenderablePrimitive.cpp" />
+    <ClCompile Include="src\GameEngine\Rendering\RenderableSprite.cpp" />
     <ClCompile Include="src\GameEngine\Rendering\Renderer.cpp" />
     <ClCompile Include="src\GameEngine\Rendering\Shader.cpp" />
     <ClCompile Include="src\GameEngine\Rendering\Sprite.cpp" />
@@ -331,7 +333,9 @@
     <ClInclude Include="src\GameEngine\Rendering\Model.h" />
     <ClInclude Include="src\GameEngine\Rendering\Primitive.h" />
     <ClInclude Include="src\GameEngine\Rendering\Renderable.h" />
+    <ClInclude Include="src\GameEngine\Rendering\Renderable2D.h" />
     <ClInclude Include="src\GameEngine\Rendering\RenderablePrimitive.h" />
+    <ClInclude Include="src\GameEngine\Rendering\RenderableSprite.h" />
     <ClInclude Include="src\GameEngine\Rendering\Renderer.h" />
     <ClInclude Include="src\GameEngine\Rendering\Shader.h" />
     <ClInclude Include="src\GameEngine\Rendering\Sprite.h" />
