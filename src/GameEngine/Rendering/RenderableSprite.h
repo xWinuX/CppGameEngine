@@ -14,8 +14,10 @@ namespace GameEngine
                 Material* _material;
             public:
                 RenderableSprite(Sprite* sprite, Material* material);
-                unsigned GetVertexSize() override;
-                void CopyQuadData(unsigned char* destination, unsigned frameIndex, unsigned numQuads) override;
+                unsigned  GetVertexSize() override;
+                void      CopyQuadData(unsigned char* destination, unsigned frameIndex, unsigned numQuads) override;
+                Material* GetMaterial() override;
+                Texture* GetTexture() override;
         };
     }
 }

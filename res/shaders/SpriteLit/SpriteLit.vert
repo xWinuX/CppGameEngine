@@ -17,9 +17,10 @@ const vec3 positions[4] = vec3[](
 
 void main()
 {
-    v_Position = calculateWorldSpacePosition(u_Transform, positions[a_VertexIndex]*vec3(a_AspectRatio, 1.0, 1.0));
+   // v_Position = calculateWorldSpacePosition(u_Transform, positions[a_VertexIndex]*vec3(a_AspectRatio, 1.0, 1.0));
 
-    gl_Position = calculateNDCPosition(u_ViewProjection, v_Position);
+    //gl_Position = calculateNDCPosition(u_ViewProjection, v_Position);
+    gl_Position = calculateNDCPosition(u_ViewProjection, positions[a_VertexIndex]*vec3(a_AspectRatio, 1.0, 1.0));
 
     v_TBN = calculateTBN(u_Transform, vec3(0.0, 0.0, 1.0), vec4(0.0, 1.0, 0.0, 1.0));
 

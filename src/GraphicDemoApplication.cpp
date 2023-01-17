@@ -104,9 +104,7 @@ void GraphicDemoApplication::Initialize(Scene& scene)
     gamerDudeSpriteTexture = new Texture("res/sprites/GamerDudeSprite.png", pixelArtTextureImportSettings);
     testSpriteTexture      = new Texture("res/sprites/TestSprite.png", pixelArtTextureImportSettings);
 
-    theDudeSprite = new Sprite(theDudeSpriteTexture, 2, glm::vec2(30, 49));
-    theDudeSprite->Finalize();
-
+    theDudeSprite   = new Sprite(theDudeSpriteTexture, 2, glm::vec2(30, 49));
     drLSprite       = new Sprite(drLSpriteTexture);
     gamerDudeSprite = new Sprite(gamerDudeSpriteTexture);
     testSprite      = new Sprite(testSpriteTexture, 12, glm::uvec2(32, 32));
@@ -114,71 +112,8 @@ void GraphicDemoApplication::Initialize(Scene& scene)
     spriteAtlas = new SpriteAtlas(glm::ivec2(1024));
 
     spriteAtlas->AddSprite(gamerDudeSprite);
-    spriteAtlas->AddSprite(theDudeSprite);
-    spriteAtlas->AddSprite(theDudeSprite);
-    spriteAtlas->AddSprite(theDudeSprite);
     spriteAtlas->AddSprite(drLSprite);
     spriteAtlas->AddSprite(theDudeSprite);
-    spriteAtlas->AddSprite(theDudeSprite);
-    spriteAtlas->AddSprite(testSprite);
-    spriteAtlas->AddSprite(testSprite);
-    spriteAtlas->AddSprite(testSprite);
-    spriteAtlas->AddSprite(testSprite);
-    spriteAtlas->AddSprite(testSprite);
-    spriteAtlas->AddSprite(testSprite);
-    spriteAtlas->AddSprite(testSprite);
-    spriteAtlas->AddSprite(testSprite);
-    spriteAtlas->AddSprite(testSprite);
-    spriteAtlas->AddSprite(testSprite);
-    spriteAtlas->AddSprite(testSprite);
-    spriteAtlas->AddSprite(testSprite);
-    spriteAtlas->AddSprite(testSprite);
-    spriteAtlas->AddSprite(testSprite);
-    spriteAtlas->AddSprite(testSprite);
-    spriteAtlas->AddSprite(testSprite);
-    spriteAtlas->AddSprite(testSprite);
-    spriteAtlas->AddSprite(testSprite);
-    spriteAtlas->AddSprite(testSprite);
-    spriteAtlas->AddSprite(testSprite);
-    spriteAtlas->AddSprite(testSprite);
-    spriteAtlas->AddSprite(testSprite);
-    spriteAtlas->AddSprite(testSprite);
-    spriteAtlas->AddSprite(testSprite);
-    spriteAtlas->AddSprite(testSprite);
-    spriteAtlas->AddSprite(testSprite);
-    spriteAtlas->AddSprite(testSprite);
-    spriteAtlas->AddSprite(testSprite);
-    spriteAtlas->AddSprite(testSprite);
-    spriteAtlas->AddSprite(testSprite);
-    spriteAtlas->AddSprite(testSprite);
-    spriteAtlas->AddSprite(testSprite);
-    spriteAtlas->AddSprite(testSprite);
-    spriteAtlas->AddSprite(testSprite);
-    spriteAtlas->AddSprite(testSprite);
-    spriteAtlas->AddSprite(testSprite);
-    spriteAtlas->AddSprite(theDudeSprite);
-    spriteAtlas->AddSprite(testSprite);
-    spriteAtlas->AddSprite(theDudeSprite);
-    spriteAtlas->AddSprite(theDudeSprite);
-    spriteAtlas->AddSprite(gamerDudeSprite);
-    spriteAtlas->AddSprite(theDudeSprite);
-    spriteAtlas->AddSprite(drLSprite);
-    spriteAtlas->AddSprite(testSprite);
-    spriteAtlas->AddSprite(drLSprite);
-    spriteAtlas->AddSprite(theDudeSprite);
-    spriteAtlas->AddSprite(drLSprite);
-    spriteAtlas->AddSprite(testSprite);
-    spriteAtlas->AddSprite(testSprite);
-    spriteAtlas->AddSprite(testSprite);
-    spriteAtlas->AddSprite(testSprite);
-    spriteAtlas->AddSprite(theDudeSprite);
-    spriteAtlas->AddSprite(testSprite);
-    spriteAtlas->AddSprite(gamerDudeSprite);
-    spriteAtlas->AddSprite(testSprite);
-    spriteAtlas->AddSprite(testSprite);
-    spriteAtlas->AddSprite(testSprite);
-    spriteAtlas->AddSprite(testSprite);
-    spriteAtlas->AddSprite(testSprite);
     spriteAtlas->AddSprite(testSprite);
 
 
@@ -240,9 +175,7 @@ void GraphicDemoApplication::Initialize(Scene& scene)
 
     // Material
     spriteLitMaterial = new Material(spriteLitShader);
-    spriteLitMaterial->GetUniformBuffer()->SetUniform("u_NormalMap", crateNormalMapTexture);
-    spriteLitMaterial->GetUniformBuffer()->SetUniform<Texture*>("u_Texture", theDudeSpriteTexture);
-    spriteLitMaterial->SetCullFace(Material::None);
+    spriteLitMaterial->SetCullFace(Material::CullFace::None);
     #pragma endregion
 
     #pragma region Physics Debug Shader
@@ -299,7 +232,7 @@ void GraphicDemoApplication::Initialize(Scene& scene)
     suzanneObject = new GameObject();
     suzanneObject->GetTransform()->SetLocalPosition(glm::vec3(0.0f, 0.0f, 0.0f));
     // suzanneObject->AddComponent(new MeshRenderer(suzanneModel->GetMesh(0), dudeMaterial));
-    suzanneObject->AddComponent(new SpriteRenderer(theDudeSprite, spriteLitMaterial));
+    suzanneObject->AddComponent(new SpriteRenderer(gamerDudeSprite, spriteLitMaterial));
     scene.AddGameObject(suzanneObject);
 
     // The Missing

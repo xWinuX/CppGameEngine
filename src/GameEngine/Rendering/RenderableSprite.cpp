@@ -10,3 +10,6 @@ void GameEngine::Rendering::RenderableSprite::CopyQuadData(unsigned char* destin
 {
     memcpy(destination, _sprite->GetQuadData(frameIndex), GetVertexSize() * numQuads * 4);
 }
+
+GameEngine::Rendering::Material* GameEngine::Rendering::RenderableSprite::GetMaterial() { return _material; }
+GameEngine::Rendering::Texture*  GameEngine::Rendering::RenderableSprite::GetTexture() { return _sprite->GetTextures()[0]; }

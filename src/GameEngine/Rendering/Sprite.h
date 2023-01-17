@@ -27,20 +27,23 @@ namespace GameEngine
                 void Finalize();
 
                 void ChangeFrameUV(unsigned int frameIndex, glm::vec2 topLeftUV, glm::vec2 bottomRightUV);
+                void ChangeFrameTexture(unsigned int frameIndex, Texture* texture);
 
                 unsigned char* GetQuadData(unsigned int frameIndex = 0);
 
+                Texture*                       GetSourceTexture() const;
                 VertexArrayObject*             GetVertexArrayObject() const;
-                Texture*                       GetTexture() const;
                 unsigned int                   GetNumFrames() const;
                 glm::uvec2                     GetFrameSize() const;
+                const std::vector<Texture*>&   GetTextures() const;
                 const std::vector<glm::uvec2>& GetFramePositions();
 
             private:
                 void AddSpriteQuad(const float aspectRatio, const glm::vec2 uvStep, const glm::uvec2 offset);
 
-                Texture*                  _texture;
+                Texture*                  _sourceTexture;
                 glm::uvec2                _frameSize;
+                std::vector<Texture*>     _textures;
                 std::vector<glm::uvec2>   _framePositions;
                 std::vector<VertexData>   _vertexData;
                 std::vector<unsigned int> _indices;

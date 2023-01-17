@@ -9,7 +9,7 @@ using namespace GameEngine::Rendering;
 
 GameEngine::Rendering::SpriteAtlas::SpriteAtlas(const glm::uvec2 size):
     _size(size),
-    _uvStep(glm::vec2(1 / _size.x, 1 / _size.y)) {}
+    _uvStep(glm::vec2(1 / size.x, 1 / size.y)) {}
 
 void SpriteAtlas::ExportPages() const
 {
@@ -34,7 +34,10 @@ void SpriteAtlas::Pack()
 {
     // Sort sprites based on height
     std::sort(_sprites.begin(), _sprites.end(),
-              [](const PackingSprite sprite1, const PackingSprite sprite2) { return sprite1.Sprite->GetTexture()->GetSize().y > sprite2.Sprite->GetTexture()->GetSize().y; });
+              [](const PackingSprite sprite1, const PackingSprite sprite2)
+              {
+                  return sprite1.Sprite->GetSourceTexture()->GetSize().y > sprite2.Sprite->GetSourceTexture()->GetSize().y;
+              });
 
     // Loop for as long as there are sprites to pack
     unsigned int numPackedSprites = 0;
@@ -52,7 +55,7 @@ void SpriteAtlas::Pack()
             if (packingSprite.WasPacked) { continue; }
 
             Sprite*          sprite        = packingSprite.Sprite;
-            const Texture*   spriteTexture = sprite->GetTexture();
+            const Texture*   spriteTexture = sprite->GetSourceTexture();
             const glm::uvec2 frameSize     = sprite->GetFrameSize();
             const glm::vec2  frameUVStep   = glm::vec2(_uvStep.x * static_cast<float>(frameSize.x), _uvStep.y * static_cast<float>(frameSize.y));
             // Loop trough each individual frame of sprite
@@ -84,7 +87,7 @@ void SpriteAtlas::Pack()
 
                 // Update sprite uvs
                 glm::vec2 topLeftUV = glm::vec2(static_cast<float>(position.x) * _uvStep.x, static_cast<float>(position.y) * _uvStep.y);
-                sprite->ChangeFrameUV(frameIndex, topLeftUV, topLeftUV + frameUVStep);
+                //sprite->ChangeFrameUV(frameIndex, topLeftUV, topLeftUV + frameUVStep);
 
                 // Update cursor x position to end of currently inserted sprite 
                 position.x += frameSize.x;
@@ -94,6 +97,7 @@ void SpriteAtlas::Pack()
 
                 // If every sprite frame has been packed mark sprite as packed
                 packingSprite.PackedFrames++;
+                packingSprite.FramePages.push_back(_buffers.size() - 1);
                 if (packingSprite.PackedFrames == sprite->GetNumFrames())
                 {
                     packingSprite.WasPacked = true;
@@ -102,10 +106,19 @@ void SpriteAtlas::Pack()
             }
         }
     }
-    
+
     ExportPages();
 
     // Create textures out of the buffers and clear the vector since the texture now manages the buffers memory
     for (unsigned char* buffer : _buffers) { _pages.push_back(new Texture(buffer, _size)); }
+
+    for (PackingSprite packingSprite : _sprites)
+    {
+        Sprite* sprite = packingSprite.Sprite;
+        for (unsigned int framePageIndex = 0; framePageIndex < packingSprite.FramePages.size(); framePageIndex++)
+        {
+            sprite->ChangeFrameTexture(framePageIndex, _pages[packingSprite.FramePages[framePageIndex]]);
+        }
+    }
     _buffers.clear();
 }

@@ -137,7 +137,6 @@
     <ClCompile Include="src\GameEngine\Rendering\Mesh.cpp" />
     <ClCompile Include="src\GameEngine\Rendering\Model.cpp" />
     <ClCompile Include="src\GameEngine\Rendering\Primitive.cpp" />
-    <ClCompile Include="src\GameEngine\Rendering\Renderable2D.cpp" />
     <ClCompile Include="src\GameEngine\Rendering\RenderablePrimitive.cpp" />
     <ClCompile Include="src\GameEngine\Rendering\RenderableSprite.cpp" />
     <ClCompile Include="src\GameEngine\Rendering\Renderer.cpp" />

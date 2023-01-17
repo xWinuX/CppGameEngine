@@ -17,6 +17,7 @@ namespace GameEngine
                     Sprite*      Sprite;
                     unsigned int PackedFrames;
                     bool         WasPacked;
+                    std::vector<unsigned int> FramePages;
                 };
 
                 std::vector<PackingSprite>  _sprites;
