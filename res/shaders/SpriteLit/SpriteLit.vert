@@ -6,7 +6,7 @@ layout (location = 1) in mat4 a_Transform;
 
 // Every Vertex
 layout (location = 5) in vec2 a_TextureCoords[4];
-layout (location = 10) in vec4 a_Colors[4];
+layout (location = 9) in vec4 a_Colors[4];
 
 #include "../Common/Functions.vert"
 #include "../Common/Uniforms.glsl"
