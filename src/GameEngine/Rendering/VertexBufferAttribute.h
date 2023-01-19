@@ -8,19 +8,19 @@ namespace GameEngine
         class VertexBufferAttribute
         {
             private:
-                GLint       _size;
-                GLenum      _type;
-                GLboolean   _normalized;
-                GLsizei     _stride;
-                const void* _offset;
+                GLint        _size       = 0;
+                GLenum       _type       = GL_NONE;
+                GLboolean    _normalized = false;
+                GLsizei      _stride     = 0;
+                const void*  _offset     = nullptr;
+                unsigned int _divisor    = 0;
 
             public:
-                VertexBufferAttribute(): _size(0), _type(-1), _normalized(false), _stride(0), _offset(nullptr) {}
-
-                VertexBufferAttribute(GLint size, GLenum type, GLboolean normalized, GLsizei stride, const void* offset);
+                VertexBufferAttribute() = default;
+                VertexBufferAttribute(GLint size, GLenum type, GLboolean normalized, GLsizei stride, const void* offset, const unsigned int divisor = 0);
                 void        Bind(GLuint index) const;
                 static void Unbind(GLuint index);
-                GLint       GetSize() const { return _size; }
+                GLint       GetSize() const;
         };
     }
 }

@@ -14,8 +14,9 @@ namespace GameEngine
             public:
                 VertexBufferLayout(VertexBufferAttribute* pVertexBufferAttributes, unsigned int numVertexBufferAttributes);
                 ~VertexBufferLayout();
-                void Bind() const;
+                void Bind(unsigned int offset) const;
                 void Unbind() const;
+                unsigned int GetNumVertexBufferAttributes() const;
         };
     }
 }

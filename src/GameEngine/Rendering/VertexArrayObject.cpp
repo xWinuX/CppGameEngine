@@ -5,17 +5,16 @@ using namespace GameEngine::Rendering;
 VertexArrayObject::VertexArrayObject(const Primitive* primitive):
     VertexArrayObject(primitive->GetVertexBuffer(), primitive->GetIndexBuffer(), primitive->GetVertexBufferLayout()) {}
 
-VertexArrayObject::VertexArrayObject(VertexBuffer* vertexBuffer, IndexBuffer* indexBuffer, VertexBufferLayout* vertexBufferLayout) :
-    VertexArrayObject(vertexBufferLayout)
+VertexArrayObject::VertexArrayObject(VertexBuffer* vertexBuffer, IndexBuffer* indexBuffer, VertexBufferLayout* vertexBufferLayout, const bool finalize) :
+    VertexArrayObject()
 {
-    _vertexBuffers.push_back(vertexBuffer);
-    _pIndexBuffer = indexBuffer;
-    Finalize();
+    AddVertexBuffer(vertexBuffer, vertexBufferLayout);
+    _indexBuffer = indexBuffer;
+    if (finalize) { Finalize(); }
 }
 
-VertexArrayObject::VertexArrayObject(VertexBufferLayout* pVertexBufferLayout)
+VertexArrayObject::VertexArrayObject()
 {
-    _pVertexBufferLayout = pVertexBufferLayout;
     glGenVertexArrays(1, &_vertexArrayObjectID);
 }
 
@@ -25,21 +24,33 @@ VertexArrayObject::~VertexArrayObject()
     glDeleteVertexArrays(1, &_vertexArrayObjectID);
 }
 
-void VertexArrayObject::AddVertexBuffer(VertexBuffer* pVertexBuffer) { _vertexBuffers.push_back(pVertexBuffer); }
-
-
-void VertexArrayObject::SetIndexBuffer(IndexBuffer* pIndexBuffer)
+void VertexArrayObject::AddVertexBuffer(VertexBuffer* vertexBuffer, VertexBufferLayout* vertexBufferLayout)
 {
-    _pIndexBuffer = pIndexBuffer;
-    pIndexBuffer->Bind();
+    _vertexBuffers.push_back(vertexBuffer);
+    _vertexBufferLayouts.push_back(vertexBufferLayout);
+}
+
+
+void VertexArrayObject::SetIndexBuffer(IndexBuffer* indexBuffer)
+{
+    _indexBuffer = indexBuffer;
+    indexBuffer->Bind();
 }
 
 void VertexArrayObject::Finalize() const
 {
     Bind();
-    for (const VertexBuffer* vertexBuffer : _vertexBuffers) { vertexBuffer->Bind(); }
-    _pVertexBufferLayout->Bind();
-    _pIndexBuffer->Bind();
+
+    unsigned int offset = 0;
+    for (unsigned int i = 0; i < _vertexBuffers.size(); i++)
+    {
+        _vertexBuffers[i]->Bind();
+        _vertexBufferLayouts[i]->Bind(offset);
+        offset += _vertexBufferLayouts[i]->GetNumVertexBufferAttributes();
+    }
+
+    _indexBuffer->Bind();
+
     Unbind();
 }
 
@@ -50,12 +61,17 @@ void VertexArrayObject::Bind() const
 
 void VertexArrayObject::Render() const
 {
-    glDrawElements(GL_TRIANGLES, static_cast<int>(_pIndexBuffer->GetNumElements()), _pIndexBuffer->GetIndicesType(), static_cast<void*>(nullptr));
+    glDrawElements(GL_TRIANGLES, static_cast<int>(_indexBuffer->GetNumElements()), _indexBuffer->GetIndicesType(), static_cast<void*>(nullptr));
 }
 
 void VertexArrayObject::Render(const int numIndices, const unsigned int offset) const
 {
-    glDrawElements(GL_TRIANGLES, numIndices, _pIndexBuffer->GetIndicesType(), reinterpret_cast<void*>(offset*_pIndexBuffer->GetElementSize()));
+    glDrawElements(GL_TRIANGLES, numIndices, _indexBuffer->GetIndicesType(), reinterpret_cast<void*>(offset * _indexBuffer->GetElementSize()));
+}
+
+void VertexArrayObject::RenderInstanced(const int numIndices, const int instanceCount) const
+{
+    glDrawElementsInstanced(GL_TRIANGLES, numIndices, _indexBuffer->GetIndicesType(), nullptr, instanceCount);
 }
 
 void VertexArrayObject::Unbind() const

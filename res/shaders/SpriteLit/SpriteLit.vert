@@ -1,8 +1,13 @@
 ﻿#include "../Common/Version.glsl"
-layout (location = 0) in int a_VertexIndex;
-layout (location = 1) in float a_AspectRatio;
-layout (location = 2) in vec2 a_TextureCoords;
-layout (location = 3) in vec4 a_Color;
+
+// Once per Quad
+layout (location = 0) in float a_AspectRatio;
+layout (location = 1) in mat4 a_Transform;
+
+// Every Vertex
+layout (location = 5) in vec2 a_TextureCoords[4];
+layout (location = 10) in vec4 a_Colors[4];
+
 #include "../Common/Functions.vert"
 #include "../Common/Uniforms.glsl"
 
@@ -20,9 +25,11 @@ void main()
    // v_Position = calculateWorldSpacePosition(u_Transform, positions[a_VertexIndex]*vec3(a_AspectRatio, 1.0, 1.0));
 
     //gl_Position = calculateNDCPosition(u_ViewProjection, v_Position);
-    gl_Position = calculateNDCPosition(u_ViewProjection, positions[a_VertexIndex]*vec3(a_AspectRatio, 1.0, 1.0));
+    
+    int vertexIndex = gl_VertexID % 4;
+    gl_Position = vec4(positions[vertexIndex],1.0);// calculateNDCPosition(u_ViewProjection, positions[vertexIndex]*vec3(a_AspectRatio, 1.0, 1.0));
 
-    v_TBN = calculateTBN(u_Transform, vec3(0.0, 0.0, 1.0), vec4(0.0, 1.0, 0.0, 1.0));
+    //v_TBN = calculateTBN(u_Transform, vec3(0.0, 0.0, 1.0), vec4(0.0, 1.0, 0.0, 1.0));
 
-    v_TexCoords = a_TextureCoords;
+    //v_TexCoords = a_TextureCoords[vertexIndex];
 }

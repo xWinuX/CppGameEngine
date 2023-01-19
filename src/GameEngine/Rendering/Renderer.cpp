@@ -12,7 +12,7 @@
 using namespace GameEngine::Rendering;
 using namespace GameEngine::Components;
 
-unsigned char*     Renderer::_renderable2DVertexData        = new unsigned char[4000 * sizeof(Sprite::VertexData)];
+unsigned char*     Renderer::_renderable2DVertexData        = new unsigned char[10000 * sizeof(Sprite::QuadData)];
 IndexBuffer*       Renderer::_renderable2DIndexBuffer       = nullptr;
 VertexBuffer*      Renderer::_renderable2DVertexBuffer      = nullptr;
 VertexArrayObject* Renderer::_renderable2DVertexArrayObject = nullptr;
@@ -36,30 +36,50 @@ void Renderer::Initialize()
     glLineWidth(2);
     glEnable(GL_CULL_FACE);
 
-    unsigned short* indices = new unsigned short[6000];
-    for (unsigned short i = 0; i < 1000; i++)
-    {
-        indices[(i*6)] = i*4 + 2;
-        indices[(i*6)+1] = i*4 + 1;
-        indices[(i*6)+2] = i*4;
-        indices[(i*6)+3] = i*4 + 1;
-        indices[(i*6)+4] = i*4 + 2;
-        indices[(i*6)+5] = i*4 + 3;
-    }
-    _renderable2DIndexBuffer       = new IndexBuffer(reinterpret_cast<unsigned char*>(indices), sizeof(unsigned short), 6000);
-    _renderable2DVertexBuffer      = new VertexBuffer(nullptr, sizeof(Sprite::VertexData), 4000, GL_DYNAMIC_DRAW);
-    _renderable2DVertexArrayObject = new VertexArrayObject(_renderable2DVertexBuffer, _renderable2DIndexBuffer, new VertexBufferLayout(new VertexBufferAttribute[4]
+
+    unsigned short* indices = new unsigned short[6]{2, 1, 0, 1, 2, 3};
+
+
+    _renderable2DIndexBuffer = new IndexBuffer(reinterpret_cast<unsigned char*>(indices), sizeof(unsigned short), 6);
+
+    _renderable2DVertexBuffer      = new VertexBuffer(nullptr, sizeof(Sprite::QuadData), 10000, GL_DYNAMIC_DRAW);
+    _renderable2DVertexArrayObject = new VertexArrayObject(_renderable2DVertexBuffer, _renderable2DIndexBuffer, new VertexBufferLayout(new VertexBufferAttribute[13]
                                                            {
-                                                               VertexBufferAttribute(1, GL_FLOAT, GL_FALSE, sizeof(Sprite::VertexData), nullptr),
-                                                               VertexBufferAttribute(1, GL_FLOAT, GL_FALSE, sizeof(Sprite::VertexData), (GLvoid*)(1 * sizeof(float))),
-                                                               VertexBufferAttribute(2, GL_FLOAT, GL_FALSE, sizeof(Sprite::VertexData), (GLvoid*)(2 * sizeof(float))),
-                                                               VertexBufferAttribute(4, GL_FLOAT, GL_FALSE, sizeof(Sprite::VertexData), (GLvoid*)(4 * sizeof(float))),
-                                                           }, 4));
+
+                                                               // Aspect ratio
+                                                               VertexBufferAttribute(1, GL_FLOAT, GL_FALSE, sizeof(Sprite::QuadData), nullptr, 1),
+
+                                                               // Transform
+                                                               VertexBufferAttribute(4, GL_FLOAT, GL_FALSE, sizeof(Sprite::QuadData), (GLvoid*)(1 * sizeof(float)), 1),
+                                                               VertexBufferAttribute(4, GL_FLOAT, GL_FALSE, sizeof(Sprite::QuadData), (GLvoid*)(5 * sizeof(float)), 1),
+                                                               VertexBufferAttribute(4, GL_FLOAT, GL_FALSE, sizeof(Sprite::QuadData), (GLvoid*)(9 * sizeof(float)), 1),
+                                                               VertexBufferAttribute(4, GL_FLOAT, GL_FALSE, sizeof(Sprite::QuadData), (GLvoid*)(13 * sizeof(float)), 1),
+
+                                                               // UV's
+                                                               VertexBufferAttribute(2, GL_FLOAT, GL_FALSE, sizeof(Sprite::QuadData), (GLvoid*)(17 * sizeof(float)), 1),
+                                                               VertexBufferAttribute(2, GL_FLOAT, GL_FALSE, sizeof(Sprite::QuadData), (GLvoid*)(19 * sizeof(float)), 1),
+                                                               VertexBufferAttribute(2, GL_FLOAT, GL_FALSE, sizeof(Sprite::QuadData), (GLvoid*)(21 * sizeof(float)), 1),
+                                                               VertexBufferAttribute(2, GL_FLOAT, GL_FALSE, sizeof(Sprite::QuadData), (GLvoid*)(23 * sizeof(float)), 1),
+                                                               // Color
+                                                               VertexBufferAttribute(4, GL_FLOAT, GL_FALSE, sizeof(Sprite::QuadData), (GLvoid*)(25 * sizeof(float)), 1),
+                                                               VertexBufferAttribute(4, GL_FLOAT, GL_FALSE, sizeof(Sprite::QuadData), (GLvoid*)(29 * sizeof(float)), 1),
+                                                               VertexBufferAttribute(4, GL_FLOAT, GL_FALSE, sizeof(Sprite::QuadData), (GLvoid*)(33 * sizeof(float)), 1),
+                                                               VertexBufferAttribute(4, GL_FLOAT, GL_FALSE, sizeof(Sprite::QuadData), (GLvoid*)(37 * sizeof(float)), 1),
+                                                           }, 13));
+
+    delete[] indices;
 }
 
 void Renderer::SubmitLight(Light* light) { _lights.push_back(light); }
 
-void Renderer::SubmitRenderable2D(Renderable2D* renderable2D) { _opaqueRenderable2Ds[renderable2D->GetMaterial()][renderable2D->GetTexture()].push_back(renderable2D); }
+void Renderer::SubmitRenderable2D(Renderable2D* renderable2D)
+{
+    if (_opaqueRenderable2Ds[renderable2D->GetMaterial()][renderable2D->GetTexture()].empty())
+    {
+        _opaqueRenderable2Ds[renderable2D->GetMaterial()][renderable2D->GetTexture()].reserve(10000);
+    }
+    _opaqueRenderable2Ds[renderable2D->GetMaterial()][renderable2D->GetTexture()].push_back(renderable2D);
+}
 
 void Renderer::SubmitRenderable(Renderable* renderable)
 {
@@ -133,13 +153,13 @@ unsigned int Renderer::RenderRenderable2D(const std::map<Material*, std::map<Tex
             unsigned int offset = 0;
             for (Renderable2D* renderable2D : texturePair.second)
             {
-                renderable2D->CopyQuadData(_renderable2DVertexData+offset);
-                offset += sizeof(Sprite::VertexData)*4;
+                renderable2D->CopyQuadData(_renderable2DVertexData + offset);
+                offset += sizeof(Sprite::QuadData);
             }
-            
-            _renderable2DVertexBuffer->UpdateData(_renderable2DVertexData, texturePair.second.size()*4);
-            material->GetUniformBuffer()->SetUniform<Texture*>("u_Texture", texturePair.first); 
-            _renderable2DVertexArrayObject->Render(texturePair.second.size()*6, 0);
+
+            _renderable2DVertexBuffer->UpdateData(_renderable2DVertexData, texturePair.second.size());
+            material->GetUniformBuffer()->SetUniform<Texture*>("u_Texture", texturePair.first);
+            _renderable2DVertexArrayObject->RenderInstanced(6, texturePair.second.size());
             numDrawCalls++;
         }
         _renderable2DVertexArrayObject->Unbind();
@@ -234,11 +254,13 @@ void Renderer::Draw()
     numDrawCalls += RenderRenderables(_opaqueRenderables);
 
     // Opaque 2D
+    glDisable(GL_DEPTH_TEST);
     numDrawCalls += RenderRenderable2D(_opaqueRenderable2Ds);
-
-        // Transparent
-        // TODO: Sort triangles and objects based on distance to camera
-        glEnable(GL_BLEND);
+    glEnable(GL_DEPTH_TEST);
+    
+    // Transparent
+    // TODO: Sort triangles and objects based on distance to camera
+    glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     numDrawCalls += RenderRenderables(_transparentRenderables);
     glDisable(GL_BLEND);

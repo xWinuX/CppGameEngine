@@ -18,75 +18,6 @@
     <ClCompile Include="main.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
-    <ClCompile Include="src\Application.cpp">
-      <Filter>Quelldateien</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Core\GameObject.cpp">
-      <Filter>Quelldateien</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Core\Scene.cpp">
-      <Filter>Quelldateien</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Core\Transform.cpp">
-      <Filter>Quelldateien</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Core\Window.cpp">
-      <Filter>Quelldateien</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Rendering\Buffers\IndexBuffer.cpp">
-      <Filter>Quelldateien</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Rendering\Buffers\VertexBuffer.cpp">
-      <Filter>Quelldateien</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Rendering\Buffers\VertexBufferAttribute.cpp">
-      <Filter>Quelldateien</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Rendering\Buffers\VertexBufferLayout.cpp">
-      <Filter>Quelldateien</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Rendering\Material.cpp">
-      <Filter>Quelldateien</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Rendering\Renderer.cpp">
-      <Filter>Quelldateien</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Rendering\Shader.cpp">
-      <Filter>Quelldateien</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Rendering\VertexArrayObject.cpp">
-      <Filter>Quelldateien</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Components\Camera.cpp">
-      <Filter>Quelldateien</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Components\MeshRenderer.cpp">
-      <Filter>Quelldateien</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Debug\Log.cpp">
-      <Filter>Quelldateien</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Input\Input.cpp">
-      <Filter>Quelldateien</Filter>
-    </ClCompile>
-    <ClCompile Include="src\IO\Stream.cpp">
-      <Filter>Quelldateien</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Rendering\Mesh.cpp">
-      <Filter>Quelldateien</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Rendering\Model.cpp">
-      <Filter>Quelldateien</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Rendering\Texture.cpp">
-      <Filter>Quelldateien</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Utils\Math.cpp">
-      <Filter>Quelldateien</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Utils\Time.cpp">
-      <Filter>Quelldateien</Filter>
-    </ClCompile>
     <ClCompile Include="vendor\GLAD\src\glad.c">
       <Filter>Quelldateien</Filter>
     </ClCompile>
@@ -96,110 +27,131 @@
     <ClCompile Include="vendor\glm\include\glm\detail\glm.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
-    <ClCompile Include="src\Components\Light.cpp">
-      <Filter>Quelldateien</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Components\PointLight.cpp">
-      <Filter>Quelldateien</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Rendering\Buffers\UniformBuffer.cpp">
-      <Filter>Quelldateien</Filter>
-    </ClCompile>
     <ClCompile Include="vendor\tinygltf\src\tiny_gltf.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
-    <ClCompile Include="src\Components\RigidbodyComponent.cpp">
+    <ClCompile Include="src\GameEngine\Components\BoxCollider.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
-    <ClCompile Include="src\Physics\Physics.cpp">
+    <ClCompile Include="src\GameEngine\Components\Camera.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
-    <ClCompile Include="src\Rendering\OpenGL.cpp">
+    <ClCompile Include="src\GameEngine\Components\CapsuleCollider.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
+    <ClCompile Include="src\GameEngine\Components\Component.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
+    <ClCompile Include="src\GameEngine\Components\Light.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
+    <ClCompile Include="src\GameEngine\Components\MeshRenderer.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
+    <ClCompile Include="src\GameEngine\Components\PointLight.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
+    <ClCompile Include="src\GameEngine\Components\Rigidbody.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
+    <ClCompile Include="src\GameEngine\Components\SpriteRenderer.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
+    <ClCompile Include="src\GameEngine\Components\Transform.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
+    <ClCompile Include="src\GameEngine\Core\Application.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
+    <ClCompile Include="src\GameEngine\Core\GameObject.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
+    <ClCompile Include="src\GameEngine\Core\Scene.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
+    <ClCompile Include="src\GameEngine\Core\Window.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
+    <ClCompile Include="src\GameEngine\Debug\Log.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
+    <ClCompile Include="src\GameEngine\Input\Input.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
+    <ClCompile Include="src\GameEngine\IO\Importer\GLTF.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
+    <ClCompile Include="src\GameEngine\IO\Importer\OBJ.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
+    <ClCompile Include="src\GameEngine\IO\Stream.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
+    <ClCompile Include="src\GameEngine\Physics\Physics.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
+    <ClCompile Include="src\GameEngine\Physics\PhysicsDebugRenderer.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
+    <ClCompile Include="src\GameEngine\Rendering\Material.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
+    <ClCompile Include="src\GameEngine\Rendering\Mesh.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
+    <ClCompile Include="src\GameEngine\Rendering\Model.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
+    <ClCompile Include="src\GameEngine\Rendering\Primitive.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
+    <ClCompile Include="src\GameEngine\Rendering\RenderablePrimitive.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
+    <ClCompile Include="src\GameEngine\Rendering\Renderer.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
+    <ClCompile Include="src\GameEngine\Rendering\Shader.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
+    <ClCompile Include="src\GameEngine\Rendering\Sprite.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
+    <ClCompile Include="src\GameEngine\Rendering\SpriteAtlas.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
+    <ClCompile Include="src\GameEngine\Rendering\Texture.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
+    <ClCompile Include="src\GameEngine\Rendering\UniformBuffer.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
+    <ClCompile Include="src\GameEngine\Rendering\VertexArrayObject.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
+    <ClCompile Include="src\GameEngine\Rendering\VertexBufferAttribute.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
+    <ClCompile Include="src\GameEngine\Rendering\VertexBufferLayout.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
+    <ClCompile Include="src\GameEngine\Shapes\Cube.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
+    <ClCompile Include="src\GameEngine\Utils\Math.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
+    <ClCompile Include="src\GameEngine\Utils\String.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
+    <ClCompile Include="src\GameEngine\Utils\Time.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
+    <ClCompile Include="src\GraphicDemoApplication.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="src\Application.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Components\Component.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Components\TransformComponent.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Core\GameObject.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Core\Scene.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Core\Transform.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Core\Window.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Rendering\Buffers\IndexBuffer.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Rendering\Buffers\VertexBuffer.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Rendering\Buffers\VertexBufferAttribute.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Rendering\Buffers\VertexBufferLayout.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Rendering\Material.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Rendering\Mesh.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Rendering\Renderable.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Rendering\Renderer.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Rendering\Shader.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Rendering\VertexArrayObject.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Rendering\Vertex.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Components\Camera.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Components\MeshRenderer.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Debug\Log.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Input\Input.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="src\IO\Stream.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Rendering\Model.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Rendering\Texture.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Utils\Math.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Utils\Time.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
     <ClInclude Include="vendor\GLAD\include\glad\glad.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
@@ -1469,28 +1421,7 @@
     <ClInclude Include="vendor\glm\include\glm\vector_relational.hpp">
       <Filter>Headerdateien</Filter>
     </ClInclude>
-    <ClInclude Include="src\Components\Light.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Components\PointLight.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Rendering\Buffers\UniformBuffer.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Rendering\Uniform.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
     <ClInclude Include="vendor\tinygltf\include\tiny_gltf.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Components\RigidbodyComponent.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Physics\Physics.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Rendering\OpenGL.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
     <ClInclude Include="vendor\reactphysics3d\include\reactphysics3d\body\CollisionBody.h">
@@ -1815,6 +1746,147 @@
       <Filter>Headerdateien</Filter>
     </ClInclude>
     <ClInclude Include="vendor\tinygltf\include\json.hpp">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="src\GameEngine\Components\BoxCollider.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="src\GameEngine\Components\Camera.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="src\GameEngine\Components\CapsuleCollider.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="src\GameEngine\Components\Collider.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="src\GameEngine\Components\Component.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="src\GameEngine\Components\Light.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="src\GameEngine\Components\MeshRenderer.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="src\GameEngine\Components\PointLight.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="src\GameEngine\Components\Rigidbody.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="src\GameEngine\Components\SpriteRenderer.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="src\GameEngine\Components\Transform.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="src\GameEngine\Core\Application.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="src\GameEngine\Core\GameObject.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="src\GameEngine\Core\Scene.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="src\GameEngine\Core\Window.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="src\GameEngine\Debug\Log.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="src\GameEngine\Input\Input.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="src\GameEngine\IO\Importer\GLTF.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="src\GameEngine\IO\Importer\OBJ.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="src\GameEngine\IO\Stream.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="src\GameEngine\Physics\Physics.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="src\GameEngine\Physics\PhysicsDebugRenderer.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="src\GameEngine\Rendering\Buffer.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="src\GameEngine\Rendering\IndexBuffer.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="src\GameEngine\Rendering\Material.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="src\GameEngine\Rendering\Mesh.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="src\GameEngine\Rendering\Model.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="src\GameEngine\Rendering\Primitive.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="src\GameEngine\Rendering\Renderable.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="src\GameEngine\Rendering\Renderable2D.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="src\GameEngine\Rendering\RenderablePrimitive.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="src\GameEngine\Rendering\Renderer.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="src\GameEngine\Rendering\Shader.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="src\GameEngine\Rendering\Sprite.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="src\GameEngine\Rendering\SpriteAtlas.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="src\GameEngine\Rendering\Texture.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="src\GameEngine\Rendering\Uniform.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="src\GameEngine\Rendering\UniformBuffer.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="src\GameEngine\Rendering\VertexArrayObject.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="src\GameEngine\Rendering\VertexBuffer.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="src\GameEngine\Rendering\VertexBufferAttribute.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="src\GameEngine\Rendering\VertexBufferLayout.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="src\GameEngine\Shapes\Cube.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="src\GameEngine\Utils\Math.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="src\GameEngine\Utils\String.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="src\GameEngine\Utils\Time.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="src\GraphicDemoApplication.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
   </ItemGroup>

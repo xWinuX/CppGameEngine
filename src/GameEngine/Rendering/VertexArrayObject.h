@@ -10,24 +10,25 @@ namespace GameEngine
         class VertexArrayObject
         {
             private:
-                VertexBufferLayout* _pVertexBufferLayout = nullptr;
-                IndexBuffer*        _pIndexBuffer        = nullptr;
+                std::vector<VertexBuffer*>       _vertexBuffers;
+                std::vector<VertexBufferLayout*> _vertexBufferLayouts;
 
-                GLuint                     _vertexArrayObjectID = 0;
-                std::vector<VertexBuffer*> _vertexBuffers;
+                IndexBuffer* _indexBuffer        = nullptr;
+                GLuint       _vertexArrayObjectID = 0;
 
             public:
+                explicit VertexArrayObject();
                 explicit VertexArrayObject(const Primitive* primitive);
-                explicit VertexArrayObject(VertexBuffer* vertexBuffer, IndexBuffer* indexBuffer, VertexBufferLayout* vertexBufferLayout);
-                explicit VertexArrayObject(VertexBufferLayout* pVertexBufferLayout);
+                explicit VertexArrayObject(VertexBuffer* vertexBuffer, IndexBuffer* indexBuffer, VertexBufferLayout* vertexBufferLayout, bool finalize = true);
                 ~VertexArrayObject();
 
-                void AddVertexBuffer(VertexBuffer* pVertexBuffer);
-                void SetIndexBuffer(IndexBuffer* pIndexBuffer);
+                void AddVertexBuffer(VertexBuffer* vertexBuffer, VertexBufferLayout* vertexBufferLayout);
+                void SetIndexBuffer(IndexBuffer* indexBuffer);
                 void Finalize() const;
                 void Bind() const;
                 void Render() const;
                 void Render(int numIndices, unsigned int offset) const;
+                void RenderInstanced(int numIndices, int instanceCount) const;
                 void Unbind() const;
         };
     }

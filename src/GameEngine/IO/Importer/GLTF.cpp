@@ -91,7 +91,7 @@ std::vector<GameEngine::Rendering::Mesh*> GLTF::ImportModel(std::string filePath
                 offset += size;
 
                 const tinygltf::BufferView view = model.bufferViews[accessor.bufferView];
-                bufferInfos.push_back({&model.buffers[view.buffer], size, accessor.byteOffset + view.byteOffset});
+                bufferInfos.push_back({&model.buffers[view.buffer], size, ((unsigned int)accessor.byteOffset + (unsigned int)view.byteOffset)});
 
                 numVertices = accessor.count;
             }

@@ -5,6 +5,7 @@
 #include "VertexArrayObject.h"
 #include "glm/vec3.hpp"
 #include "glm/vec4.hpp"
+#include "glm/mat4x4.hpp"
 
 namespace GameEngine
 {
@@ -13,12 +14,15 @@ namespace GameEngine
         class Sprite
         {
             public:
-                struct VertexData
+                struct QuadData
                 {
-                    int       VertexIndex;
+                    // Divisor 1
                     float     AspectRatio;
-                    glm::vec2 UV;
-                    glm::vec4 Color;
+                    glm::mat4 Transform;
+
+                    // Divisor 1
+                    glm::vec2 UVs[4];
+                    glm::vec4 Colors[4];
                 };
 
                 explicit Sprite(Texture* texture);
@@ -45,7 +49,7 @@ namespace GameEngine
                 glm::uvec2                _frameSize;
                 std::vector<Texture*>     _textures;
                 std::vector<glm::uvec2>   _framePositions;
-                std::vector<VertexData>   _vertexData;
+                std::vector<QuadData>   _quadData;
                 std::vector<unsigned int> _indices;
                 unsigned int              _numFrames         = 1;
                 VertexArrayObject*        _vertexArrayObject = nullptr;
