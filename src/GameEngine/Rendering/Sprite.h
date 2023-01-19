@@ -30,10 +30,11 @@ namespace GameEngine
 
                 void Finalize();
 
-                void ChangeFrameUV(unsigned int frameIndex, glm::vec2 topLeftUV, glm::vec2 bottomRightUV);
-                void ChangeFrameTexture(unsigned int frameIndex, Texture* texture);
+                void ChangeFrameUV(size_t frameIndex, glm::vec2 topLeftUV, glm::vec2 bottomRightUV);
+                void ChangeFrameTexture(size_t frameIndex, Texture* texture);
+                void SetQuadTransform(size_t frameIndex, glm::mat4 trs);
 
-                unsigned char* GetQuadData(unsigned int frameIndex = 0);
+                unsigned char* GetQuadData(const size_t frameIndex = 0);
 
                 Texture*                       GetSourceTexture() const;
                 VertexArrayObject*             GetVertexArrayObject() const;

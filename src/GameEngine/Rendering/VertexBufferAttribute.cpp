@@ -2,9 +2,6 @@
 
 using namespace GameEngine::Rendering;
 
-
-
-
 VertexBufferAttribute::VertexBufferAttribute(const GLint size, const GLenum type, const GLboolean normalized, const GLsizei stride, const void* offset, const unsigned int divisor):
     _size(size),
     _type(type),

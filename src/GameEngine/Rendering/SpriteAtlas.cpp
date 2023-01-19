@@ -7,10 +7,10 @@
 
 using namespace GameEngine::Rendering;
 
-GameEngine::Rendering::SpriteAtlas::SpriteAtlas(const glm::uvec2 size, Texture::ImportSettings importSettings):
+GameEngine::Rendering::SpriteAtlas::SpriteAtlas(const glm::uvec2 size, const Texture::ImportSettings importSettings):
+    _importSettings(importSettings),
     _size(size),
-    _uvStep(glm::vec2(1.0f / size.x, 1.0f / size.y)),
-    _importSettings(importSettings) {}
+    _uvStep(glm::vec2(1.0f / static_cast<float>(size.x), 1.0f / static_cast<float>(size.y))) {}
 
 void SpriteAtlas::ExportPages() const
 {
@@ -35,7 +35,7 @@ void SpriteAtlas::Pack()
 {
     // Sort sprites based on height
     std::sort(_sprites.begin(), _sprites.end(),
-              [](const PackingSprite sprite1, const PackingSprite sprite2)
+              [](const PackingSprite& sprite1, const PackingSprite& sprite2)
               {
                   return sprite1.Sprite->GetSourceTexture()->GetSize().y > sprite2.Sprite->GetSourceTexture()->GetSize().y;
               });
@@ -82,7 +82,7 @@ void SpriteAtlas::Pack()
                 {
                     const unsigned int xOffset = framePosition.x * 4;
                     const unsigned int yOffset = ((y - 1) + framePosition.y) * spriteTexture->GetSize().x * 4;
-                    memcpy(_buffers[_buffers.size() - 1] + bufferRowOffset, spriteBuffer + xOffset + yOffset, frameSize.x * 4);
+                    memcpy(_buffers[_buffers.size() - 1] + bufferRowOffset, spriteBuffer + xOffset + yOffset, static_cast<size_t>(frameSize.x) * 4);
                     bufferRowOffset += _size.x * 4;
                 }
 
@@ -119,7 +119,7 @@ void SpriteAtlas::Pack()
     for (PackingSprite packingSprite : _sprites)
     {
         Sprite* sprite = packingSprite.Sprite;
-        for (unsigned int framePageIndex = 0; framePageIndex < packingSprite.FramePages.size(); framePageIndex++)
+        for (size_t framePageIndex = 0; framePageIndex < packingSprite.FramePages.size(); framePageIndex++)
         {
             sprite->ChangeFrameTexture(framePageIndex, _pages[packingSprite.FramePages[framePageIndex]]);
         }

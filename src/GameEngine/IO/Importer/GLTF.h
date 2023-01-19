@@ -25,16 +25,16 @@ namespace GameEngine
                     {
                         public:
                             tinygltf::Buffer* PBuffer;
-                            unsigned int      BufferElementSize;
-                            unsigned int      BufferByteOffset;
+                            size_t            BufferElementSize;
+                            size_t            BufferByteOffset;
                     };
 
 
                     struct TinyGLTFComponentTypeLookupEntry
                     {
                         public:
-                            GLenum       Enum;
-                            unsigned int Size;
+                            GLenum Enum;
+                            size_t Size;
                     };
 
                     static const std::vector<std::string>                              GLTFAttributeOrder;

@@ -53,6 +53,8 @@ Model* theMissingModel;
 Model* sphereModel;
 Model* highPolyPlane;
 
+Cube* cube;
+
 Shader* litShader;
 Shader* spriteLitShader;
 Shader* waterShader;
@@ -144,7 +146,7 @@ void GraphicDemoApplication::Initialize(Scene& scene)
 
     // Other
     litShader->InitializeUniform<glm::vec4>("u_ColorTint", glm::vec4(1.0f));
-    litShader->InitializeUniform<Texture*>("u_Texture", whiteTexture);
+    litShader->InitializeUniform<Texture*>("u_Texture", theDudeTexture);
     litShader->InitializeUniform<Texture*>("u_NormalMap", normalMapDefaultTexture);
     litShader->InitializeUniform<float>("u_NormalMapIntensity", 1.0f);
 
@@ -203,10 +205,12 @@ void GraphicDemoApplication::Initialize(Scene& scene)
     vertexColorMaterial->GetUniformBuffer()->SetUniform("u_Texture", crateTexture);
     #pragma endregion
 
+    cube = new Cube();
+    
     // Camera
     cameraObject = new GameObject();
     cameraObject->GetTransform()->SetLocalPosition(glm::vec3(0.0f, 0.0f, 3.0f));
-    cameraObject->AddComponent(new Camera(60, 0.01f, 100.0f));
+    cameraObject->AddComponent(new Camera(60, 0.01f, 10000.0f));
     scene.AddGameObject(cameraObject);
 
     // Red light
@@ -245,8 +249,8 @@ void GraphicDemoApplication::Initialize(Scene& scene)
     crateObject = new GameObject();
     crateObject->GetTransform()->SetLocalPosition(glm::vec3(0.0f, -1.5f, 0.0f));
     crateObject->GetTransform()->SetLocalScale(glm::vec3(0.5f, 0.5f, 0.5f));
-    //crateObject->AddComponent(new MeshRenderer(cubeModel->GetMesh(0), crateMaterial));
-    suzanneObject->AddComponent(new SpriteRenderer(theDudeSprite, spriteLitMaterial));
+    crateObject->AddComponent(new MeshRenderer(cubeModel->GetMesh(0), crateMaterial));
+    crateObject->AddComponent(new SpriteRenderer(theDudeSprite, spriteLitMaterial));
     crateObject->AddComponent(new BoxCollider(glm::vec3(0.5f)));
     crateObject->AddComponent(new Rigidbody(reactphysics3d::BodyType::DYNAMIC));
     scene.AddGameObject(crateObject);
@@ -336,5 +340,6 @@ void GraphicDemoApplication::CustomRun()
     // Move camera
     cameraObject->GetTransform()->MoveLocal(cameraVelocity);
 
-    GameEngine::Debug::Log::Message("DeltaTime: " + std::to_string(Time::GetDeltaTime())); 
+
+    std::cout << "FPS: " << std::to_string(1/Time::GetDeltaTime()) << std::endl;
 }

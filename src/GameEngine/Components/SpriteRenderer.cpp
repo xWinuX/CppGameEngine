@@ -13,19 +13,18 @@ SpriteRenderer::SpriteRenderer(Rendering::Sprite* sprite, Rendering::Material* m
     _sprite(sprite),
     _material(material) {}
 
-void SpriteRenderer::OnBeforeRender()
-{
-    for (unsigned int i = 0; i < 5000; i++)
-    {
-        Renderer::SubmitRenderable2D(this);
-    }
-}
+void SpriteRenderer::OnBeforeRender() { Renderer::SubmitRenderable2D(this); }
 
 void SpriteRenderer::OnUpdate() { _frameIndex = fmod(_frameIndex + Time::GetDeltaTime() * _framesPerSecond, static_cast<float>(_sprite->GetNumFrames())); }
 
 unsigned SpriteRenderer::GetQuadSize() { return sizeof(Sprite::QuadData); }
 
-void SpriteRenderer::CopyQuadData(unsigned char* destination) { memcpy(destination, _sprite->GetQuadData(static_cast<unsigned int>(floor(_frameIndex))), GetQuadSize()); }
+void SpriteRenderer::CopyQuadData(unsigned char* destination)
+{
+    const size_t frameIndex = static_cast<size_t>(floor(_frameIndex));
+    _sprite->SetQuadTransform(frameIndex, _transform->GetTRS());
+    memcpy(destination, _sprite->GetQuadData(frameIndex), GetQuadSize());
+}
 
 void SpriteRenderer::OnBeforeDraw() { _material->GetUniformBuffer()->SetUniformInstant<glm::mat4>("u_Transform", _transform->GetTRS()); }
 

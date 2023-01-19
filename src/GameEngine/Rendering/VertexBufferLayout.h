@@ -10,13 +10,13 @@ namespace GameEngine
         {
             private:
                 VertexBufferAttribute*             _pVertexBufferAttributes;
-                unsigned int                       _numVertexBufferAttributes;
+                size_t                       _numVertexBufferAttributes;
             public:
-                VertexBufferLayout(VertexBufferAttribute* pVertexBufferAttributes, unsigned int numVertexBufferAttributes);
+                VertexBufferLayout(VertexBufferAttribute* pVertexBufferAttributes, const size_t numVertexBufferAttributes);
                 ~VertexBufferLayout();
                 void Bind(unsigned int offset) const;
                 void Unbind() const;
-                unsigned int GetNumVertexBufferAttributes() const;
+                size_t GetNumVertexBufferAttributes() const;
         };
     }
 }

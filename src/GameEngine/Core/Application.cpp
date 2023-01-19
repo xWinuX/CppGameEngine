@@ -28,6 +28,8 @@ Application::Application()
     if (!gladLoadGLLoader(reinterpret_cast<GLADloadproc>(glfwGetProcAddress))) { Log::Error("Failed to initialize GLAD"); }
 
     Renderer::Initialize();
+
+    glfwSwapInterval(0);
 }
 
 void Application::Run()

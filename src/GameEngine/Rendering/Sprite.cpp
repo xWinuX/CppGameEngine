@@ -12,7 +12,7 @@ void Sprite::AddSpriteQuad(const float aspectRatio, const glm::vec2 uvStep = glm
     const float vStepBegin = uvStep.y * static_cast<float>(offset.y);
     const float vStepEnd   = uvStep.y * static_cast<float>(offset.y + 1);
 
-    unsigned int indicesOffset = _quadData.size();
+    unsigned int indicesOffset = static_cast<unsigned int>(_quadData.size());
 
     _indices.insert(_indices.end(), {indicesOffset + 2, indicesOffset + 1, indicesOffset, indicesOffset + 1, indicesOffset + 2, indicesOffset + 3});
 
@@ -75,7 +75,7 @@ void Sprite::Finalize()
     _vertexArrayObject = new VertexArrayObject(vertexBuffer, indexBuffer, vertexBufferLayout);
 }
 
-void Sprite::ChangeFrameUV(const unsigned int frameIndex, const glm::vec2 topLeftUV, const glm::vec2 bottomRightUV)
+void Sprite::ChangeFrameUV(const size_t frameIndex, const glm::vec2 topLeftUV, const glm::vec2 bottomRightUV)
 {
     _quadData[frameIndex].UVs[0] = topLeftUV;
     _quadData[frameIndex].UVs[1] = {bottomRightUV.x, topLeftUV.y};
@@ -83,9 +83,11 @@ void Sprite::ChangeFrameUV(const unsigned int frameIndex, const glm::vec2 topLef
     _quadData[frameIndex].UVs[3] = bottomRightUV;
 }
 
-void Sprite::ChangeFrameTexture(const unsigned frameIndex, Texture* texture) { _textures[frameIndex] = texture; }
+void Sprite::ChangeFrameTexture(const size_t frameIndex, Texture* texture) { _textures[frameIndex] = texture; }
 
-unsigned char* Sprite::GetQuadData(const unsigned frameIndex) { return reinterpret_cast<unsigned char*>(_quadData.data() + frameIndex); }
+void Sprite::SetQuadTransform(const size_t frameIndex, const glm::mat4 trs) { _quadData[frameIndex].Transform = trs; }
+
+unsigned char* Sprite::GetQuadData(const size_t frameIndex) { return reinterpret_cast<unsigned char*>(_quadData.data() + frameIndex); }
 Texture*       Sprite::GetSourceTexture() const { return _sourceTexture; }
 
 

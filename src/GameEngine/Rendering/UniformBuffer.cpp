@@ -40,9 +40,14 @@ void UniformBuffer::Apply()
 }
 
 
-int UniformBuffer::GetUniformLocation(const GLchar* uniformName)
+int UniformBuffer::GetUniformLocation(const std::string& uniformName)
 {
-    if (_uniformNameLocationMap.find(uniformName) == _uniformNameLocationMap.end()) { return -1; }
+    if (_uniformNameLocationMap.find(uniformName) == _uniformNameLocationMap.end())
+    {
+        Debug::Log::Message(std::string(uniformName) + "not found");  
+        return -1;
+    }
+    
     return _uniformNameLocationMap[uniformName];
 }
 

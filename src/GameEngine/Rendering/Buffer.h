@@ -10,20 +10,20 @@ namespace GameEngine
         class Buffer
         {
             protected:
-                GLuint         _bufferID = 0;
-                unsigned int   _elementSize;
-                unsigned int   _numElements;
-                GLenum         _drawType;
+                GLuint _bufferID = 0;
+                size_t _elementSize;
+                size_t _numElements;
+                GLenum _drawType;
 
             public:
-                explicit Buffer(const unsigned char* buffer, const unsigned int elementSize, const unsigned int numElements, const GLenum drawType = GL_STATIC_DRAW):
+                explicit Buffer(const unsigned char* buffer, const size_t elementSize, const size_t numElements, const GLenum drawType = GL_STATIC_DRAW):
                     _elementSize(elementSize),
                     _numElements(numElements),
                     _drawType(drawType)
                 {
                     glGenBuffers(1, &_bufferID);
                     Bind();
-                    glBufferData(BufferType, numElements * elementSize, buffer, _drawType);
+                    glBufferData(BufferType, static_cast<GLsizeiptr>(numElements * elementSize), buffer, _drawType);
                     Unbind();
                 }
 
@@ -32,8 +32,8 @@ namespace GameEngine
                     glDeleteBuffers(1, &_bufferID);
                 }
 
-                unsigned int GetElementSize() const { return _elementSize; }
-                unsigned int GetNumElements() const { return _numElements; }
+                size_t GetElementSize() const { return _elementSize; }
+                size_t GetNumElements() const { return _numElements; }
 
                 void Bind() const
                 {
@@ -45,7 +45,7 @@ namespace GameEngine
                     glBindBuffer(GL_ARRAY_BUFFER, 0);
                 }
 
-                void UpdateData(const unsigned char* data, const unsigned int numElements)
+                void UpdateData(const unsigned char* data, const size_t numElements)
                 {
                     if (_drawType != GL_DYNAMIC_DRAW)
                     {

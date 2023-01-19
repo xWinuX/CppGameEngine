@@ -14,6 +14,7 @@ namespace GameEngine
                 glm::vec3 _localPosition = glm::vec3(0.0f, 0.0f, 0.0f);
                 glm::quat _localRotation = glm::identity<glm::quat>();
                 glm::vec3 _localScale    = glm::vec3(1.0f, 1.0f, 1.0f);
+                glm::mat4 _trs           = glm::identity<glm::mat4>();
 
                 reactphysics3d::Transform _physicsTransform = reactphysics3d::Transform(
                                                                                         reactphysics3d::Vector3(_localPosition.x, _localPosition.y, _localPosition.z),
@@ -33,6 +34,8 @@ namespace GameEngine
 
                 glm::mat4 GetTRS() const;
 
+                void CalculateTRS();
+
                 void Move(const glm::vec3& vector3);
                 void Rotate(const glm::vec3& eulerAngles);
                 void MoveLocal(const glm::vec3& vector3);
@@ -48,6 +51,8 @@ namespace GameEngine
                 glm::vec3 ToLocalSpace(glm::vec3 vec3) const;
 
                 reactphysics3d::Transform& GetPhysicsTransform();
+
+                void OnBeforeRender() override;
         };
     }
 }

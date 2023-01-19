@@ -5,8 +5,9 @@
 #include <glm/mat4x4.hpp>
 
 #include "Texture.h"
+#include "glm/gtc/type_ptr.hpp"
 
-#define LOCATION_CHECK if (_location < 0) { return; }
+#define LOCATION_CHECK if (_location < 0) { Debug::Log::Message(std::string(_name) + "'s location not found"); return; }
 
 namespace GameEngine
 {
@@ -16,21 +17,25 @@ namespace GameEngine
         class Uniform
         {
             private:
-                const GLchar* _name     = "";
-                const GLint   _location = -1;
-                const T       _defaultValue;
-                T             _value;
+                const std::string _name;
+                const GLint       _location = -1;
+                const T           _defaultValue;
+                T                 _value;
 
             public:
                 Uniform():
                     _defaultValue(),
                     _value() { }
 
-                Uniform(const GLchar* uniformName, const GLint location, T defaultValue):
+                Uniform(const std::string uniformName, const GLint location, T defaultValue):
                     _name(uniformName),
                     _location(location),
                     _defaultValue(defaultValue),
-                    _value(defaultValue) { }
+                    _value(defaultValue)
+                {
+                    Debug::Log::Message(_name);
+                    Debug::Log::Message(std::to_string(_location));
+                }
 
                 // ReSharper disable once CppMemberFunctionMayBeStatic (No it's not...)
                 void Apply() { Debug::Log::Message("This should never appear"); }
@@ -39,8 +44,8 @@ namespace GameEngine
 
                 void Reset() { _value = _defaultValue; }
 
-                const GLchar* GetName() const { return _name; }
-                T             GetDefaultValue() { return _defaultValue; }
+                std::string GetName() const { return _name; }
+                T           GetDefaultValue() { return _defaultValue; }
         };
 
 
@@ -48,23 +53,22 @@ namespace GameEngine
         class Uniform<Texture*>
         {
             private:
-                const GLchar*  _name     = "";
-                const GLint    _location = -1;
-                const Texture* _defaultValue;
-                const Texture* _value;
+                const std::string _name;
+                const GLint       _location = -1;
+                const Texture*    _defaultValue;
+                const Texture*    _value;
 
             public:
                 Uniform():
                     _defaultValue(),
                     _value() { }
 
-                Uniform(const GLchar* uniformName, const GLint location, const Texture* defaultValue):
+                Uniform(const std::string uniformName, const GLint location, const Texture* defaultValue):
                     _name(uniformName),
                     _location(location),
                     _defaultValue(defaultValue),
                     _value(defaultValue) { }
 
-                // ReSharper disable once CppMemberFunctionMayBeStatic (No it's not...)
                 void Apply(const int slot = 0) const
                 {
                     LOCATION_CHECK
@@ -74,9 +78,9 @@ namespace GameEngine
 
                 void Set(const Texture* value) { _value = value; }
 
-                void          Reset() { _value = _defaultValue; }
-                const GLchar* GetName() const { return _name; }
-                Texture*      GetDefaultValue() const { return const_cast<Texture*>(_defaultValue); }
+                void        Reset() { _value = _defaultValue; }
+                std::string GetName() const { return _name; }
+                Texture*    GetDefaultValue() const { return const_cast<Texture*>(_defaultValue); }
         };
 
         template <>
@@ -90,7 +94,7 @@ namespace GameEngine
         inline void Uniform<std::vector<float>*>::Apply()
         {
             LOCATION_CHECK
-            glUniform1fv(_location, _value->size(), _value->data());
+            glUniform1fv(_location, static_cast<int>(_value->size()), _value->data());
         }
 
         template <>
@@ -106,7 +110,7 @@ namespace GameEngine
             LOCATION_CHECK
             if (_value == nullptr) { return; }
 
-            glUniform4fv(_location, _value->size(), reinterpret_cast<GLfloat*>(_value->data()));
+            glUniform4fv(_location, static_cast<int>(_value->size()), reinterpret_cast<GLfloat*>(_value->data()));
         }
 
         template <>
@@ -122,14 +126,14 @@ namespace GameEngine
             LOCATION_CHECK
             if (_value == nullptr) { return; }
 
-            glUniform3fv(_location, _value->size(), reinterpret_cast<GLfloat*>(_value->data()));
+            glUniform3fv(_location, static_cast<int>(_value->size()), reinterpret_cast<GLfloat*>(_value->data()));
         }
 
         template <>
         inline void Uniform<glm::mat4>::Apply()
         {
             LOCATION_CHECK
-            glUniformMatrix4fv(_location, 1, GL_FALSE, &_value[0][0]);
+            glUniformMatrix4fv(_location, 1, GL_FALSE, glm::value_ptr(_value));
         }
 
         template <>

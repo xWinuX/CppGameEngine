@@ -30,8 +30,7 @@ glm::mat4 Renderer::_viewMatrix       = glm::identity<glm::mat4>();
 void Renderer::Initialize()
 {
     glEnable(GL_DEPTH_TEST);
-    glDepthMask(GL_TRUE);
-    glDepthFunc(GL_LEQUAL);
+    glDepthFunc(GL_LESS);
     glDepthRange(0.0, 1.0);
     glLineWidth(2);
     glEnable(GL_CULL_FACE);
@@ -150,7 +149,7 @@ unsigned int Renderer::RenderRenderable2D(const std::map<Material*, std::map<Tex
         _renderable2DVertexArrayObject->Bind();
         for (const std::pair<Texture* const, std::vector<Renderable2D*>>& texturePair : materialPair.second)
         {
-            unsigned int offset = 0;
+            size_t offset = 0;
             for (Renderable2D* renderable2D : texturePair.second)
             {
                 renderable2D->CopyQuadData(_renderable2DVertexData + offset);
@@ -254,9 +253,7 @@ void Renderer::Draw()
     numDrawCalls += RenderRenderables(_opaqueRenderables);
 
     // Opaque 2D
-    glDisable(GL_DEPTH_TEST);
     numDrawCalls += RenderRenderable2D(_opaqueRenderable2Ds);
-    glEnable(GL_DEPTH_TEST);
     
     // Transparent
     // TODO: Sort triangles and objects based on distance to camera

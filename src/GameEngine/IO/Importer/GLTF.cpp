@@ -56,7 +56,7 @@ std::vector<GameEngine::Rendering::Mesh*> GLTF::ImportModel(std::string filePath
             std::vector<unsigned int>          bufferElementSize = std::vector<unsigned int>();
             std::vector<VertexBufferAttribute> attributes;
 
-            unsigned int numVertices = 0;
+            size_t numVertices = 0;
 
             std::vector<int> sortedAttributeValues;
 
@@ -85,13 +85,13 @@ std::vector<GameEngine::Rendering::Mesh*> GLTF::ImportModel(std::string filePath
                 TinyGLTFTypeLookupEntry          type          = TinyGltfTypeLookup.at(accessor.type);
                 TinyGLTFComponentTypeLookupEntry typeComponent = TinyGltfComponentTypeLookup.at(accessor.componentType);
 
-                attributes.emplace_back(type.NumComponents, typeComponent.Enum, accessor.normalized, vertexSize, reinterpret_cast<GLvoid*>(offset));
+                attributes.emplace_back(type.NumComponents, typeComponent.Enum, accessor.normalized, vertexSize, reinterpret_cast<void*>(offset));
 
-                unsigned int size = typeComponent.Size * type.NumComponents;
+                size_t size = typeComponent.Size * type.NumComponents;
                 offset += size;
 
                 const tinygltf::BufferView view = model.bufferViews[accessor.bufferView];
-                bufferInfos.push_back({&model.buffers[view.buffer], size, ((unsigned int)accessor.byteOffset + (unsigned int)view.byteOffset)});
+                bufferInfos.push_back({&model.buffers[view.buffer], size, (accessor.byteOffset + view.byteOffset)});
 
                 numVertices = accessor.count;
             }
@@ -103,7 +103,7 @@ std::vector<GameEngine::Rendering::Mesh*> GLTF::ImportModel(std::string filePath
             VertexBufferLayout* vertexBufferLayout = new VertexBufferLayout(vertexBufferAttributes, attributes.size());
 
             // Create interleaved buffer
-            unsigned int size = numVertices * vertexSize;
+            size_t size = numVertices * vertexSize;
 
             unsigned char* vertexBufferData = new unsigned char[size];
 
@@ -127,10 +127,10 @@ std::vector<GameEngine::Rendering::Mesh*> GLTF::ImportModel(std::string filePath
             tinygltf::BufferView indicesBufferView = model.bufferViews[indicesAccessor.bufferView];
             tinygltf::Buffer     indicesBuffer     = model.buffers[indicesBufferView.buffer];
 
-            unsigned int   indexSize = TinyGltfComponentTypeLookup.at(indicesAccessor.componentType).Size;
+            size_t   indexSize = TinyGltfComponentTypeLookup.at(indicesAccessor.componentType).Size;
             unsigned char* indices   = new unsigned char[indicesAccessor.count * indexSize];
 
-            auto start = indicesBuffer.data.begin() + indicesAccessor.byteOffset + indicesBufferView.byteOffset;
+            auto start = indicesBuffer.data.begin() + static_cast<long long>(indicesAccessor.byteOffset + indicesBufferView.byteOffset);
             std::copy_n(start, (indicesAccessor.count * indexSize), indices);
 
             mesh->AddPrimitive(

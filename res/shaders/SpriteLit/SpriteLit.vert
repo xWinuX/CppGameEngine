@@ -12,24 +12,24 @@ layout (location = 10) in vec4 a_Colors[4];
 #include "../Common/Uniforms.glsl"
 
 #include "../Lit/IO.vert"
+out vec4 v_Color;
 
 const vec3 positions[4] = vec3[](
-    vec3(0.0, 0.0, 0.0),
-    vec3(1.0, 0.0, 0.0),
-    vec3(0.0, -1.0, 0.0),
-    vec3(1.0, -1.0, 0.0)
+    vec3(0.0, 0.0, 0.1),
+    vec3(1.0, 0.0, 0.1),
+    vec3(0.0, -1.0, 0.1),
+    vec3(1.0, -1.0, 0.1)
 );
 
 void main()
 {
-   // v_Position = calculateWorldSpacePosition(u_Transform, positions[a_VertexIndex]*vec3(a_AspectRatio, 1.0, 1.0));
-
-    //gl_Position = calculateNDCPosition(u_ViewProjection, v_Position);
-    
     int vertexIndex = gl_VertexID % 4;
-    gl_Position = vec4(positions[vertexIndex],1.0);// calculateNDCPosition(u_ViewProjection, positions[vertexIndex]*vec3(a_AspectRatio, 1.0, 1.0));
+    v_Position = calculateWorldSpacePosition(a_Transform, positions[vertexIndex]*vec3(a_AspectRatio, 1.0, gl_InstanceID));
 
-    //v_TBN = calculateTBN(u_Transform, vec3(0.0, 0.0, 1.0), vec4(0.0, 1.0, 0.0, 1.0));
+    gl_Position = calculateNDCPosition(u_ViewProjection, v_Position);
+    
+    v_TBN = calculateTBN(u_Transform, vec3(0.0, 0.0, 1.0), vec4(0.0, 1.0, 0.0, 1.0));
 
-    //v_TexCoords = a_TextureCoords[vertexIndex];
+    v_TexCoords = a_TextureCoords[vertexIndex];
+    v_Color = a_Colors[vertexIndex];
 }

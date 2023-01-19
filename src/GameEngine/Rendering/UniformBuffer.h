@@ -11,7 +11,7 @@
 
 #define ADD_UNIFORM_SPECIALIZATION(type,suffix) \
         template<> \
-        inline void UniformBuffer::InitializeUniform<type>(const GLchar* uniformName, type value, const bool includeInApplyQueue, const bool resetAfterApply) \
+        inline void UniformBuffer::InitializeUniform<type>(std::string uniformName, type value, const bool includeInApplyQueue, const bool resetAfterApply) \
         {  \
             InitializeUniform<type, &UniformBuffer::_uniform##suffix##s>(uniformName, value, includeInApplyQueue, resetAfterApply); \
         } \
@@ -21,7 +21,7 @@
             _uniform##suffix##s[uniformLocation].Uniform.Set(value); \
         } \
         template<> \
-        inline void UniformBuffer::SetUniform<type>(const GLchar* uniformName, type value) \
+        inline void UniformBuffer::SetUniform<type>(std::string uniformName, type value) \
         { \
             const int uniformLocation = GetUniformLocation(uniformName); \
             if (uniformLocation < 0) { return; } \
@@ -34,7 +34,7 @@
             _uniform##suffix##s[uniformLocation].Uniform.Apply(); \
         } \
         template<> \
-        inline void UniformBuffer::SetUniformInstant<type>(const GLchar* uniformName, type value) \
+        inline void UniformBuffer::SetUniformInstant<type>(std::string uniformName, type value) \
         { \
             const int uniformLocation = GetUniformLocation(uniformName); \
             if (uniformLocation < 0) { return; } \
@@ -63,7 +63,7 @@ namespace GameEngine
                 };
 
                 GLuint                          _programID;
-                std::map<const GLchar*, int>    _uniformNameLocationMap;
+                std::map<std::string, int>      _uniformNameLocationMap;
                 std::map<int, std::vector<int>> _applyQueue;
                 unsigned int                    _invalidLocationsCounter = 0;
 
@@ -78,9 +78,11 @@ namespace GameEngine
                 UNIFORM(Texture*, Texture)
 
                 template <typename T, std::map<int, UniformEntry<T>> UniformBuffer::*MapPtr>
-                void InitializeUniform(const GLchar* uniformName, T defaultVar, const bool includeInApplyQueue = true, const bool resetAfterApply = false)
+                void InitializeUniform(std::string uniformName, T defaultVar, const bool includeInApplyQueue = true, const bool resetAfterApply = false)
                 {
-                    int location = glGetUniformLocation(_programID, uniformName);
+                    Debug::Log::Message("Initializing uniform " + uniformName);
+
+                    int location = glGetUniformLocation(_programID, uniformName.c_str());
 
                     if (location == -1)
                     {
@@ -96,7 +98,7 @@ namespace GameEngine
                 }
 
                 template <typename T>
-                void InitializeUniform(const GLchar* uniformName, T defaultVar, const bool includeInApplyQueue = true, const bool resetAfterApply = false)
+                void InitializeUniform(std::string uniformName, T defaultVar, const bool includeInApplyQueue = true, const bool resetAfterApply = false)
                 {
                     ShowUniformNotSupportedError<T>();
                 }
@@ -106,7 +108,7 @@ namespace GameEngine
 
                 void Apply();
 
-                int GetUniformLocation(const GLchar* uniformName);
+                int GetUniformLocation(const std::string& uniformName);
 
                 UniformBuffer* Copy(const GLuint programID) const;
 
@@ -117,13 +119,13 @@ namespace GameEngine
                 void SetUniform(int location, T value) { ShowUniformNotSupportedError<T>(); }
 
                 template <typename T>
-                void SetUniform(const GLchar* location, T value) { ShowUniformNotSupportedError<T>(); }
+                void SetUniform(std::string uniformName, T value) { ShowUniformNotSupportedError<T>(); }
 
                 template <typename T>
                 void SetUniformInstant(int location, T value) { ShowUniformNotSupportedError<T>(); }
 
                 template <typename T>
-                void SetUniformInstant(const GLchar* location, T value) { ShowUniformNotSupportedError<T>(); }
+                void SetUniformInstant(std::string uniformName, T value) { ShowUniformNotSupportedError<T>(); }
         };
 
         ADD_UNIFORM_SPECIALIZATION(Texture*, Texture)
