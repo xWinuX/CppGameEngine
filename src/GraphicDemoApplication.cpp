@@ -146,7 +146,7 @@ void GraphicDemoApplication::Initialize(Scene& scene)
 
     // Other
     litShader->InitializeUniform<glm::vec4>("u_ColorTint", glm::vec4(1.0f));
-    litShader->InitializeUniform<Texture*>("u_Texture", theDudeTexture);
+    litShader->InitializeUniform<Texture*>("u_Texture", whiteTexture);
     litShader->InitializeUniform<Texture*>("u_NormalMap", normalMapDefaultTexture);
     litShader->InitializeUniform<float>("u_NormalMapIntensity", 1.0f);
 
