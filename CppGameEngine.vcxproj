@@ -30,12 +30,12 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <IncludePath>$(SolutionDir)\vendor\GLAD\include;$(SolutionDir)\vendor\GLFW\include;$(SolutionDir)\vendor\glm\include;$(SolutionDir)\vendor\reactphysics3d\include;$(SolutionDir)\vendor\stb_image\include;$(SolutionDir)\vendor\tinygltf\include;$(IncludePath)</IncludePath>
+    <IncludePath>$(IncludePath);$(SolutionDir)\vendor\GLAD\include;$(SolutionDir)\vendor\GLFW\include;$(SolutionDir)\vendor\glm\include;$(SolutionDir)\vendor\reactphysics3d\include;$(SolutionDir)\vendor\stb_image\include;$(SolutionDir)\vendor\tinygltf\include;$(SolutionDir)\vendor\freetype\include$(SolutionDir)\vendor\artery-font-format\include;$(SolutionDir)\vendor\msdfgen\include;$(SolutionDir)\vendor\msdf-atlas-gen\include</IncludePath>
     <LibraryPath>W:\Git\C++\CppGameEngine\vendor\reactphysics3d\libs;W:\Git\C++\CppGameEngine\vendor\GLFW\libs;$(LibraryPath)</LibraryPath>
     <SourcePath>$(SolutionDir)\vendor\tinygltf\src;$(SolutionDir)\vendor\stb_image\src;$(SolutionDir)\vendor\GLAD\src;$(SourcePath)</SourcePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <IncludePath>$(SolutionDir)\vendor\GLAD\include;$(SolutionDir)\vendor\GLFW\include;$(SolutionDir)\vendor\glm\include;$(SolutionDir)\vendor\reactphysics3d\include;$(SolutionDir)\vendor\stb_image\include;$(SolutionDir)\vendor\tinygltf\include;$(IncludePath)</IncludePath>
+    <IncludePath>$(IncludePath);$(SolutionDir)\vendor\GLAD\include;$(SolutionDir)\vendor\GLFW\include;$(SolutionDir)\vendor\glm\include;$(SolutionDir)\vendor\reactphysics3d\include;$(SolutionDir)\vendor\stb_image\include;$(SolutionDir)\vendor\tinygltf\include;$(SolutionDir)\vendor\freetype\include$(SolutionDir)\vendor\artery-font-format\include;$(SolutionDir)\vendor\msdfgen\include;$(SolutionDir)\vendor\msdf-atlas-gen\include</IncludePath>
     <LibraryPath>$(LibraryPath)</LibraryPath>
     <SourcePath>$(SolutionDir)\vendor\tinygltf\src;$(SolutionDir)\vendor\stb_image\src;$(SolutionDir)\vendor\GLAD\src;$(SourcePath)</SourcePath>
   </PropertyGroup>
@@ -45,7 +45,7 @@
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>$(SolutionDir)vendor\reactphysics3d\libs\reactphysics3d_Debug_x64.lib;$(SolutionDir)vendor\glfw\libs\glfw3_Release_x64.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>%(AdditionalDependencies);$(SolutionDir)vendor\reactphysics3d\libs\reactphysics3d_Debug_x64.lib;$(SolutionDir)vendor\glfw\libs\glfw3_Release_x64.lib;$(SolutionDir)vendor\freetype\libs\freetype_Debug_x64.lib</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -59,7 +59,7 @@
       <UndefinePreprocessorDefinitions>_DEBUG</UndefinePreprocessorDefinitions>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>$(SolutionDir)vendor\reactphysics3d\libs\reactphysics3d_Release_x64.lib;$(SolutionDir)vendor\glfw\libs\glfw3_Release_x64.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>%(AdditionalDependencies);$(SolutionDir)vendor\reactphysics3d\libs\reactphysics3d_Release_x64.lib;$(SolutionDir)vendor\glfw\libs\glfw3_Release_x64.lib;$(SolutionDir)vendor\freetype\libs\freetype_Release_x64.lib</AdditionalDependencies>
       <GenerateDebugInformation>false</GenerateDebugInformation>
     </Link>
     <ProjectReference>
@@ -743,6 +743,10 @@
     <Content Include="vendor\reactphysics3d\include\reactphysics3d\collision\narrowphase\.DS_Store" />
     <Content Include="vendor\reactphysics3d\libs\reactphysics3d_Debug_x64.lib" />
     <Content Include="vendor\reactphysics3d\libs\reactphysics3d_Release_x64.lib" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="vendor\artery-font-format\include" />
+    <Folder Include="vendor\msdf-atlas-gen" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
