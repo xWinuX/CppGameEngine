@@ -30,12 +30,12 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <IncludePath>$(IncludePath);$(SolutionDir)\vendor\GLAD\include;$(SolutionDir)\vendor\GLFW\include;$(SolutionDir)\vendor\glm\include;$(SolutionDir)\vendor\reactphysics3d\include;$(SolutionDir)\vendor\stb_image\include;$(SolutionDir)\vendor\tinygltf\include;$(SolutionDir)\vendor\freetype\include$(SolutionDir)\vendor\artery-font-format\include;$(SolutionDir)\vendor\msdfgen\include;$(SolutionDir)\vendor\msdf-atlas-gen\include</IncludePath>
+    <IncludePath>$(IncludePath);$(SolutionDir)\vendor\GLAD\include;$(SolutionDir)\vendor\GLFW\include;$(SolutionDir)\vendor\glm\include;$(SolutionDir)\vendor\reactphysics3d\include;$(SolutionDir)\vendor\stb_image\include;$(SolutionDir)\vendor\tinygltf\include;$(SolutionDir)vendor\msdf-atlas-gen\include;$(SolutionDir)vendor\freetype\include;$(SolutionDir)vendor\msdfgen\include;$(SolutionDir)vendor\skia\include</IncludePath>
     <LibraryPath>W:\Git\C++\CppGameEngine\vendor\reactphysics3d\libs;W:\Git\C++\CppGameEngine\vendor\GLFW\libs;$(LibraryPath)</LibraryPath>
     <SourcePath>$(SolutionDir)\vendor\tinygltf\src;$(SolutionDir)\vendor\stb_image\src;$(SolutionDir)\vendor\GLAD\src;$(SourcePath)</SourcePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <IncludePath>$(IncludePath);$(SolutionDir)\vendor\GLAD\include;$(SolutionDir)\vendor\GLFW\include;$(SolutionDir)\vendor\glm\include;$(SolutionDir)\vendor\reactphysics3d\include;$(SolutionDir)\vendor\stb_image\include;$(SolutionDir)\vendor\tinygltf\include;$(SolutionDir)\vendor\freetype\include$(SolutionDir)\vendor\artery-font-format\include;$(SolutionDir)\vendor\msdfgen\include;$(SolutionDir)\vendor\msdf-atlas-gen\include</IncludePath>
+    <IncludePath>$(IncludePath);$(SolutionDir)\vendor\GLAD\include;$(SolutionDir)\vendor\GLFW\include;$(SolutionDir)\vendor\glm\include;$(SolutionDir)\vendor\reactphysics3d\include;$(SolutionDir)\vendor\stb_image\include;$(SolutionDir)\vendor\tinygltf\include;$(SolutionDir)vendor\msdf-atlas-gen\include;$(SolutionDir)vendor\freetype\include;$(SolutionDir)vendor\msdfgen\include;$(SolutionDir)vendor\skia\include</IncludePath>
     <LibraryPath>$(LibraryPath)</LibraryPath>
     <SourcePath>$(SolutionDir)\vendor\tinygltf\src;$(SolutionDir)\vendor\stb_image\src;$(SolutionDir)\vendor\GLAD\src;$(SourcePath)</SourcePath>
   </PropertyGroup>
@@ -45,7 +45,7 @@
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>%(AdditionalDependencies);$(SolutionDir)vendor\reactphysics3d\libs\reactphysics3d_Debug_x64.lib;$(SolutionDir)vendor\glfw\libs\glfw3_Release_x64.lib;$(SolutionDir)vendor\freetype\libs\freetype_Debug_x64.lib</AdditionalDependencies>
+      <AdditionalDependencies>%(AdditionalDependencies);$(SolutionDir)vendor\reactphysics3d\libs\reactphysics3d_Debug_x64.lib;$(SolutionDir)vendor\glfw\libs\glfw3_Release_x64.lib;$(SolutionDir)vendor\msdf-atlas-gen\libs\msdf-atlas-gen_Debug_x64.lib;$(SolutionDir)vendor\freetype\libs\freetype_Debug_x64.lib</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -59,7 +59,7 @@
       <UndefinePreprocessorDefinitions>_DEBUG</UndefinePreprocessorDefinitions>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>%(AdditionalDependencies);$(SolutionDir)vendor\reactphysics3d\libs\reactphysics3d_Release_x64.lib;$(SolutionDir)vendor\glfw\libs\glfw3_Release_x64.lib;$(SolutionDir)vendor\freetype\libs\freetype_Release_x64.lib</AdditionalDependencies>
+      <AdditionalDependencies>%(AdditionalDependencies);$(SolutionDir)vendor\reactphysics3d\libs\reactphysics3d_Release_x64.lib;$(SolutionDir)vendor\glfw\libs\glfw3_Release_x64.lib;$(SolutionDir)vendor\msdf-atlas-gen\libs\msdf-atlas-gen_Release_x64.lib;$(SolutionDir)vendor\freetype\libs\freetype_Release_x64.lib;$(SolutionDir)vendor\msdfgen\libs\msdfgen-core_Release_x64.lib;$(SolutionDir)vendor\msdfgen\libs\msdfgen-ext_Release_x64.lib;$(SolutionDir)vendor\msdfgen\libs\skia.lib</AdditionalDependencies>
       <GenerateDebugInformation>false</GenerateDebugInformation>
     </Link>
     <ProjectReference>
@@ -161,6 +161,8 @@
     <ClInclude Include="src\GameEngine\Utils\String.h" />
     <ClInclude Include="src\GameEngine\Utils\Time.h" />
     <ClInclude Include="src\GraphicDemoApplication.h" />
+    <ClInclude Include="vendor\freetype\include\freetype\config\ftconfig.h" />
+    <ClInclude Include="vendor\freetype\include\freetype\config\ftoption.h" />
     <ClInclude Include="vendor\GLAD\include\glad\glad.h" />
     <ClInclude Include="vendor\GLAD\include\KHR\khrplatform.h" />
     <ClInclude Include="vendor\GLFW\include\GLFW\glfw3.h" />
@@ -583,6 +585,74 @@
     <ClInclude Include="vendor\glm\include\glm\vec3.hpp" />
     <ClInclude Include="vendor\glm\include\glm\vec4.hpp" />
     <ClInclude Include="vendor\glm\include\glm\vector_relational.hpp" />
+    <ClInclude Include="vendor\msdf-atlas-gen\include\msdf-atlas-gen\artery-font-export.h" />
+    <ClInclude Include="vendor\msdf-atlas-gen\include\msdf-atlas-gen\AtlasGenerator.h" />
+    <ClInclude Include="vendor\msdf-atlas-gen\include\msdf-atlas-gen\AtlasStorage.h" />
+    <ClInclude Include="vendor\msdf-atlas-gen\include\msdf-atlas-gen\bitmap-blit.h" />
+    <ClInclude Include="vendor\msdf-atlas-gen\include\msdf-atlas-gen\BitmapAtlasStorage.h" />
+    <ClInclude Include="vendor\msdf-atlas-gen\include\msdf-atlas-gen\BitmapAtlasStorage.hpp" />
+    <ClInclude Include="vendor\msdf-atlas-gen\include\msdf-atlas-gen\Charset.h" />
+    <ClInclude Include="vendor\msdf-atlas-gen\include\msdf-atlas-gen\csv-export.h" />
+    <ClInclude Include="vendor\msdf-atlas-gen\include\msdf-atlas-gen\DynamicAtlas.h" />
+    <ClInclude Include="vendor\msdf-atlas-gen\include\msdf-atlas-gen\DynamicAtlas.hpp" />
+    <ClInclude Include="vendor\msdf-atlas-gen\include\msdf-atlas-gen\FontGeometry.h" />
+    <ClInclude Include="vendor\msdf-atlas-gen\include\msdf-atlas-gen\glyph-generators.h" />
+    <ClInclude Include="vendor\msdf-atlas-gen\include\msdf-atlas-gen\GlyphBox.h" />
+    <ClInclude Include="vendor\msdf-atlas-gen\include\msdf-atlas-gen\GlyphGeometry.h" />
+    <ClInclude Include="vendor\msdf-atlas-gen\include\msdf-atlas-gen\image-encode.h" />
+    <ClInclude Include="vendor\msdf-atlas-gen\include\msdf-atlas-gen\image-save.h" />
+    <ClInclude Include="vendor\msdf-atlas-gen\include\msdf-atlas-gen\image-save.hpp" />
+    <ClInclude Include="vendor\msdf-atlas-gen\include\msdf-atlas-gen\ImmediateAtlasGenerator.h" />
+    <ClInclude Include="vendor\msdf-atlas-gen\include\msdf-atlas-gen\ImmediateAtlasGenerator.hpp" />
+    <ClInclude Include="vendor\msdf-atlas-gen\include\msdf-atlas-gen\json-export.h" />
+    <ClInclude Include="vendor\msdf-atlas-gen\include\msdf-atlas-gen\msdf-atlas-gen.h" />
+    <ClInclude Include="vendor\msdf-atlas-gen\include\msdf-atlas-gen\rectangle-packing.h" />
+    <ClInclude Include="vendor\msdf-atlas-gen\include\msdf-atlas-gen\rectangle-packing.hpp" />
+    <ClInclude Include="vendor\msdf-atlas-gen\include\msdf-atlas-gen\Rectangle.h" />
+    <ClInclude Include="vendor\msdf-atlas-gen\include\msdf-atlas-gen\RectanglePacker.h" />
+    <ClInclude Include="vendor\msdf-atlas-gen\include\msdf-atlas-gen\Remap.h" />
+    <ClInclude Include="vendor\msdf-atlas-gen\include\msdf-atlas-gen\shadron-preview-generator.h" />
+    <ClInclude Include="vendor\msdf-atlas-gen\include\msdf-atlas-gen\size-selectors.h" />
+    <ClInclude Include="vendor\msdf-atlas-gen\include\msdf-atlas-gen\TightAtlasPacker.h" />
+    <ClInclude Include="vendor\msdf-atlas-gen\include\msdf-atlas-gen\types.h" />
+    <ClInclude Include="vendor\msdf-atlas-gen\include\msdf-atlas-gen\utf8.h" />
+    <ClInclude Include="vendor\msdf-atlas-gen\include\msdf-atlas-gen\Workload.h" />
+    <ClInclude Include="vendor\msdfgen\include\core\arithmetics.hpp" />
+    <ClInclude Include="vendor\msdfgen\include\core\bitmap-interpolation.hpp" />
+    <ClInclude Include="vendor\msdfgen\include\core\Bitmap.h" />
+    <ClInclude Include="vendor\msdfgen\include\core\Bitmap.hpp" />
+    <ClInclude Include="vendor\msdfgen\include\core\BitmapRef.hpp" />
+    <ClInclude Include="vendor\msdfgen\include\core\contour-combiners.h" />
+    <ClInclude Include="vendor\msdfgen\include\core\Contour.h" />
+    <ClInclude Include="vendor\msdfgen\include\core\edge-coloring.h" />
+    <ClInclude Include="vendor\msdfgen\include\core\edge-segments.h" />
+    <ClInclude Include="vendor\msdfgen\include\core\edge-selectors.h" />
+    <ClInclude Include="vendor\msdfgen\include\core\EdgeColor.h" />
+    <ClInclude Include="vendor\msdfgen\include\core\EdgeHolder.h" />
+    <ClInclude Include="vendor\msdfgen\include\core\equation-solver.h" />
+    <ClInclude Include="vendor\msdfgen\include\core\generator-config.h" />
+    <ClInclude Include="vendor\msdfgen\include\core\msdf-error-correction.h" />
+    <ClInclude Include="vendor\msdfgen\include\core\MSDFErrorCorrection.h" />
+    <ClInclude Include="vendor\msdfgen\include\core\pixel-conversion.hpp" />
+    <ClInclude Include="vendor\msdfgen\include\core\Projection.h" />
+    <ClInclude Include="vendor\msdfgen\include\core\rasterization.h" />
+    <ClInclude Include="vendor\msdfgen\include\core\render-sdf.h" />
+    <ClInclude Include="vendor\msdfgen\include\core\save-bmp.h" />
+    <ClInclude Include="vendor\msdfgen\include\core\save-tiff.h" />
+    <ClInclude Include="vendor\msdfgen\include\core\Scanline.h" />
+    <ClInclude Include="vendor\msdfgen\include\core\sdf-error-estimation.h" />
+    <ClInclude Include="vendor\msdfgen\include\core\shape-description.h" />
+    <ClInclude Include="vendor\msdfgen\include\core\Shape.h" />
+    <ClInclude Include="vendor\msdfgen\include\core\ShapeDistanceFinder.h" />
+    <ClInclude Include="vendor\msdfgen\include\core\ShapeDistanceFinder.hpp" />
+    <ClInclude Include="vendor\msdfgen\include\core\SignedDistance.h" />
+    <ClInclude Include="vendor\msdfgen\include\core\Vector2.h" />
+    <ClInclude Include="vendor\msdfgen\include\ext\import-font.h" />
+    <ClInclude Include="vendor\msdfgen\include\ext\import-svg.h" />
+    <ClInclude Include="vendor\msdfgen\include\ext\resolve-shape-geometry.h" />
+    <ClInclude Include="vendor\msdfgen\include\ext\save-png.h" />
+    <ClInclude Include="vendor\msdfgen\include\msdfgen-ext.h" />
+    <ClInclude Include="vendor\msdfgen\include\msdfgen.h" />
     <ClInclude Include="vendor\reactphysics3d\include\reactphysics3d\body\CollisionBody.h" />
     <ClInclude Include="vendor\reactphysics3d\include\reactphysics3d\body\RigidBody.h" />
     <ClInclude Include="vendor\reactphysics3d\include\reactphysics3d\collision\broadphase\DynamicAABBTree.h" />
@@ -737,8 +807,15 @@
     <Content Include="res\textures\NoTexture.png" />
     <Content Include="res\textures\TheDude.png" />
     <Content Include="res\textures\White.png" />
+    <Content Include="vendor\freetype\libs\freetype_Debug_x64.lib" />
+    <Content Include="vendor\freetype\libs\freetype_Release_x64.lib" />
+    <Content Include="vendor\freetype\LICENSE.TXT" />
     <Content Include="vendor\GLFW\libs\glfw3_Release_x64.lib" />
     <Content Include="vendor\glm\include\glm\CMakeLists.txt" />
+    <Content Include="vendor\msdf-atlas-gen\libs\msdf-atlas-gen_Release_x64.lib" />
+    <Content Include="vendor\msdfgen\libs\msdfgen-core_Release_x64.lib" />
+    <Content Include="vendor\msdfgen\libs\msdfgen-ext_Release_x64.lib" />
+    <Content Include="vendor\msdfgen\libs\skia.lib" />
     <Content Include="vendor\reactphysics3d\include\reactphysics3d\collision\.DS_Store" />
     <Content Include="vendor\reactphysics3d\include\reactphysics3d\collision\narrowphase\.DS_Store" />
     <Content Include="vendor\reactphysics3d\libs\reactphysics3d_Debug_x64.lib" />
@@ -746,7 +823,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="vendor\artery-font-format\include" />
-    <Folder Include="vendor\msdf-atlas-gen" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

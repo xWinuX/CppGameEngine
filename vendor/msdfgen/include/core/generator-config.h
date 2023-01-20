@@ -6,6 +6,8 @@
 
 namespace msdfgen {
 
+#define MSDFGEN_PUBLIC
+    
 /// The configuration of the MSDF error correction pass.
 struct ErrorCorrectionConfig {
     /// The default value of minDeviationRatio.
