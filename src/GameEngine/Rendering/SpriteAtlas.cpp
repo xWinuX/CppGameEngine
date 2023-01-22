@@ -1,6 +1,8 @@
 ﻿#include "SpriteAtlas.h"
 
+#include "Sprite.h"
 #include <algorithm>
+
 
 #include "stb_image_write.h"
 #include "glm/gtx/string_cast.hpp"
@@ -21,24 +23,29 @@ void SpriteAtlas::ExportPages() const
     }
 }
 
-void GameEngine::Rendering::SpriteAtlas::AddSprite(Sprite* sprite) { _sprites.push_back({sprite, 0, false}); }
+void GameEngine::Rendering::SpriteAtlas::AddSprite(SpriteSet* spriteSet) { for (size_t i = 0; i < spriteSet->GetNumFrames(); i++) { AddSprite(spriteSet->GetSprite(i)); } }
+void SpriteAtlas::AddSprite(Sprite* sprite) { _sprites.push_back({sprite, false}); }
 
 void SpriteAtlas::CreateNewPage()
 {
-    Debug::Log::Message("Create new page");
     _buffers.push_back(new unsigned char[_size.x * _size.y * 4]);
     memset(_buffers[_buffers.size() - 1], 0, _size.x * _size.y * 4);
+}
+
+void SpriteAtlas::SortSpritesByHeight()
+{
+    std::sort(_sprites.begin(), _sprites.end(),
+              [](const PackingSprite& sprite1, const PackingSprite& sprite2)
+              {
+                  return sprite1.Sprite->GetSourceTexture()->GetSize().y > sprite2.Sprite->GetSourceTexture()->GetSize().y;
+              });
 }
 
 // Simple Packing algorithm: https://www.david-colson.com/2020/03/10/exploring-rect-packing.html
 void SpriteAtlas::Pack()
 {
     // Sort sprites based on height
-    std::sort(_sprites.begin(), _sprites.end(),
-              [](const PackingSprite& sprite1, const PackingSprite& sprite2)
-              {
-                  return sprite1.Sprite->GetSourceTexture()->GetSize().y > sprite2.Sprite->GetSourceTexture()->GetSize().y;
-              });
+    SortSpritesByHeight();
 
     // Loop for as long as there are sprites to pack
     unsigned int numPackedSprites = 0;
@@ -55,59 +62,49 @@ void SpriteAtlas::Pack()
             // If sprite was already packed skip it
             if (packingSprite.WasPacked) { continue; }
 
-            Sprite*          sprite        = packingSprite.Sprite;
+            const Sprite*    sprite        = packingSprite.Sprite;
             const Texture*   spriteTexture = sprite->GetSourceTexture();
-            const glm::uvec2 frameSize     = sprite->GetFrameSize();
+            const glm::uvec2 frameSize     = sprite->GetSize();
             const glm::vec2  frameUVStep   = glm::vec2(_uvStep.x * static_cast<float>(frameSize.x), _uvStep.y * static_cast<float>(frameSize.y));
-            // Loop trough each individual frame of sprite
-            for (unsigned int frameIndex = packingSprite.PackedFrames; frameIndex < sprite->GetNumFrames(); frameIndex++)
+
+            const glm::uvec2 framePosition = sprite->GetPixelPosition();
+
+            // If sprite is too large to fit on current row reset cursor position back to the left and increase y position by the highest element in current row
+            if (position.x + frameSize.x > _size.x)
             {
-                const glm::uvec2 framePosition = sprite->GetFramePositions()[frameIndex];
-
-                // If sprite is too large to fit on current row reset cursor position back to the left and increase y position by the highest element in current row
-                if (position.x + frameSize.x > _size.x)
-                {
-                    position.y += largestHeightInCurrentRow;
-                    position.x                = 0;
-                    largestHeightInCurrentRow = 0;
-                }
-
-                // If the sprite is high to fit the page skip it
-                if (position.y + frameSize.y > _size.y) { continue; }
-
-                // Copy the contents of the texture into the atlas page
-                const unsigned char* spriteBuffer    = spriteTexture->GetBuffer();
-                unsigned int         bufferRowOffset = position.y * _size.x * 4 + position.x * 4;
-                for (unsigned int y = frameSize.y; y > 0; y--) // Copy entire row at once
-                {
-                    const unsigned int xOffset = framePosition.x * 4;
-                    const unsigned int yOffset = ((y - 1) + framePosition.y) * spriteTexture->GetSize().x * 4;
-                    memcpy(_buffers[_buffers.size() - 1] + bufferRowOffset, spriteBuffer + xOffset + yOffset, static_cast<size_t>(frameSize.x) * 4);
-                    bufferRowOffset += _size.x * 4;
-                }
-
-                // Update sprite uvs
-                glm::vec2 topLeftUV = glm::vec2(static_cast<float>(position.x) * _uvStep.x, static_cast<float>(_size.y - position.y) * _uvStep.y);
-                Debug::Log::Message(glm::to_string(_uvStep));
-                Debug::Log::Message(glm::to_string(topLeftUV));
-                Debug::Log::Message(glm::to_string(topLeftUV + frameUVStep));
-                sprite->ChangeFrameUV(frameIndex, topLeftUV, topLeftUV + frameUVStep);
-
-                // Update cursor x position to end of currently inserted sprite 
-                position.x += frameSize.x;
-
-                // Update largest height if needed 
-                if (frameSize.y > largestHeightInCurrentRow) { largestHeightInCurrentRow = frameSize.y; }
-
-                // If every sprite frame has been packed mark sprite as packed
-                packingSprite.PackedFrames++;
-                packingSprite.FramePages.push_back(_buffers.size() - 1);
-                if (packingSprite.PackedFrames == sprite->GetNumFrames())
-                {
-                    packingSprite.WasPacked = true;
-                    numPackedSprites++;
-                }
+                position.y += largestHeightInCurrentRow;
+                position.x                = 0;
+                largestHeightInCurrentRow = 0;
             }
+
+            // If the sprite is high to fit the page skip it
+            if (position.y + frameSize.y > _size.y) { continue; }
+
+            // Copy the contents of the texture into the atlas page
+            const unsigned char* spriteBuffer    = spriteTexture->GetBuffer();
+            unsigned int         bufferRowOffset = position.y * _size.x * 4 + position.x * 4;
+            for (unsigned int y = frameSize.y; y > 0; y--) // Copy entire row at once
+            {
+                const unsigned int xOffset = framePosition.x * 4;
+                const unsigned int yOffset = ((y - 1) + framePosition.y) * spriteTexture->GetSize().x * 4;
+                memcpy(_buffers[_buffers.size() - 1] + bufferRowOffset, spriteBuffer + xOffset + yOffset, static_cast<size_t>(frameSize.x) * 4);
+                bufferRowOffset += _size.x * 4;
+            }
+
+            // Update sprite uvs
+            glm::vec2 topLeftUV = glm::vec2(static_cast<float>(position.x) * _uvStep.x, static_cast<float>(_size.y - position.y) * _uvStep.y);
+            sprite->SetUV(topLeftUV, topLeftUV + frameUVStep);
+
+            // Update cursor x position to end of currently inserted sprite 
+            position.x += frameSize.x;
+
+            // Update largest height if needed 
+            if (frameSize.y > largestHeightInCurrentRow) { largestHeightInCurrentRow = frameSize.y; }
+
+            // Mark sprite as packed and give him the current page index
+            packingSprite.PageIndex = _buffers.size() - 1;
+            packingSprite.WasPacked = true;
+            numPackedSprites++;
         }
     }
 
@@ -116,13 +113,11 @@ void SpriteAtlas::Pack()
     // Create textures out of the buffers and clear the vector since the texture now manages the buffers memory
     for (unsigned char* buffer : _buffers) { _pages.push_back(new Texture(buffer, _size, _importSettings)); }
 
-    for (PackingSprite packingSprite : _sprites)
+    for (const PackingSprite packingSprite : _sprites)
     {
         Sprite* sprite = packingSprite.Sprite;
-        for (size_t framePageIndex = 0; framePageIndex < packingSprite.FramePages.size(); framePageIndex++)
-        {
-            sprite->ChangeFrameTexture(framePageIndex, _pages[packingSprite.FramePages[framePageIndex]]);
-        }
+        sprite->SetTexture(_pages[packingSprite.PageIndex]);
     }
+    
     _buffers.clear();
 }

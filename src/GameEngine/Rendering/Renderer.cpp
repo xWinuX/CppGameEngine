@@ -5,6 +5,7 @@
 
 #include "Shader.h"
 #include "VertexArrayObject.h"
+#include "Sprite.h"
 #include "../Core/Window.h"
 #include "../Utils/Time.h"
 #include "glm/ext/matrix_transform.hpp"
@@ -46,24 +47,24 @@ void Renderer::Initialize()
                                                            {
 
                                                                // Aspect ratio
-                                                               VertexBufferAttribute(1, GL_FLOAT, GL_FALSE, sizeof(Sprite::QuadData), nullptr, 1),
+                                                               VertexBufferAttribute(4, GL_FLOAT, GL_FALSE, sizeof(Sprite::QuadData), nullptr, 1),
 
                                                                // Transform
-                                                               VertexBufferAttribute(4, GL_FLOAT, GL_FALSE, sizeof(Sprite::QuadData), (GLvoid*)(1 * sizeof(float)), 1),
-                                                               VertexBufferAttribute(4, GL_FLOAT, GL_FALSE, sizeof(Sprite::QuadData), (GLvoid*)(5 * sizeof(float)), 1),
-                                                               VertexBufferAttribute(4, GL_FLOAT, GL_FALSE, sizeof(Sprite::QuadData), (GLvoid*)(9 * sizeof(float)), 1),
-                                                               VertexBufferAttribute(4, GL_FLOAT, GL_FALSE, sizeof(Sprite::QuadData), (GLvoid*)(13 * sizeof(float)), 1),
+                                                               VertexBufferAttribute(4, GL_FLOAT, GL_FALSE, sizeof(Sprite::QuadData), (GLvoid*)(4 * sizeof(float)), 1),
+                                                               VertexBufferAttribute(4, GL_FLOAT, GL_FALSE, sizeof(Sprite::QuadData), (GLvoid*)(8 * sizeof(float)), 1),
+                                                               VertexBufferAttribute(4, GL_FLOAT, GL_FALSE, sizeof(Sprite::QuadData), (GLvoid*)(12 * sizeof(float)), 1),
+                                                               VertexBufferAttribute(4, GL_FLOAT, GL_FALSE, sizeof(Sprite::QuadData), (GLvoid*)(16 * sizeof(float)), 1),
 
                                                                // UV's
-                                                               VertexBufferAttribute(2, GL_FLOAT, GL_FALSE, sizeof(Sprite::QuadData), (GLvoid*)(17 * sizeof(float)), 1),
-                                                               VertexBufferAttribute(2, GL_FLOAT, GL_FALSE, sizeof(Sprite::QuadData), (GLvoid*)(19 * sizeof(float)), 1),
-                                                               VertexBufferAttribute(2, GL_FLOAT, GL_FALSE, sizeof(Sprite::QuadData), (GLvoid*)(21 * sizeof(float)), 1),
-                                                               VertexBufferAttribute(2, GL_FLOAT, GL_FALSE, sizeof(Sprite::QuadData), (GLvoid*)(23 * sizeof(float)), 1),
+                                                               VertexBufferAttribute(2, GL_FLOAT, GL_FALSE, sizeof(Sprite::QuadData), (GLvoid*)(20 * sizeof(float)), 1),
+                                                               VertexBufferAttribute(2, GL_FLOAT, GL_FALSE, sizeof(Sprite::QuadData), (GLvoid*)(22 * sizeof(float)), 1),
+                                                               VertexBufferAttribute(2, GL_FLOAT, GL_FALSE, sizeof(Sprite::QuadData), (GLvoid*)(24 * sizeof(float)), 1),
+                                                               VertexBufferAttribute(2, GL_FLOAT, GL_FALSE, sizeof(Sprite::QuadData), (GLvoid*)(26 * sizeof(float)), 1),
                                                                // Color
-                                                               VertexBufferAttribute(4, GL_FLOAT, GL_FALSE, sizeof(Sprite::QuadData), (GLvoid*)(25 * sizeof(float)), 1),
-                                                               VertexBufferAttribute(4, GL_FLOAT, GL_FALSE, sizeof(Sprite::QuadData), (GLvoid*)(29 * sizeof(float)), 1),
-                                                               VertexBufferAttribute(4, GL_FLOAT, GL_FALSE, sizeof(Sprite::QuadData), (GLvoid*)(33 * sizeof(float)), 1),
-                                                               VertexBufferAttribute(4, GL_FLOAT, GL_FALSE, sizeof(Sprite::QuadData), (GLvoid*)(37 * sizeof(float)), 1),
+                                                               VertexBufferAttribute(4, GL_FLOAT, GL_FALSE, sizeof(Sprite::QuadData), (GLvoid*)(28 * sizeof(float)), 1),
+                                                               VertexBufferAttribute(4, GL_FLOAT, GL_FALSE, sizeof(Sprite::QuadData), (GLvoid*)(32 * sizeof(float)), 1),
+                                                               VertexBufferAttribute(4, GL_FLOAT, GL_FALSE, sizeof(Sprite::QuadData), (GLvoid*)(36 * sizeof(float)), 1),
+                                                               VertexBufferAttribute(4, GL_FLOAT, GL_FALSE, sizeof(Sprite::QuadData), (GLvoid*)(40 * sizeof(float)), 1),
                                                            }, 13));
 
     delete[] indices;

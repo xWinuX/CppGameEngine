@@ -15,15 +15,13 @@
 #include "GameEngine/Rendering/Material.h"
 #include "GameEngine/Rendering/Model.h"
 #include "GameEngine/Rendering/Shader.h"
-#include "GameEngine/Rendering/Sprite.h"
+#include "GameEngine/Rendering/SpriteSet.h"
 #include "GameEngine/Rendering/Texture.h"
 #include "GameEngine/Rendering/SpriteAtlas.h"
 #include "GameEngine/Utils/Math.h"
 #include "GameEngine/Shapes/Cube.h"
 #include "GameEngine/Utils/Time.h"
 #include "glm/gtx/string_cast.hpp"
-
-#include <msdf-atlas-gen/msdf-atlas-gen.h>
 
 using namespace GameEngine::Debug;
 using namespace GameEngine::Utils;
@@ -79,75 +77,16 @@ GameObject* crateObject;
 GameObject* childCrateObject;
 GameObject* childOfChildCrateObject;
 
-Sprite* theDudeSprite;
-Sprite* drLSprite;
-Sprite* gamerDudeSprite;
-Sprite* testSprite;
+SpriteSet* theDudeSprite;
+SpriteSet* drLSprite;
+SpriteSet* gamerDudeSprite;
+SpriteSet* testSprite;
 
 SpriteAtlas* spriteAtlas;
 
 
-using namespace msdf_atlas;
 
-bool generateAtlas(const char *fontFilename) {
-    bool success = false;
-    // Initialize instance of FreeType library
-    if (msdfgen::FreetypeHandle *ft = msdfgen::initializeFreetype()) {
-        // Load font file
-        if (msdfgen::FontHandle *font = msdfgen::loadFont(ft, fontFilename)) {
-            // Storage for glyph geometry and their coordinates in the atlas
-            std::vector<GlyphGeometry> glyphs;
-            // FontGeometry is a helper class that loads a set of glyphs from a single font.
-            // It can also be used to get additional font metrics, kerning information, etc.
-            FontGeometry fontGeometry(&glyphs);
-            // Load a set of character glyphs:
-            // The second argument can be ignored unless you mix different font sizes in one atlas.
-            // In the last argument, you can specify a charset other than ASCII.
-            // To load specific glyph indices, use loadGlyphs instead.
-            fontGeometry.loadCharset(font, 1.0, Charset::ASCII);
-            // Apply MSDF edge coloring. See edge-coloring.h for other coloring strategies.
-            const double maxCornerAngle = 3.0;
-            for (GlyphGeometry &glyph : glyphs)
-                glyph.edgeColoring(&msdfgen::edgeColoringInkTrap, maxCornerAngle, 0);
-            // TightAtlasPacker class computes the layout of the atlas.
-            TightAtlasPacker packer;
-            // Set atlas parameters:
-            // setDimensions or setDimensionsConstraint to find the best value
-            packer.setDimensionsConstraint(TightAtlasPacker::DimensionsConstraint::SQUARE);
-            // setScale for a fixed size or setMinimumScale to use the largest that fits
-            packer.setMinimumScale(24.0);
-            // setPixelRange or setUnitRange
-            packer.setPixelRange(2.0);
-            packer.setMiterLimit(1.0);
-            // Compute atlas layout - pack glyphs
-            packer.pack(glyphs.data(), glyphs.size());
-            // Get final atlas dimensions
-            int width = 0, height = 0;
-            packer.getDimensions(width, height);
-            // The ImmediateAtlasGenerator class facilitates the generation of the atlas bitmap.
-            ImmediateAtlasGenerator<
-                float, // pixel type of buffer for individual glyphs depends on generator function
-                3, // number of atlas color channels
-                &msdfGenerator, // function to generate bitmaps for individual glyphs
-                BitmapAtlasStorage<byte, 3> // class that stores the atlas bitmap
-                // For example, a custom atlas storage class that stores it in VRAM can be used.
-            > generator(width, height);
-            // GeneratorAttributes can be modified to change the generator's default settings.
-            GeneratorAttributes attributes;
-            generator.setAttributes(attributes);
-            generator.setThreadCount(4);
-            // Generate atlas bitmap
-            generator.generate(glyphs.data(), glyphs.size());
-            // The atlas bitmap can now be retrieved via atlasStorage as a BitmapConstRef.
-            // The glyphs array (or fontGeometry) contains positioning data for typesetting text.
-            //success = myProject::submitAtlasBitmapAndLayout(generator.atlasStorage(), glyphs);
-            // Cleanup
-            msdfgen::destroyFont(font);
-        }
-        msdfgen::deinitializeFreetype(ft);
-    }
-    return success;
-}
+
 
 void GraphicDemoApplication::Initialize(Scene& scene)
 {
@@ -171,10 +110,10 @@ void GraphicDemoApplication::Initialize(Scene& scene)
     gamerDudeSpriteTexture = new Texture("res/sprites/GamerDudeSprite.png", pixelArtTextureImportSettings);
     testSpriteTexture      = new Texture("res/sprites/TestSprite.png", pixelArtTextureImportSettings);
 
-    theDudeSprite   = new Sprite(theDudeSpriteTexture, 2, glm::vec2(30, 49));
-    drLSprite       = new Sprite(drLSpriteTexture);
-    gamerDudeSprite = new Sprite(gamerDudeSpriteTexture);
-    testSprite      = new Sprite(testSpriteTexture, 12, glm::uvec2(32, 32));
+    theDudeSprite   = new SpriteSet(theDudeSpriteTexture, 2, glm::vec2(30, 49));
+    drLSprite       = new SpriteSet(drLSpriteTexture);
+    gamerDudeSprite = new SpriteSet(gamerDudeSpriteTexture);
+    testSprite      = new SpriteSet(testSpriteTexture, 12, glm::uvec2(32, 32));
 
     spriteAtlas = new SpriteAtlas(glm::ivec2(1024), pixelArtTextureImportSettings);
 
@@ -271,7 +210,7 @@ void GraphicDemoApplication::Initialize(Scene& scene)
     #pragma endregion
 
     cube = new Cube();
-    
+
     // Camera
     cameraObject = new GameObject();
     cameraObject->GetTransform()->SetLocalPosition(glm::vec3(0.0f, 0.0f, 3.0f));
@@ -406,5 +345,5 @@ void GraphicDemoApplication::CustomRun()
     cameraObject->GetTransform()->MoveLocal(cameraVelocity);
 
 
-    std::cout << "FPS: " << std::to_string(1/Time::GetDeltaTime()) << std::endl;
+    std::cout << "FPS: " << std::to_string(1 / Time::GetDeltaTime()) << std::endl;
 }

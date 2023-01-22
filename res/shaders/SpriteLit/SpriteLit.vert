@@ -1,7 +1,7 @@
 ﻿#include "../Common/Version.glsl"
 
 // Once per Quad
-layout (location = 0) in float a_AspectRatio;
+layout (location = 0) in vec4 a_SizeAndOrigin;
 layout (location = 1) in mat4 a_Transform;
 
 // Every Vertex
@@ -23,8 +23,10 @@ const vec3 positions[4] = vec3[](
 
 void main()
 {
+    float aspectRatio = a_SizeAndOrigin.x / a_SizeAndOrigin.y;
+    
     int vertexIndex = gl_VertexID % 4;
-    v_Position = calculateWorldSpacePosition(a_Transform, positions[vertexIndex]*vec3(a_AspectRatio, 1.0, gl_InstanceID));
+    v_Position = calculateWorldSpacePosition(a_Transform, positions[vertexIndex]*vec3(aspectRatio, 1.0, gl_InstanceID));
 
     gl_Position = calculateNDCPosition(u_ViewProjection, v_Position);
     

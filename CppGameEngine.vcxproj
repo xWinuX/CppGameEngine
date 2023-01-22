@@ -89,6 +89,7 @@
     <ClCompile Include="src\GameEngine\IO\Stream.cpp" />
     <ClCompile Include="src\GameEngine\Physics\Physics.cpp" />
     <ClCompile Include="src\GameEngine\Physics\PhysicsDebugRenderer.cpp" />
+    <ClCompile Include="src\GameEngine\Rendering\Font.cpp" />
     <ClCompile Include="src\GameEngine\Rendering\Material.cpp" />
     <ClCompile Include="src\GameEngine\Rendering\Mesh.cpp" />
     <ClCompile Include="src\GameEngine\Rendering\Model.cpp" />
@@ -97,6 +98,7 @@
     <ClCompile Include="src\GameEngine\Rendering\Renderer.cpp" />
     <ClCompile Include="src\GameEngine\Rendering\Shader.cpp" />
     <ClCompile Include="src\GameEngine\Rendering\Sprite.cpp" />
+    <ClCompile Include="src\GameEngine\Rendering\SpriteSet.cpp" />
     <ClCompile Include="src\GameEngine\Rendering\SpriteAtlas.cpp" />
     <ClCompile Include="src\GameEngine\Rendering\Texture.cpp" />
     <ClCompile Include="src\GameEngine\Rendering\UniformBuffer.cpp" />
@@ -137,6 +139,7 @@
     <ClInclude Include="src\GameEngine\Physics\Physics.h" />
     <ClInclude Include="src\GameEngine\Physics\PhysicsDebugRenderer.h" />
     <ClInclude Include="src\GameEngine\Rendering\Buffer.h" />
+    <ClInclude Include="src\GameEngine\Rendering\Font.h" />
     <ClInclude Include="src\GameEngine\Rendering\IndexBuffer.h" />
     <ClInclude Include="src\GameEngine\Rendering\Material.h" />
     <ClInclude Include="src\GameEngine\Rendering\Mesh.h" />
@@ -145,9 +148,11 @@
     <ClInclude Include="src\GameEngine\Rendering\Renderable.h" />
     <ClInclude Include="src\GameEngine\Rendering\Renderable2D.h" />
     <ClInclude Include="src\GameEngine\Rendering\RenderablePrimitive.h" />
+    <ClInclude Include="src\GameEngine\Rendering\RenderableSprite.h" />
     <ClInclude Include="src\GameEngine\Rendering\Renderer.h" />
     <ClInclude Include="src\GameEngine\Rendering\Shader.h" />
     <ClInclude Include="src\GameEngine\Rendering\Sprite.h" />
+    <ClInclude Include="src\GameEngine\Rendering\SpriteSet.h" />
     <ClInclude Include="src\GameEngine\Rendering\SpriteAtlas.h" />
     <ClInclude Include="src\GameEngine\Rendering\Texture.h" />
     <ClInclude Include="src\GameEngine\Rendering\Uniform.h" />
@@ -765,6 +770,7 @@
     <ClInclude Include="vendor\tinygltf\include\tiny_gltf.h" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="res\fonts\DePixelKlein.ttf" />
     <Content Include="res\models\cube.glb" />
     <Content Include="res\models\Cube.gltf" />
     <Content Include="res\models\HighPolyPlane.gltf" />

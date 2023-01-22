@@ -3,7 +3,9 @@
 #include "Material.h"
 #include "Renderable.h"
 #include "Renderable2D.h"
-#include "Sprite.h"
+#include "VertexArrayObject.h"
+#include "VertexBuffer.h"
+#include "SpriteSet.h"
 #include "../Components/Light.h"
 
 namespace GameEngine

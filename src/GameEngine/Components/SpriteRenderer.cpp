@@ -1,6 +1,7 @@
 ﻿#include "SpriteRenderer.h"
 #include "Transform.h"
 #include "../Rendering/Renderer.h"
+#include "../Rendering/Sprite.h"
 #include "../Utils/Math.h"
 #include "../Utils/Time.h"
 #include "glm/gtx/integer.hpp"
@@ -9,7 +10,7 @@ using namespace GameEngine::Rendering;
 using namespace GameEngine::Components;
 using namespace GameEngine::Utils;
 
-SpriteRenderer::SpriteRenderer(Rendering::Sprite* sprite, Rendering::Material* material):
+SpriteRenderer::SpriteRenderer(Rendering::RenderableSprite* sprite, Rendering::Material* material):
     _sprite(sprite),
     _material(material) {}
 
@@ -22,14 +23,13 @@ unsigned SpriteRenderer::GetQuadSize() { return sizeof(Sprite::QuadData); }
 void SpriteRenderer::CopyQuadData(unsigned char* destination)
 {
     const size_t frameIndex = static_cast<size_t>(floor(_frameIndex));
-    _sprite->SetQuadTransform(frameIndex, _transform->GetTRS());
-    memcpy(destination, _sprite->GetQuadData(frameIndex), GetQuadSize());
+    memcpy(destination, _sprite->GetQuadData(frameIndex, _transform->GetTRS()), GetQuadSize());
 }
 
 void SpriteRenderer::OnBeforeDraw() { _material->GetUniformBuffer()->SetUniformInstant<glm::mat4>("u_Transform", _transform->GetTRS()); }
 
 GameEngine::Rendering::Material* SpriteRenderer::GetMaterial() { return _material; }
-GameEngine::Rendering::Texture*  SpriteRenderer::GetTexture() { return _sprite->GetTextures()[0]; }
+GameEngine::Rendering::Texture*  SpriteRenderer::GetTexture() { return _sprite->GetTexture(static_cast<size_t>(floor(_frameIndex))); }
 
 float SpriteRenderer::GetFrameIndex() const { return _frameIndex; }
 void  SpriteRenderer::SetFrameIndex(const float frameIndex) { _frameIndex = frameIndex; }
