@@ -21,8 +21,8 @@ namespace GameEngine
                     glm::vec4 Colors[4];
                 };
 
-                explicit Sprite(Texture* texture);
-                Sprite(Texture* texture, glm::uvec2 pixelPosition, glm::uvec2 size, glm::vec2 uvTopLeft, glm::vec2 uvBottomRight);
+                explicit Sprite(Texture* texture, unsigned int pixelsPerUnit = 30);
+                Sprite(Texture* texture, glm::uvec2 pixelPosition, glm::uvec2 size, glm::vec2 uvTopLeft, glm::vec2 uvBottomRight, unsigned int pixelsPerUnit = 30);
                 ~Sprite() override;
 
                 void SetUV(glm::vec2 topLeftUV, glm::vec2 bottomRightUV) const;
@@ -44,6 +44,7 @@ namespace GameEngine
                 Texture*   _texture;
                 glm::uvec2 _pixelPosition;
                 glm::uvec2 _size;
+                unsigned int _pixelsPerUnit; 
                 QuadData*  _quadData = nullptr;
 
                 void CreateSpriteQuad(const glm::vec2 uvTopLeft, const glm::vec2 uvBottomRight);

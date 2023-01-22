@@ -18,7 +18,7 @@ namespace GameEngine
             public:
                 explicit SpriteSet(Texture* texture);
                 SpriteSet(Texture* texture, unsigned int numFrames, glm::uvec2 frameSize);
-                SpriteSet(Texture* texture, std::vector<msdf_atlas::GlyphGeometry> glyphs);
+                SpriteSet(Texture* texture, const std::vector<msdf_atlas::GlyphGeometry>& glyphs);
 
                 ~SpriteSet() override;
 

@@ -5,17 +5,19 @@
 using namespace GameEngine::Rendering;
 
 
-Sprite::Sprite(Texture* texture):
+Sprite::Sprite(Texture* texture, const unsigned int pixelsPerUnit):
     _sourceTexture(texture),
     _texture(texture),
     _pixelPosition(glm::uvec2(0, 0)),
-    _size(texture->GetSize()) { CreateSpriteQuad(glm::vec2(0.0f, 0.0f), glm::vec2(1.0f, 1.0f)); }
+    _size(texture->GetSize()),
+    _pixelsPerUnit(pixelsPerUnit) { CreateSpriteQuad(glm::vec2(0.0f, 0.0f), glm::vec2(1.0f, 1.0f)); }
 
-Sprite::Sprite(Texture* texture, glm::uvec2 pixelPosition, const glm::uvec2 size, const glm::vec2 uvTopLeft, const glm::vec2 uvBottomRight):
+Sprite::Sprite(Texture* texture, const glm::uvec2 pixelPosition, const glm::uvec2 size, const glm::vec2 uvTopLeft, const glm::vec2 uvBottomRight, const unsigned int pixelsPerUnit):
     _sourceTexture(texture),
     _texture(texture),
     _pixelPosition(pixelPosition),
-    _size(size) { CreateSpriteQuad(uvTopLeft, uvBottomRight); }
+    _size(size),
+    _pixelsPerUnit(pixelsPerUnit) { CreateSpriteQuad(uvTopLeft, uvBottomRight); }
 
 Sprite::~Sprite() { delete _quadData; }
 
@@ -23,7 +25,7 @@ void Sprite::CreateSpriteQuad(const glm::vec2 uvTopLeft, const glm::vec2 uvBotto
 {
     _quadData = new QuadData{
 
-        glm::vec4(_size.x, _size.y, 0, 0),
+        glm::vec4(static_cast<float>(_size.x) / static_cast<float>(_pixelsPerUnit), static_cast<float>(_size.y) / static_cast<float>(_pixelsPerUnit), 0, 0),
         glm::identity<glm::mat4>(),
         {
             glm::vec2(uvTopLeft.x, uvBottomRight.y),

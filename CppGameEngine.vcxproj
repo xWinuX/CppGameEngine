@@ -771,6 +771,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="res\fonts\DePixelKlein.ttf" />
+    <Content Include="res\fonts\Roboto-Regular.ttf" />
     <Content Include="res\models\cube.glb" />
     <Content Include="res\models\Cube.gltf" />
     <Content Include="res\models\HighPolyPlane.gltf" />
@@ -782,6 +783,7 @@
     <Content Include="res\models\TheMissingAnim.gltf" />
     <Content Include="res\shaders\Common\Functions.frag" />
     <Content Include="res\shaders\Common\Functions.vert" />
+    <Content Include="res\shaders\Common\IO.frag" />
     <Content Include="res\shaders\Common\Layout.glsl" />
     <Content Include="res\shaders\Common\Uniforms.glsl" />
     <Content Include="res\shaders\Common\Version.glsl" />
@@ -794,10 +796,20 @@
     <Content Include="res\shaders\Lit\Uniforms.frag" />
     <Content Include="res\shaders\Lit\Lit.frag" />
     <Content Include="res\shaders\Lit\Lit.vert" />
+    <Content Include="res\shaders\MSDFFont\MSDFFont.frag" />
+    <Content Include="res\shaders\MSDFFont\MSDFFont.vert" />
     <Content Include="res\shaders\PhysicsDebugShader.fsh" />
     <Content Include="res\shaders\PhysicsDebugShader.vsh" />
     <Content Include="res\shaders\SpriteLit\SpriteLit.frag" />
     <Content Include="res\shaders\SpriteLit\SpriteLit.vert" />
+    <Content Include="res\shaders\Sprite\Constants.vert" />
+    <Content Include="res\shaders\Sprite\Attributes.vert" />
+    <Content Include="res\shaders\Sprite\IO.frag" />
+    <Content Include="res\shaders\Sprite\IO.vert" />
+    <Content Include="res\shaders\Sprite\Main.vert" />
+    <Content Include="res\shaders\Sprite\Sprite.frag" />
+    <Content Include="res\shaders\Sprite\Sprite.vert" />
+    <Content Include="res\shaders\Sprite\Uniforms.frag" />
     <Content Include="res\shaders\VertexColor\VertexColor.frag" />
     <Content Include="res\shaders\VertexColor\VertexColor.vert" />
     <Content Include="res\shaders\Water\Water.frag" />

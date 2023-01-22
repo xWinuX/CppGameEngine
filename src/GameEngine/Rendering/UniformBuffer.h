@@ -65,6 +65,7 @@ namespace GameEngine
                 GLuint                          _programID;
                 std::map<std::string, int>      _uniformNameLocationMap;
                 std::map<int, std::vector<int>> _applyQueue;
+                bool                            _isTemplate              = false;
                 unsigned int                    _invalidLocationsCounter = 0;
 
                 UNIFORM(glm::mat4, Mat4F)
@@ -81,29 +82,33 @@ namespace GameEngine
                 void InitializeUniform(std::string uniformName, T defaultVar, const bool includeInApplyQueue = true, const bool resetAfterApply = false)
                 {
                     Debug::Log::Message("Initializing uniform " + uniformName);
+                    int location = 0;
 
-                    int location = glGetUniformLocation(_programID, uniformName.c_str());
-
-                    if (location == -1)
+                    if (_isTemplate)
                     {
                         location -= _invalidLocationsCounter;
                         _invalidLocationsCounter++;
-                        Debug::Log::Message(std::to_string(_invalidLocationsCounter));
+                    }
+                    else
+                    {
+                        location = glGetUniformLocation(_programID, uniformName.c_str());
+
+                        if (location == -1)
+                        {
+                            location -= _invalidLocationsCounter;
+                            _invalidLocationsCounter++;
+                            Debug::Log::Message(std::to_string(_invalidLocationsCounter));
+                        }
                     }
 
                     _uniformNameLocationMap[uniformName] = location;
                     (this->*MapPtr).emplace(location, UniformEntry<T>{Uniform<T>{uniformName, location, defaultVar}, includeInApplyQueue, resetAfterApply});
 
-                    if (location < 0) { Debug::Log::Error("Something went wrong initializing uniform \"" + std::string(uniformName)); }
-                }
-
-                template <typename T>
-                void InitializeUniform(std::string uniformName, T defaultVar, const bool includeInApplyQueue = true, const bool resetAfterApply = false)
-                {
-                    ShowUniformNotSupportedError<T>();
+                    if (location < 0 && !_isTemplate) { Debug::Log::Error("Something went wrong initializing uniform \"" + std::string(uniformName)); }
                 }
 
             public:
+                explicit UniformBuffer();
                 explicit UniformBuffer(const GLuint programID);
 
                 void Apply();
@@ -111,9 +116,17 @@ namespace GameEngine
                 int GetUniformLocation(const std::string& uniformName);
 
                 UniformBuffer* Copy(const GLuint programID) const;
+                void           CopyTo(UniformBuffer* uniformBuffer) const;
+                void           CopyFrom(const UniformBuffer* uniformBuffer);
 
                 template <typename T>
                 static void ShowUniformNotSupportedError() { Debug::Log::Error("Uniform type " + std::string(typeid(T).name()) + " is not supported"); }
+
+                template <typename T>
+                void InitializeUniform(std::string uniformName, T defaultVar, const bool includeInApplyQueue = true, const bool resetAfterApply = false)
+                {
+                    ShowUniformNotSupportedError<T>();
+                }
 
                 template <typename T>
                 void SetUniform(int location, T value) { ShowUniformNotSupportedError<T>(); }

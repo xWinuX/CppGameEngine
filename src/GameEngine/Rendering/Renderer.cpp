@@ -158,7 +158,7 @@ unsigned int Renderer::RenderRenderable2D(const std::map<Material*, std::map<Tex
             }
 
             _renderable2DVertexBuffer->UpdateData(_renderable2DVertexData, texturePair.second.size());
-            material->GetUniformBuffer()->SetUniform<Texture*>("u_Texture", texturePair.first);
+            material->GetUniformBuffer()->SetUniformInstant<Texture*>("u_Texture", texturePair.first);
             _renderable2DVertexArrayObject->RenderInstanced(6, texturePair.second.size());
             numDrawCalls++;
         }
@@ -255,7 +255,7 @@ void Renderer::Draw()
 
     // Opaque 2D
     numDrawCalls += RenderRenderable2D(_opaqueRenderable2Ds);
-    
+
     // Transparent
     // TODO: Sort triangles and objects based on distance to camera
     glEnable(GL_BLEND);

@@ -4,6 +4,7 @@
 
 #include "../Lit/Uniforms.frag"
 
+#include "../Common/IO.frag"
 #include "../Lit/IO.frag"
 in float v_WaveHeight;
 

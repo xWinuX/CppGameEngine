@@ -12,6 +12,7 @@
 #include "GameEngine/Core/Window.h"
 #include "GameEngine/Input/Input.h"
 #include "GameEngine/Physics/Physics.h"
+#include "GameEngine/Rendering/Font.h"
 #include "GameEngine/Rendering/Material.h"
 #include "GameEngine/Rendering/Model.h"
 #include "GameEngine/Rendering/Shader.h"
@@ -53,20 +54,19 @@ Model* theMissingModel;
 Model* sphereModel;
 Model* highPolyPlane;
 
-Cube* cube;
-
 Shader* litShader;
+Shader* spriteShader;
 Shader* spriteLitShader;
+Shader* msdfFontShader;
 Shader* waterShader;
 Shader* physicsDebugShader;
-Shader* vertexColorShader;
 
 Material* spriteLitMaterial;
-Material* vertexColorMaterial;
 Material* dudeMaterial;
 Material* crateMaterial;
 Material* physicsMaterial;
 Material* waterMaterial;
+Material* msdfFontMaterial;
 
 GameObject* cameraObject;
 GameObject* redLightObject;
@@ -84,12 +84,14 @@ SpriteSet* testSprite;
 
 SpriteAtlas* spriteAtlas;
 
-
-
+Font* pixelFont;
 
 
 void GraphicDemoApplication::Initialize(Scene& scene)
 {
+    // Fonts
+    pixelFont = new Font("res/fonts/Roboto-Regular.ttf");
+
     // Textures
     noTexture               = new Texture("res/textures/NoTexture.png");
     blackTexture            = new Texture("res/textures/Black.png");
@@ -130,29 +132,35 @@ void GraphicDemoApplication::Initialize(Scene& scene)
     sphereModel     = new Model("res/models/Sphere.gltf");
     highPolyPlane   = new Model("res/models/HighPolyPlane.gltf");
 
+    UniformBuffer defaultUniforms = UniformBuffer();
+    defaultUniforms.InitializeUniform<float>("u_Time", 0.0f, false);
+    defaultUniforms.InitializeUniform<glm::mat4>("u_ViewProjection", glm::identity<glm::mat4>(), false);
+    defaultUniforms.InitializeUniform<glm::mat4>("u_Transform", glm::identity<glm::mat4>(), false);
+
+    UniformBuffer litUniforms = UniformBuffer();
+    litUniforms.InitializeUniform<Texture*>("u_NormalMap", normalMapDefaultTexture);
+    litUniforms.InitializeUniform<float>("u_NormalMapIntensity", 1.0f);
+
+    litUniforms.InitializeUniform<glm::vec4>("u_AmbientLightColor", glm::vec4(1.0));
+    litUniforms.InitializeUniform<float>("u_AmbientLightIntensity", 0.3f);
+
+    litUniforms.InitializeUniform<int>("u_NumPointLights", 0, false);
+    litUniforms.InitializeUniform<std::vector<glm::vec3>*>("u_PointLightPositions", nullptr, false);
+    litUniforms.InitializeUniform<std::vector<glm::vec4>*>("u_PointLightColors", nullptr, false);
+    litUniforms.InitializeUniform<std::vector<float>*>("u_PointLightIntensities", nullptr, false);
+    litUniforms.InitializeUniform<std::vector<float>*>("u_PointLightRanges", nullptr, false);
+
+    UniformBuffer spriteUniforms = UniformBuffer();
+    spriteUniforms.InitializeUniform<Texture*>("u_Texture", whiteTexture, false);
+
     #pragma region Default Shader
     litShader = new Shader("res/shaders/Lit/Lit.vert", "res/shaders/Lit/Lit.frag");
-
-    // Common
-    litShader->InitializeUniform<float>("u_Time", 0.0f, false);
-    litShader->InitializeUniform<glm::mat4>("u_ViewProjection", glm::identity<glm::mat4>(), false);
-    litShader->InitializeUniform<glm::mat4>("u_Transform", glm::identity<glm::mat4>(), false);
-
-    // Lighting
-    litShader->InitializeUniform<glm::vec4>("u_AmbientLightColor", glm::vec4(1.0));
-    litShader->InitializeUniform<float>("u_AmbientLightIntensity", 0.3f);
-
-    litShader->InitializeUniform<int>("u_NumPointLights", 0, false);
-    litShader->InitializeUniform<std::vector<glm::vec3>*>("u_PointLightPositions", nullptr, false);
-    litShader->InitializeUniform<std::vector<glm::vec4>*>("u_PointLightColors", nullptr, false);
-    litShader->InitializeUniform<std::vector<float>*>("u_PointLightIntensities", nullptr, false);
-    litShader->InitializeUniform<std::vector<float>*>("u_PointLightRanges", nullptr, false);
+    litShader->GetUniformBuffer()->CopyFrom(&defaultUniforms);
+    litShader->GetUniformBuffer()->CopyFrom(&litUniforms);
 
     // Other
     litShader->InitializeUniform<glm::vec4>("u_ColorTint", glm::vec4(1.0f));
     litShader->InitializeUniform<Texture*>("u_Texture", whiteTexture);
-    litShader->InitializeUniform<Texture*>("u_NormalMap", normalMapDefaultTexture);
-    litShader->InitializeUniform<float>("u_NormalMapIntensity", 1.0f);
 
     // Dude material
     dudeMaterial = new Material(litShader);
@@ -176,7 +184,9 @@ void GraphicDemoApplication::Initialize(Scene& scene)
 
     #pragma region Sprite Lit Shader
     spriteLitShader = new Shader("res/shaders/SpriteLit/SpriteLit.vert", "res/shaders/SpriteLit/SpriteLit.frag");
-    spriteLitShader->UniformBufferFromShader(litShader);
+    spriteLitShader->GetUniformBuffer()->CopyFrom(&defaultUniforms);
+    spriteLitShader->GetUniformBuffer()->CopyFrom(&spriteUniforms);
+    spriteLitShader->GetUniformBuffer()->CopyFrom(&litUniforms);
 
     // Material
     spriteLitMaterial = new Material(spriteLitShader);
@@ -195,22 +205,15 @@ void GraphicDemoApplication::Initialize(Scene& scene)
     physicsMaterial->SetRenderMode(Material::Wireframe);
     #pragma endregion
 
-    #pragma region Vertex Color Shader
-    vertexColorShader = new Shader("res/shaders/VertexColor/VertexColor.vert", "res/shaders/VertexColor/VertexColor.frag");
+    #pragma region MSDFFont Shader
+    msdfFontShader = new Shader("res/shaders/MSDFFont/MSDFFont.vert", "res/shaders/MSDFFont/MSDFFont.frag");
+    msdfFontShader->GetUniformBuffer()->CopyFrom(&defaultUniforms);
+    msdfFontShader->GetUniformBuffer()->CopyFrom(&spriteUniforms);
 
-    // Common
-    vertexColorShader->InitializeUniform<float>("u_Time", 0.0f, false);
-    vertexColorShader->InitializeUniform<glm::mat4>("u_ViewProjection", glm::identity<glm::mat4>(), false);
-    vertexColorShader->InitializeUniform<glm::mat4>("u_Transform", glm::identity<glm::mat4>(), false);
-
-    vertexColorShader->InitializeUniform<Texture*>("u_Texture", whiteTexture);
-
-    vertexColorMaterial = new Material(vertexColorShader);
-    vertexColorMaterial->GetUniformBuffer()->SetUniform("u_Texture", crateTexture);
+    msdfFontMaterial = new Material(msdfFontShader);
+    msdfFontMaterial->SetCullFace(Material::CullFace::None);
     #pragma endregion
-
-    cube = new Cube();
-
+    
     // Camera
     cameraObject = new GameObject();
     cameraObject->GetTransform()->SetLocalPosition(glm::vec3(0.0f, 0.0f, 3.0f));
@@ -239,7 +242,7 @@ void GraphicDemoApplication::Initialize(Scene& scene)
     suzanneObject = new GameObject();
     suzanneObject->GetTransform()->SetLocalPosition(glm::vec3(0.0f, 0.0f, 0.0f));
     // suzanneObject->AddComponent(new MeshRenderer(suzanneModel->GetMesh(0), dudeMaterial));
-    suzanneObject->AddComponent(new SpriteRenderer(testSprite, spriteLitMaterial));
+    suzanneObject->AddComponent(new SpriteRenderer(pixelFont->GetSprite(), msdfFontMaterial));
     scene.AddGameObject(suzanneObject);
 
     // The Missing
@@ -252,7 +255,6 @@ void GraphicDemoApplication::Initialize(Scene& scene)
     // Crate
     crateObject = new GameObject();
     crateObject->GetTransform()->SetLocalPosition(glm::vec3(0.0f, -1.5f, 0.0f));
-    crateObject->GetTransform()->SetLocalScale(glm::vec3(0.5f, 0.5f, 0.5f));
     crateObject->AddComponent(new MeshRenderer(cubeModel->GetMesh(0), crateMaterial));
     crateObject->AddComponent(new SpriteRenderer(theDudeSprite, spriteLitMaterial));
     crateObject->AddComponent(new BoxCollider(glm::vec3(0.5f)));

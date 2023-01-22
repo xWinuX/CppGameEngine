@@ -31,6 +31,8 @@ namespace GameEngine
                     Texture::WrapMode   WrapMode         = Texture::WrapMode::Repeat;
                     unsigned int        MipMapLevels     = 3;
                     unsigned int        AnisotropyLevels = 8;
+                    GLenum              Format           = GL_RGBA;
+                    GLenum              InternalFormat   = GL_RGBA8;
                 };
 
                 explicit Texture(const std::string& filePath, ImportSettings importSettings = ImportSettings());

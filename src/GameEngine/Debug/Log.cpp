@@ -14,7 +14,7 @@ void Log::Message(const std::string& message)
 
 void Log::Error(const std::string& message)
 {
-    #if defined(_DEBUG)
+    //#if defined(_DEBUG)
     std::cerr << message << std::endl;
-    #endif
+    //#endif
 }

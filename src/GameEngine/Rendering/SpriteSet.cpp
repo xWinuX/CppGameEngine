@@ -20,6 +20,19 @@ SpriteSet::SpriteSet(Texture* texture, const unsigned int numFrames, const glm::
     }
 }
 
+SpriteSet::SpriteSet(Texture* texture, const std::vector<msdf_atlas::GlyphGeometry>& glyphs)
+{
+    const glm::vec2 uvStep = glm::vec2(1.0f / static_cast<float>(texture->GetSize().x), 1.0f / static_cast<float>(texture->GetSize().y));
+
+    for (const msdf_atlas::GlyphBox glyph : glyphs)
+    {
+        const glm::vec2 uvTopLeft     = glm::vec2(uvStep.x * static_cast<float>(glyph.rect.x), uvStep.y * static_cast<float>(glyph.rect.y));
+        const glm::vec2 uvBottomRight = glm::vec2(uvTopLeft.x + static_cast<float>(glyph.rect.w) * uvStep.x, uvTopLeft.y + static_cast<float>(glyph.rect.h) * uvStep.y);
+
+        _sprites.push_back(new Sprite(texture, glm::uvec2(glyph.rect.x, glyph.rect.y), glm::uvec2(glyph.rect.w, glyph.rect.h), uvTopLeft, uvBottomRight));
+    }
+}
+
 SpriteSet::~SpriteSet() { for (const Sprite* sprite : _sprites) { delete sprite; } }
 
 Sprite*        SpriteSet::GetSprite(const size_t frameIndex) const { return _sprites[frameIndex]; }

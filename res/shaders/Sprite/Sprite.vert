@@ -1,0 +1,16 @@
+﻿#include "../Common/Version.glsl"
+
+#include "Attributes.vert"
+
+#include "../Common/Functions.vert"
+
+#include "../Common/Uniforms.glsl"
+
+#include "IO.vert"
+
+#include "Constants.vert"
+
+void main()
+{
+#include "Main.vert"
+}
