@@ -22,7 +22,8 @@ namespace GameEngine
                 void OnBeforeRender() override;
                 void OnUpdate() override;
 
-                unsigned             GetQuadSize() override;
+                size_t               GetCopySize() override;
+                size_t               GetQuadSize() override;
                 void                 CopyQuadData(unsigned char* destination) override;
                 void                 OnBeforeDraw() override;
                 Rendering::Material* GetMaterial() override;

@@ -1,6 +1,9 @@
 ﻿#include "SpriteSet.h"
 
+#include <iostream>
+
 #include "Sprite.h"
+#include "../Debug/Log.h"
 
 #include "glm/ext/matrix_transform.hpp"
 
@@ -20,16 +23,45 @@ SpriteSet::SpriteSet(Texture* texture, const unsigned int numFrames, const glm::
     }
 }
 
-SpriteSet::SpriteSet(Texture* texture, const std::vector<msdf_atlas::GlyphGeometry>& glyphs)
+SpriteSet::SpriteSet(Texture* texture, const msdf_atlas::FontGeometry& fontGeometry)
 {
-    const glm::vec2 uvStep = glm::vec2(1.0f / static_cast<float>(texture->GetSize().x), 1.0f / static_cast<float>(texture->GetSize().y));
+    const glm::vec2 texelSize = glm::vec2(1.0f / static_cast<float>(texture->GetSize().x), 1.0f / static_cast<float>(texture->GetSize().y));
 
-    for (const msdf_atlas::GlyphBox glyph : glyphs)
+    const auto glyphs = fontGeometry.getGlyphs();
+
+
+    for (const msdf_atlas::GlyphGeometry& glyph : glyphs)
     {
-        const glm::vec2 uvTopLeft     = glm::vec2(uvStep.x * static_cast<float>(glyph.rect.x), uvStep.y * static_cast<float>(glyph.rect.y));
-        const glm::vec2 uvBottomRight = glm::vec2(uvTopLeft.x + static_cast<float>(glyph.rect.w) * uvStep.x, uvTopLeft.y + static_cast<float>(glyph.rect.h) * uvStep.y);
+        double pl, pb, pr, pt;
+        double il, ib, ir, it;
+        glyph.getQuadPlaneBounds(pl, pb, pr, pt);
+        glyph.getQuadAtlasBounds(il, ib, ir, it);
 
-        _sprites.push_back(new Sprite(texture, glm::uvec2(glyph.rect.x, glyph.rect.y), glm::uvec2(glyph.rect.w, glyph.rect.h), uvTopLeft, uvBottomRight));
+
+        double widthDiff = abs(pl - pr);
+        double heightDiff = abs(pt - pb);
+        double xOrigin = 1.0/widthDiff * abs(pl);
+        double yOrigin = 1.0/heightDiff * abs(pt);
+
+        std::cout << "left" << pl << std::endl;
+        std::cout << "right" << pr << std::endl;
+        std::cout << "top" << pt << std::endl;
+        std::cout << "bottom" << pb << std::endl;
+
+        const glm::uvec2 pixelPosition = glm::uvec2(il, it);
+        const glm::vec2  size          = glm::vec2(ir - il, it - ib);
+
+        il *= texelSize.x;
+        ib *= texelSize.y;
+        ir *= texelSize.x;
+        it *= texelSize.y;
+
+
+        const glm::vec2 uvTopLeft     = glm::vec2(il, it);
+        const glm::vec2 uvBottomRight = glm::vec2(ir, ib);
+
+
+        _sprites.push_back(new Sprite(texture, pixelPosition, glm::vec4(pl, pr, pt, pb), uvTopLeft, uvBottomRight));
     }
 }
 
@@ -38,4 +70,5 @@ SpriteSet::~SpriteSet() { for (const Sprite* sprite : _sprites) { delete sprite;
 Sprite*        SpriteSet::GetSprite(const size_t frameIndex) const { return _sprites[frameIndex]; }
 size_t         SpriteSet::GetNumFrames() { return _sprites.size(); }
 Texture*       SpriteSet::GetTexture(const size_t frameIndex) { return _sprites[frameIndex]->GetTexture(); }
-unsigned char* SpriteSet::GetQuadData(const size_t frameIndex, const glm::mat4 transform) { return _sprites[frameIndex]->GetQuadData(0, transform); }
+unsigned char* SpriteSet::GetQuadDataWithTransform(const size_t frameIndex, const glm::mat4 transform) { return _sprites[frameIndex]->GetQuadDataWithTransform(0, transform); }
+unsigned char* SpriteSet::GetQuadData(const size_t frameIndex) { return _sprites[frameIndex]->GetQuadData(0); }

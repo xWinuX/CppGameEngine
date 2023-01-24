@@ -8,8 +8,6 @@
 
 #include "IO.vert"
 
-#include "Constants.vert"
-
 void main()
 {
 #include "Main.vert"

@@ -31,7 +31,7 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <IncludePath>$(IncludePath);$(SolutionDir)\vendor\GLAD\include;$(SolutionDir)\vendor\GLFW\include;$(SolutionDir)\vendor\glm\include;$(SolutionDir)\vendor\reactphysics3d\include;$(SolutionDir)\vendor\stb_image\include;$(SolutionDir)\vendor\tinygltf\include;$(SolutionDir)vendor\msdf-atlas-gen\include;$(SolutionDir)vendor\freetype\include;$(SolutionDir)vendor\msdfgen\include;$(SolutionDir)vendor\skia\include</IncludePath>
-    <LibraryPath>W:\Git\C++\CppGameEngine\vendor\reactphysics3d\libs;W:\Git\C++\CppGameEngine\vendor\GLFW\libs;$(LibraryPath)</LibraryPath>
+    <LibraryPath>$(LibraryPath)</LibraryPath>
     <SourcePath>$(SolutionDir)\vendor\tinygltf\src;$(SolutionDir)\vendor\stb_image\src;$(SolutionDir)\vendor\GLAD\src;$(SourcePath)</SourcePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -45,7 +45,7 @@
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>%(AdditionalDependencies);$(SolutionDir)vendor\reactphysics3d\libs\reactphysics3d_Debug_x64.lib;$(SolutionDir)vendor\glfw\libs\glfw3_Release_x64.lib;$(SolutionDir)vendor\msdf-atlas-gen\libs\msdf-atlas-gen_Debug_x64.lib;$(SolutionDir)vendor\freetype\libs\freetype_Debug_x64.lib</AdditionalDependencies>
+      <AdditionalDependencies>%(AdditionalDependencies);$(SolutionDir)vendor\reactphysics3d\libs\reactphysics3d_Debug_x64.lib;$(SolutionDir)vendor\glfw\libs\glfw3_Release_x64.lib;$(SolutionDir)vendor\msdf-atlas-gen\libs\msdf-atlas-gen_Debug_x64.lib;$(SolutionDir)vendor\freetype\libs\freetype_Debug_x64.lib;$(SolutionDir)vendor\msdfgen\libs\msdfgen-core_Debug_x64.lib;$(SolutionDir)vendor\msdfgen\libs\msdfgen-ext_Debug_x64.lib;$(SolutionDir)vendor\msdfgen\libs\skia_Debug_x64.lib</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -59,7 +59,7 @@
       <UndefinePreprocessorDefinitions>_DEBUG</UndefinePreprocessorDefinitions>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>%(AdditionalDependencies);$(SolutionDir)vendor\reactphysics3d\libs\reactphysics3d_Release_x64.lib;$(SolutionDir)vendor\glfw\libs\glfw3_Release_x64.lib;$(SolutionDir)vendor\msdf-atlas-gen\libs\msdf-atlas-gen_Release_x64.lib;$(SolutionDir)vendor\freetype\libs\freetype_Release_x64.lib;$(SolutionDir)vendor\msdfgen\libs\msdfgen-core_Release_x64.lib;$(SolutionDir)vendor\msdfgen\libs\msdfgen-ext_Release_x64.lib;$(SolutionDir)vendor\msdfgen\libs\skia.lib</AdditionalDependencies>
+      <AdditionalDependencies>%(AdditionalDependencies);$(SolutionDir)vendor\reactphysics3d\libs\reactphysics3d_Release_x64.lib;$(SolutionDir)vendor\glfw\libs\glfw3_Release_x64.lib;$(SolutionDir)vendor\msdf-atlas-gen\libs\msdf-atlas-gen_Release_x64.lib;$(SolutionDir)vendor\freetype\libs\freetype_Release_x64.lib;$(SolutionDir)vendor\msdfgen\libs\msdfgen-core_Release_x64.lib;$(SolutionDir)vendor\msdfgen\libs\msdfgen-ext_Release_x64.lib;$(SolutionDir)vendor\msdfgen\libs\skia_Release_x64.lib</AdditionalDependencies>
       <GenerateDebugInformation>false</GenerateDebugInformation>
     </Link>
     <ProjectReference>
@@ -77,6 +77,7 @@
     <ClCompile Include="src\GameEngine\Components\PointLight.cpp" />
     <ClCompile Include="src\GameEngine\Components\Rigidbody.cpp" />
     <ClCompile Include="src\GameEngine\Components\SpriteRenderer.cpp" />
+    <ClCompile Include="src\GameEngine\Components\TextRenderer.cpp" />
     <ClCompile Include="src\GameEngine\Components\Transform.cpp" />
     <ClCompile Include="src\GameEngine\Core\Application.cpp" />
     <ClCompile Include="src\GameEngine\Core\GameObject.cpp" />
@@ -126,6 +127,7 @@
     <ClInclude Include="src\GameEngine\Components\PointLight.h" />
     <ClInclude Include="src\GameEngine\Components\Rigidbody.h" />
     <ClInclude Include="src\GameEngine\Components\SpriteRenderer.h" />
+    <ClInclude Include="src\GameEngine\Components\TextRenderer.h" />
     <ClInclude Include="src\GameEngine\Components\Transform.h" />
     <ClInclude Include="src\GameEngine\Core\Application.h" />
     <ClInclude Include="src\GameEngine\Core\GameObject.h" />
@@ -802,7 +804,6 @@
     <Content Include="res\shaders\PhysicsDebugShader.vsh" />
     <Content Include="res\shaders\SpriteLit\SpriteLit.frag" />
     <Content Include="res\shaders\SpriteLit\SpriteLit.vert" />
-    <Content Include="res\shaders\Sprite\Constants.vert" />
     <Content Include="res\shaders\Sprite\Attributes.vert" />
     <Content Include="res\shaders\Sprite\IO.frag" />
     <Content Include="res\shaders\Sprite\IO.vert" />

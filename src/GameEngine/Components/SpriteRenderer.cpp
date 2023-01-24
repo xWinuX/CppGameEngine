@@ -18,12 +18,13 @@ void SpriteRenderer::OnBeforeRender() { Renderer::SubmitRenderable2D(this); }
 
 void SpriteRenderer::OnUpdate() { _frameIndex = fmod(_frameIndex + Time::GetDeltaTime() * _framesPerSecond, static_cast<float>(_sprite->GetNumFrames())); }
 
-unsigned SpriteRenderer::GetQuadSize() { return sizeof(Sprite::QuadData); }
+size_t SpriteRenderer::GetCopySize() { return sizeof(Sprite::QuadData); }
+size_t SpriteRenderer::GetQuadSize() { return sizeof(Sprite::QuadData); }
 
 void SpriteRenderer::CopyQuadData(unsigned char* destination)
 {
     const size_t frameIndex = static_cast<size_t>(floor(_frameIndex));
-    memcpy(destination, _sprite->GetQuadData(frameIndex, _transform->GetTRS()), GetQuadSize());
+    memcpy(destination, _sprite->GetQuadDataWithTransform(frameIndex, _transform->GetTRS()), GetCopySize());
 }
 
 void SpriteRenderer::OnBeforeDraw() { _material->GetUniformBuffer()->SetUniformInstant<glm::mat4>("u_Transform", _transform->GetTRS()); }

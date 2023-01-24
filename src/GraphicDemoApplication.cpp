@@ -8,6 +8,7 @@
 #include "GameEngine/Components/PointLight.h"
 #include "GameEngine/Components/Rigidbody.h"
 #include "GameEngine/Components/SpriteRenderer.h"
+#include "GameEngine/Components/TextRenderer.h"
 #include "GameEngine/Components/Transform.h"
 #include "GameEngine/Core/Window.h"
 #include "GameEngine/Input/Input.h"
@@ -240,9 +241,10 @@ void GraphicDemoApplication::Initialize(Scene& scene)
 
     // Suzanne
     suzanneObject = new GameObject();
-    suzanneObject->GetTransform()->SetLocalPosition(glm::vec3(0.0f, 0.0f, 0.0f));
+    suzanneObject->GetTransform()->SetLocalPosition(glm::vec3(0.0f, 2.0f, 0.0f));
     // suzanneObject->AddComponent(new MeshRenderer(suzanneModel->GetMesh(0), dudeMaterial));
-    suzanneObject->AddComponent(new SpriteRenderer(pixelFont->GetSprite(), msdfFontMaterial));
+   // suzanneObject->AddComponent(new SpriteRenderer(pixelFont->GetSprite(), msdfFontMaterial));
+    suzanneObject->AddComponent(new TextRenderer(pixelFont, msdfFontMaterial));
     scene.AddGameObject(suzanneObject);
 
     // The Missing
