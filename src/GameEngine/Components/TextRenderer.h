@@ -13,7 +13,7 @@ namespace GameEngine
             private:
                 Rendering::Font*     _font;
                 Rendering::Material* _material;
-                std::string          _text = "()abc-.";
+                std::string          _text = "abcdefghij\nklmnopqrstuvxy\nzABCEDFGHIJKLMN\nOPQRSTUVXYZ-.";
 
             public:
                 TextRenderer(Rendering::Font* font, Rendering::Material* material);

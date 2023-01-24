@@ -16,26 +16,21 @@ namespace GameEngine
             public:
                 struct CharacterInfo
                 {
-                    Sprite*                Sprite;
-                    float                  Advance;
-                    msdfgen::Shape::Bounds Bounds;
-                    glm::vec2              Translation;
+                    Sprite*                   Sprite;
+                    msdf_atlas::GlyphGeometry GlyphGeometry;
                 };
 
-                explicit                    Font(const std::string& ttsFilePath);
-                SpriteSet*                  GetSprite() const;
-                Texture*                    GetTexture() const;
-                const CharacterInfo*        GetCharacterInfo(msdfgen::unicode_t character);
-                const msdfgen::FontMetrics& GetFontMetrics() const;
-                float                       GetGeometryScale() const;
+                explicit                        Font(const std::string& ttsFilePath);
+                SpriteSet*                      GetSprite() const;
+                Texture*                        GetTexture() const;
+                const CharacterInfo*            GetCharacterInfo(msdfgen::unicode_t character);
                 const msdf_atlas::FontGeometry& GetFontGeometry();
-
+                float                           GetScale() const;
             private:
                 Texture*                                    _texture;
                 SpriteSet*                                  _sprite;
-                float                                       _geometryScale;
                 msdf_atlas::FontGeometry                    _fontGeometry;
-                msdfgen::FontMetrics                        _fontMetrics;
+                float                                       _scale;
                 std::map<msdfgen::unicode_t, CharacterInfo> _characterToSpriteFrameIndexMap;
         };
     }

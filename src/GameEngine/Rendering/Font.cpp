@@ -46,20 +46,13 @@ Font::Font(const std::string& ttsFilePath)
             _texture                      = new Texture(const_cast<unsigned char*>(atlasStorage.pixels), glm::uvec2(atlasStorage.width, atlasStorage.height), importSettings);
             _sprite                       = new SpriteSet(_texture, fontGeometry);
 
-            _fontGeometry  = fontGeometry;
-            _geometryScale = static_cast<float>(fontGeometry.getGeometryScale());
-            _fontMetrics   = fontGeometry.getMetrics();
+            _fontGeometry = fontGeometry;
+            _scale        = 1.0f / static_cast<float>(_fontGeometry.getMetrics().ascenderY - _fontGeometry.getMetrics().descenderY);
 
             size_t spriteFrameIndex = 0;
             for (const GlyphGeometry& glyphGeometry : glyphs)
             {
-                glm::vec2 translation                                         = glm::vec2(glyphGeometry.getBoxTranslate().x, glyphGeometry.getBoxTranslate().y);
-                _characterToSpriteFrameIndexMap[glyphGeometry.getCodepoint()] = CharacterInfo{
-                    _sprite->GetSprite(spriteFrameIndex),
-                    static_cast<float>(glyphGeometry.getAdvance()),
-                    glyphGeometry.getShape().getBounds(),
-                    translation
-                };
+                _characterToSpriteFrameIndexMap[glyphGeometry.getCodepoint()] = CharacterInfo{_sprite->GetSprite(spriteFrameIndex), glyphGeometry};
                 spriteFrameIndex++;
             }
 
@@ -84,6 +77,5 @@ const Font::CharacterInfo* Font::GetCharacterInfo(const msdfgen::unicode_t chara
     return &(found->second);
 }
 
-const msdfgen::FontMetrics&     Font::GetFontMetrics() const { return _fontMetrics; }
-float                           Font::GetGeometryScale() const { return _geometryScale; }
 const msdf_atlas::FontGeometry& Font::GetFontGeometry() { return _fontGeometry; }
+float                           Font::GetScale() const { return _scale; }

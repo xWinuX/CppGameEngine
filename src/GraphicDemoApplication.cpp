@@ -239,8 +239,8 @@ void GraphicDemoApplication::Initialize(Scene& scene)
     Transform* redLightTransform = redLightObject->GetTransform();
     redLightTransform->SetLocalPosition(glm::vec3(2.0f, 0.0f, 0.0f));
     redLightTransform->SetLocalScale(glm::vec3(0.1f));
-    //redLightObject->AddComponent(new MeshRenderer(sphereModel->GetMesh(0), dudeMaterial));
-    //redLightObject->AddComponent(new PointLight(litShader, glm::vec4(1.0f, 0.0f, 0.0f, 1.0f), 5.0f, 2.0f));
+    redLightObject->AddComponent(new MeshRenderer(sphereModel->GetMesh(0), dudeMaterial));
+    redLightObject->AddComponent(new PointLight(litShader, glm::vec4(1.0f, 0.0f, 0.0f, 1.0f), 5.0f, 2.0f));
     scene.AddGameObject(redLightObject);
 
     // Rainbow light
