@@ -90,6 +90,30 @@ void Renderer::SetProjectionMatrix(const glm::mat4 projectionMatrix) { _projecti
 void Renderer::SetViewMatrix(const glm::mat4 viewMatrix) { _viewMatrix = viewMatrix; }
 void Renderer::SetViewPosition(const glm::vec3 viewPosition) { _viewPosition = viewPosition; }
 
+unsigned int Renderer::Render2DBatches(const std::pair<Material* const, std::map<Texture*, std::vector<Renderable2D*>>>& materialPair) {
+    int numDrawCalls = 0;
+    _renderable2DVertexArrayObject->Bind();
+    const Material* material = materialPair.first;
+    for (const std::pair<Texture* const, std::vector<Renderable2D*>>& texturePair : materialPair.second)
+    {
+        size_t offset   = 0;
+        size_t numQuads = 0;
+        for (Renderable2D* renderable2D : texturePair.second)
+        {
+            renderable2D->CopyQuadData(_renderable2DVertexData + offset);
+            offset += renderable2D->GetCopySize();
+            numQuads += renderable2D->GetCopySize() / renderable2D->GetQuadSize();
+        }
+        
+        _renderable2DVertexBuffer->UpdateData(_renderable2DVertexData, numQuads);
+        material->GetUniformBuffer()->SetUniformInstant<Texture*>("u_Texture", texturePair.first);
+        _renderable2DVertexArrayObject->RenderInstanced(6, static_cast<int>(numQuads));
+        numDrawCalls++;
+    }
+    _renderable2DVertexArrayObject->Unbind();
+    return numDrawCalls;
+}
+
 unsigned int Renderer::RenderRenderable2D(const std::map<Material*, std::map<Texture*, std::vector<Renderable2D*>>>& map)
 {
     unsigned int         numDrawCalls      = 0;
@@ -115,11 +139,7 @@ unsigned int Renderer::RenderRenderable2D(const std::map<Material*, std::map<Tex
 
             // TODO: Somehow abstract this away
             material->GetUniformBuffer()->SetUniformInstant<float>("u_Time", Time::GetTimeSinceStart());
-            glm::mat4 viewProjectionMatrix = _projectionMatrix * _viewMatrix;
-            material->GetUniformBuffer()->SetUniformInstant<glm::mat4>("u_ViewProjection", viewProjectionMatrix);
-
-            glm::vec4 viewPos =  inverse(viewProjectionMatrix) *glm::vec4(0.0, 0.0, 0.0, 1.0);
-            viewPos /= viewPos.w;
+            material->GetUniformBuffer()->SetUniformInstant<glm::mat4>("u_ViewProjection", _projectionMatrix * _viewMatrix);
             material->GetUniformBuffer()->SetUniformInstant<glm::vec3>("u_ViewPosition", _viewPosition);
         }
 
@@ -151,26 +171,7 @@ unsigned int Renderer::RenderRenderable2D(const std::map<Material*, std::map<Tex
         material->GetUniformBuffer()->Apply();
 
         // Actually draw the elements
-        _renderable2DVertexArrayObject->Bind();
-        for (const std::pair<Texture* const, std::vector<Renderable2D*>>& texturePair : materialPair.second)
-        {
-            size_t offset   = 0;
-            size_t numQuads = 0;
-            for (Renderable2D* renderable2D : texturePair.second)
-            {
-                renderable2D->CopyQuadData(_renderable2DVertexData + offset);
-                offset += renderable2D->GetCopySize();
-                numQuads += renderable2D->GetCopySize() / renderable2D->GetQuadSize();
-            }
-
-
-            _renderable2DVertexBuffer->UpdateData(_renderable2DVertexData, numQuads);
-            material->GetUniformBuffer()->SetUniformInstant<Texture*>("u_Texture", texturePair.first);
-            _renderable2DVertexArrayObject->RenderInstanced(6, static_cast<int>(numQuads));
-            numDrawCalls++;
-        }
-        _renderable2DVertexArrayObject->Unbind();
-
+        Render2DBatches(numDrawCalls, materialPair, material);
 
         firstLoop = false;
     }
@@ -204,10 +205,6 @@ unsigned int Renderer::RenderRenderables(const std::map<Material*, std::vector<R
             // TODO: Somehow abstract this away
             material->GetUniformBuffer()->SetUniformInstant<float>("u_Time", Time::GetTimeSinceStart());
             material->GetUniformBuffer()->SetUniformInstant<glm::mat4>("u_ViewProjection", _projectionMatrix * _viewMatrix);
-
-            glm::mat4 viewProjectionMatrix = _projectionMatrix * _viewMatrix;
-            glm::vec4 viewPos =  inverse(viewProjectionMatrix) *glm::vec4(0.0, 0.0, 0.0, 1.0);
-            viewPos /= viewPos.w;
             material->GetUniformBuffer()->SetUniformInstant<glm::vec3>("u_ViewPosition", _viewPosition);
         }
 
@@ -266,7 +263,7 @@ void Renderer::Draw()
     numDrawCalls += RenderRenderables(_opaqueRenderables);
 
     // Opaque 2D
-    numDrawCalls += RenderRenderable2D(_opaqueRenderable2Ds);
+    numDrawCalls += RenderRenderables<std::map<Texture*, std::vector<Renderable2D*>>, &Renderer::Render2DBatches>(_opaqueRenderable2Ds);
 
     // Transparent
     // TODO: Sort triangles and objects based on distance to camera
@@ -284,9 +281,6 @@ void Renderer::Draw()
     _lights.clear();
 
     // Cleanup renderables
-    for (std::pair<Material* const, std::vector<Renderable*>> materialRenderables : _opaqueRenderables) { materialRenderables.second.clear(); }
-    for (std::pair<Material* const, std::vector<Renderable*>> materialRenderables : _transparentRenderables) { materialRenderables.second.clear(); }
-
     _opaqueRenderables.clear();
     _opaqueRenderable2Ds.clear();
     _transparentRenderables.clear();
