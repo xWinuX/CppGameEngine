@@ -61,6 +61,7 @@ Shader* spriteLitShader;
 Shader* msdfFontShader;
 Shader* waterShader;
 Shader* physicsDebugShader;
+Shader* vertexColorShader;
 
 Material* spriteLitMaterial;
 Material* dudeMaterial;
@@ -68,6 +69,7 @@ Material* crateMaterial;
 Material* physicsMaterial;
 Material* waterMaterial;
 Material* msdfFontMaterial;
+Material* vertexColorMaterial;
 
 GameObject* cameraObject;
 GameObject* redLightObject;
@@ -86,6 +88,9 @@ SpriteSet* testSprite;
 SpriteAtlas* spriteAtlas;
 
 Font* pixelFont;
+
+
+Cube* cube;
 
 
 void GraphicDemoApplication::Initialize(Scene& scene)
@@ -133,10 +138,12 @@ void GraphicDemoApplication::Initialize(Scene& scene)
     sphereModel     = new Model("res/models/Sphere.gltf");
     highPolyPlane   = new Model("res/models/HighPolyPlane.gltf");
 
-    UniformBuffer defaultUniforms = UniformBuffer();
-    defaultUniforms.InitializeUniform<float>("u_Time", 0.0f, false);
-    defaultUniforms.InitializeUniform<glm::mat4>("u_ViewProjection", glm::identity<glm::mat4>(), false);
-    defaultUniforms.InitializeUniform<glm::mat4>("u_Transform", glm::identity<glm::mat4>(), false);
+    cube = new Cube();
+    
+    UniformBuffer commonUniforms = UniformBuffer();
+    commonUniforms.InitializeUniform<float>("u_Time", 0.0f, false);
+    commonUniforms.InitializeUniform<glm::mat4>("u_ViewProjection", glm::identity<glm::mat4>(), false);
+    commonUniforms.InitializeUniform<glm::mat4>("u_Transform", glm::identity<glm::mat4>(), false);
 
     UniformBuffer litUniforms = UniformBuffer();
     litUniforms.InitializeUniform<Texture*>("u_NormalMap", normalMapDefaultTexture);
@@ -156,7 +163,7 @@ void GraphicDemoApplication::Initialize(Scene& scene)
 
     #pragma region Default Shader
     litShader = new Shader("res/shaders/Lit/Lit.vert", "res/shaders/Lit/Lit.frag");
-    litShader->GetUniformBuffer()->CopyFrom(&defaultUniforms);
+    litShader->GetUniformBuffer()->CopyFrom(&commonUniforms);
     litShader->GetUniformBuffer()->CopyFrom(&litUniforms);
 
     // Other
@@ -185,7 +192,7 @@ void GraphicDemoApplication::Initialize(Scene& scene)
 
     #pragma region Sprite Lit Shader
     spriteLitShader = new Shader("res/shaders/SpriteLit/SpriteLit.vert", "res/shaders/SpriteLit/SpriteLit.frag");
-    spriteLitShader->GetUniformBuffer()->CopyFrom(&defaultUniforms);
+    spriteLitShader->GetUniformBuffer()->CopyFrom(&commonUniforms);
     spriteLitShader->GetUniformBuffer()->CopyFrom(&spriteUniforms);
     spriteLitShader->GetUniformBuffer()->CopyFrom(&litUniforms);
 
@@ -208,11 +215,19 @@ void GraphicDemoApplication::Initialize(Scene& scene)
 
     #pragma region MSDFFont Shader
     msdfFontShader = new Shader("res/shaders/MSDFFont/MSDFFont.vert", "res/shaders/MSDFFont/MSDFFont.frag");
-    msdfFontShader->GetUniformBuffer()->CopyFrom(&defaultUniforms);
+    msdfFontShader->GetUniformBuffer()->CopyFrom(&commonUniforms);
     msdfFontShader->GetUniformBuffer()->CopyFrom(&spriteUniforms);
 
     msdfFontMaterial = new Material(msdfFontShader);
     msdfFontMaterial->SetCullFace(Material::CullFace::None);
+    #pragma endregion
+
+    #pragma region VertexColor Shader
+    vertexColorShader = new Shader("res/shaders/VertexColor/VertexColor.vert", "res/shaders/VertexColor/VertexColor.frag");
+    vertexColorShader->GetUniformBuffer()->CopyFrom(&commonUniforms);
+    vertexColorShader->InitializeUniform<Texture*>("u_Texture", crateTexture);
+
+    vertexColorMaterial = new Material(vertexColorShader);
     #pragma endregion
     
     // Camera
@@ -257,8 +272,8 @@ void GraphicDemoApplication::Initialize(Scene& scene)
     // Crate
     crateObject = new GameObject();
     crateObject->GetTransform()->SetLocalPosition(glm::vec3(0.0f, -1.5f, 0.0f));
-    crateObject->AddComponent(new MeshRenderer(cubeModel->GetMesh(0), crateMaterial));
-    crateObject->AddComponent(new SpriteRenderer(theDudeSprite, spriteLitMaterial));
+    crateObject->AddComponent(new MeshRenderer(cube->GetMesh(), vertexColorMaterial));
+    //crateObject->AddComponent(new SpriteRenderer(theDudeSprite, spriteLitMaterial));
     crateObject->AddComponent(new BoxCollider(glm::vec3(0.5f)));
     crateObject->AddComponent(new Rigidbody(reactphysics3d::BodyType::DYNAMIC));
     scene.AddGameObject(crateObject);

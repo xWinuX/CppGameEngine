@@ -14,5 +14,5 @@ void main()
     gl_Position = u_ViewProjection * u_Transform * vec4(a_Position, 1.0);
     
     v_Color = a_Color;
-    v_TextureCoords = a_TextureCoords;
+    v_TextureCoords = a_TextureCoords * abs(sin(u_Time)) * 5.0;
 }
