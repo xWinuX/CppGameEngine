@@ -68,12 +68,12 @@ glm::mat4 Transform::GetTRS() const { return _trs; }
 void Transform::CalculateTRS()
 {
     _trs = glm::identity<glm::mat4>();
-
+    
     _trs *= GetParentTRS();
 
-    _trs = glm::translate(_trs, _localPosition);
-    _trs = _trs * glm::mat4_cast(_localRotation);
     _trs = glm::scale(_trs, _localScale);
+    _trs = _trs * glm::mat4_cast(_localRotation);
+    _trs = glm::translate(_trs, _localPosition);
 }
 
 

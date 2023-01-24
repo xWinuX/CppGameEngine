@@ -26,7 +26,6 @@ void TextRenderer::CopyQuadData(unsigned char* destination)
 
     for (const char c : _text)
     {
-        std::cout << "begin" <<std::endl;
         const Font::CharacterInfo*       characterInfo = _font->GetCharacterInfo(c);
 
         
@@ -40,6 +39,7 @@ void TextRenderer::CopyQuadData(unsigned char* destination)
         Sprite::QuadData* quadData = sprite->GetQuadDataPtr();
         const float       factor   = sprite->GetPixelsPerUnitFactor() * static_cast<float>(sprite->GetSize().x);
 
+        /*
         std::cout << "em: " << _font->GetFontMetrics().emSize << std::endl;
         std::cout << "scale: " << _font->GetGeometryScale() << std::endl;
         std::cout << "lineheight: " << _font->GetFontMetrics().lineHeight << std::endl;
@@ -50,14 +50,14 @@ void TextRenderer::CopyQuadData(unsigned char* destination)
         //std::cout << "boundtop2: " << pt << std::endl;
         std::cout << "boundbot: " << characterInfo->Bounds.b << std::endl;
         std::cout << "translationy: " << characterInfo->Translation.y << std::endl;
-        std::cout << "scale: " << scale << std::endl;
+        std::cout << "scale: " << scale << std::endl;*/
 
         quadData->Transform[3][0] = trs[3][0];
         quadData->Transform[3][1] = trs[3][1];
 
         memcpy(destination + offset, sprite->GetQuadData(), GetCopySize());
         const float advance = characterInfo->Advance;
-        std::cout << "final advance: " << advance << std::endl;
+        //std::cout << "final advance: " << advance << std::endl;
         trs[3][0] += advance;
         offset += GetQuadSize();
     }

@@ -89,9 +89,7 @@ SpriteAtlas* spriteAtlas;
 
 Font* pixelFont;
 
-
 Cube* cube;
-
 
 void GraphicDemoApplication::Initialize(Scene& scene)
 {
@@ -142,12 +140,13 @@ void GraphicDemoApplication::Initialize(Scene& scene)
     
     UniformBuffer commonUniforms = UniformBuffer();
     commonUniforms.InitializeUniform<float>("u_Time", 0.0f, false);
+    commonUniforms.InitializeUniform<glm::vec3>("u_ViewPosition", glm::zero<glm::vec3>(), false);
     commonUniforms.InitializeUniform<glm::mat4>("u_ViewProjection", glm::identity<glm::mat4>(), false);
     commonUniforms.InitializeUniform<glm::mat4>("u_Transform", glm::identity<glm::mat4>(), false);
 
     UniformBuffer litUniforms = UniformBuffer();
+    litUniforms.InitializeUniform<float>("u_Shininess", 0.7f);
     litUniforms.InitializeUniform<Texture*>("u_NormalMap", normalMapDefaultTexture);
-    litUniforms.InitializeUniform<float>("u_NormalMapIntensity", 1.0f);
 
     litUniforms.InitializeUniform<glm::vec4>("u_AmbientLightColor", glm::vec4(1.0));
     litUniforms.InitializeUniform<float>("u_AmbientLightIntensity", 0.3f);
@@ -232,7 +231,6 @@ void GraphicDemoApplication::Initialize(Scene& scene)
     
     // Camera
     cameraObject = new GameObject();
-    cameraObject->GetTransform()->SetLocalPosition(glm::vec3(0.0f, 0.0f, 3.0f));
     cameraObject->AddComponent(new Camera(60, 0.01f, 10000.0f));
     scene.AddGameObject(cameraObject);
 
@@ -241,14 +239,14 @@ void GraphicDemoApplication::Initialize(Scene& scene)
     Transform* redLightTransform = redLightObject->GetTransform();
     redLightTransform->SetLocalPosition(glm::vec3(2.0f, 0.0f, 0.0f));
     redLightTransform->SetLocalScale(glm::vec3(0.1f));
-    redLightObject->AddComponent(new MeshRenderer(sphereModel->GetMesh(0), dudeMaterial));
-    redLightObject->AddComponent(new PointLight(litShader, glm::vec4(1.0f, 0.0f, 0.0f, 1.0f), 5.0f, 2.0f));
+    //redLightObject->AddComponent(new MeshRenderer(sphereModel->GetMesh(0), dudeMaterial));
+    //redLightObject->AddComponent(new PointLight(litShader, glm::vec4(1.0f, 0.0f, 0.0f, 1.0f), 5.0f, 2.0f));
     scene.AddGameObject(redLightObject);
 
     // Rainbow light
     rainbowLightObject               = new GameObject();
     Transform* rainbowLightTransform = rainbowLightObject->GetTransform();
-    rainbowLightTransform->SetLocalPosition(glm::vec3(-2.0f, 0.0f, 0.0f));
+    rainbowLightTransform->SetPosition(glm::vec3(-2.0f, 0.0f, 0.0f));
     rainbowLightTransform->SetLocalScale(glm::vec3(0.1f));
     rainbowLightObject->AddComponent(new MeshRenderer(sphereModel->GetMesh(0), dudeMaterial));
     rainbowLightObject->AddComponent(new PointLight(litShader, glm::vec4(1.0f, 1.0f, 1.0f, 1.0f), 5.0f, 2.0f));
@@ -294,8 +292,8 @@ void GraphicDemoApplication::Initialize(Scene& scene)
     GameObject*                        floorObject    = new GameObject();
     GameEngine::Components::Transform* floorTransform = floorObject->GetTransform();
     floorTransform->SetLocalPosition(glm::vec3(0.0f, -2.0f, 0.0f));
-    floorTransform->SetLocalScale(glm::vec3(10.0f, 1.0f, 5.0f));
-    floorObject->AddComponent(new MeshRenderer(cubeModel->GetMesh(0), crateMaterial));
+    floorTransform->SetLocalScale(glm::vec3(2.0f, 2.0f, 2.0f));
+    floorObject->AddComponent(new MeshRenderer(sphereModel->GetMesh(0), crateMaterial));
     floorObject->AddComponent(new BoxCollider(glm::vec3(5.0f, 0.5f, 5.0f)));
     floorObject->AddComponent(new Rigidbody(reactphysics3d::BodyType::STATIC));
     scene.AddGameObject(floorObject);
@@ -303,7 +301,7 @@ void GraphicDemoApplication::Initialize(Scene& scene)
     // Water
     GameObject* waterObject = new GameObject();
     waterObject->GetTransform()->SetLocalPosition(glm::vec3(0.0f, -2.0f, 0.0f));
-    waterObject->AddComponent(new MeshRenderer(highPolyPlane->GetMesh(0), waterMaterial));
+   // waterObject->AddComponent(new MeshRenderer(highPolyPlane->GetMesh(0), waterMaterial));
     scene.AddGameObject(waterObject);
 
     // Setup physics debug
@@ -331,6 +329,8 @@ void GraphicDemoApplication::CustomRun()
     if (Input::GetKeyDown(GLFW_KEY_LEFT)) { crateVelocity.x -= 5.0f * Time::GetDeltaTime(); }
     if (Input::GetKeyDown(GLFW_KEY_UP)) { crateVelocity.z -= 5.0f * Time::GetDeltaTime(); }
     if (Input::GetKeyDown(GLFW_KEY_DOWN)) { crateVelocity.z += 5.0f * Time::GetDeltaTime(); }
+    if (Input::GetKeyDown(GLFW_KEY_C)) { crateVelocity.y -= 5.0f * Time::GetDeltaTime(); }
+    if (Input::GetKeyDown(GLFW_KEY_V)) { crateVelocity.y += 5.0f * Time::GetDeltaTime(); }
 
     // Close window if escape key is pressed
     if (Input::GetKeyPressed(GLFW_KEY_ESCAPE)) { glfwSetWindowShouldClose(Application::_window.GetGlWindow(), true); }
@@ -353,16 +353,21 @@ void GraphicDemoApplication::CustomRun()
     childCrateObject->GetTransform()->RotateLocal(glm::vec3(0.0f, 0.0f, 45.0f * Time::GetDeltaTime()));
 
     // Move lights
-    rainbowLightObject->GetTransform()->SetLocalPosition(glm::vec3(sin(Time::GetTimeSinceStart()) * 7.0f, -1.0f, 0.0f));
+  //  rainbowLightObject->GetTransform()->SetLocalPosition(glm::vec3(sin(Time::GetTimeSinceStart()) * 7.0f, -1.0f, 0.0f));
     redLightObject->GetTransform()->SetLocalPosition(glm::vec3(0.0, -1.0f, sin(Time::GetTimeSinceStart()) * 7.0f));
 
+    rainbowLightObject->GetTransform()->MoveLocal(cameraVelocity*10.0f);
     // Move crate
-    crateObject->GetComponent<Rigidbody>()->ApplyForce(crateVelocity * 100.0f);
-    crateObject->GetComponent<Rigidbody>()->ApplyTorque(crateVelocity * 100.0f);
+    //crateObject->GetComponent<Rigidbody>()->ApplyForce(crateVelocity * 100.0f);
+    //crateObject->GetComponent<Rigidbody>()->ApplyTorque(crateVelocity * 100.0f);
 
     // Move camera
-    cameraObject->GetTransform()->MoveLocal(cameraVelocity);
+    cameraObject->GetTransform()->Move(crateVelocity);
 
 
+    GameEngine::Debug::Log::Message(glm::to_string(rainbowLightObject->GetTransform()->GetPosition()));
+    GameEngine::Debug::Log::Message(glm::to_string(rainbowLightObject->GetTransform()->GetLocalPosition()));
+    GameEngine::Debug::Log::Message(glm::to_string(cameraObject->GetTransform()->GetPosition()));
+    GameEngine::Debug::Log::Message(glm::to_string(cameraObject->GetTransform()->GetLocalPosition()));
     std::cout << "FPS: " << std::to_string(1 / Time::GetDeltaTime()) << std::endl;
 }

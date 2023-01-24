@@ -23,6 +23,7 @@ void Camera::OnBeforeRender()
 {
     Renderer::SetProjectionMatrix(_projectionMatrix);
     Renderer::SetViewMatrix(glm::inverse(GetTransform()->GetTRS()));
+    Renderer::SetViewPosition(_transform->GetPosition());
 }
 
 void Camera::UpdateProjectionMatrix()

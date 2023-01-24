@@ -35,6 +35,7 @@ namespace GameEngine
 
                 static std::map<Material*, std::map<Texture*, std::vector<Renderable2D*>>> _opaqueRenderable2Ds;
 
+                static glm::vec3 _viewPosition;
                 static glm::mat4 _viewMatrix;
                 static glm::mat4 _projectionMatrix;
 
@@ -45,6 +46,7 @@ namespace GameEngine
                 static void         SubmitRenderable(Renderable* renderable);
                 static void         SetProjectionMatrix(glm::mat4 projectionMatrix);
                 static void         SetViewMatrix(glm::mat4 viewMatrix);
+                static void         SetViewPosition(glm::vec3 viewPosition);
                 static unsigned int RenderRenderable2D(const std::map<Material*, std::map<Texture*, std::vector<Renderable2D*>>>& map);
                 static unsigned int RenderRenderables(const std::map<Material*, std::vector<Renderable*>>& map);
                 static void         Draw();

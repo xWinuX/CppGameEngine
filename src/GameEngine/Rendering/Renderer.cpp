@@ -25,6 +25,7 @@ std::map<Material*, std::vector<Renderable*>> Renderer::_transparentRenderables 
 
 std::map<Material*, std::map<Texture*, std::vector<Renderable2D*>>> Renderer::_opaqueRenderable2Ds = std::map<Material*, std::map<Texture*, std::vector<Renderable2D*>>>();
 
+glm::vec3 Renderer::_viewPosition     = glm::zero<glm::vec3>();
 glm::mat4 Renderer::_projectionMatrix = glm::identity<glm::mat4>();
 glm::mat4 Renderer::_viewMatrix       = glm::identity<glm::mat4>();
 
@@ -87,6 +88,7 @@ void Renderer::SubmitRenderable(Renderable* renderable)
 void Renderer::SetProjectionMatrix(const glm::mat4 projectionMatrix) { _projectionMatrix = projectionMatrix; }
 
 void Renderer::SetViewMatrix(const glm::mat4 viewMatrix) { _viewMatrix = viewMatrix; }
+void Renderer::SetViewPosition(const glm::vec3 viewPosition) { _viewPosition = viewPosition; }
 
 unsigned int Renderer::RenderRenderable2D(const std::map<Material*, std::map<Texture*, std::vector<Renderable2D*>>>& map)
 {
@@ -113,7 +115,12 @@ unsigned int Renderer::RenderRenderable2D(const std::map<Material*, std::map<Tex
 
             // TODO: Somehow abstract this away
             material->GetUniformBuffer()->SetUniformInstant<float>("u_Time", Time::GetTimeSinceStart());
-            material->GetUniformBuffer()->SetUniformInstant<glm::mat4>("u_ViewProjection", _projectionMatrix * _viewMatrix);
+            glm::mat4 viewProjectionMatrix = _projectionMatrix * _viewMatrix;
+            material->GetUniformBuffer()->SetUniformInstant<glm::mat4>("u_ViewProjection", viewProjectionMatrix);
+
+            glm::vec4 viewPos =  inverse(viewProjectionMatrix) *glm::vec4(0.0, 0.0, 0.0, 1.0);
+            viewPos /= viewPos.w;
+            material->GetUniformBuffer()->SetUniformInstant<glm::vec3>("u_ViewPosition", _viewPosition);
         }
 
         // Update polygon mode if needed
@@ -197,6 +204,11 @@ unsigned int Renderer::RenderRenderables(const std::map<Material*, std::vector<R
             // TODO: Somehow abstract this away
             material->GetUniformBuffer()->SetUniformInstant<float>("u_Time", Time::GetTimeSinceStart());
             material->GetUniformBuffer()->SetUniformInstant<glm::mat4>("u_ViewProjection", _projectionMatrix * _viewMatrix);
+
+            glm::mat4 viewProjectionMatrix = _projectionMatrix * _viewMatrix;
+            glm::vec4 viewPos =  inverse(viewProjectionMatrix) *glm::vec4(0.0, 0.0, 0.0, 1.0);
+            viewPos /= viewPos.w;
+            material->GetUniformBuffer()->SetUniformInstant<glm::vec3>("u_ViewPosition", _viewPosition);
         }
 
         // Update polygon mode if needed

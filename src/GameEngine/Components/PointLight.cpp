@@ -14,7 +14,7 @@ void PointLight::SetIntensity(const float intensity) { _intensity = intensity; }
 
 void PointLight::OnBeforeRender()
 {
-    _positions.push_back(_transform->GetLocalPosition());
+    _positions.push_back(_transform->GetPosition());
     _colors.emplace_back(_color);
     _intensities.push_back(_intensity);
     _ranges.push_back(_range);
