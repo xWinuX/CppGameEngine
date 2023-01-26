@@ -25,6 +25,14 @@
 #include "GameEngine/Utils/Time.h"
 #include "glm/gtx/string_cast.hpp"
 
+
+#include <fmod.hpp>
+
+
+using namespace FMOD;
+
+FMOD::System* fmodSystem;
+
 using namespace GameEngine::Debug;
 using namespace GameEngine::Utils;
 using namespace GameEngine::Core;
@@ -93,6 +101,33 @@ Cube* cube;
 
 void GraphicDemoApplication::Initialize(Scene& scene)
 {
+    FMOD::System_Create(&fmodSystem);
+
+    FMOD::Sound *sound;
+    FMOD::Channel *channel;
+    
+    // Create an instance of the FMOD::System class
+    FMOD_RESULT result = FMOD::System_Create(&fmodSystem);
+    if (result != FMOD_OK) {
+        std::cout << "Error initializing FMOD: " << result << std::endl;
+    }
+
+    // Initialize the FMOD system with 32 channels
+    result = fmodSystem->init(32, FMOD_INIT_NORMAL, 0);
+    if (result != FMOD_OK) {
+        std::cout << "Error initializing FMOD: " << result << std::endl;
+    }
+    
+    result = fmodSystem->createSound("res/audio/Test.mp3", FMOD_DEFAULT, 0, &sound);
+    if (result != FMOD_OK) {
+        std::cout << "Error loading sound: " << result << std::endl;
+    }
+
+    result = fmodSystem->playSound(sound, 0, false, &channel);
+    if (result != FMOD_OK) {
+        std::cout << "Error playing sound: " << result << std::endl;
+    }
+    
     // Fonts
     pixelFont = new Font("res/fonts/Roboto-Regular.ttf");
 

@@ -30,7 +30,7 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <IncludePath>$(IncludePath);$(SolutionDir)\vendor\GLAD\include;$(SolutionDir)\vendor\GLFW\include;$(SolutionDir)\vendor\glm\include;$(SolutionDir)\vendor\reactphysics3d\include;$(SolutionDir)\vendor\stb_image\include;$(SolutionDir)\vendor\tinygltf\include;$(SolutionDir)vendor\msdf-atlas-gen\include;$(SolutionDir)vendor\freetype\include;$(SolutionDir)vendor\msdfgen\include;$(SolutionDir)vendor\skia\include</IncludePath>
+    <IncludePath>$(IncludePath);$(SolutionDir)\vendor\GLAD\include;$(SolutionDir)\vendor\GLFW\include;$(SolutionDir)\vendor\glm\include;$(SolutionDir)\vendor\reactphysics3d\include;$(SolutionDir)\vendor\stb_image\include;$(SolutionDir)\vendor\tinygltf\include;$(SolutionDir)vendor\msdf-atlas-gen\include;$(SolutionDir)vendor\freetype\include;$(SolutionDir)vendor\msdfgen\include;$(SolutionDir)vendor\skia\include;$(SolutionDir)vendor\fmod\api\core\inc;$(SolutionDir)vendor\fmod\api\studio\inc</IncludePath>
     <LibraryPath>$(LibraryPath)</LibraryPath>
     <SourcePath>$(SolutionDir)\vendor\tinygltf\src;$(SolutionDir)\vendor\stb_image\src;$(SolutionDir)\vendor\GLAD\src;$(SourcePath)</SourcePath>
   </PropertyGroup>
@@ -45,7 +45,7 @@
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>%(AdditionalDependencies);$(SolutionDir)vendor\reactphysics3d\libs\reactphysics3d_Debug_x64.lib;$(SolutionDir)vendor\glfw\libs\glfw3_Release_x64.lib;$(SolutionDir)vendor\msdf-atlas-gen\libs\msdf-atlas-gen_Debug_x64.lib;$(SolutionDir)vendor\freetype\libs\freetype_Debug_x64.lib;$(SolutionDir)vendor\msdfgen\libs\msdfgen-core_Debug_x64.lib;$(SolutionDir)vendor\msdfgen\libs\msdfgen-ext_Debug_x64.lib;$(SolutionDir)vendor\msdfgen\libs\skia_Debug_x64.lib</AdditionalDependencies>
+      <AdditionalDependencies>%(AdditionalDependencies);$(SolutionDir)vendor\reactphysics3d\libs\reactphysics3d_Debug_x64.lib;$(SolutionDir)vendor\glfw\libs\glfw3_Release_x64.lib;$(SolutionDir)vendor\msdf-atlas-gen\libs\msdf-atlas-gen_Debug_x64.lib;$(SolutionDir)vendor\freetype\libs\freetype_Debug_x64.lib;$(SolutionDir)vendor\msdfgen\libs\msdfgen-core_Debug_x64.lib;$(SolutionDir)vendor\msdfgen\libs\msdfgen-ext_Debug_x64.lib;$(SolutionDir)vendor\msdfgen\libs\skia_Debug_x64.lib;$(SolutionDir)vendor\fmod\api\core\lib\x64\fmod_vc.lib</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -57,6 +57,9 @@
       <WarningLevel>TurnOffAllWarnings</WarningLevel>
       <WholeProgramOptimization>true</WholeProgramOptimization>
       <UndefinePreprocessorDefinitions>_DEBUG</UndefinePreprocessorDefinitions>
+      <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <BufferSecurityCheck>false</BufferSecurityCheck>
     </ClCompile>
     <Link>
       <AdditionalDependencies>%(AdditionalDependencies);$(SolutionDir)vendor\reactphysics3d\libs\reactphysics3d_Release_x64.lib;$(SolutionDir)vendor\glfw\libs\glfw3_Release_x64.lib;$(SolutionDir)vendor\msdf-atlas-gen\libs\msdf-atlas-gen_Release_x64.lib;$(SolutionDir)vendor\freetype\libs\freetype_Release_x64.lib;$(SolutionDir)vendor\msdfgen\libs\msdfgen-core_Release_x64.lib;$(SolutionDir)vendor\msdfgen\libs\msdfgen-ext_Release_x64.lib;$(SolutionDir)vendor\msdfgen\libs\skia_Release_x64.lib</AdditionalDependencies>
@@ -168,6 +171,20 @@
     <ClInclude Include="src\GameEngine\Utils\String.h" />
     <ClInclude Include="src\GameEngine\Utils\Time.h" />
     <ClInclude Include="src\GraphicDemoApplication.h" />
+    <ClInclude Include="vendor\fmod\api\core\inc\fmod.h" />
+    <ClInclude Include="vendor\fmod\api\core\inc\fmod.hpp" />
+    <ClInclude Include="vendor\fmod\api\core\inc\fmod_codec.h" />
+    <ClInclude Include="vendor\fmod\api\core\inc\fmod_common.h" />
+    <ClInclude Include="vendor\fmod\api\core\inc\fmod_dsp.h" />
+    <ClInclude Include="vendor\fmod\api\core\inc\fmod_dsp_effects.h" />
+    <ClInclude Include="vendor\fmod\api\core\inc\fmod_errors.h" />
+    <ClInclude Include="vendor\fmod\api\core\inc\fmod_output.h" />
+    <ClInclude Include="vendor\fmod\api\fsbank\inc\fsbank.h" />
+    <ClInclude Include="vendor\fmod\api\fsbank\inc\fsbank_errors.h" />
+    <ClInclude Include="vendor\fmod\api\studio\inc\fmod_studio.h" />
+    <ClInclude Include="vendor\fmod\api\studio\inc\fmod_studio.hpp" />
+    <ClInclude Include="vendor\fmod\api\studio\inc\fmod_studio_common.h" />
+    <ClInclude Include="vendor\fmod\plugins\resonance_audio\inc\RoomProperties.h" />
     <ClInclude Include="vendor\freetype\include\freetype\config\ftconfig.h" />
     <ClInclude Include="vendor\freetype\include\freetype\config\ftoption.h" />
     <ClInclude Include="vendor\GLAD\include\glad\glad.h" />
@@ -772,6 +789,7 @@
     <ClInclude Include="vendor\tinygltf\include\tiny_gltf.h" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="res\audio\Test.mp3" />
     <Content Include="res\fonts\DePixelKlein.ttf" />
     <Content Include="res\fonts\Roboto-Regular.ttf" />
     <Content Include="res\models\cube.glb" />
@@ -826,6 +844,23 @@
     <Content Include="res\textures\NoTexture.png" />
     <Content Include="res\textures\TheDude.png" />
     <Content Include="res\textures\White.png" />
+    <Content Include="vendor\fmod\api\core\lib\x64\fmod.dll" />
+    <Content Include="vendor\fmod\api\core\lib\x64\fmodL.dll" />
+    <Content Include="vendor\fmod\api\core\lib\x64\fmodL_vc.lib" />
+    <Content Include="vendor\fmod\api\core\lib\x64\fmod_vc.lib" />
+    <Content Include="vendor\fmod\api\fsbank\lib\x64\fsbank.dll" />
+    <Content Include="vendor\fmod\api\fsbank\lib\x64\fsbank_vc.lib" />
+    <Content Include="vendor\fmod\api\fsbank\lib\x64\libfsbvorbis64.dll" />
+    <Content Include="vendor\fmod\api\fsbank\lib\x64\opus.dll" />
+    <Content Include="vendor\fmod\api\studio\lib\x64\fmodstudio.dll" />
+    <Content Include="vendor\fmod\api\studio\lib\x64\fmodstudioL.dll" />
+    <Content Include="vendor\fmod\api\studio\lib\x64\fmodstudioL_vc.lib" />
+    <Content Include="vendor\fmod\api\studio\lib\x64\fmodstudio_vc.lib" />
+    <Content Include="vendor\fmod\LICENSE.TXT" />
+    <Content Include="vendor\fmod\plugins\resonance_audio\lib\x64\resonanceaudio.dll" />
+    <Content Include="vendor\fmod\plugins\resonance_audio\lib\x86\resonanceaudio.dll" />
+    <Content Include="vendor\fmod\plugins\resonance_audio\license.txt" />
+    <Content Include="vendor\fmod\plugins\resonance_audio\readme.txt" />
     <Content Include="vendor\freetype\libs\freetype_Debug_x64.lib" />
     <Content Include="vendor\freetype\libs\freetype_Release_x64.lib" />
     <Content Include="vendor\freetype\LICENSE.TXT" />
@@ -839,9 +874,6 @@
     <Content Include="vendor\reactphysics3d\include\reactphysics3d\collision\narrowphase\.DS_Store" />
     <Content Include="vendor\reactphysics3d\libs\reactphysics3d_Debug_x64.lib" />
     <Content Include="vendor\reactphysics3d\libs\reactphysics3d_Release_x64.lib" />
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="vendor\artery-font-format\include" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

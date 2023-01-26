@@ -20,6 +20,8 @@ $RECYCLE.BIN/
 *.msix
 *.msm
 *.msp
+*.tlog
+*recipe
 
 # Windows shortcuts
 *.lnk
@@ -511,7 +513,6 @@ local.properties
 *.lai
 *.so
 *.so.*
-*.dll
 *.dylib
 
 # Qt-es
@@ -580,8 +581,6 @@ mono_crash.*
 [Dd]ebugPublic/
 [Rr]elease/
 [Rr]eleases/
-x64/
-x86/
 [Ww][Ii][Nn]32/
 [Aa][Rr][Mm]/
 [Aa][Rr][Mm]64/
@@ -965,7 +964,6 @@ _deps
 # Compiled Dynamic libraries
 *.so
 *.dylib
-*.dll
 
 # Fortran module files
 *.mod
@@ -1008,8 +1006,7 @@ _deps
 *.la
 *.lo
 
-# Shared objects (inc. Windows DLLs)
-*.dll
+# Shared objects 
 *.so
 *.so.*
 *.dylib
@@ -1041,3 +1038,4 @@ dkms.conf
 *.uf2
 # Raspberry Pi Pico disassembler file
 *.dis
+x64/Debug/CppGameEngine.vcxproj.FileListAbsolute.txt
