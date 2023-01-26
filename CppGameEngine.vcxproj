@@ -17,10 +17,7 @@
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
-  <PropertyGroup Label="Configuration" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <PlatformToolset>v143</PlatformToolset>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+  <PropertyGroup Label="Configuration">
     <PlatformToolset>v143</PlatformToolset>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
@@ -29,16 +26,16 @@
   <ImportGroup Label="Shared">
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+  <PropertyGroup>
     <IncludePath>$(IncludePath);$(SolutionDir)\vendor\GLAD\include;$(SolutionDir)\vendor\GLFW\include;$(SolutionDir)\vendor\glm\include;$(SolutionDir)\vendor\reactphysics3d\include;$(SolutionDir)\vendor\stb_image\include;$(SolutionDir)\vendor\tinygltf\include;$(SolutionDir)vendor\msdf-atlas-gen\include;$(SolutionDir)vendor\freetype\include;$(SolutionDir)vendor\msdfgen\include;$(SolutionDir)vendor\skia\include;$(SolutionDir)vendor\fmod\api\core\inc;$(SolutionDir)vendor\fmod\api\studio\inc</IncludePath>
-    <LibraryPath>$(LibraryPath)</LibraryPath>
+    <OutDir>$(SolutionDir)\build\$(Platform)\$(Configuration)\</OutDir>
     <SourcePath>$(SolutionDir)\vendor\tinygltf\src;$(SolutionDir)\vendor\stb_image\src;$(SolutionDir)\vendor\GLAD\src;$(SourcePath)</SourcePath>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <IncludePath>$(IncludePath);$(SolutionDir)\vendor\GLAD\include;$(SolutionDir)\vendor\GLFW\include;$(SolutionDir)\vendor\glm\include;$(SolutionDir)\vendor\reactphysics3d\include;$(SolutionDir)\vendor\stb_image\include;$(SolutionDir)\vendor\tinygltf\include;$(SolutionDir)vendor\msdf-atlas-gen\include;$(SolutionDir)vendor\freetype\include;$(SolutionDir)vendor\msdfgen\include;$(SolutionDir)vendor\skia\include;$(SolutionDir)vendor\fmod\api\core\inc;$(SolutionDir)vendor\fmod\api\studio\inc</IncludePath>
-    <LibraryPath>$(LibraryPath)</LibraryPath>
-    <SourcePath>$(SolutionDir)\vendor\tinygltf\src;$(SolutionDir)\vendor\stb_image\src;$(SolutionDir)\vendor\GLAD\src;$(SourcePath)</SourcePath>
-  </PropertyGroup>
+  <ItemDefinitionGroup>
+    <PostBuildEvent>
+      <Command>xcopy /y /d "$(SolutionDir)dependencies\$(Platform)\$(Configuration)\*.dll" "$(SolutionDir)\build\$(Platform)\$(Configuration)\"</Command>
+    </PostBuildEvent>
+  </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
       <Optimization>Disabled</Optimization>
@@ -69,6 +66,11 @@
       <UseLibraryDependencyInputs>true</UseLibraryDependencyInputs>
     </ProjectReference>
   </ItemDefinitionGroup>
+  <ItemGroup>
+    <Content Include="$(SolutionDir)\res\**">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
     <ClCompile Include="src\GameEngine\Components\BoxCollider.cpp" />
@@ -789,6 +791,8 @@
     <ClInclude Include="vendor\tinygltf\include\tiny_gltf.h" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="dependencies\x64\Debug\fmodL.dll" />
+    <Content Include="dependencies\x64\Release\fmod.dll" />
     <Content Include="res\audio\Test.mp3" />
     <Content Include="res\fonts\DePixelKlein.ttf" />
     <Content Include="res\fonts\Roboto-Regular.ttf" />
@@ -874,6 +878,9 @@
     <Content Include="vendor\reactphysics3d\include\reactphysics3d\collision\narrowphase\.DS_Store" />
     <Content Include="vendor\reactphysics3d\libs\reactphysics3d_Debug_x64.lib" />
     <Content Include="vendor\reactphysics3d\libs\reactphysics3d_Release_x64.lib" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="build\x64\Debug" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
