@@ -28,9 +28,6 @@
 
 #include <fmod.hpp>
 
-
-using namespace FMOD;
-
 FMOD::System* fmodSystem;
 
 using namespace GameEngine::Debug;

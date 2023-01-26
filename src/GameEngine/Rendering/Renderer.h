@@ -8,6 +8,7 @@
 #include "VertexBuffer.h"
 #include "SpriteSet.h"
 #include "../Components/Light.h"
+#include "../Utils/Time.h"
 
 namespace GameEngine
 {
@@ -41,28 +42,27 @@ namespace GameEngine
                 static glm::mat4 _projectionMatrix;
 
             public:
-                static void Initialize();
-                static void SubmitLight(GameEngine::Components::Light* light);
-                static void SubmitRenderable2D(Renderable2D* renderable2D);
-                static void SubmitRenderable(Renderable* renderable);
-                static void SetProjectionMatrix(glm::mat4 projectionMatrix);
-                static void SetViewMatrix(glm::mat4 viewMatrix);
-                static void SetViewPosition(glm::vec3 viewPosition);
-                static unsigned int Render2DBatches(const std::pair<Material* const, std::map<Texture*, std::vector<Renderable2D*>>>& materialPair);
-                static unsigned int RenderRenderable2D(const std::map<Material*, std::map<Texture*, std::vector<Renderable2D*>>>& map);
-                static unsigned int RenderRenderables(const std::map<Material*, std::vector<Renderable*>>& map);
+                static void         Initialize();
+                static void         SubmitLight(GameEngine::Components::Light* light);
+                static void         SubmitRenderable2D(Renderable2D* renderable2D);
+                static void         SubmitRenderable(Renderable* renderable);
+                static void         SetProjectionMatrix(glm::mat4 projectionMatrix);
+                static void         SetViewMatrix(glm::mat4 viewMatrix);
+                static void         SetViewPosition(glm::vec3 viewPosition);
+                static unsigned int Render2DBatches(const std::pair<Material*, std::map<Texture*, std::vector<Renderable2D*>>>& materialPair);
+                static unsigned int RenderDefault(const std::pair<Material*, std::vector<Renderable*>>& materialRenderables);
                 static void         Draw();
 
-                template<typename T, unsigned int(Renderer::*RenderFunc)(const std::pair<Material*, T>&)>
-                static unsigned int RenderRenderables(const std::map<Material*, T>& map)
+                template <typename T, unsigned int(*RenderFunc)(const std::pair<Material*, T>&)>
+                static unsigned int RenderRenderables(std::map<Material*, T>& map)
                 {
                     unsigned int         numDrawCalls      = 0;
                     const Shader*        shader            = nullptr;
                     Material::CullFace   currentCullFace   = Material::CullFace::Back;
                     Material::RenderMode currentRenderMode = Material::RenderMode::Fill;
                     bool                 firstLoop         = true;
-                    
-                    for (const std::pair<Material*, T>& pair : map)
+
+                    for (auto& pair : map)
                     {
                         const Material*            material   = pair.first;
                         const Material::CullFace   cullFace   = material->GetCullFace();
@@ -111,7 +111,7 @@ namespace GameEngine
                         material->GetUniformBuffer()->Apply();
 
                         numDrawCalls += RenderFunc(pair);
-        
+
                         firstLoop = false;
                     }
 

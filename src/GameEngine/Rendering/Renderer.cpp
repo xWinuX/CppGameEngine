@@ -90,7 +90,7 @@ void Renderer::SetProjectionMatrix(const glm::mat4 projectionMatrix) { _projecti
 void Renderer::SetViewMatrix(const glm::mat4 viewMatrix) { _viewMatrix = viewMatrix; }
 void Renderer::SetViewPosition(const glm::vec3 viewPosition) { _viewPosition = viewPosition; }
 
-unsigned int Renderer::Render2DBatches(const std::pair<Material* const, std::map<Texture*, std::vector<Renderable2D*>>>& materialPair) {
+unsigned int Renderer::Render2DBatches(const std::pair<Material* , std::map<Texture*, std::vector<Renderable2D*>>>& materialPair) {
     int numDrawCalls = 0;
     _renderable2DVertexArrayObject->Bind();
     const Material* material = materialPair.first;
@@ -114,141 +114,20 @@ unsigned int Renderer::Render2DBatches(const std::pair<Material* const, std::map
     return numDrawCalls;
 }
 
-unsigned int Renderer::RenderRenderable2D(const std::map<Material*, std::map<Texture*, std::vector<Renderable2D*>>>& map)
+unsigned int Renderer::RenderDefault(const std::pair<Material*, std::vector<Renderable*>>& materialRenderables)
 {
-    unsigned int         numDrawCalls      = 0;
-    const Shader*        shader            = nullptr;
-    Material::CullFace   currentCullFace   = Material::CullFace::Back;
-    Material::RenderMode currentRenderMode = Material::RenderMode::Fill;
-    bool                 firstLoop         = true;
-
-    for (const std::pair<Material* const, std::map<Texture*, std::vector<Renderable2D*>>>& materialPair : map)
+    unsigned int numDrawCalls = 0;
+    for (Renderable* renderable : materialRenderables.second)
     {
-        const Material*            material   = materialPair.first;
-        const Material::CullFace   cullFace   = material->GetCullFace();
-        const Material::RenderMode renderMode = material->GetRenderMode();
+        renderable->OnBeforeDraw();
+        renderable->OnDraw();
 
-        // Choose if new shader should get activated
-        const Shader* newShader = material->GetShader();
-        if (shader == nullptr || shader != newShader)
-        {
-            shader = newShader;
-            shader->Use();
-
-            for (Light*& light : _lights) { light->OnShaderUse(); }
-
-            // TODO: Somehow abstract this away
-            material->GetUniformBuffer()->SetUniformInstant<float>("u_Time", Time::GetTimeSinceStart());
-            material->GetUniformBuffer()->SetUniformInstant<glm::mat4>("u_ViewProjection", _projectionMatrix * _viewMatrix);
-            material->GetUniformBuffer()->SetUniformInstant<glm::vec3>("u_ViewPosition", _viewPosition);
-        }
-
-        // Update polygon mode if needed
-        if (renderMode != currentRenderMode || firstLoop)
-        {
-            glPolygonMode(GL_FRONT_AND_BACK, material->GetRenderMode());
-            currentRenderMode = renderMode;
-        }
-
-        // Face Culling
-        if (cullFace != currentCullFace || firstLoop)
-        {
-            if (cullFace == Material::CullFace::None)
-            {
-                glDisable(GL_CULL_FACE);
-                glCullFace(GL_BACK);
-            }
-            else
-            {
-                glEnable(GL_CULL_FACE);
-                glCullFace(cullFace);
-            }
-
-            currentCullFace = cullFace;
-        }
-
-        // Apply material uniforms that are in the queue
-        material->GetUniformBuffer()->Apply();
-
-        // Actually draw the elements
-        Render2DBatches(numDrawCalls, materialPair, material);
-
-        firstLoop = false;
+        numDrawCalls++;
     }
 
     return numDrawCalls;
 }
 
-unsigned int Renderer::RenderRenderables(const std::map<Material*, std::vector<Renderable*>>& map)
-{
-    unsigned int         numDrawCalls      = 0;
-    const Shader*        shader            = nullptr;
-    Material::CullFace   currentCullFace   = Material::CullFace::Back;
-    Material::RenderMode currentRenderMode = Material::RenderMode::Fill;
-    bool                 firstLoop         = true;
-
-    for (const std::pair<Material* const, std::vector<Renderable*>>& materialRenderables : map)
-    {
-        const Material*            material   = materialRenderables.first;
-        const Material::CullFace   cullFace   = material->GetCullFace();
-        const Material::RenderMode renderMode = material->GetRenderMode();
-
-        // Choose if new shader should get activated
-        const Shader* newShader = material->GetShader();
-        if (shader == nullptr || shader != newShader)
-        {
-            shader = newShader;
-            shader->Use();
-
-            for (Light*& light : _lights) { light->OnShaderUse(); }
-
-            // TODO: Somehow abstract this away
-            material->GetUniformBuffer()->SetUniformInstant<float>("u_Time", Time::GetTimeSinceStart());
-            material->GetUniformBuffer()->SetUniformInstant<glm::mat4>("u_ViewProjection", _projectionMatrix * _viewMatrix);
-            material->GetUniformBuffer()->SetUniformInstant<glm::vec3>("u_ViewPosition", _viewPosition);
-        }
-
-        // Update polygon mode if needed
-        if (renderMode != currentRenderMode || firstLoop)
-        {
-            glPolygonMode(GL_FRONT_AND_BACK, material->GetRenderMode());
-            currentRenderMode = renderMode;
-        }
-
-        // Face Culling
-        if (cullFace != currentCullFace || firstLoop)
-        {
-            if (cullFace == Material::CullFace::None)
-            {
-                glDisable(GL_CULL_FACE);
-                glCullFace(GL_BACK);
-            }
-            else
-            {
-                glEnable(GL_CULL_FACE);
-                glCullFace(cullFace);
-            }
-
-            currentCullFace = cullFace;
-        }
-
-        // Apply material uniforms that are in the queue
-        material->GetUniformBuffer()->Apply();
-
-        // Actually draw the elements
-        for (Renderable* renderable : materialRenderables.second)
-        {
-            renderable->OnBeforeDraw();
-            renderable->OnDraw();
-
-            numDrawCalls++;
-        }
-
-        firstLoop = false;
-    }
-
-    return numDrawCalls;
-}
 
 void Renderer::Draw()
 {
@@ -260,16 +139,16 @@ void Renderer::Draw()
     unsigned int numDrawCalls = 0;
 
     // Opaque
-    numDrawCalls += RenderRenderables(_opaqueRenderables);
+    numDrawCalls += RenderRenderables<std::vector<Renderable*>, &RenderDefault>(_opaqueRenderables);
 
     // Opaque 2D
-    numDrawCalls += RenderRenderables<std::map<Texture*, std::vector<Renderable2D*>>, &Renderer::Render2DBatches>(_opaqueRenderable2Ds);
+    numDrawCalls += RenderRenderables<std::map<Texture*, std::vector<Renderable2D*>>, &Render2DBatches>(_opaqueRenderable2Ds);
 
     // Transparent
     // TODO: Sort triangles and objects based on distance to camera
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-    numDrawCalls += RenderRenderables(_transparentRenderables);
+    numDrawCalls += RenderRenderables<std::vector<Renderable*>, &RenderDefault>(_transparentRenderables);
     glDisable(GL_BLEND);
 
     Debug::Log::Message("Draw Calls: " + std::to_string(numDrawCalls));
