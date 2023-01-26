@@ -577,9 +577,7 @@ compile_commands.json
 mono_crash.*
 
 # Build results
-/[Dd]ebug/
 [Dd]ebugPublic/
-[Rr]elease/
 [Rr]eleases/
 [Ww][Ii][Nn]32/
 [Aa][Rr][Mm]/
@@ -1039,3 +1037,4 @@ dkms.conf
 # Raspberry Pi Pico disassembler file
 *.dis
 x64/Debug/CppGameEngine.vcxproj.FileListAbsolute.txt
+x64/Release/CppGameEngine.vcxproj.FileListAbsolute.txt

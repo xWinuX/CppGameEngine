@@ -35,7 +35,7 @@
     <SourcePath>$(SolutionDir)\vendor\tinygltf\src;$(SolutionDir)\vendor\stb_image\src;$(SolutionDir)\vendor\GLAD\src;$(SourcePath)</SourcePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <IncludePath>$(IncludePath);$(SolutionDir)\vendor\GLAD\include;$(SolutionDir)\vendor\GLFW\include;$(SolutionDir)\vendor\glm\include;$(SolutionDir)\vendor\reactphysics3d\include;$(SolutionDir)\vendor\stb_image\include;$(SolutionDir)\vendor\tinygltf\include;$(SolutionDir)vendor\msdf-atlas-gen\include;$(SolutionDir)vendor\freetype\include;$(SolutionDir)vendor\msdfgen\include;$(SolutionDir)vendor\skia\include</IncludePath>
+    <IncludePath>$(IncludePath);$(SolutionDir)\vendor\GLAD\include;$(SolutionDir)\vendor\GLFW\include;$(SolutionDir)\vendor\glm\include;$(SolutionDir)\vendor\reactphysics3d\include;$(SolutionDir)\vendor\stb_image\include;$(SolutionDir)\vendor\tinygltf\include;$(SolutionDir)vendor\msdf-atlas-gen\include;$(SolutionDir)vendor\freetype\include;$(SolutionDir)vendor\msdfgen\include;$(SolutionDir)vendor\skia\include;$(SolutionDir)vendor\fmod\api\core\inc;$(SolutionDir)vendor\fmod\api\studio\inc</IncludePath>
     <LibraryPath>$(LibraryPath)</LibraryPath>
     <SourcePath>$(SolutionDir)\vendor\tinygltf\src;$(SolutionDir)\vendor\stb_image\src;$(SolutionDir)\vendor\GLAD\src;$(SourcePath)</SourcePath>
   </PropertyGroup>
@@ -45,7 +45,7 @@
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>%(AdditionalDependencies);$(SolutionDir)vendor\reactphysics3d\libs\reactphysics3d_Debug_x64.lib;$(SolutionDir)vendor\glfw\libs\glfw3_Release_x64.lib;$(SolutionDir)vendor\msdf-atlas-gen\libs\msdf-atlas-gen_Debug_x64.lib;$(SolutionDir)vendor\freetype\libs\freetype_Debug_x64.lib;$(SolutionDir)vendor\msdfgen\libs\msdfgen-core_Debug_x64.lib;$(SolutionDir)vendor\msdfgen\libs\msdfgen-ext_Debug_x64.lib;$(SolutionDir)vendor\msdfgen\libs\skia_Debug_x64.lib;$(SolutionDir)vendor\fmod\api\core\lib\x64\fmod_vc.lib</AdditionalDependencies>
+      <AdditionalDependencies>%(AdditionalDependencies);$(SolutionDir)vendor\reactphysics3d\libs\reactphysics3d_Debug_x64.lib;$(SolutionDir)vendor\glfw\libs\glfw3_Release_x64.lib;$(SolutionDir)vendor\msdf-atlas-gen\libs\msdf-atlas-gen_Debug_x64.lib;$(SolutionDir)vendor\freetype\libs\freetype_Debug_x64.lib;$(SolutionDir)vendor\msdfgen\libs\msdfgen-core_Debug_x64.lib;$(SolutionDir)vendor\msdfgen\libs\msdfgen-ext_Debug_x64.lib;$(SolutionDir)vendor\msdfgen\libs\skia_Debug_x64.lib;$(SolutionDir)vendor\fmod\api\core\lib\x64\fmodL_vc.lib</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -62,7 +62,7 @@
       <BufferSecurityCheck>false</BufferSecurityCheck>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>%(AdditionalDependencies);$(SolutionDir)vendor\reactphysics3d\libs\reactphysics3d_Release_x64.lib;$(SolutionDir)vendor\glfw\libs\glfw3_Release_x64.lib;$(SolutionDir)vendor\msdf-atlas-gen\libs\msdf-atlas-gen_Release_x64.lib;$(SolutionDir)vendor\freetype\libs\freetype_Release_x64.lib;$(SolutionDir)vendor\msdfgen\libs\msdfgen-core_Release_x64.lib;$(SolutionDir)vendor\msdfgen\libs\msdfgen-ext_Release_x64.lib;$(SolutionDir)vendor\msdfgen\libs\skia_Release_x64.lib</AdditionalDependencies>
+      <AdditionalDependencies>%(AdditionalDependencies);$(SolutionDir)vendor\reactphysics3d\libs\reactphysics3d_Release_x64.lib;$(SolutionDir)vendor\glfw\libs\glfw3_Release_x64.lib;$(SolutionDir)vendor\msdf-atlas-gen\libs\msdf-atlas-gen_Release_x64.lib;$(SolutionDir)vendor\freetype\libs\freetype_Release_x64.lib;$(SolutionDir)vendor\msdfgen\libs\msdfgen-core_Release_x64.lib;$(SolutionDir)vendor\msdfgen\libs\msdfgen-ext_Release_x64.lib;$(SolutionDir)vendor\msdfgen\libs\skia_Release_x64.lib;$(SolutionDir)vendor\fmod\api\core\lib\x64\fmod_vc.lib</AdditionalDependencies>
       <GenerateDebugInformation>false</GenerateDebugInformation>
     </Link>
     <ProjectReference>
