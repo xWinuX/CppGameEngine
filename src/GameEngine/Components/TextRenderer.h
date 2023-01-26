@@ -3,6 +3,7 @@
 #include "../Rendering/Font.h"
 #include "../Rendering/Material.h"
 #include "../Rendering/Renderable2D.h"
+#include "../Rendering/Sprite.h"
 
 namespace GameEngine
 {
@@ -13,17 +14,23 @@ namespace GameEngine
             private:
                 Rendering::Font*     _font;
                 Rendering::Material* _material;
-                std::string          _text = "abcdefghij\nklmnopqrstuvxy\nzABCEDFGHIJKLMN\nOPQRSTUVXYZ-.";
+                std::string          _text =
+                    "abcdefghij\nklmnopqrstuvxy\nzABCEDFGHIJKLMN\nOPQRSTUVXYZ-.\nabcdefghij\nklmnopqrstuvxy\nzABCEDFGHIJKLMN\nOPQRSTUVXYZ-.\nabcdefghij\nklmnopqrstuvxy\nzABCEDFGHIJKLMN\nOPQRSTUVXYZ-.\nabcdefghij\nklmnopqrstuvxy\nzABCEDFGHIJKLMN\nOPQRSTUVXYZ-.\nabcdefghij\nklmnopqrstuvxy\nzABCEDFGHIJKLMN\nOPQRSTUVXYZ-.\nabcdefghij\nklmnopqrstuvxy\nzABCEDFGHIJKLMN\nOPQRSTUVXYZ-.abcdefghij\nklmnopqrstuvxy\nzABCEDFGHIJKLMN\nOPQRSTUVXYZ-.\nabcdefghij\nklmnopqrstuvxy\nzABCEDFGHIJKLMN\nOPQRSTUVXYZ-.\nabcdefghij\nklmnopqrstuvxy\nzABCEDFGHIJKLMN\nOPQRSTUVXYZ-.\nabcdefghij\nklmnopqrstuvxy\nzABCEDFGHIJKLMN\nOPQRSTUVXYZ-.\nabcdefghij\nklmnopqrstuvxy\nzABCEDFGHIJKLMN\nOPQRSTUVXYZ-.\nabcdefghij\nklmnopqrstuvxy\nzABCEDFGHIJKLMN\nOPQRSTUVXYZ-.abcdefghij\nklmnopqrstuvxy\nzABCEDFGHIJKLMN\nOPQRSTUVXYZ-.\nabcdefghij\nklmnopqrstuvxy\nzABCEDFGHIJKLMN\nOPQRSTUVXYZ-.\nabcdefghij\nklmnopqrstuvxy\nzABCEDFGHIJKLMN\nOPQRSTUVXYZ-.\nabcdefghij\nklmnopqrstuvxy\nzABCEDFGHIJKLMN\nOPQRSTUVXYZ-.\nabcdefghij\nklmnopqrstuvxy\nzABCEDFGHIJKLMN\nOPQRSTUVXYZ-.\nabcdefghij\nklmnopqrstuvxy\nzABCEDFGHIJKLMN\nOPQRSTUVXYZ-.abcdefghij\nklmnopqrstuvxy\nzABCEDFGHIJKLMN\nOPQRSTUVXYZ-.\nabcdefghij\nklmnopqrstuvxy\nzABCEDFGHIJKLMN\nOPQRSTUVXYZ-.\nabcdefghij\nklmnopqrstuvxy\nzABCEDFGHIJKLMN\nOPQRSTUVXYZ-.\nabcdefghij\nklmnopqrstuvxy\nzABCEDFGHIJKLMN\nOPQRSTUVXYZ-.\nabcdefghij\nklmnopqrstuvxy\nzABCEDFGHIJKLMN\nOPQRSTUVXYZ-.\nabcdefghij\nklmnopqrstuvxy\nzABCEDFGHIJKLMN\nOPQRSTUVXYZ-.abcdefghij\nklmnopqrstuvxy\nzABCEDFGHIJKLMN\nOPQRSTUVXYZ-.\nabcdefghij\nklmnopqrstuvxy\nzABCEDFGHIJKLMN\nOPQRSTUVXYZ-.\nabcdefghij\nklmnopqrstuvxy\nzABCEDFGHIJKLMN\nOPQRSTUVXYZ-.\nabcdefghij\nklmnopqrstuvxy\nzABCEDFGHIJKLMN\nOPQRSTUVXYZ-.\nabcdefghij\nklmnopqrstuvxy\nzABCEDFGHIJKLMN\nOPQRSTUVXYZ-.\nabcdefghij\nklmnopqrstuvxy\nzABCEDFGHIJKLMN\nOPQRSTUVXYZ-.abcdefghij\nklmnopqrstuvxy\nzABCEDFGHIJKLMN\nOPQRSTUVXYZ-.\nabcdefghij\nklmnopqrstuvxy\nzABCEDFGHIJKLMN\nOPQRSTUVXYZ-.\nabcdefghij\nklmnopqrstuvxy\nzABCEDFGHIJKLMN\nOPQRSTUVXYZ-.\nabcdefghij\nklmnopqrstuvxy\nzABCEDFGHIJKLMN\nOPQRSTUVXYZ-.\nabcdefghij\nklmnopqrstuvxy\nzABCEDFGHIJKLMN\nOPQRSTUVXYZ-.\nabcdefghij\nklmnopqrstuvxy\nzABCEDFGHIJKLMN\nOPQRSTUVXYZ-.";
+                std::vector<Rendering::Sprite::QuadData> _quads       = std::vector<Rendering::Sprite::QuadData>(32);
+                bool                                     _needsUpdate = false;
+                void                                     UpdateQuads();
 
             public:
                 TextRenderer(Rendering::Font* font, Rendering::Material* material);
 
+                void                 OnStart() override;
                 void                 OnBeforeRender() override;
                 Rendering::Material* GetMaterial() override;
                 Rendering::Texture*  GetTexture() override;
                 size_t               GetQuadSize() override;
                 size_t               GetCopySize() override;
                 void                 CopyQuadData(unsigned char* destination) override;
+                void                 SetText(const std::string& text);
         };
     }
 }
