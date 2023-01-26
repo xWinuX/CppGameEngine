@@ -124,6 +124,7 @@ void GraphicDemoApplication::Initialize(Scene& scene)
     }
 
     result = fmodSystem->playSound(sound, 0, false, &channel);
+    channel->setVolume(0.1);
     if (result != FMOD_OK) {
         std::cout << "Error playing sound: " << result << std::endl;
     }
