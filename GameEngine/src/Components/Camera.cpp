@@ -1,10 +1,10 @@
-﻿#include "Camera.h"
+﻿#include "GameEngine/Components/Camera.h"
 
 #include <glm/ext/matrix_clip_space.hpp>
 
-#include "Transform.h"
-#include "../Core/Window.h"
-#include "../Rendering/Renderer.h"
+#include "GameEngine/Components/Transform.h"
+#include "GameEngine/Core/Window.h"
+#include "GameEngine/Rendering/Renderer.h"
 
 using namespace GameEngine::Components;
 using namespace GameEngine::Rendering;
@@ -37,5 +37,5 @@ float Camera::GetFOVInDegrees() const { return _fovInDegrees; }
 void Camera::SetFOVInDegrees(const float value)
 {
     _fovInDegrees = value;
-    UpdateProjectionMatrix();   
+    UpdateProjectionMatrix();
 }

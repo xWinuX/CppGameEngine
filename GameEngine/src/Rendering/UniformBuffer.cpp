@@ -1,7 +1,6 @@
-﻿#include "UniformBuffer.h"
+﻿#include "GameEngine/Rendering/UniformBuffer.h"
 
 using namespace GameEngine::Rendering;
-
 
 #define APPLY_UNIFORM(suffix) \
 for (auto& uniform##suffix : _uniform##suffix##s) \
@@ -9,7 +8,6 @@ for (auto& uniform##suffix : _uniform##suffix##s) \
     if (uniform##suffix##.second.ApplyInQueue) { uniform##suffix##.second.Uniform.Apply(); } \
     if (uniform##suffix##.second.ResetAfterApply) { uniform##suffix##.second.Uniform.Reset(); } \
 }
-
 
 #define COPY_UNIFORM(type,suffix) \
 for (auto uniform##suffix : _uniform##suffix##s) \

@@ -1,8 +1,8 @@
-﻿#include "GameObject.h"
+﻿#include "GameEngine/Core/GameObject.h"
 
 #include <iostream>
 
-#include "../Debug/Log.h"
+#include "GameEngine/Debug/Log.h"
 
 using namespace GameEngine::Debug;
 using namespace GameEngine::Core;

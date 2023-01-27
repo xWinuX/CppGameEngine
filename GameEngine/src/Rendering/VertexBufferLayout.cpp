@@ -1,4 +1,4 @@
-﻿#include "VertexBufferLayout.h"
+﻿#include "GameEngine/Rendering/VertexBufferLayout.h"
 
 using namespace GameEngine::Rendering;
 

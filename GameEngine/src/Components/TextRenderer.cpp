@@ -1,8 +1,7 @@
-﻿#include "TextRenderer.h"
+﻿#include "GameEngine/Components/TextRenderer.h"
 
-#include "Transform.h"
-#include "../Rendering/Sprite.h"
-#include "../Rendering/Renderer.h"
+#include "GameEngine/Components/Transform.h"
+#include "GameEngine/Rendering/Renderer.h"
 
 using namespace GameEngine::Rendering;
 using namespace GameEngine::Components;
@@ -60,7 +59,7 @@ void TextRenderer::OnBeforeRender()
 {
     // Update quads needed
     if (_needsUpdate) { UpdateQuads(); }
-    
+
     Renderer::SubmitRenderable2D(this);
 }
 

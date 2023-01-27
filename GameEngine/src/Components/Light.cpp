@@ -1,6 +1,6 @@
-﻿#include "Light.h"
+﻿#include "GameEngine/Components/Light.h"
 
-#include "../Rendering/Renderer.h"
+#include "GameEngine/Rendering/Renderer.h"
 
 using namespace GameEngine::Components;
 using namespace GameEngine::Rendering;

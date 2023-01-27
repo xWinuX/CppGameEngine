@@ -1,10 +1,9 @@
-﻿#include "Physics.h"
+﻿#include "GameEngine/Physics/Physics.h"
 
-#include "../Core/Scene.h"
-#include "../Components/MeshRenderer.h"
-#include "../Rendering/Renderer.h"
-#include "PhysicsDebugRenderer.h"
-#include "../Utils/Time.h"
+#include <reactphysics3d/engine/PhysicsCommon.h>
+
+#include "GameEngine/Physics/PhysicsDebugRenderer.h"
+#include "GameEngine/Utils/Time.h"
 
 using namespace GameEngine::Physics;
 using namespace GameEngine::Rendering;

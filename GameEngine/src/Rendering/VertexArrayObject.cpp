@@ -1,4 +1,4 @@
-﻿#include "VertexArrayObject.h"
+﻿#include "GameEngine/Rendering/VertexArrayObject.h"
 
 using namespace GameEngine::Rendering;
 

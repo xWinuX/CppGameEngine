@@ -1,5 +1,8 @@
-﻿#include "GLTF.h"
-#include "../../Debug/Log.h"
+﻿#include "GameEngine/IO/Importer/GLTF.h"
+
+#include <tiny_gltf.h>
+
+#include "GameEngine/Rendering/Mesh.h"
 
 using namespace GameEngine::Rendering;
 using namespace GameEngine::IO::Importer;
@@ -41,7 +44,7 @@ std::vector<GameEngine::Rendering::Mesh*> GLTF::ImportModel(std::string filePath
 
     if (!result)
     {
-        Debug::Log::Error("GLTF Import Error: Failed to parse gltf file");
+        GameEngine::Debug::Log::Error("GLTF Import Error: Failed to parse gltf file");
         return meshes;
     }
 
@@ -127,7 +130,7 @@ std::vector<GameEngine::Rendering::Mesh*> GLTF::ImportModel(std::string filePath
             tinygltf::BufferView indicesBufferView = model.bufferViews[indicesAccessor.bufferView];
             tinygltf::Buffer     indicesBuffer     = model.buffers[indicesBufferView.buffer];
 
-            size_t   indexSize = TinyGltfComponentTypeLookup.at(indicesAccessor.componentType).Size;
+            size_t         indexSize = TinyGltfComponentTypeLookup.at(indicesAccessor.componentType).Size;
             unsigned char* indices   = new unsigned char[indicesAccessor.count * indexSize];
 
             auto start = indicesBuffer.data.begin() + static_cast<long long>(indicesAccessor.byteOffset + indicesBufferView.byteOffset);

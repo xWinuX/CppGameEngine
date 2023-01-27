@@ -1,6 +1,6 @@
-﻿#include "MeshRenderer.h"
+﻿#include "GameEngine/Components/MeshRenderer.h"
 
-#include "../Rendering/Renderer.h"
+#include "GameEngine/Rendering/Renderer.h"
 
 using namespace GameEngine::Components;
 using namespace GameEngine::Rendering;

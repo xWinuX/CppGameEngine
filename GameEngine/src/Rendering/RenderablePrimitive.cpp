@@ -1,5 +1,6 @@
-﻿#include "RenderablePrimitive.h"
-#include "VertexArrayObject.h"
+﻿#include "GameEngine/Rendering/RenderablePrimitive.h"
+
+#include "GameEngine/Rendering/VertexArrayObject.h"
 
 using namespace GameEngine::Rendering;
 

@@ -1,14 +1,13 @@
-﻿#include "SpriteRenderer.h"
-#include "Transform.h"
-#include "../Rendering/Renderer.h"
-#include "../Rendering/Sprite.h"
-#include "../Utils/Math.h"
-#include "../Utils/Time.h"
-#include "glm/gtx/integer.hpp"
+﻿#include "GameEngine/Components/SpriteRenderer.h"
+
+#include <glm/gtx/integer.hpp>
+
+#include "GameEngine/Components/Transform.h"
+#include "GameEngine/Rendering/Renderer.h"
+#include "GameEngine/Rendering/Sprite.h"
 
 using namespace GameEngine::Rendering;
 using namespace GameEngine::Components;
-using namespace GameEngine::Utils;
 
 SpriteRenderer::SpriteRenderer(Rendering::RenderableSprite* sprite, Rendering::Material* material):
     _sprite(sprite),

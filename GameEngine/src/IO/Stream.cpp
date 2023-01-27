@@ -1,8 +1,10 @@
-﻿#include "Stream.h"
-#include "../Debug/Log.h"
+﻿#include "GameEngine/IO/Stream.h"
+
 #include <iostream>
 #include <fstream>
 #include <sstream>
+
+#include "GameEngine/Debug/Log.h"
 
 using namespace GameEngine::IO;
 

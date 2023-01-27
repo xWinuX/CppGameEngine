@@ -1,8 +1,10 @@
-﻿#include "Shader.h"
-#include <iostream>
-#include <fstream>
+﻿#include "GameEngine/Rendering/Shader.h"
 
-#include "../Utils/String.h"
+#include <fstream>
+#include <iostream>
+#include <glad/glad.h>
+
+#include "GameEngine/Utils/String.h"
 
 using namespace GameEngine::Rendering;
 using namespace GameEngine::IO;

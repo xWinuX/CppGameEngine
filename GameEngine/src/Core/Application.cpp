@@ -1,15 +1,10 @@
-﻿#include "Application.h"
+﻿#include "GameEngine/Core/Application.h"
 
+#include <tiny_gltf.h>
 
-#include "tiny_gltf.h"
-#include "../Components/Camera.h"
-#include "../Core/Scene.h"
-#include "../Core/Window.h"
-#include "../Input/Input.h"
-#include "../Physics/Physics.h"
-#include "../Rendering/Renderer.h"
-#include "../Rendering/Shader.h"
-#include "../Utils/Time.h"
+#include "GameEngine/Input/Input.h"
+#include "GameEngine/Physics/Physics.h"
+#include "GameEngine/Rendering/Renderer.h"
 
 using namespace GameEngine::Debug;
 using namespace GameEngine::Core;

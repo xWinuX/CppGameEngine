@@ -1,5 +1,6 @@
-﻿#include "PointLight.h"
-#include "Transform.h"
+﻿#include "GameEngine/Components/PointLight.h"
+
+#include "GameEngine/Components/Transform.h"
 
 using namespace GameEngine::Components;
 

@@ -1,11 +1,10 @@
-﻿#include "SpriteAtlas.h"
+﻿#include "GameEngine/Rendering/SpriteAtlas.h"
 
-#include "Sprite.h"
 #include <algorithm>
+#include <stb_image_write.h>
+#include <glm/gtx/string_cast.hpp>
 
-
-#include "stb_image_write.h"
-#include "glm/gtx/string_cast.hpp"
+#include "GameEngine/Rendering/Sprite.h"
 
 using namespace GameEngine::Rendering;
 

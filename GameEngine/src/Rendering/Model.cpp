@@ -1,19 +1,20 @@
-﻿#include "Model.h"
+﻿#include "GameEngine/Rendering/Model.h"
+
 #include <random>
 #include <vector>
 
-#include "../Debug/Log.h"
-#include "../IO/Importer/GLTF.h"
-#include "../IO/Importer/OBJ.h"
+#include "GameEngine/IO/Importer/GLTF.h"
+#include "GameEngine/IO/Importer/OBJ.h"
 
 using namespace GameEngine::Rendering;
+using namespace GameEngine::IO;
 
 Model::Model(const std::string& filePath)
 {
     const std::string extension = filePath.substr(filePath.find_last_of('.') + 1);
 
-    if (extension == "obj") { _meshes = GameEngine::IO::Importer::OBJ::ImportModel(filePath); }
-    else if (extension == "gltf") { _meshes = GameEngine::IO::Importer::GLTF::ImportModel(filePath); }
+    if (extension == "obj") { _meshes = IO::Importer::OBJ::ImportModel(filePath); }
+    else if (extension == "gltf") { _meshes = IO::Importer::GLTF::ImportModel(filePath); }
     else { Debug::Log::Error("Model file extension " + extension + " is not supported"); }
 }
 

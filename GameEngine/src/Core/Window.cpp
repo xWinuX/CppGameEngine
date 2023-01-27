@@ -1,6 +1,6 @@
-﻿#include "Window.h"
+﻿#include "GameEngine/Core/Window.h"
 
-#include "../Debug/Log.h"
+#include "GameEngine/Debug/Log.h"
 
 using namespace GameEngine::Core;
 

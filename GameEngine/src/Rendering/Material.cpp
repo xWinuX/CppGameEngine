@@ -1,5 +1,6 @@
-﻿#include "Material.h"
-#include "Shader.h"
+﻿#include "GameEngine/Rendering/Material.h"
+
+#include "GameEngine/Rendering/Shader.h"
 
 using namespace GameEngine::Rendering;
 

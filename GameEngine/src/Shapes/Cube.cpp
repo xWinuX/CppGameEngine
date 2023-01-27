@@ -1,5 +1,8 @@
-﻿#include "Cube.h"
+﻿#include "GameEngine/Shapes/Cube.h"
+
 #include <glad/glad.h>
+
+#include "GameEngine/Rendering/VertexBufferAttribute.h"
 
 using namespace GameEngine::Rendering;
 using namespace GameEngine::Shapes;
@@ -15,10 +18,10 @@ VertexBufferLayout Cube::_vertexBufferLayout = VertexBufferLayout(_vertexBufferA
 Cube::Cube() :
     _pCubeVertices(new VertexPositionColorUV[24]{
                        // Front
-                       {{-0.5f, -0.5f, 0.5f}, {0.0, 0.0, 0.0, 1.0}, {0.0f, 0.0f}}, // 0 Back Top Left
-                       {{0.5f, -0.5f, 0.5f}, {0.0, 0.0, 0.0, 1.0}, {1.0f, 0.0f}},  // 1 Back Top Right
-                       {{-0.5f, 0.5f, 0.5f}, {1.0, 1.0, 1.0, 1.0}, {0.0f, 1.0f}},  // 2 Back Bottom Left
-                       {{0.5f, 0.5f, 0.5f}, {1.0, 1.0, 1.0, 1.0}, {1.0f, 1.0f}},   // 3 Back Bottom Right
+                       {{-0.5f, -0.5f, 0.5f}, {0.0, 0.0, 0.0, 1.0}, {0.0f, 0.0f}}, // 0 Top Left
+                       {{0.5f, -0.5f, 0.5f}, {0.0, 0.0, 0.0, 1.0}, {1.0f, 0.0f}},  // 1 Top Right
+                       {{-0.5f, 0.5f, 0.5f}, {1.0, 1.0, 1.0, 1.0}, {0.0f, 1.0f}},  // 2 Bottom Left
+                       {{0.5f, 0.5f, 0.5f}, {1.0, 1.0, 1.0, 1.0}, {1.0f, 1.0f}},   // 3 Bottom Right
 
                        // Back
                        {{-0.5f, -0.5f, -0.5f}, {0.0, 0.0, 0.0, 0.0}, {0.0f, 0.0f}},
@@ -71,6 +74,7 @@ Cube::Cube() :
                       // Top Face
                       2 + 16, 1 + 16, 0 + 16, // First Triangle
                       3 + 16, 1 + 16, 2 + 16, // Second Triangle
+        
                       // Bottom Face
                       0 + 20, 1 + 20, 2 + 20, // First Triangle
                       1 + 20, 3 + 20, 2 + 20, // Second Triangle

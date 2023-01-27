@@ -1,4 +1,4 @@
-﻿#include "VertexBufferAttribute.h"
+﻿#include "GameEngine/Rendering/VertexBufferAttribute.h"
 
 using namespace GameEngine::Rendering;
 

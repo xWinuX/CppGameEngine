@@ -1,14 +1,15 @@
-﻿#include "Renderer.h"
+﻿#include "GameEngine/Rendering/Renderer.h"
 
-#include <GLFW/glfw3.h>
 #include <numeric>
+#include <GLFW/glfw3.h>
+#include <glm/ext/matrix_transform.hpp>
 
-#include "Shader.h"
-#include "VertexArrayObject.h"
-#include "Sprite.h"
-#include "../Core/Window.h"
-#include "../Utils/Time.h"
-#include "glm/ext/matrix_transform.hpp"
+#include "GameEngine/Core/Window.h"
+#include "GameEngine/Rendering/IndexBuffer.h"
+#include "GameEngine/Rendering/Material.h"
+#include "GameEngine/Rendering/Sprite.h"
+#include "GameEngine/Rendering/VertexArrayObject.h"
+#include "GameEngine/Rendering/VertexBuffer.h"
 
 using namespace GameEngine::Rendering;
 using namespace GameEngine::Components;

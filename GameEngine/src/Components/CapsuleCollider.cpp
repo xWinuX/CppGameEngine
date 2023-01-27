@@ -1,5 +1,6 @@
-﻿#include "CapsuleCollider.h"
-#include "../Physics/Physics.h"
+﻿#include "GameEngine/Components/CapsuleCollider.h"
+
+#include "GameEngine/Physics/Physics.h"
 
 using namespace GameEngine::Components;
 using namespace GameEngine::Physics;

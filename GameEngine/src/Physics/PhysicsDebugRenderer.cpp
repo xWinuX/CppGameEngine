@@ -1,7 +1,6 @@
-﻿#include "PhysicsDebugRenderer.h"
+﻿#include "GameEngine/Physics/PhysicsDebugRenderer.h"
 
-#include "Physics.h"
-#include "../Rendering/Renderer.h"
+#include "GameEngine/Rendering/Renderer.h"
 
 using namespace GameEngine::Physics;
 using namespace GameEngine::Rendering;

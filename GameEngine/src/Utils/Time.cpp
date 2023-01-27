@@ -1,4 +1,6 @@
 ﻿#include "Time.h"
+#include "GameEngine/Utils/Time.h"
+
 #include <GLFW/glfw3.h>
 
 float Time::_deltaTime = 0;

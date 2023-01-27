@@ -1,4 +1,5 @@
 ﻿#include "Math.h"
+#include "GameEngine/Utils/Math.h"
 
 #include <cmath>
 

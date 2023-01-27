@@ -1,6 +1,5 @@
 ﻿#include <GameEngine/Rendering/SpriteSet.h>
 #include <GameEngine/Rendering/Sprite.h>
-#include <GameEngine/Debug/Log.h>
 
 #include <iostream>
 #include "glm/ext/matrix_transform.hpp"
@@ -27,7 +26,6 @@ SpriteSet::SpriteSet(Texture* texture, const msdf_atlas::FontGeometry& fontGeome
 
     const auto glyphs = fontGeometry.getGlyphs();
 
-
     for (const msdf_atlas::GlyphGeometry& glyph : glyphs)
     {
         double pl, pb, pr, pt;
@@ -35,29 +33,20 @@ SpriteSet::SpriteSet(Texture* texture, const msdf_atlas::FontGeometry& fontGeome
         glyph.getQuadPlaneBounds(pl, pb, pr, pt);
         glyph.getQuadAtlasBounds(il, ib, ir, it);
 
-
-        double widthDiff = abs(pl - pr);
-        double heightDiff = abs(pt - pb);
-        double xOrigin = 1.0/widthDiff * abs(pl);
-        double yOrigin = 1.0/heightDiff * abs(pt);
-
         std::cout << "left" << pl << std::endl;
         std::cout << "right" << pr << std::endl;
         std::cout << "top" << pt << std::endl;
         std::cout << "bottom" << pb << std::endl;
 
         const glm::uvec2 pixelPosition = glm::uvec2(il, it);
-        const glm::vec2  size          = glm::vec2(ir - il, it - ib);
 
         il *= texelSize.x;
         ib *= texelSize.y;
         ir *= texelSize.x;
         it *= texelSize.y;
-
-
+        
         const glm::vec2 uvTopLeft     = glm::vec2(il, it);
         const glm::vec2 uvBottomRight = glm::vec2(ir, ib);
-
 
         _sprites.push_back(new Sprite(texture, pixelPosition, glm::vec4(pl, pr, pt, pb), uvTopLeft, uvBottomRight));
     }

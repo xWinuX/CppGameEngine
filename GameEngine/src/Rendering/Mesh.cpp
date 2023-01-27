@@ -1,4 +1,4 @@
-﻿#include "Mesh.h"
+﻿#include "GameEngine/Rendering/Mesh.h"
 
 using namespace GameEngine::Rendering;
 

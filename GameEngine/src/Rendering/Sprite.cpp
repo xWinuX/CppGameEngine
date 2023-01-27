@@ -1,9 +1,8 @@
-﻿#include "Sprite.h"
+﻿#include "GameEngine/Rendering/Sprite.h"
 
-#include "glm/ext/matrix_transform.hpp"
+#include <glm/ext/matrix_transform.hpp>
 
 using namespace GameEngine::Rendering;
-
 
 Sprite::Sprite(Texture* texture, const unsigned int pixelsPerUnit):
     _sourceTexture(texture),
@@ -21,16 +20,15 @@ Sprite::Sprite(Texture* texture, const glm::uvec2 pixelPosition, const glm::uvec
     _pixelsPerUnit(pixelsPerUnit),
     _pixelsPerUnitFactor(1.0f / static_cast<float>(pixelsPerUnit)) { CreateSpriteQuad(uvTopLeft, uvBottomRight); }
 
-Sprite::Sprite(Texture* texture, glm::uvec2 pixelPosition, glm::vec4 posLRTB, glm::vec2 uvTopLeft, glm::vec2 uvBottomRight, unsigned pixelsPerUnit):
+Sprite::Sprite(Texture* texture, const glm::uvec2 pixelPosition, const glm::vec4 posLRTB, const glm::vec2 uvTopLeft, const glm::vec2 uvBottomRight, const unsigned pixelsPerUnit):
     _sourceTexture(texture),
     _texture(texture),
     _pixelPosition(pixelPosition),
-    _size(glm::vec2(abs(posLRTB.x-posLRTB.y), abs(posLRTB.z-posLRTB.w))),
+    _size(glm::vec2(abs(posLRTB.x - posLRTB.y), abs(posLRTB.z - posLRTB.w))),
     _pixelsPerUnit(pixelsPerUnit),
     _pixelsPerUnitFactor(1.0f / static_cast<float>(pixelsPerUnit))
 {
-
-    _quadData               = new QuadData{
+    _quadData = new QuadData{
 
         glm::identity<glm::mat4>(),
 
@@ -53,7 +51,6 @@ Sprite::Sprite(Texture* texture, glm::uvec2 pixelPosition, glm::vec4 posLRTB, gl
             glm::one<glm::vec4>(),
         }
     };
-    
 }
 
 Sprite::~Sprite() { delete _quadData; }

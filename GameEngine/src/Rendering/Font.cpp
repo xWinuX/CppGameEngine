@@ -1,9 +1,8 @@
-﻿#include "Font.h"
-#include <msdf-atlas-gen/msdf-atlas-gen.h>
+﻿#include "GameEngine/Rendering/Font.h"
 
-#include "stb_image_write.h"
-#include "tiny_gltf.h"
-#include "../Components/TextRenderer.h"
+#include <stb_image_write.h>
+#include <msdf-atlas-gen/msdf-atlas-gen.h>
+#include <tiny_gltf.h>
 
 using namespace msdf_atlas;
 using namespace GameEngine::Rendering;

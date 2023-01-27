@@ -1,6 +1,11 @@
-﻿#include "OBJ.h"
-#include "../Stream.h"
-#include "../../Utils/String.h"
+﻿#include "GameEngine/IO/Importer/OBJ.h"
+
+#include "GameEngine/IO/Stream.h"
+#include "GameEngine/Rendering/IndexBuffer.h"
+#include "GameEngine/Rendering/VertexBuffer.h"
+#include "GameEngine/Rendering/VertexBufferAttribute.h"
+#include "GameEngine/Rendering/VertexBufferLayout.h"
+#include "GameEngine/Utils/String.h"
 
 
 using namespace GameEngine::Rendering;
@@ -8,7 +13,7 @@ using namespace GameEngine::Utils;
 using namespace GameEngine::IO::Importer;
 using namespace GameEngine::IO;
 
-const std::vector<VertexBufferAttribute>  OBJ::VertexBufferAttributes = {
+const std::vector<VertexBufferAttribute> OBJ::VertexBufferAttributes = {
     VertexBufferAttribute(3, GL_FLOAT, GL_FALSE, sizeof(VertexPositionUVNormal), nullptr),
     VertexBufferAttribute(2, GL_FLOAT, GL_FALSE, sizeof(VertexPositionUVNormal), reinterpret_cast<GLvoid*>(3 * sizeof(float))),
     VertexBufferAttribute(3, GL_FLOAT, GL_FALSE, sizeof(VertexPositionUVNormal), reinterpret_cast<GLvoid*>(5 * sizeof(float)))
@@ -29,10 +34,10 @@ void OBJ::AddMesh(std::vector<VertexPositionUVNormal>& vertexBuffer, std::vector
     std::copy(VertexBufferAttributes.begin(), VertexBufferAttributes.end(), pVertexAttributes);
 
     meshes.push_back(new Mesh(
-                               new VertexBuffer(reinterpret_cast<unsigned char*>(vertices), sizeof(VertexPositionUVNormal), vertexBuffer.size()),
-                               new IndexBuffer(reinterpret_cast<unsigned char*>(indices), sizeof(unsigned int), indexBuffer.size()),
-                               new VertexBufferLayout(pVertexAttributes, 3))
-                     );
+                              new VertexBuffer(reinterpret_cast<unsigned char*>(vertices), sizeof(VertexPositionUVNormal), vertexBuffer.size()),
+                              new IndexBuffer(reinterpret_cast<unsigned char*>(indices), sizeof(unsigned int), indexBuffer.size()),
+                              new VertexBufferLayout(pVertexAttributes, 3))
+                    );
 
     delete[] vertices;
     delete[] indices;
@@ -41,7 +46,7 @@ void OBJ::AddMesh(std::vector<VertexPositionUVNormal>& vertexBuffer, std::vector
 std::vector<GameEngine::Rendering::Mesh*> OBJ::ImportModel(const std::string& filePath)
 {
     std::vector<Mesh*> meshes;
-    
+
     Stream stream(filePath);
 
     std::vector<VertexPositionUVNormal> vertexBuffer;
@@ -71,7 +76,7 @@ std::vector<GameEngine::Rendering::Mesh*> OBJ::ImportModel(const std::string& fi
                     normalIndexOffset += normalList.size();
                     colorIndexOffset += colorList.size();
                     AddMesh(vertexBuffer, indexBuffer, meshes);
-                    
+
                     vertexBuffer.clear();
                     indexBuffer.clear();
                     positionList.clear();
@@ -150,7 +155,6 @@ std::vector<GameEngine::Rendering::Mesh*> OBJ::ImportModel(const std::string& fi
     uvList.clear();
     normalList.clear();
     colorList.clear();
-    
+
     return meshes;
 }
-
