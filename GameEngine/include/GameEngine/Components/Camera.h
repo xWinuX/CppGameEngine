@@ -16,11 +16,14 @@ namespace GameEngine
                 float     _zNear;
                 float     _zFar;
                 glm::mat4 _projectionMatrix = glm::identity<glm::mat4>();
-                void      UpdateProjectionMatrix();
+
+                void UpdateProjectionMatrix();
+
+            protected:
+                void OnBeforeRender() override;
 
             public:
                 Camera(float fovInDegrees, float zNear, float zFar);
-                void  OnBeforeRender() override;
                 float GetFOVInDegrees() const;
                 void  SetFOVInDegrees(float value);
         };

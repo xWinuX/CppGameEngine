@@ -1,7 +1,6 @@
-﻿#include "GameEngine/Core/Scene.h"
+﻿#include "GameEngine/Scene.h"
 
-using namespace GameEngine::Core;
-
+using namespace GameEngine;
 
 Scene::~Scene() { delete _sceneRoot; }
 

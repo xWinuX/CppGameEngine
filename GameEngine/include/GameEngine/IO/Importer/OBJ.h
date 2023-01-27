@@ -2,8 +2,9 @@
 #include <string>
 #include <vector>
 #include "../../Rendering/Mesh.h"
-#include "../../Rendering/Model.h"
 #include "../../Rendering/VertexBufferAttribute.h"
+#include "glm/vec2.hpp"
+#include "glm/vec3.hpp"
 
 namespace GameEngine
 {

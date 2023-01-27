@@ -4,7 +4,7 @@
 #include <GLFW/glfw3.h>
 #include <glm/ext/matrix_transform.hpp>
 
-#include "GameEngine/Core/Window.h"
+#include "GameEngine/Window.h"
 #include "GameEngine/Rendering/IndexBuffer.h"
 #include "GameEngine/Rendering/Material.h"
 #include "GameEngine/Rendering/Sprite.h"
@@ -154,7 +154,7 @@ void Renderer::Draw()
 
     Debug::Log::Message("Draw Calls: " + std::to_string(numDrawCalls));
 
-    glfwSwapBuffers(Core::Window::GetCurrentWindow()->GetGlWindow());
+    glfwSwapBuffers(Window::GetCurrentWindow()->GetGlWindow());
 
     // Cleanup lights
     for (Light* light : _lights) { light->OnFrameEnd(); }

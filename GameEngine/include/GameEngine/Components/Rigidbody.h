@@ -16,12 +16,15 @@ namespace GameEngine
             private:
                 reactphysics3d::RigidBody* _pPhysicsRigidBody;
 
-            public:
-                explicit Rigidbody(reactphysics3d::BodyType bodyType = reactphysics3d::BodyType::DYNAMIC);
-                ~Rigidbody() override;
+            protected:
                 void OnStart() override;
                 void OnPhysicsUpdate() override;
                 void OnOtherComponentAdded(Component* component) override;
+
+            public:
+                explicit Rigidbody(reactphysics3d::BodyType bodyType = reactphysics3d::BodyType::DYNAMIC);
+                ~Rigidbody() override;
+
                 void ApplyForce(glm::vec3 force) const;
                 void ApplyTorque(glm::vec3 torque) const;
         };

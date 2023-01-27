@@ -8,7 +8,7 @@
 #include "VertexBuffer.h"
 #include "SpriteSet.h"
 #include "../Components/Light.h"
-#include "../Utils/Time.h"
+#include "../Time.h"
 
 namespace GameEngine
 {

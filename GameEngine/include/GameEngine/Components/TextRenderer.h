@@ -20,11 +20,13 @@ namespace GameEngine
                 bool                                     _needsUpdate = false;
                 void                                     UpdateQuads();
 
+            protected:
+                void OnStart() override;
+                void OnBeforeRender() override;
+
             public:
                 TextRenderer(Rendering::Font* font, Rendering::Material* material);
-
-                void                 OnStart() override;
-                void                 OnBeforeRender() override;
+            
                 Rendering::Material* GetMaterial() override;
                 Rendering::Texture*  GetTexture() override;
                 size_t               GetQuadSize() override;

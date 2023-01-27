@@ -3,7 +3,6 @@
 #include <vector>
 
 #include "Mesh.h"
-#include "../Core/GameObject.h"
 
 namespace GameEngine
 {

@@ -1,18 +1,17 @@
-﻿#include "GameEngine/Core/Application.h"
+﻿#include "GameEngine/Application.h"
 
 #include <tiny_gltf.h>
 
-#include "GameEngine/Input/Input.h"
-#include "GameEngine/Physics/Physics.h"
+#include "GameEngine/Input.h"
+#include "GameEngine/Audio/AudioManager.h"
+#include "GameEngine/Physics/PhysicsManager.h"
 #include "GameEngine/Rendering/Renderer.h"
 
+using namespace GameEngine;
 using namespace GameEngine::Debug;
-using namespace GameEngine::Core;
 using namespace GameEngine::Rendering;
 using namespace GameEngine::Physics;
-using namespace GameEngine::Input;
-
-bool cull = false;
+using namespace GameEngine::Audio;
 
 Application::Application()
 {
@@ -23,6 +22,7 @@ Application::Application()
     if (!gladLoadGLLoader(reinterpret_cast<GLADloadproc>(glfwGetProcAddress))) { Log::Error("Failed to initialize GLAD"); }
 
     Renderer::Initialize();
+    Audio::AudioManager::Initialize();
 
     glfwSwapInterval(0);
 }
@@ -44,7 +44,7 @@ void Application::Run()
         Input::Update();
 
         // Execute the physics update on all objects if needed
-        Physics::Update(&scene);
+        PhysicsManager::Update(&scene);
 
         // Execute Update calls on each game object in the current scene
         scene.Update();

@@ -3,12 +3,12 @@
 #include <glm/ext/matrix_clip_space.hpp>
 
 #include "GameEngine/Components/Transform.h"
-#include "GameEngine/Core/Window.h"
+#include "GameEngine/Window.h"
 #include "GameEngine/Rendering/Renderer.h"
 
 using namespace GameEngine::Components;
 using namespace GameEngine::Rendering;
-using namespace GameEngine::Core;
+using namespace GameEngine;
 
 Camera::Camera(const float fovInDegrees, const float zNear, const float zFar) :
     _fovInDegrees(fovInDegrees),

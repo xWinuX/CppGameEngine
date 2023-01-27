@@ -1,25 +1,24 @@
-﻿#include "GameEngine/Physics/Physics.h"
+﻿#include "GameEngine/Physics/PhysicsManager.h"
 
 #include <reactphysics3d/engine/PhysicsCommon.h>
 
 #include "GameEngine/Physics/PhysicsDebugRenderer.h"
-#include "GameEngine/Utils/Time.h"
+#include "GameEngine/Time.h"
 
 using namespace GameEngine::Physics;
 using namespace GameEngine::Rendering;
-using namespace GameEngine::Core;
 using namespace GameEngine::Components;
 
-reactphysics3d::PhysicsCommon Physics::_physicsCommon;
-reactphysics3d::PhysicsWorld* Physics::_physicsWorld  = Physics::_physicsCommon.createPhysicsWorld();
-Material*                     Physics::_debugMaterial = nullptr;
-PhysicsDebugRenderer*         Physics::_debugRenderer = nullptr;
+reactphysics3d::PhysicsCommon PhysicsManager::_physicsCommon;
+reactphysics3d::PhysicsWorld* PhysicsManager::_physicsWorld  = PhysicsManager::_physicsCommon.createPhysicsWorld();
+Material*                     PhysicsManager::_debugMaterial = nullptr;
+PhysicsDebugRenderer*         PhysicsManager::_debugRenderer = nullptr;
 
-float Physics::_physicsTimeStep      = 1.0f / 60.0f;
-float Physics::_frameAccumulator     = 0.0f;
-bool  Physics::_renderDebugWireFrame = false;
+float PhysicsManager::_physicsTimeStep      = 1.0f / 60.0f;
+float PhysicsManager::_frameAccumulator     = 0.0f;
+bool  PhysicsManager::_renderDebugWireFrame = false;
 
-void Physics::Update(const GameEngine::Core::Scene* scene)
+void PhysicsManager::Update(const Scene* scene)
 {
     const float deltaTime = std::min(Time::GetDeltaTime(), 0.25f);
 
@@ -53,11 +52,11 @@ void Physics::Update(const GameEngine::Core::Scene* scene)
     }
 }
 
-reactphysics3d::PhysicsWorld*    Physics::GetPhysicsWorld() { return _physicsWorld; }
-reactphysics3d::PhysicsCommon*   Physics::GetPhysicsCommon() { return &_physicsCommon; }
-reactphysics3d::MemoryAllocator& Physics::GetMemoryAllocator() { return _physicsWorld->getMemoryManager().getHeapAllocator(); }
+reactphysics3d::PhysicsWorld*    PhysicsManager::GetPhysicsWorld() { return _physicsWorld; }
+reactphysics3d::PhysicsCommon*   PhysicsManager::GetPhysicsCommon() { return &_physicsCommon; }
+reactphysics3d::MemoryAllocator& PhysicsManager::GetMemoryAllocator() { return _physicsWorld->getMemoryManager().getHeapAllocator(); }
 
-void Physics::ToggleDebugWireframe()
+void PhysicsManager::ToggleDebugWireframe()
 {
     _renderDebugWireFrame = !_renderDebugWireFrame;
 
@@ -65,7 +64,7 @@ void Physics::ToggleDebugWireframe()
     Debug::Log::Message("Toggled physics debug is now: " + std::to_string(_renderDebugWireFrame));
 }
 
-void Physics::SetDebugRendererMaterial(Rendering::Material* material)
+void PhysicsManager::SetDebugRendererMaterial(Rendering::Material* material)
 {
     _debugMaterial = material;
     if (_debugRenderer != nullptr) { _debugRenderer->SetMaterial(_debugMaterial); }

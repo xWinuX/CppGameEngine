@@ -16,11 +16,12 @@ namespace GameEngine
                 float                        _framesPerSecond = 1;
                 float                        _frameIndex      = 0;
 
-            public:
-                SpriteRenderer(Rendering::RenderableSprite* sprite, Rendering::Material* material);
-
+            protected:
                 void OnBeforeRender() override;
                 void OnUpdate() override;
+
+            public:
+                SpriteRenderer(Rendering::RenderableSprite* sprite, Rendering::Material* material);
 
                 size_t               GetCopySize() override;
                 size_t               GetQuadSize() override;

@@ -2,31 +2,21 @@
 
 namespace GameEngine
 {
-    namespace Core
-    {
-        class GameObject;
-    }
-}
+    class GameObject;
 
-namespace GameEngine
-{
     namespace Components
     {
         class Transform;
 
         class Component
         {
-            friend GameEngine::Core::GameObject;
+            friend GameEngine::GameObject;
 
             protected:
-                GameEngine::Core::GameObject* _gameObject;
+                GameEngine::GameObject* _gameObject;
                 Transform*                    _transform;
                 bool                          _enabled = true;
-
-            public:
-                Component();
-                virtual ~Component() = default;
-
+            
                 virtual void OnStart();
                 virtual void OnUpdate();
                 virtual void OnPhysicsUpdate();
@@ -35,6 +25,12 @@ namespace GameEngine
 
                 virtual void OnComponentAdded();
                 virtual void OnOtherComponentAdded(Component* component);
+            
+            public:
+                Component();
+                virtual ~Component() = default;
+
+
 
                 void SetEnabled(const bool enabled);
                 bool GetEnabled() const;

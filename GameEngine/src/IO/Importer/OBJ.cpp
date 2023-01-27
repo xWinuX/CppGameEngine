@@ -6,6 +6,7 @@
 #include "GameEngine/Rendering/VertexBufferAttribute.h"
 #include "GameEngine/Rendering/VertexBufferLayout.h"
 #include "GameEngine/Utils/String.h"
+#include "glm/vec4.hpp"
 
 
 using namespace GameEngine::Rendering;
@@ -18,7 +19,6 @@ const std::vector<VertexBufferAttribute> OBJ::VertexBufferAttributes = {
     VertexBufferAttribute(2, GL_FLOAT, GL_FALSE, sizeof(VertexPositionUVNormal), reinterpret_cast<GLvoid*>(3 * sizeof(float))),
     VertexBufferAttribute(3, GL_FLOAT, GL_FALSE, sizeof(VertexPositionUVNormal), reinterpret_cast<GLvoid*>(5 * sizeof(float)))
 };
-
 
 void OBJ::AddMesh(std::vector<VertexPositionUVNormal>& vertexBuffer, std::vector<unsigned>& indexBuffer, std::vector<Mesh*>& meshes)
 {

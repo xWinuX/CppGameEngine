@@ -1,5 +1,5 @@
 ﻿#pragma once
-#include "Physics.h"
+#include "PhysicsManager.h"
 #include "../Components/MeshRenderer.h"
 #include "../Rendering/IndexBuffer.h"
 #include "../Rendering/VertexBuffer.h"

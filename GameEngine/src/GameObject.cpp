@@ -1,11 +1,11 @@
-﻿#include "GameEngine/Core/GameObject.h"
+﻿#include "GameEngine/GameObject.h"
 
 #include <iostream>
 
 #include "GameEngine/Debug/Log.h"
 
 using namespace GameEngine::Debug;
-using namespace GameEngine::Core;
+using namespace GameEngine;
 
 GameObject::GameObject():
     _transform(new GameEngine::Components::Transform()) { AddComponent(_transform); }

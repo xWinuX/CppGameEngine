@@ -5,10 +5,9 @@
 #include <glm/gtc/quaternion.hpp>
 #include <glm/gtx/euler_angles.hpp>
 
-#include "GameEngine/Core/GameObject.h"
+#include "GameEngine/GameObject.h"
 
 using namespace GameEngine::Components;
-using namespace GameEngine::Core;
 
 glm::vec3 Transform::GetPosition() const { return ToWorldSpace(_localPosition); }
 glm::vec3 Transform::GetLocalPosition() const { return _localPosition; }

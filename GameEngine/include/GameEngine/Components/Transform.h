@@ -25,6 +25,9 @@ namespace GameEngine
                 glm::mat4 GetParentTRS() const;
                 glm::quat GetParentRotation() const;
 
+            protected:
+                void OnBeforeRender() override;
+
             public:
                 glm::vec3 GetPosition() const;
                 glm::vec3 GetLocalPosition() const;
@@ -51,8 +54,6 @@ namespace GameEngine
                 glm::vec3 ToLocalSpace(glm::vec3 vec3) const;
 
                 reactphysics3d::Transform& GetPhysicsTransform();
-
-                void OnBeforeRender() override;
         };
     }
 }

@@ -1,18 +1,15 @@
 ﻿#include "GraphicDemoApplication.h"
 
-#include <reactphysics3d/reactphysics3d.h>
-
 #include "GameEngine/Components/BoxCollider.h"
 #include "GameEngine/Components/Camera.h"
 #include "GameEngine/Components/MeshRenderer.h"
 #include "GameEngine/Components/PointLight.h"
 #include "GameEngine/Components/Rigidbody.h"
-#include "GameEngine/Components/SpriteRenderer.h"
 #include "GameEngine/Components/TextRenderer.h"
 #include "GameEngine/Components/Transform.h"
-#include "GameEngine/Core/Window.h"
-#include "GameEngine/Input/Input.h"
-#include "GameEngine/Physics/Physics.h"
+#include "GameEngine/Window.h"
+#include "GameEngine/Input.h"
+#include "GameEngine/Physics/PhysicsManager.h"
 #include "GameEngine/Rendering/Font.h"
 #include "GameEngine/Rendering/Material.h"
 #include "GameEngine/Rendering/Model.h"
@@ -22,21 +19,22 @@
 #include "GameEngine/Rendering/SpriteAtlas.h"
 #include "GameEngine/Utils/Math.h"
 #include "GameEngine/Shapes/Cube.h"
-#include "GameEngine/Utils/Time.h"
+#include "GameEngine/Time.h"
+#include "GameEngine/Audio/AudioManager.h"
+#include "GameEngine/Audio/Sound.h"
 #include "glm/gtx/string_cast.hpp"
-
-
+/*
 #include <fmod.hpp>
 
-FMOD::System* fmodSystem;
+FMOD::System* fmodSystem;*/
 
+using namespace GameEngine;
 using namespace GameEngine::Debug;
+using namespace GameEngine::Audio;
 using namespace GameEngine::Utils;
-using namespace GameEngine::Core;
 using namespace GameEngine::Rendering;
 using namespace GameEngine::Components;
 using namespace GameEngine::Physics;
-using namespace GameEngine::Input;
 using namespace GameEngine::Shapes;
 
 // Textures 
@@ -96,34 +94,17 @@ Font* pixelFont;
 
 Cube* cube;
 
+Sound* dlSound;
+
 void GraphicDemoApplication::Initialize(Scene& scene)
 {
-    FMOD::System_Create(&fmodSystem);
 
-    FMOD::Sound *sound;
-    FMOD::Channel *channel;
     
-    // Create an instance of the FMOD::System class
-    FMOD_RESULT result = FMOD::System_Create(&fmodSystem);
-    if (result != FMOD_OK) {
-        std::cout << "Error initializing FMOD: " << result << std::endl;
-    }
+    dlSound = new Sound("res/audio/Test.mp3");
 
-    // Initialize the FMOD system with 32 channels
-    result = fmodSystem->init(32, FMOD_INIT_NORMAL, 0);
-    if (result != FMOD_OK) {
-        std::cout << "Error initializing FMOD: " << result << std::endl;
-    }
+    FMOD::Channel* channel;
+    AudioManager::GetFMODSystem()->playSound(dlSound->GetFMODSound(), 0, false, &channel);
     
-    result = fmodSystem->createSound("res/audio/Test.mp3", FMOD_DEFAULT, 0, &sound);
-    if (result != FMOD_OK) {
-        std::cout << "Error loading sound: " << result << std::endl;
-    }
-
-    result = fmodSystem->playSound(sound, 0, false, &channel);
-    if (result != FMOD_OK) {
-        std::cout << "Error playing sound: " << result << std::endl;
-    }
     
     // Fonts
     pixelFont = new Font("res/fonts/Roboto-Regular.ttf");
@@ -337,14 +318,14 @@ void GraphicDemoApplication::Initialize(Scene& scene)
     scene.AddGameObject(waterObject);
 
     // Setup physics debug
-    Physics::SetDebugRendererMaterial(physicsMaterial);
-    Physics::ToggleDebugWireframe();
+    PhysicsManager::SetDebugRendererMaterial(physicsMaterial);
+    PhysicsManager::ToggleDebugWireframe();
 }
 
 void GraphicDemoApplication::CustomRun()
 {
     // Toggle physics debug wireframe
-    if (Input::GetKeyPressed(GLFW_KEY_P)) { Physics::ToggleDebugWireframe(); }
+    if (Input::GetKeyPressed(GLFW_KEY_P)) { PhysicsManager::ToggleDebugWireframe(); }
 
     // Camera movement
     glm::vec4 cameraVelocity = glm::vec4(0.0f);

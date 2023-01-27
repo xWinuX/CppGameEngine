@@ -1,10 +1,10 @@
 ﻿#pragma once
-#include "GameEngine/Core/Application.h"
+#include "GameEngine/Application.h"
 
-class GraphicDemoApplication final : public Application
+class GraphicDemoApplication final : public GameEngine::Application
 {
     public:
-        void Initialize(GameEngine::Core::Scene& scene) override;
+        void Initialize(GameEngine::Scene& scene) override;
         void CustomRun() override;
         
 };

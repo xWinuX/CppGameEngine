@@ -1,7 +1,8 @@
-﻿#include "Time.h"
-#include "GameEngine/Utils/Time.h"
+﻿#include "GameEngine/Time.h"
 
 #include <GLFW/glfw3.h>
+
+using namespace GameEngine;
 
 float Time::_deltaTime = 0;
 float Time::_previousTimeSinceStart = 0;

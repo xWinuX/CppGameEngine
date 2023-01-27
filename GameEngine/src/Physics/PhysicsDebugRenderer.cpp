@@ -21,7 +21,7 @@ PhysicsDebugRenderer::~PhysicsDebugRenderer()
 
 void PhysicsDebugRenderer::EnableDebugRenderer(const bool enable)
 {
-    reactphysics3d::PhysicsWorld* physicsWorld = Physics::GetPhysicsWorld();
+    reactphysics3d::PhysicsWorld* physicsWorld = PhysicsManager::GetPhysicsWorld();
     physicsWorld->setIsDebugRenderingEnabled(enable);
     physicsWorld->getDebugRenderer().setIsDebugItemDisplayed(reactphysics3d::DebugRenderer::DebugItem::COLLIDER_AABB, enable);
     physicsWorld->getDebugRenderer().setIsDebugItemDisplayed(reactphysics3d::DebugRenderer::DebugItem::CONTACT_POINT, enable);
@@ -37,7 +37,7 @@ void PhysicsDebugRenderer::Render()
         return;
     }
 
-    const reactphysics3d::DebugRenderer debugRenderer = Physics::GetPhysicsWorld()->getDebugRenderer();
+    const reactphysics3d::DebugRenderer debugRenderer = PhysicsManager::GetPhysicsWorld()->getDebugRenderer();
     const unsigned int                  numTriangles  = debugRenderer.getNbTriangles();
 
     // Don't render if there aren't any triangles

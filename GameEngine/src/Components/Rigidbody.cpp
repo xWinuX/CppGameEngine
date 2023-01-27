@@ -4,15 +4,15 @@
 
 #include "GameEngine/Components/CapsuleCollider.h"
 #include "GameEngine/Components/Collider.h"
-#include "GameEngine/Physics/Physics.h"
+#include "GameEngine/Physics/PhysicsManager.h"
 
 using namespace GameEngine::Physics;
 using namespace GameEngine::Components;
 
 Rigidbody::Rigidbody(const reactphysics3d::BodyType bodyType):
-    _pPhysicsRigidBody(Physics::Physics::Physics::GetPhysicsWorld()->createRigidBody(reactphysics3d::Transform())) { _pPhysicsRigidBody->setType(bodyType); }
+    _pPhysicsRigidBody(PhysicsManager::GetPhysicsWorld()->createRigidBody(reactphysics3d::Transform())) { _pPhysicsRigidBody->setType(bodyType); }
 
-Rigidbody::~Rigidbody() { Physics::Physics::GetPhysicsWorld()->destroyRigidBody(_pPhysicsRigidBody); }
+Rigidbody::~Rigidbody() { PhysicsManager::GetPhysicsWorld()->destroyRigidBody(_pPhysicsRigidBody); }
 
 void Rigidbody::OnStart()
 {

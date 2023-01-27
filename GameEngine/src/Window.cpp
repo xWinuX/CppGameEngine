@@ -1,8 +1,8 @@
-﻿#include "GameEngine/Core/Window.h"
+﻿#include "GameEngine/Window.h"
 
 #include "GameEngine/Debug/Log.h"
 
-using namespace GameEngine::Core;
+using namespace GameEngine;
 
 Window* Window::_currentWindow = nullptr;
 
