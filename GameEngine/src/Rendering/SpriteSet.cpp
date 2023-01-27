@@ -1,10 +1,8 @@
-﻿#include "SpriteSet.h"
+﻿#include <GameEngine/Rendering/SpriteSet.h>
+#include <GameEngine/Rendering/Sprite.h>
+#include <GameEngine/Debug/Log.h>
 
 #include <iostream>
-
-#include "Sprite.h"
-#include "../Debug/Log.h"
-
 #include "glm/ext/matrix_transform.hpp"
 
 using namespace GameEngine::Rendering;
