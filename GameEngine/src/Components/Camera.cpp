@@ -19,7 +19,7 @@ Camera::Camera(const float fovInDegrees, const float zNear, const float zFar) :
     Window::GetCurrentWindow()->AddFramebufferSizeCallback([this](Window* window) { UpdateProjectionMatrix(); });
 }
 
-void Camera::OnBeforeRender()
+void Camera::OnUpdateEnd()
 {
     Renderer::SetProjectionMatrix(_projectionMatrix);
     Renderer::SetViewMatrix(glm::inverse(GetTransform()->GetTRS()));

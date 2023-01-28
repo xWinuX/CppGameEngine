@@ -9,17 +9,35 @@
 
 using namespace GameEngine::Components;
 
+const glm::vec4 Transform::Right   = glm::vec4(1.0f, 0.0f, 0.0f, 0.0f);
+const glm::vec4 Transform::Up      = glm::vec4(0.0f, 1.0f, 0.0f, 0.0f);
+const glm::vec4 Transform::Forward = glm::vec4(0.0f, 0.0f, 1.0f, 0.0f);
+
 glm::vec3 Transform::GetPosition() const { return ToWorldSpace(_localPosition); }
 glm::vec3 Transform::GetLocalPosition() const { return _localPosition; }
 glm::quat Transform::GetRotation() const { return GetParentRotation() * _localRotation; }
 glm::quat Transform::GetLocalRotation() const { return _localRotation; }
 glm::vec3 Transform::GetLocalScale() const { return _localScale; }
+
+glm::vec3 Transform::GetRight() const { return mat4_cast(GetRotation()) * Right; }
+glm::vec3 Transform::GetUp() const { return mat4_cast(GetRotation()) * Up; }
+glm::vec3 Transform::GetForward() const { return mat4_cast(GetRotation()) * Forward; }
+
+/**
+ * \brief
+ * Returns the TransformationRotationScale matrix of the transform
+ * \n \n
+ * IMPORTANT: The TRS is only calculated at the end of the update cycle for performance reasons,
+ * if you need the TRS immediately after a transformation call CalculateTRS() before GetTRS()
+ * 
+ * \return Matrix4x4 TRS
+ */
 glm::mat4 Transform::GetTRS() const { return _trs; }
 
 reactphysics3d::Transform& Transform::GetPhysicsTransform() { return _physicsTransform; }
 
-
 void Transform::SetPosition(const glm::vec3& position) { SetLocalPosition(ToLocalSpace(position)); }
+
 void Transform::SetLocalPosition(const glm::vec3& localPosition)
 {
     _localPosition = localPosition;
@@ -27,6 +45,7 @@ void Transform::SetLocalPosition(const glm::vec3& localPosition)
 }
 
 void Transform::SetRotation(const glm::quat quaternion) { SetLocalRotation(quaternion * GetRotation()); }
+
 void Transform::SetLocalRotation(const glm::quat quaternion)
 {
     _localRotation = quaternion;
@@ -56,6 +75,7 @@ void Transform::Rotate(const glm::vec3& eulerAngles)
     const glm::quat parentRotation = GetParentRotation();
     SetLocalRotation(parentRotation * glm::quat(radians(eulerAngles)) * inverse(parentRotation) * _localRotation);
 }
+
 void Transform::RotateLocal(const glm::vec3& eulerAngles) { SetLocalRotation(GetLocalRotation() * glm::quat(radians(eulerAngles))); }
 
 
@@ -73,4 +93,4 @@ void Transform::CalculateTRS()
     _trs = glm::translate(_trs, _localPosition);
 }
 
-void Transform::OnBeforeRender() { CalculateTRS(); }
+void Transform::OnUpdateEnd() { CalculateTRS(); }

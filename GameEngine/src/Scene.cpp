@@ -8,9 +8,10 @@ void Scene::InitializeScene() const { _sceneRoot->OnStart(); }
 
 void Scene::Update() const
 {
+    _sceneRoot->OnUpdateBegin();
     _sceneRoot->OnUpdate();
     _sceneRoot->OnLateUpdate();
-    _sceneRoot->OnBeforeRender();
+    _sceneRoot->OnUpdateEnd();
 }
 
 void Scene::PhysicsUpdate() const { _sceneRoot->OnPhysicsUpdate(); }

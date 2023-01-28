@@ -17,7 +17,7 @@ namespace GameEngine
                 float                        _frameIndex      = 0;
 
             protected:
-                void OnBeforeRender() override;
+                void OnUpdateEnd() override;
                 void OnUpdate() override;
 
             public:

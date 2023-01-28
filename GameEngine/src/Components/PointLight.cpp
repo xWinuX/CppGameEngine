@@ -13,13 +13,13 @@ void PointLight::SetColor(const glm::vec4 color) { _color = color; }
 void PointLight::SetRange(const float range) { _range = range; }
 void PointLight::SetIntensity(const float intensity) { _intensity = intensity; }
 
-void PointLight::OnBeforeRender()
+void PointLight::OnUpdateEnd()
 {
     _positions.push_back(_transform->GetPosition());
     _colors.emplace_back(_color);
     _intensities.push_back(_intensity);
     _ranges.push_back(_range);
-    Light::OnBeforeRender();
+    Light::OnUpdateEnd();
 }
 
 void PointLight::OnShaderUse()

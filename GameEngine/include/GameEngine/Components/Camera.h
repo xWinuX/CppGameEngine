@@ -20,7 +20,7 @@ namespace GameEngine
                 void UpdateProjectionMatrix();
 
             protected:
-                void OnBeforeRender() override;
+                void OnUpdateEnd() override;
 
             public:
                 Camera(float fovInDegrees, float zNear, float zFar);

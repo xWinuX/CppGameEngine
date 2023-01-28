@@ -23,7 +23,7 @@ MeshRenderer::~MeshRenderer()
 
 void MeshRenderer::OnComponentAdded() { for (RenderablePrimitive* renderablePrimitive : _renderablePrimitives) { renderablePrimitive->SetTransform(_transform); } }
 
-void MeshRenderer::OnBeforeRender()
+void MeshRenderer::OnUpdateEnd()
 {
     if (!_visible) { return; }
 

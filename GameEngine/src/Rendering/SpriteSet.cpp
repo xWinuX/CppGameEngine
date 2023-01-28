@@ -33,11 +33,6 @@ SpriteSet::SpriteSet(Texture* texture, const msdf_atlas::FontGeometry& fontGeome
         glyph.getQuadPlaneBounds(pl, pb, pr, pt);
         glyph.getQuadAtlasBounds(il, ib, ir, it);
 
-        std::cout << "left" << pl << std::endl;
-        std::cout << "right" << pr << std::endl;
-        std::cout << "top" << pt << std::endl;
-        std::cout << "bottom" << pb << std::endl;
-
         const glm::uvec2 pixelPosition = glm::uvec2(il, it);
 
         il *= texelSize.x;

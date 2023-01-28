@@ -22,6 +22,8 @@
 #include "GameEngine/Time.h"
 #include "GameEngine/Audio/AudioManager.h"
 #include "GameEngine/Audio/Sound.h"
+#include "GameEngine/Components/AudioListener.h"
+#include "GameEngine/Components/AudioSource.h"
 #include "glm/gtx/string_cast.hpp"
 /*
 #include <fmod.hpp>
@@ -98,13 +100,7 @@ Sound* dlSound;
 
 void GraphicDemoApplication::Initialize(Scene& scene)
 {
-
-    
-    dlSound = new Sound("res/audio/Test.mp3");
-
-    FMOD::Channel* channel;
-    AudioManager::GetFMODSystem()->playSound(dlSound->GetFMODSound(), 0, false, &channel);
-    
+    dlSound = new Sound("res/audio/Test.mp3", true);
     
     // Fonts
     pixelFont = new Font("res/fonts/Roboto-Regular.ttf");
@@ -245,6 +241,7 @@ void GraphicDemoApplication::Initialize(Scene& scene)
     // Camera
     cameraObject = new GameObject();
     cameraObject->AddComponent(new Camera(60, 0.01f, 10000.0f));
+    cameraObject->AddComponent(new AudioListener());
     scene.AddGameObject(cameraObject);
 
     // Red light
@@ -261,6 +258,7 @@ void GraphicDemoApplication::Initialize(Scene& scene)
     Transform* rainbowLightTransform = rainbowLightObject->GetTransform();
     rainbowLightTransform->SetPosition(glm::vec3(-2.0f, 0.0f, 0.0f));
     rainbowLightTransform->SetLocalScale(glm::vec3(0.1f));
+    rainbowLightObject->AddComponent(new AudioSource(dlSound));
     rainbowLightObject->AddComponent(new MeshRenderer(sphereModel->GetMesh(0), dudeMaterial));
     rainbowLightObject->AddComponent(new PointLight(litShader, glm::vec4(1.0f, 1.0f, 1.0f, 1.0f), 5.0f, 2.0f));
     scene.AddGameObject(rainbowLightObject);
@@ -348,6 +346,12 @@ void GraphicDemoApplication::CustomRun()
     // Close window if escape key is pressed
     if (Input::GetKeyPressed(GLFW_KEY_ESCAPE)) { glfwSetWindowShouldClose(Application::_window.GetGlWindow(), true); }
 
+
+    if (Input::GetKeyPressed(GLFW_KEY_M))
+    {
+        rainbowLightObject->GetComponent<AudioSource>()->PlayLooped();
+    }
+    
     // Change rainbow light color
     rainbowLightObject->GetComponent<PointLight>()->SetColor(glm::vec4(
                                                                        Math::Sin01(Time::GetTimeSinceStart() + 250),

@@ -25,8 +25,12 @@ namespace GameEngine
                 glm::mat4 GetParentTRS() const;
                 glm::quat GetParentRotation() const;
 
+                static const glm::vec4 Forward;
+                static const glm::vec4 Up;
+                static const glm::vec4 Right;
+
             protected:
-                void OnBeforeRender() override;
+                void OnUpdateEnd() override;
 
             public:
                 glm::vec3 GetPosition() const;
@@ -34,6 +38,9 @@ namespace GameEngine
                 glm::quat GetRotation() const;
                 glm::quat GetLocalRotation() const;
                 glm::vec3 GetLocalScale() const;
+                glm::vec3 GetUp() const;
+                glm::vec3 GetForward() const;
+                glm::vec3 GetRight() const;
 
                 glm::mat4 GetTRS() const;
 

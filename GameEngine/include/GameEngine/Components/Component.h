@@ -18,10 +18,11 @@ namespace GameEngine
                 bool                          _enabled = true;
             
                 virtual void OnStart();
+                virtual void OnUpdateBegin();
                 virtual void OnUpdate();
                 virtual void OnPhysicsUpdate();
                 virtual void OnLateUpdate();
-                virtual void OnBeforeRender();
+                virtual void OnUpdateEnd();
 
                 virtual void OnComponentAdded();
                 virtual void OnOtherComponentAdded(Component* component);

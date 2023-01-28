@@ -55,7 +55,7 @@ TextRenderer::TextRenderer(Rendering::Font* font, Rendering::Material* material)
 
 void TextRenderer::OnStart() { UpdateQuads(); }
 
-void TextRenderer::OnBeforeRender()
+void TextRenderer::OnUpdateEnd()
 {
     // Update quads needed
     if (_needsUpdate) { UpdateQuads(); }

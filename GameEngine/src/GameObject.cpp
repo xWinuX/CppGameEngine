@@ -7,6 +7,15 @@
 using namespace GameEngine::Debug;
 using namespace GameEngine;
 
+
+#define DO_FUNCTION(funcName) \
+for (GameEngine::Components::Component* component : _components) \
+{ \
+    if (!component->GetEnabled()) { continue; } \
+    component->funcName(); \
+} \
+for (const GameObject* child : _children) { child->funcName(); }
+
 GameObject::GameObject():
     _transform(new GameEngine::Components::Transform()) { AddComponent(_transform); }
 
@@ -20,7 +29,7 @@ GameObject::~GameObject()
     while (i != _children.end())
     {
         const GameObject* child = *i;
-        i = _children.erase(i);
+        i                       = _children.erase(i);
         delete child;
     }
 
@@ -62,48 +71,9 @@ void GameObject::SetParent(GameObject* newParent)
 
 GameObject* GameObject::GetParent() const { return _parent; }
 
-void GameObject::OnStart() const
-{
-    for (Components::Component* component : _components) { component->OnStart(); }
-    for (const GameObject* child : _children) { child->OnStart(); }
-}
-
-void GameObject::OnPhysicsUpdate() const
-{
-    for (GameEngine::Components::Component* component : _components)
-    {
-        if (!component->GetEnabled()) { continue; }
-        component->OnPhysicsUpdate();
-    }
-    for (const GameObject* child : _children) { child->OnPhysicsUpdate(); }
-}
-
-void GameObject::OnUpdate() const
-{
-    for (GameEngine::Components::Component* component : _components)
-    {
-        if (!component->GetEnabled()) { continue; }
-        component->OnUpdate();
-    }
-    for (const GameObject* child : _children) { child->OnUpdate(); }
-}
-
-void GameObject::OnLateUpdate() const
-{
-    for (GameEngine::Components::Component* component : _components)
-    {
-        if (!component->GetEnabled()) { continue; }
-        component->OnLateUpdate();
-    }
-    for (const GameObject* child : _children) { child->OnLateUpdate(); }
-}
-
-void GameObject::OnBeforeRender() const
-{
-    for (GameEngine::Components::Component* component : _components)
-    {
-        if (!component->GetEnabled()) { continue; }
-        component->OnBeforeRender();
-    }
-    for (const GameObject* child : _children) { child->OnBeforeRender(); }
-}
+void GameObject::OnStart() const { DO_FUNCTION(OnStart) }
+void GameObject::OnUpdateBegin() const { DO_FUNCTION(OnUpdateBegin) }
+void GameObject::OnPhysicsUpdate() const { DO_FUNCTION(OnPhysicsUpdate) }
+void GameObject::OnUpdate() const { DO_FUNCTION(OnUpdate) }
+void GameObject::OnLateUpdate() const { DO_FUNCTION(OnLateUpdate) }
+void GameObject::OnUpdateEnd() const { DO_FUNCTION(OnUpdateEnd) }

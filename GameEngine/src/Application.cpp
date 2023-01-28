@@ -21,6 +21,7 @@ Application::Application()
 
     if (!gladLoadGLLoader(reinterpret_cast<GLADloadproc>(glfwGetProcAddress))) { Log::Error("Failed to initialize GLAD"); }
 
+    // Initialize Systems
     Renderer::Initialize();
     Audio::AudioManager::Initialize();
 
@@ -37,19 +38,19 @@ void Application::Run()
 
     while (!_window.ShouldClose())
     {
-        // Update delta time
         Time::Update();
-
-        // Update the new input state
         Input::Update();
 
-        // Execute the physics update on all objects if needed
+        // Executes als OnPhysicsUpdates on game objects if a pyhsics time step happens, also updates the physics world
         PhysicsManager::Update(&scene);
 
         // Execute Update calls on each game object in the current scene
         scene.Update();
 
         CustomRun();
+
+        // Audio Update
+        AudioManager::Update();
 
         // Render
         Renderer::Draw();

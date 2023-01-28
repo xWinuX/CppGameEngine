@@ -22,7 +22,7 @@ namespace GameEngine
 
             protected:
                 void OnStart() override;
-                void OnBeforeRender() override;
+                void OnUpdateEnd() override;
 
             public:
                 TextRenderer(Rendering::Font* font, Rendering::Material* material);

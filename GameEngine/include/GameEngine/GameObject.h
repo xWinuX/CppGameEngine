@@ -25,10 +25,11 @@ namespace GameEngine
             void RemoveChild(GameObject* child);
 
             void OnStart() const;
+            void OnUpdateBegin() const;
             void OnUpdate() const;
             void OnPhysicsUpdate() const;
             void OnLateUpdate() const;
-            void OnBeforeRender() const;
+            void OnUpdateEnd() const;
 
         public:
             GameObject();

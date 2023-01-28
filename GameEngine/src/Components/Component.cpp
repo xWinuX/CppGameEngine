@@ -7,10 +7,11 @@ GameEngine::Components::Component::Component():
     _transform(nullptr) {}
 
 void Component::OnStart() {}
+void Component::OnUpdateBegin() {}
 void Component::OnUpdate() {}
 void Component::OnPhysicsUpdate() {}
 void Component::OnLateUpdate() {}
-void Component::OnBeforeRender() {}
+void Component::OnUpdateEnd() {}
 void Component::OnComponentAdded() {}
 void Component::OnOtherComponentAdded(Component* component) {}
 void Component::SetEnabled(const bool enabled) { _enabled = enabled; }

@@ -22,7 +22,7 @@ namespace GameEngine
                 float     _intensity;
 
             protected:
-                void OnBeforeRender() override;
+                void OnUpdateEnd() override;
                 void OnFrameEnd() override;
                 void OnShaderUse() override;
 

@@ -20,7 +20,7 @@ namespace GameEngine
 
             protected:
                 void OnComponentAdded() override;
-                void OnBeforeRender() override;
+                void OnUpdateEnd() override;
 
             public:
                 explicit MeshRenderer(Rendering::Mesh* mesh, Rendering::Material* material);

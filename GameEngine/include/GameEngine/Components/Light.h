@@ -18,7 +18,7 @@ namespace GameEngine
             protected:
                 GameEngine::Rendering::Shader* _shader;
 
-                void OnBeforeRender() override;
+                void OnUpdateEnd() override;
                 virtual void OnShaderUse() = 0;
                 virtual void OnFrameEnd() = 0;
             public:
