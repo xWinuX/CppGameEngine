@@ -20,6 +20,9 @@
   <PropertyGroup Label="Configuration">
     <PlatformToolset>v143</PlatformToolset>
   </PropertyGroup>
+  <PropertyGroup Label="Configuration" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <UseDebugLibraries>true</UseDebugLibraries>
+  </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings">
   </ImportGroup>
@@ -40,6 +43,8 @@
     <ClCompile>
       <Optimization>Disabled</Optimization>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+      <PreprocessorDefinitions>_DEBUG</PreprocessorDefinitions>
+      <AdditionalOptions>/MTd</AdditionalOptions>
     </ClCompile>
     <Link>
       <AdditionalDependencies>%(AdditionalDependencies);$(SolutionDir)vendor\reactphysics3d\libs\reactphysics3d_Debug_x64.lib;$(SolutionDir)vendor\glfw\libs\glfw3_Release_x64.lib;$(SolutionDir)vendor\msdf-atlas-gen\libs\msdf-atlas-gen_Debug_x64.lib;$(SolutionDir)vendor\freetype\libs\freetype_Debug_x64.lib;$(SolutionDir)vendor\msdfgen\libs\msdfgen-core_Debug_x64.lib;$(SolutionDir)vendor\msdfgen\libs\msdfgen-ext_Debug_x64.lib;$(SolutionDir)vendor\msdfgen\libs\skia_Debug_x64.lib;$(SolutionDir)vendor\fmod\api\core\lib\x64\fmodL_vc.lib</AdditionalDependencies>
@@ -900,6 +905,7 @@
       <LinkCompiled>true</LinkCompiled>
     </ClCompile>
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="src\CarstenBehaviour.cpp" />
     <ClCompile Include="src\GraphicDemoApplication.cpp" />
     <ClCompile Include="vendor\GLAD\src\glad.c" />
     <ClCompile Include="vendor\glm\include\glm\detail\glm.cpp" />
@@ -907,6 +913,7 @@
     <ClCompile Include="vendor\tinygltf\src\tiny_gltf.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="GameEngine\include\AssetDatabase.h" />
     <ClInclude Include="GameEngine\include\GameEngine\Application.h" />
     <ClInclude Include="GameEngine\include\GameEngine\Audio\AudioManager.h" />
     <ClInclude Include="GameEngine\include\GameEngine\Audio\Sound.h" />
@@ -961,6 +968,8 @@
     <ClInclude Include="GameEngine\include\GameEngine\Utils\Math.h" />
     <ClInclude Include="GameEngine\include\GameEngine\Utils\String.h" />
     <ClInclude Include="GameEngine\include\GameEngine\Window.h" />
+    <ClInclude Include="src\Asset.h" />
+    <ClInclude Include="src\CarstenBehaviour.h" />
     <ClInclude Include="src\GraphicDemoApplication.h" />
     <ClInclude Include="vendor\fmod\api\core\inc\fmod.h" />
     <ClInclude Include="vendor\fmod\api\core\inc\fmod.hpp" />

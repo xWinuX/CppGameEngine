@@ -24,11 +24,10 @@ namespace GameEngine
             protected:
                 void OnUpdateEnd() override;
                 void OnFrameEnd() override;
-                void OnShaderUse() override;
+                void OnShaderUse(Rendering::Shader* shader) override;
 
             public:
-                explicit PointLight(GameEngine::Rendering::Shader* shader, const glm::vec4 color = glm::vec4(1.0), const float range = 1.0f, const float intensity = 1.0f):
-                    Light(shader),
+                explicit PointLight(const glm::vec4 color = glm::vec4(1.0), const float range = 1.0f, const float intensity = 1.0f):
                     _color(color),
                     _range(range),
                     _intensity(intensity) {}

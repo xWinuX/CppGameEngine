@@ -22,13 +22,13 @@ void PointLight::OnUpdateEnd()
     Light::OnUpdateEnd();
 }
 
-void PointLight::OnShaderUse()
+void PointLight::OnShaderUse(Rendering::Shader* shader)
 {
-    _shader->SetUniformInstant<int>("u_NumPointLights", static_cast<int>(_positions.size()));
-    _shader->SetUniformInstant<std::vector<glm::vec3>*>("u_PointLightPositions", &_positions);
-    _shader->SetUniformInstant<std::vector<glm::vec4>*>("u_PointLightColors", &_colors);
-    _shader->SetUniformInstant<std::vector<float>*>("u_PointLightIntensities", &_intensities);
-    _shader->SetUniformInstant<std::vector<float>*>("u_PointLightRanges", &_ranges);
+    shader->SetUniformInstant<int>("u_NumPointLights", static_cast<int>(_positions.size()));
+    shader->SetUniformInstant<std::vector<glm::vec3>*>("u_PointLightPositions", &_positions);
+    shader->SetUniformInstant<std::vector<glm::vec4>*>("u_PointLightColors", &_colors);
+    shader->SetUniformInstant<std::vector<float>*>("u_PointLightIntensities", &_intensities);
+    shader->SetUniformInstant<std::vector<float>*>("u_PointLightRanges", &_ranges);
 }
 
 void PointLight::OnFrameEnd()

@@ -57,7 +57,7 @@ namespace GameEngine
                 static unsigned int RenderRenderables(std::map<Material*, T>& map)
                 {
                     unsigned int         numDrawCalls      = 0;
-                    const Shader*        shader            = nullptr;
+                    Shader*              shader            = nullptr;
                     Material::CullFace   currentCullFace   = Material::CullFace::Back;
                     Material::RenderMode currentRenderMode = Material::RenderMode::Fill;
                     bool                 firstLoop         = true;
@@ -69,13 +69,13 @@ namespace GameEngine
                         const Material::RenderMode renderMode = material->GetRenderMode();
 
                         // Choose if new shader should get activated
-                        const Shader* newShader = material->GetShader();
+                        Shader* newShader = material->GetShader();
                         if (shader == nullptr || shader != newShader)
                         {
                             shader = newShader;
                             shader->Use();
 
-                            for (Components::Light*& light : _lights) { light->OnShaderUse(); }
+                            for (Components::Light*& light : _lights) { light->OnShaderUse(shader); }
 
                             // TODO: Somehow abstract this away
                             material->GetUniformBuffer()->SetUniformInstant<float>("u_Time", Time::GetTimeSinceStart());

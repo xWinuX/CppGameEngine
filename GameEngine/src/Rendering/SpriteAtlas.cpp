@@ -91,7 +91,7 @@ void SpriteAtlas::Pack()
             }
 
             // Update sprite uvs
-            glm::vec2 topLeftUV = glm::vec2(static_cast<float>(position.x) * _uvStep.x, static_cast<float>(_size.y - position.y) * _uvStep.y);
+            glm::vec2 topLeftUV = glm::vec2(static_cast<float>(position.x) * _uvStep.x, static_cast<float>(position.y) * _uvStep.y);
             sprite->SetUV(topLeftUV, topLeftUV + frameUVStep);
 
             // Update cursor x position to end of currently inserted sprite 

@@ -27,9 +27,9 @@ namespace GameEngine
                     glm::vec4 Colors[4];
                 };
 
-                explicit Sprite(Texture* texture, unsigned int pixelsPerUnit = 1);
-                Sprite(Texture* texture, glm::uvec2 pixelPosition, glm::uvec2 size, glm::vec2 uvTopLeft, glm::vec2 uvBottomRight, unsigned int pixelsPerUnit = 1);
-                Sprite(Texture* texture, glm::uvec2 pixelPosition, glm::vec4 posLRTB, glm::vec2 uvTopLeft, glm::vec2 uvBottomRight, unsigned int pixelsPerUnit = 1);
+                explicit Sprite(Texture* texture, unsigned int pixelsPerUnit = 30);
+                Sprite(Texture* texture, glm::uvec2 pixelPosition, glm::uvec2 size, glm::vec2 uvTopLeft, glm::vec2 uvBottomRight, unsigned int pixelsPerUnit = 30);
+                Sprite(Texture* texture, glm::uvec2 pixelPosition, glm::vec4 posLRTB, glm::vec2 uvTopLeft, glm::vec2 uvBottomRight, unsigned int pixelsPerUnit = 30);
                 ~Sprite() override;
 
                 void SetUV(glm::vec2 topLeftUV, glm::vec2 bottomRightUV) const;

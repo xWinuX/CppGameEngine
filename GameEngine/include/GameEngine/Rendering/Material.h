@@ -13,13 +13,13 @@ namespace GameEngine
                 enum CullFace
                 {
                     Front = GL_FRONT,
-                    Back = GL_BACK,
-                    None = 0,
+                    Back  = GL_BACK,
+                    None  = 0,
                 };
 
                 enum RenderMode
                 {
-                    Fill = GL_FILL,
+                    Fill      = GL_FILL,
                     Wireframe = GL_LINE
                 };
 
@@ -31,18 +31,17 @@ namespace GameEngine
                 RenderMode GetRenderMode() const;
                 CullFace   GetCullFace() const;
                 bool       GetTransparent() const;
-
-
+            
                 void SetRenderMode(RenderMode renderMode);
                 void SetCullFace(CullFace cullFace);
                 void SetTransparent(bool transparent);
 
             private:
-                Shader*          _shader;
-                UniformBuffer*   _uniformBuffer;
-                CullFace         _cullFace    = CullFace::Back;
-                RenderMode       _renderMode  = RenderMode::Fill;
-                bool             _transparent = false;
+                Shader*        _shader;
+                UniformBuffer* _uniformBuffer;
+                CullFace       _cullFace               = CullFace::Back;
+                RenderMode     _renderMode             = RenderMode::Fill;
+                bool           _transparent            = false;
         };
     }
 }

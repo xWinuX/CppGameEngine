@@ -12,10 +12,9 @@ namespace GameEngine
         class TextRenderer final : public Component, public Rendering::Renderable2D
         {
             private:
-                Rendering::Font*     _font;
-                Rendering::Material* _material;
-                std::string          _text =
-                    "abcdefghij\nklmnopqrstuvxy\nzABCEDFGHIJKLMN\nOPQRSTUVXYZ-.\nabcdefghij\nklmnopqrstuvxy\nzABCEDFGHIJKLMN\nOPQRSTUVXYZ-.\nabcdefghij\nklmnopqrstuvxy\nzABCEDFGHIJKLMN\nOPQRSTUVXYZ-.\nabcdefghij\nklmnopqrstuvxy\nzABCEDFGHIJKLMN\nOPQRSTUVXYZ-.\nabcdefghij\nklmnopqrstuvxy\nzABCEDFGHIJKLMN\nOPQRSTUVXYZ-.\nabcdefghij\nklmnopqrstuvxy\nzABCEDFGHIJKLMN\nOPQRSTUVXYZ-.abcdefghij\nklmnopqrstuvxy\nzABCEDFGHIJKLMN\nOPQRSTUVXYZ-.\nabcdefghij\nklmnopqrstuvxy\nzABCEDFGHIJKLMN\nOPQRSTUVXYZ-.\nabcdefghij\nklmnopqrstuvxy\nzABCEDFGHIJKLMN\nOPQRSTUVXYZ-.\nabcdefghij\nklmnopqrstuvxy\nzABCEDFGHIJKLMN\nOPQRSTUVXYZ-.\nabcdefghij\nklmnopqrstuvxy\nzABCEDFGHIJKLMN\nOPQRSTUVXYZ-.\nabcdefghij\nklmnopqrstuvxy\nzABCEDFGHIJKLMN\nOPQRSTUVXYZ-.abcdefghij\nklmnopqrstuvxy\nzABCEDFGHIJKLMN\nOPQRSTUVXYZ-.\nabcdefghij\nklmnopqrstuvxy\nzABCEDFGHIJKLMN\nOPQRSTUVXYZ-.\nabcdefghij\nklmnopqrstuvxy\nzABCEDFGHIJKLMN\nOPQRSTUVXYZ-.\nabcdefghij\nklmnopqrstuvxy\nzABCEDFGHIJKLMN\nOPQRSTUVXYZ-.\nabcdefghij\nklmnopqrstuvxy\nzABCEDFGHIJKLMN\nOPQRSTUVXYZ-.\nabcdefghij\nklmnopqrstuvxy\nzABCEDFGHIJKLMN\nOPQRSTUVXYZ-.abcdefghij\nklmnopqrstuvxy\nzABCEDFGHIJKLMN\nOPQRSTUVXYZ-.\nabcdefghij\nklmnopqrstuvxy\nzABCEDFGHIJKLMN\nOPQRSTUVXYZ-.\nabcdefghij\nklmnopqrstuvxy\nzABCEDFGHIJKLMN\nOPQRSTUVXYZ-.\nabcdefghij\nklmnopqrstuvxy\nzABCEDFGHIJKLMN\nOPQRSTUVXYZ-.\nabcdefghij\nklmnopqrstuvxy\nzABCEDFGHIJKLMN\nOPQRSTUVXYZ-.\nabcdefghij\nklmnopqrstuvxy\nzABCEDFGHIJKLMN\nOPQRSTUVXYZ-.abcdefghij\nklmnopqrstuvxy\nzABCEDFGHIJKLMN\nOPQRSTUVXYZ-.\nabcdefghij\nklmnopqrstuvxy\nzABCEDFGHIJKLMN\nOPQRSTUVXYZ-.\nabcdefghij\nklmnopqrstuvxy\nzABCEDFGHIJKLMN\nOPQRSTUVXYZ-.\nabcdefghij\nklmnopqrstuvxy\nzABCEDFGHIJKLMN\nOPQRSTUVXYZ-.\nabcdefghij\nklmnopqrstuvxy\nzABCEDFGHIJKLMN\nOPQRSTUVXYZ-.\nabcdefghij\nklmnopqrstuvxy\nzABCEDFGHIJKLMN\nOPQRSTUVXYZ-.abcdefghij\nklmnopqrstuvxy\nzABCEDFGHIJKLMN\nOPQRSTUVXYZ-.\nabcdefghij\nklmnopqrstuvxy\nzABCEDFGHIJKLMN\nOPQRSTUVXYZ-.\nabcdefghij\nklmnopqrstuvxy\nzABCEDFGHIJKLMN\nOPQRSTUVXYZ-.\nabcdefghij\nklmnopqrstuvxy\nzABCEDFGHIJKLMN\nOPQRSTUVXYZ-.\nabcdefghij\nklmnopqrstuvxy\nzABCEDFGHIJKLMN\nOPQRSTUVXYZ-.\nabcdefghij\nklmnopqrstuvxy\nzABCEDFGHIJKLMN\nOPQRSTUVXYZ-.";
+                Rendering::Font*                         _font;
+                Rendering::Material*                     _material;
+                std::string                              _text        = "abcdefghij\nklmnopqrstuvxy";
                 std::vector<Rendering::Sprite::QuadData> _quads       = std::vector<Rendering::Sprite::QuadData>(32);
                 bool                                     _needsUpdate = false;
                 void                                     UpdateQuads();
@@ -26,7 +25,7 @@ namespace GameEngine
 
             public:
                 TextRenderer(Rendering::Font* font, Rendering::Material* material);
-            
+
                 Rendering::Material* GetMaterial() override;
                 Rendering::Texture*  GetTexture() override;
                 size_t               GetQuadSize() override;

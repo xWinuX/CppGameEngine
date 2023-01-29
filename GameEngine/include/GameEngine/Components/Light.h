@@ -16,14 +16,10 @@ namespace GameEngine
             friend Rendering::Renderer;
             
             protected:
-                GameEngine::Rendering::Shader* _shader;
 
                 void OnUpdateEnd() override;
-                virtual void OnShaderUse() = 0;
+                virtual void OnShaderUse(Rendering::Shader* shader) = 0;
                 virtual void OnFrameEnd() = 0;
-            public:
-                explicit     Light(GameEngine::Rendering::Shader* shader);
-
         };
     }
 }
