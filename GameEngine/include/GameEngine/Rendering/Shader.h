@@ -2,7 +2,7 @@
 
 #include <glad/glad.h>
 
-#include "UniformBuffer.h"
+#include "UniformStorage.h"
 
 #include "../IO/Stream.h"
 
@@ -14,7 +14,7 @@ namespace GameEngine
         {
             private:
                 GLuint         _programID     = 0;
-                UniformBuffer* _uniformBuffer = nullptr;
+                UniformStorage* _uniformStorage = nullptr;
 
                 static GLuint CompileShader(const std::string& shaderSource, const int type);
 
@@ -30,18 +30,18 @@ namespace GameEngine
                 template <typename T>
                 void InitializeUniform(const GLchar* uniformName, T defaultValue, const bool includeInApplyQueue = true)
                 {
-                    _uniformBuffer->InitializeUniform<T>(uniformName, defaultValue, includeInApplyQueue);
+                    _uniformStorage->InitializeUniform<T>(uniformName, defaultValue, includeInApplyQueue);
                 }
 
                 template <typename T>
-                void SetUniformInstant(const GLchar* uniformName, T value) { _uniformBuffer->SetUniformInstant<T>(uniformName, value); }
+                void SetUniformInstant(const GLchar* uniformName, T value) { _uniformStorage->SetUniformInstant<T>(uniformName, value); }
 
                 GLuint GetProgramID() const;
 
-                void UniformBufferFromShader(const Shader* shader);
+                void UniformStorageFromShader(const Shader* shader);
 
-                UniformBuffer* GetUniformBuffer() const;
-                UniformBuffer* GetUniformBufferCopy() const;
+                UniformStorage* GetUniformStorage() const;
+                UniformStorage* GetUniformStorageCopy() const;
         };
     }
 }

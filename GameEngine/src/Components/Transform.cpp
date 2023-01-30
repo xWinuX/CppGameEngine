@@ -42,6 +42,7 @@ void Transform::SetLocalPosition(const glm::vec3& localPosition)
 {
     _localPosition = localPosition;
     _physicsTransform.setPosition(reactphysics3d::Vector3(_localPosition.x, _localPosition.y, _localPosition.z));
+    CalculateTRS();
 }
 
 void Transform::SetRotation(const glm::quat quaternion) { SetLocalRotation(quaternion * GetRotation()); }
@@ -50,9 +51,14 @@ void Transform::SetLocalRotation(const glm::quat quaternion)
 {
     _localRotation = quaternion;
     _physicsTransform.setOrientation(reactphysics3d::Quaternion(_localRotation.x, _localRotation.y, _localRotation.z, _localRotation.w));
+    CalculateTRS();
 }
 
-void Transform::SetLocalScale(const glm::vec3& scale) { _localScale = scale; }
+void Transform::SetLocalScale(const glm::vec3& scale)
+{
+    _localScale = scale;
+    CalculateTRS();
+}
 
 glm::mat4 Transform::GetParentTRS() const
 {
@@ -79,8 +85,8 @@ void Transform::Rotate(const glm::vec3& eulerAngles)
 void Transform::RotateLocal(const glm::vec3& eulerAngles) { SetLocalRotation(GetLocalRotation() * glm::quat(radians(eulerAngles))); }
 
 
-glm::vec3 Transform::ToWorldSpace(const glm::vec3 vec3) const { return GetTRS() * glm::vec4(vec3, 0.0); }
-glm::vec3 Transform::ToLocalSpace(const glm::vec3 vec3) const { return inverse(GetParentTRS()) * glm::vec4(vec3, 1.0); }
+glm::vec3 Transform::ToWorldSpace(const glm::vec3 vec3) const { return GetTRS() * glm::vec4(vec3, 0.0f); }
+glm::vec3 Transform::ToLocalSpace(const glm::vec3 vec3) const { return inverse(GetTRS()) * glm::vec4(vec3, 0.0f); }
 
 void Transform::CalculateTRS()
 {

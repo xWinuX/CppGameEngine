@@ -1,6 +1,6 @@
 ﻿#pragma once
 
-#include "UniformBuffer.h"
+#include "UniformStorage.h"
 #include "glad/glad.h"
 
 namespace GameEngine
@@ -26,7 +26,7 @@ namespace GameEngine
                 explicit Material(Shader* shader);
                 ~Material();
                 Shader*        GetShader() const;
-                UniformBuffer* GetUniformBuffer() const;
+                UniformStorage* GetUniformStorage() const;
 
                 RenderMode GetRenderMode() const;
                 CullFace   GetCullFace() const;
@@ -38,7 +38,7 @@ namespace GameEngine
 
             private:
                 Shader*        _shader;
-                UniformBuffer* _uniformBuffer;
+                UniformStorage* _uniformStorage;
                 CullFace       _cullFace               = CullFace::Back;
                 RenderMode     _renderMode             = RenderMode::Fill;
                 bool           _transparent            = false;

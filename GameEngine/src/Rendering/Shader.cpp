@@ -75,13 +75,13 @@ Shader::Shader(const char* vertexShaderSource, const char* fragmentShaderSource,
     glDeleteShader(fragmentShaderID);
 
     // Create uniform buffer
-    _uniformBuffer = new UniformBuffer(_programID);
+    _uniformStorage = new UniformStorage(_programID);
 }
 
 Shader::~Shader()
 {
     glDeleteProgram(_programID);
-    delete _uniformBuffer;
+    delete _uniformStorage;
 }
 
 void Shader::Use() const
@@ -89,13 +89,13 @@ void Shader::Use() const
     glUseProgram(_programID);
 }
 
-void Shader::UniformBufferFromShader(const Shader* shader)
+void Shader::UniformStorageFromShader(const Shader* shader)
 {
-    delete _uniformBuffer;
-    _uniformBuffer = shader->GetUniformBuffer()->Copy(_programID);
+    delete _uniformStorage;
+    _uniformStorage = shader->GetUniformStorage()->Copy(_programID);
 }
 
 GLuint Shader::GetProgramID() const { return _programID; }
 
-UniformBuffer* Shader::GetUniformBuffer() const { return _uniformBuffer; }
-UniformBuffer* Shader::GetUniformBufferCopy() const { return _uniformBuffer->Copy(_programID); }
+UniformStorage* Shader::GetUniformStorage() const { return _uniformStorage; }
+UniformStorage* Shader::GetUniformStorageCopy() const { return _uniformStorage->Copy(_programID); }

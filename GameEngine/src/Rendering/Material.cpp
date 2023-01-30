@@ -6,12 +6,12 @@ using namespace GameEngine::Rendering;
 
 Material::Material(Shader* shader) :
     _shader(shader),
-    _uniformBuffer(shader->GetUniformBufferCopy()) {}
+    _uniformStorage(shader->GetUniformStorageCopy()) {}
 
-Material::~Material() { delete _uniformBuffer; }
+Material::~Material() { delete _uniformStorage; }
 
 Shader*              Material::GetShader() const { return _shader; }
-UniformBuffer*       Material::GetUniformBuffer() const { return _uniformBuffer; }
+UniformStorage*       Material::GetUniformStorage() const { return _uniformStorage; }
 Material::RenderMode Material::GetRenderMode() const { return _renderMode; }
 Material::CullFace   Material::GetCullFace() const { return _cullFace; }
 bool                 Material::GetTransparent() const { return _transparent; }

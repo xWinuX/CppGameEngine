@@ -34,6 +34,7 @@ namespace GameEngine
                 void  SetFrameIndex(float frameIndex);
                 void  SetFramesPerSecond(float framesPerSecond);
                 void  SetTransform(Components::Transform* transform);
+                void  SetSprite(Rendering::RenderableSprite* sprite);
         };
     }
 }

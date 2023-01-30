@@ -26,6 +26,7 @@ namespace GameEngine
                 void Pause();
                 void Continue();
                 void Play();
+                void PlayPitch(float pitch);
                 void PlayLooped();
         };
     }

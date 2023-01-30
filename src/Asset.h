@@ -1,5 +1,11 @@
 ﻿#pragma once
 
+#include "GameEngine/AssetDatabase.h"
+#include "GameEngine/Rendering/Texture.h"
+#include "GameEngine/Rendering/SpriteSet.h"
+#include "GameEngine/Rendering/Model.h"
+#include "GameEngine/Audio/Sound.h"
+
 namespace Asset
 {
     enum class Texture : size_t
@@ -20,6 +26,7 @@ namespace Asset
         GamerDude,
         Test,
         CarstenWalkRight,
+        CarstenWalkLeft,
     };
 
     enum class Font : size_t
@@ -50,6 +57,7 @@ namespace Asset
         PhysicsDebug,
         MSDFFont,
         VertexColor,
+        FrameBuffer,
     };
 
     enum class Material : size_t
@@ -64,18 +72,18 @@ namespace Asset
     };
 }
 
-#define ADD_TEXTURE(id, asset) AssetDatabase::Add<Texture*>(Asset::Texture::id, asset)
-#define ADD_SPRITE(id, asset) AssetDatabase::Add<SpriteSet*>(Asset::Sprite::id, asset)
-#define ADD_FONT(id, asset) AssetDatabase::Add<Font*>(Asset::Font::id, asset)
-#define ADD_MODEL(id, asset) AssetDatabase::Add<Model*>(Asset::Model::id, asset)
-#define ADD_SOUND(id, asset) AssetDatabase::Add<Sound*>(Asset::Sound::id, asset)
-#define ADD_SHADER(id, asset) AssetDatabase::Add<Shader*>(Asset::Shader::id, asset)
-#define ADD_MATERIAL(id, asset) AssetDatabase::Add<Material*>(Asset::Material::##id, asset)
+#define ADD_TEXTURE(id, asset) GameEngine::AssetDatabase::Add<GameEngine::Rendering::Texture*>(Asset::Texture::id, asset)
+#define ADD_SPRITE(id, asset) GameEngine::AssetDatabase::Add<GameEngine::Rendering::SpriteSet*>(Asset::Sprite::id, asset)
+#define ADD_FONT(id, asset) GameEngine::AssetDatabase::Add<GameEngine::Rendering::Font*>(Asset::Font::id, asset)
+#define ADD_MODEL(id, asset) GameEngine::AssetDatabase::Add<GameEngine::Rendering::Model*>(Asset::Model::id, asset)
+#define ADD_SOUND(id, asset) GameEngine::AssetDatabase::Add<Sound*>(Asset::Sound::id, asset)
+#define ADD_SHADER(id, asset) GameEngine::AssetDatabase::Add<GameEngine::Rendering::Shader*>(Asset::Shader::id, asset)
+#define ADD_MATERIAL(id, asset) GameEngine::AssetDatabase::Add<GameEngine::Rendering::Material*>(Asset::Material::##id, asset)
 
-#define GET_TEXTURE(id) AssetDatabase::Get<Texture*>(Asset::Texture::id)
-#define GET_SPRITE(id) AssetDatabase::Get<SpriteSet*>(Asset::Sprite::id)
-#define GET_FONT(id) AssetDatabase::Get<Font*>(Asset::Font::id)
-#define GET_MODEL(id) AssetDatabase::Get<Model*>(Asset::Model::id)
-#define GET_SOUND(id) AssetDatabase::Get<Sound*>(Asset::Sound::id)
-#define GET_SHADER(id) AssetDatabase::Get<Shader*>(Asset::Shader::id)
-#define GET_MATERIAL(id) AssetDatabase::Get<Material*>(Asset::Material::id)
+#define GET_TEXTURE(id) GameEngine::AssetDatabase::Get<GameEngine::Rendering::Texture*>(Asset::Texture::id)
+#define GET_SPRITE(id) GameEngine::AssetDatabase::Get<GameEngine::Rendering::SpriteSet*>(Asset::Sprite::id)
+#define GET_FONT(id) GameEngine::AssetDatabase::Get<GameEngine::Rendering::Font*>(Asset::Font::id)
+#define GET_MODEL(id) GameEngine::AssetDatabase::Get<GameEngine::Rendering::Model*>(Asset::Model::id)
+#define GET_SOUND(id) GameEngine::AssetDatabase::Get<GameEngine::Audio::Sound*>(Asset::Sound::id)
+#define GET_SHADER(id) GameEngine::AssetDatabase::Get<GameEngine::Rendering::Shader*>(Asset::Shader::id)
+#define GET_MATERIAL(id) GameEngine::AssetDatabase::Get<GameEngine::Rendering::Material*>(Asset::Material::id)

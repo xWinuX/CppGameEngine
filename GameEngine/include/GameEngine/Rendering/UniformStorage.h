@@ -11,30 +11,30 @@
 
 #define ADD_UNIFORM_SPECIALIZATION(type,suffix) \
         template<> \
-        inline void UniformBuffer::InitializeUniform<type>(std::string uniformName, type value, const bool includeInApplyQueue, const bool resetAfterApply) \
+        inline void UniformStorage::InitializeUniform<type>(std::string uniformName, type value, const bool includeInApplyQueue, const bool resetAfterApply) \
         {  \
-            InitializeUniform<type, &UniformBuffer::_uniform##suffix##s>(uniformName, value, includeInApplyQueue, resetAfterApply); \
+            InitializeUniform<type, &UniformStorage::_uniform##suffix##s>(uniformName, value, includeInApplyQueue, resetAfterApply); \
         } \
         template<> \
-        inline void UniformBuffer::SetUniform<type>(const int uniformLocation, type value) \
+        inline void UniformStorage::SetUniform<type>(const int uniformLocation, type value) \
         { \
             _uniform##suffix##s[uniformLocation].Uniform.Set(value); \
         } \
         template<> \
-        inline void UniformBuffer::SetUniform<type>(std::string uniformName, type value) \
+        inline void UniformStorage::SetUniform<type>(std::string uniformName, type value) \
         { \
             const int uniformLocation = GetUniformLocation(uniformName); \
             if (uniformLocation < 0) { return; } \
             SetUniform<type>(uniformLocation, value); \
         } \
         template<> \
-        inline void UniformBuffer::SetUniformInstant<type>(const int uniformLocation, type value) \
+        inline void UniformStorage::SetUniformInstant<type>(const int uniformLocation, type value) \
         { \
             _uniform##suffix##s[uniformLocation].Uniform.Set(value); \
             _uniform##suffix##s[uniformLocation].Uniform.Apply(); \
         } \
         template<> \
-        inline void UniformBuffer::SetUniformInstant<type>(std::string uniformName, type value) \
+        inline void UniformStorage::SetUniformInstant<type>(std::string uniformName, type value) \
         { \
             const int uniformLocation = GetUniformLocation(uniformName); \
             if (uniformLocation < 0) { return; } \
@@ -48,7 +48,7 @@ namespace GameEngine
     {
         class Shader;
 
-        class UniformBuffer
+        class UniformStorage
         {
             friend Shader;
 
@@ -78,7 +78,7 @@ namespace GameEngine
                 UNIFORM(std::vector<float>*, 1FV)
                 UNIFORM(Texture*, Texture)
 
-                template <typename T, std::map<int, UniformEntry<T>> UniformBuffer::*MapPtr>
+                template <typename T, std::map<int, UniformEntry<T>> UniformStorage::*MapPtr>
                 void InitializeUniform(std::string uniformName, T defaultVar, const bool includeInApplyQueue = true, const bool resetAfterApply = false)
                 {
                     Debug::Log::Message("Initializing uniform " + uniformName);
@@ -108,16 +108,16 @@ namespace GameEngine
                 }
 
             public:
-                explicit UniformBuffer();
-                explicit UniformBuffer(const GLuint programID);
+                explicit UniformStorage();
+                explicit UniformStorage(const GLuint programID);
 
                 void Apply();
 
                 int GetUniformLocation(const std::string& uniformName);
 
-                UniformBuffer* Copy(const GLuint programID) const;
-                void           CopyTo(UniformBuffer* uniformBuffer) const;
-                void           CopyFrom(const UniformBuffer* uniformBuffer);
+                UniformStorage* Copy(const GLuint programID) const;
+                void           CopyTo(UniformStorage* uniformStorage) const;
+                void           CopyFrom(const UniformStorage* uniformStorage);
 
                 template <typename T>
                 static void ShowUniformNotSupportedError() { Debug::Log::Error("Uniform type " + std::string(typeid(T).name()) + " is not supported"); }

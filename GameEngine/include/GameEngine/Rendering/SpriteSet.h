@@ -17,9 +17,9 @@ namespace GameEngine
         class SpriteSet : public RenderableSprite
         {
             public:
-                explicit SpriteSet(Texture* texture);
-                SpriteSet(Texture* texture, unsigned int numFrames, glm::uvec2 frameSize);
-                SpriteSet(Texture* texture, const msdf_atlas::FontGeometry& fontGeometry);
+                explicit SpriteSet(Texture* texture, unsigned int pixelsPerUnit = 30);
+                SpriteSet(Texture* texture, unsigned int numFrames, glm::uvec2 frameSize, unsigned int pixelsPerUnit = 30);
+                SpriteSet(Texture* texture, const msdf_atlas::FontGeometry& fontGeometry, unsigned int pixelsPerUnit = 30);
 
                 ~SpriteSet() override;
 

@@ -1,7 +1,6 @@
 ﻿#include "GraphicDemoApplication.h"
 
 #include "Asset.h"
-#include "AssetDatabase.h"
 #include "CarstenBehaviour.h"
 #include "GameEngine/Components/BoxCollider.h"
 #include "GameEngine/Components/Camera.h"
@@ -30,6 +29,7 @@
 #include "GameEngine/Components/CapsuleCollider.h"
 #include "GameEngine/Components/SpriteRenderer.h"
 #include "glm/gtx/string_cast.hpp"
+#include "Prefabs/CarstenPrefab.h"
 
 
 using namespace GameEngine;
@@ -80,12 +80,14 @@ void GraphicDemoApplication::LoadSprites()
     Texture* gamerDudeSpriteTexture        = new Texture("res/sprites/GamerDudeSprite.png", pixelArtTextureImportSettings);
     Texture* testSpriteTexture             = new Texture("res/sprites/TestSprite.png", pixelArtTextureImportSettings);
     Texture* carstenWalkRightSpriteTexture = new Texture("res/sprites/CarstenWalkRight.png", pixelArtTextureImportSettings);
+    Texture* carstenWalkLeftSpriteTexture  = new Texture("res/sprites/CarstenWalkLeft.png", pixelArtTextureImportSettings);
 
     SpriteSet* theDude          = ADD_SPRITE(TheDude, new SpriteSet(theDudeSpriteTexture, 2, glm::vec2(30, 49)));
     SpriteSet* drL              = ADD_SPRITE(DrL, new SpriteSet(drLSpriteTexture));
     SpriteSet* gamerDude        = ADD_SPRITE(GamerDude, new SpriteSet(gamerDudeSpriteTexture));
     SpriteSet* test             = ADD_SPRITE(Test, new SpriteSet(testSpriteTexture, 12, glm::uvec2(32, 32)));
-    SpriteSet* carstenWalkRight = ADD_SPRITE(CarstenWalkRight, new SpriteSet(carstenWalkRightSpriteTexture, 6, glm::uvec2(119, 190)));
+    SpriteSet* carstenWalkRight = ADD_SPRITE(CarstenWalkRight, new SpriteSet(carstenWalkRightSpriteTexture, 6, glm::uvec2(119, 190), 90));
+    SpriteSet* carstenWalkLeft  = ADD_SPRITE(CarstenWalkLeft, new SpriteSet(carstenWalkLeftSpriteTexture, 6, glm::uvec2(119, 190), 90));
 
     spriteAtlas = new SpriteAtlas(glm::ivec2(1024), pixelArtTextureImportSettings);
 
@@ -94,14 +96,12 @@ void GraphicDemoApplication::LoadSprites()
     spriteAtlas->AddSprite(gamerDude);
     spriteAtlas->AddSprite(test);
     spriteAtlas->AddSprite(carstenWalkRight);
+    spriteAtlas->AddSprite(carstenWalkLeft);
 
     spriteAtlas->Pack();
 }
 
-void GraphicDemoApplication::LoadFonts() const
-{
-    ADD_FONT(Roboto, new Font("res/fonts/Roboto-Regular.ttf"));
-}
+void GraphicDemoApplication::LoadFonts() const { ADD_FONT(Roboto, new Font("res/fonts/Roboto-Regular.ttf")); }
 
 void GraphicDemoApplication::LoadSounds() const
 {
@@ -121,13 +121,13 @@ void GraphicDemoApplication::LoadModels() const
 void GraphicDemoApplication::LoadShaders() const
 {
     #pragma region Template Uniforms
-    UniformBuffer commonUniforms = UniformBuffer();
+    UniformStorage commonUniforms = UniformStorage();
     commonUniforms.InitializeUniform<float>("u_Time", 0.0f, false);
     commonUniforms.InitializeUniform<glm::vec3>("u_ViewPosition", glm::zero<glm::vec3>(), false);
     commonUniforms.InitializeUniform<glm::mat4>("u_ViewProjection", glm::identity<glm::mat4>(), false);
     commonUniforms.InitializeUniform<glm::mat4>("u_Transform", glm::identity<glm::mat4>(), false);
 
-    UniformBuffer litUniforms = UniformBuffer();
+    UniformStorage litUniforms = UniformStorage();
     litUniforms.InitializeUniform<float>("u_Shininess", 0.7f);
     litUniforms.InitializeUniform<Texture*>("u_NormalMap", GET_TEXTURE(NormalMapDefault));
 
@@ -140,27 +140,27 @@ void GraphicDemoApplication::LoadShaders() const
     litUniforms.InitializeUniform<std::vector<float>*>("u_PointLightIntensities", nullptr, false);
     litUniforms.InitializeUniform<std::vector<float>*>("u_PointLightRanges", nullptr, false);
 
-    UniformBuffer spriteUniforms = UniformBuffer();
+    UniformStorage spriteUniforms = UniformStorage();
     spriteUniforms.InitializeUniform<Texture*>("u_Texture", GET_TEXTURE(White), false);
     #pragma endregion
 
     // Lit
     Shader* litShader = ADD_SHADER(Lit, new Shader("res/shaders/Lit/Lit.vert", "res/shaders/Lit/Lit.frag"));
-    litShader->GetUniformBuffer()->CopyFrom(&commonUniforms);
-    litShader->GetUniformBuffer()->CopyFrom(&litUniforms);
+    litShader->GetUniformStorage()->CopyFrom(&commonUniforms);
+    litShader->GetUniformStorage()->CopyFrom(&litUniforms);
 
     litShader->InitializeUniform<glm::vec4>("u_ColorTint", glm::vec4(1.0f));
     litShader->InitializeUniform<Texture*>("u_Texture", GET_TEXTURE(White));
 
     // Water
     Shader* waterShader = ADD_SHADER(Water, new Shader("res/shaders/Water/Water.vert", "res/shaders/Water/Water.frag"));
-    waterShader->UniformBufferFromShader(litShader);
+    waterShader->UniformStorageFromShader(litShader);
 
     // Sprite Lit
     Shader* spriteLitShader = ADD_SHADER(SpriteLit, new Shader("res/shaders/SpriteLit/SpriteLit.vert", "res/shaders/SpriteLit/SpriteLit.frag"));
-    spriteLitShader->GetUniformBuffer()->CopyFrom(&commonUniforms);
-    spriteLitShader->GetUniformBuffer()->CopyFrom(&spriteUniforms);
-    spriteLitShader->GetUniformBuffer()->CopyFrom(&litUniforms);
+    spriteLitShader->GetUniformStorage()->CopyFrom(&commonUniforms);
+    spriteLitShader->GetUniformStorage()->CopyFrom(&spriteUniforms);
+    spriteLitShader->GetUniformStorage()->CopyFrom(&litUniforms);
 
     // Physics Debug
     Shader* physicsDebugShader = ADD_SHADER(PhysicsDebug, new Shader("res/shaders/PhysicsDebugShader.vsh", "res/shaders/PhysicsDebugShader.fsh"));
@@ -168,27 +168,30 @@ void GraphicDemoApplication::LoadShaders() const
 
     // MSDF Font
     Shader* msdfFontShader = ADD_SHADER(MSDFFont, new Shader("res/shaders/MSDFFont/MSDFFont.vert", "res/shaders/MSDFFont/MSDFFont.frag"));
-    msdfFontShader->GetUniformBuffer()->CopyFrom(&commonUniforms);
-    msdfFontShader->GetUniformBuffer()->CopyFrom(&spriteUniforms);
+    msdfFontShader->GetUniformStorage()->CopyFrom(&commonUniforms);
+    msdfFontShader->GetUniformStorage()->CopyFrom(&spriteUniforms);
 
     // Vertex Color
     Shader* vertexColorShader = ADD_SHADER(VertexColor, new Shader("res/shaders/VertexColor/VertexColor.vert", "res/shaders/VertexColor/VertexColor.frag"));
-    vertexColorShader->GetUniformBuffer()->CopyFrom(&commonUniforms);
+    vertexColorShader->GetUniformStorage()->CopyFrom(&commonUniforms);
     vertexColorShader->InitializeUniform<Texture*>("u_Texture", GET_TEXTURE(Crate));
+
+    // Frame Buffer
+    Shader* frameBufferShader = ADD_SHADER(FrameBuffer, new Shader("res/shaders/FrameBuffer/FrameBuffer.vert", "res/shaders/FrameBuffer/FrameBuffer.frag"));
 }
 
 void GraphicDemoApplication::LoadMaterials() const
 {
     // Dude
     Material* dudeMaterial = ADD_MATERIAL(Dude, new Material(GET_SHADER(Lit)));
-    dudeMaterial->GetUniformBuffer()->SetUniform("u_Texture", GET_TEXTURE(TheDude));
+    dudeMaterial->GetUniformStorage()->SetUniform("u_Texture", GET_TEXTURE(TheDude));
 
     // Crate
     Material* crateMaterial = ADD_MATERIAL(Crate, new Material(GET_SHADER(Lit)));
-    
-    crateMaterial->GetUniformBuffer()->SetUniform("u_Texture", GET_TEXTURE(Crate));
-    crateMaterial->GetUniformBuffer()->SetUniform("u_NormalMap", GET_TEXTURE(CrateNormalMap));
-    crateMaterial->GetUniformBuffer()->SetUniform("u_NormalMapIntensity", 1.0f);
+
+    crateMaterial->GetUniformStorage()->SetUniform("u_Texture", GET_TEXTURE(Crate));
+    crateMaterial->GetUniformStorage()->SetUniform("u_NormalMap", GET_TEXTURE(CrateNormalMap));
+    crateMaterial->GetUniformStorage()->SetUniform("u_NormalMapIntensity", 1.0f);
 
     // Physics Debug
     Material* physicsMaterial = ADD_MATERIAL(PhysicsDebug, new Material(GET_SHADER(PhysicsDebug)));
@@ -225,23 +228,26 @@ void GraphicDemoApplication::LoadAssets()
 void GraphicDemoApplication::Initialize(Scene& scene)
 {
     LoadAssets();
-    
+
     cube = new Cube();
 
     // Camera
     cameraObject = new GameObject();
-    cameraObject->AddComponent(new Camera(60, 0.01f, 10000.0f));
+    cameraObject->AddComponent(new Camera(60, 0.01f, 10000.0f, GET_SHADER(FrameBuffer)));
     cameraObject->AddComponent(new AudioListener());
     scene.AddGameObject(cameraObject);
 
     // Carsten
-    carstenObject = new GameObject();
-
-    carstenObject->AddComponent(new AudioSource(GET_SOUND(Hey)));
-    carstenObject->AddComponent(new SpriteRenderer(GET_SPRITE(CarstenWalkRight), GET_MATERIAL(SpriteLit)));
-    carstenObject->AddComponent(new CarstenBehaviour());
-    scene.AddGameObject(carstenObject);
-
+    CarstenPrefab carstenPrefab = CarstenPrefab();
+    for (unsigned int i = 0; i < 5; i++)
+    {
+        GameObject*     gameObject     = carstenPrefab.Instantiate();
+        const glm::vec2 randomPosition = glm::diskRand(30.0f);
+        gameObject->GetTransform()->SetPosition(glm::vec3(randomPosition.x, 0.0f, randomPosition.y));
+        gameObject->GetTransform()->SetLocalScale(glm::linearRand(0.25f, 5.0f) * glm::vec3(1.0));
+        scene.AddGameObject(gameObject);
+    }
+    
     // Red light
     redLightObject               = new GameObject();
     Transform* redLightTransform = redLightObject->GetTransform();
@@ -258,7 +264,7 @@ void GraphicDemoApplication::Initialize(Scene& scene)
     rainbowLightTransform->SetLocalScale(glm::vec3(0.1f));
     rainbowLightObject->AddComponent(new AudioSource(GET_SOUND(Dirty)));
     rainbowLightObject->AddComponent(new MeshRenderer(GET_MODEL(Sphere)->GetMesh(0), GET_MATERIAL(Dude)));
-    rainbowLightObject->AddComponent(new PointLight(glm::vec4(1.0f, 1.0f, 1.0f, 1.0f), 5.0f, 2.0f));
+    rainbowLightObject->AddComponent(new PointLight(glm::vec4(1.0f, 1.0f, 1.0f, 1.0f), 5.0f, 5.0f));
     scene.AddGameObject(rainbowLightObject);
 
     // Suzanne
@@ -359,7 +365,7 @@ void GraphicDemoApplication::CustomRun()
     childCrateObject->GetTransform()->SetLocalScale(glm::vec3(2.0, 2.0, 2.0));
 
     // Rotate 
-   // theMissingObject->GetTransform()->Rotate(glm::vec3(0.0f, 0.0f, 45.0f * Time::GetDeltaTime()));
+    // theMissingObject->GetTransform()->Rotate(glm::vec3(0.0f, 0.0f, 45.0f * Time::GetDeltaTime()));
     suzanneObject->GetTransform()->Rotate(glm::vec3(0.0f, 45.0f * Time::GetDeltaTime(), 0.0f));
 
     // Rotate child crate to test hierarchy
@@ -369,7 +375,7 @@ void GraphicDemoApplication::CustomRun()
     //  rainbowLightObject->GetTransform()->SetLocalPosition(glm::vec3(sin(Time::GetTimeSinceStart()) * 7.0f, -1.0f, 0.0f));
     redLightObject->GetTransform()->SetLocalPosition(glm::vec3(0.0, -1.0f, sin(Time::GetTimeSinceStart()) * 7.0f));
 
-    rainbowLightObject->GetTransform()->MoveLocal(cameraVelocity * 10.0f);
+    rainbowLightObject->GetTransform()->Move(cameraVelocity);
     // Move crate
     //crateObject->GetComponent<Rigidbody>()->ApplyForce(crateVelocity * 100.0f);
     //crateObject->GetComponent<Rigidbody>()->ApplyTorque(crateVelocity * 100.0f);

@@ -1,6 +1,8 @@
 ﻿#pragma once
 #include <functional>
 #include <map>
+
+#include "FrameBuffer.h"
 #include "Material.h"
 #include "Renderable.h"
 #include "Renderable2D.h"
@@ -17,6 +19,7 @@ namespace GameEngine
         class Renderer
         {
             private:
+                static FrameBuffer*                                _frameBuffer;
                 static std::vector<GameEngine::Components::Light*> _lights;
 
                 // 3D
@@ -49,6 +52,7 @@ namespace GameEngine
                 static void         SetProjectionMatrix(glm::mat4 projectionMatrix);
                 static void         SetViewMatrix(glm::mat4 viewMatrix);
                 static void         SetViewPosition(glm::vec3 viewPosition);
+                static void         SetFrameBuffer(FrameBuffer* frameBuffer);
                 static unsigned int Render2DBatches(const std::pair<Material*, std::map<Texture*, std::vector<Renderable2D*>>>& materialPair);
                 static unsigned int RenderDefault(const std::pair<Material*, std::vector<Renderable*>>& materialRenderables);
                 static void         Draw();
@@ -78,9 +82,9 @@ namespace GameEngine
                             for (Components::Light*& light : _lights) { light->OnShaderUse(shader); }
 
                             // TODO: Somehow abstract this away
-                            material->GetUniformBuffer()->SetUniformInstant<float>("u_Time", Time::GetTimeSinceStart());
-                            material->GetUniformBuffer()->SetUniformInstant<glm::mat4>("u_ViewProjection", _projectionMatrix * _viewMatrix);
-                            material->GetUniformBuffer()->SetUniformInstant<glm::vec3>("u_ViewPosition", _viewPosition);
+                            material->GetUniformStorage()->SetUniformInstant<float>("u_Time", Time::GetTimeSinceStart());
+                            material->GetUniformStorage()->SetUniformInstant<glm::mat4>("u_ViewProjection", _projectionMatrix * _viewMatrix);
+                            material->GetUniformStorage()->SetUniformInstant<glm::vec3>("u_ViewPosition", _viewPosition);
                         }
 
                         // Update polygon mode if needed
@@ -108,7 +112,7 @@ namespace GameEngine
                         }
 
                         // Apply material uniforms that are in the queue
-                        material->GetUniformBuffer()->Apply();
+                        material->GetUniformStorage()->Apply();
 
                         numDrawCalls += RenderFunc(pair);
 

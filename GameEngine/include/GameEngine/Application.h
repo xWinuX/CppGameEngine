@@ -12,7 +12,7 @@ namespace GameEngine
     class Application
     {
         protected:
-            GameEngine::Window _window = GameEngine::Window(glm::ivec2(800, 600));
+            GameEngine::Window _window = GameEngine::Window(glm::ivec2(800, 800));
 
         public:
             Application();

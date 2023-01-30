@@ -7,17 +7,24 @@
 class CarstenBehaviour final : public GameEngine::Components::Component
 {
     private:
-        GameEngine::Components::AudioSource* _audioSource = nullptr;
-        GameEngine::Components::SpriteRenderer* _spriteRenderer = nullptr;
-    
-        float _canMoveTimer = 1;
-        float _moveTimer = 2;
-        float _moveSpeed = 2;
-        bool _canMove = false;
+        GameEngine::Components::AudioSource*    _audioSource     = nullptr;
+        GameEngine::Components::SpriteRenderer* _spriteRenderer  = nullptr;
+        GameEngine::Rendering::SpriteSet*       _walkRightSprite = nullptr;
+        GameEngine::Rendering::SpriteSet*       _walkLeftSprite  = nullptr;
+
+        float _soundTimer     = 1;
+        float _canMoveTimer   = 1;
+        float _animationSpeed = 0;
+        float _moveTimer      = 2;
+        float _moveSpeed      = 2;
+        bool  _canMove        = false;
+        float _scale          = 1;
 
         glm::vec2 _randomDirection = glm::circularRand(1);
+
     public:
         void OnStart() override;
+        void RandomizeMoveTimers();
+        void RandomizeSoundTimer();
         void OnUpdate() override;
-        
 };

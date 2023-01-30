@@ -15,6 +15,8 @@ using namespace GameEngine::Rendering;
 using namespace GameEngine::Components;
 
 unsigned char*     Renderer::_renderable2DVertexData        = new unsigned char[10000 * sizeof(Sprite::QuadData)];
+
+FrameBuffer*       Renderer::_frameBuffer                   = nullptr;
 IndexBuffer*       Renderer::_renderable2DIndexBuffer       = nullptr;
 VertexBuffer*      Renderer::_renderable2DVertexBuffer      = nullptr;
 VertexArrayObject* Renderer::_renderable2DVertexArrayObject = nullptr;
@@ -32,7 +34,6 @@ glm::mat4 Renderer::_viewMatrix       = glm::identity<glm::mat4>();
 
 void Renderer::Initialize()
 {
-    glEnable(GL_DEPTH_TEST);
     glDepthFunc(GL_LESS);
     glDepthRange(0.0, 1.0);
     glLineWidth(2);
@@ -90,8 +91,10 @@ void Renderer::SetProjectionMatrix(const glm::mat4 projectionMatrix) { _projecti
 
 void Renderer::SetViewMatrix(const glm::mat4 viewMatrix) { _viewMatrix = viewMatrix; }
 void Renderer::SetViewPosition(const glm::vec3 viewPosition) { _viewPosition = viewPosition; }
+void Renderer::SetFrameBuffer(FrameBuffer* frameBuffer) { _frameBuffer = frameBuffer; }
 
-unsigned int Renderer::Render2DBatches(const std::pair<Material* , std::map<Texture*, std::vector<Renderable2D*>>>& materialPair) {
+unsigned int Renderer::Render2DBatches(const std::pair<Material*, std::map<Texture*, std::vector<Renderable2D*>>>& materialPair)
+{
     int numDrawCalls = 0;
     _renderable2DVertexArrayObject->Bind();
     const Material* material = materialPair.first;
@@ -105,9 +108,9 @@ unsigned int Renderer::Render2DBatches(const std::pair<Material* , std::map<Text
             offset += renderable2D->GetCopySize();
             numQuads += renderable2D->GetCopySize() / renderable2D->GetQuadSize();
         }
-        
+
         _renderable2DVertexBuffer->UpdateData(_renderable2DVertexData, numQuads);
-        material->GetUniformBuffer()->SetUniformInstant<Texture*>("u_Texture", texturePair.first);
+        material->GetUniformStorage()->SetUniformInstant<Texture*>("u_Texture", texturePair.first);
         _renderable2DVertexArrayObject->RenderInstanced(6, static_cast<int>(numQuads));
         numDrawCalls++;
     }
@@ -132,12 +135,15 @@ unsigned int Renderer::RenderDefault(const std::pair<Material*, std::vector<Rend
 
 void Renderer::Draw()
 {
+    _frameBuffer->Bind();
     // Clear TODO: Abstract this away
     glClearColor(0.05f, 0.15f, 0.3f, 1.0f);
-    glClearDepth(1.0);
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
+    glEnable(GL_DEPTH_TEST);
 
+    
     unsigned int numDrawCalls = 0;
+
 
     // Opaque
     numDrawCalls += RenderRenderables<std::vector<Renderable*>, &RenderDefault>(_opaqueRenderables);
@@ -151,6 +157,13 @@ void Renderer::Draw()
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     numDrawCalls += RenderRenderables<std::vector<Renderable*>, &RenderDefault>(_transparentRenderables);
     glDisable(GL_BLEND);
+
+
+
+    _frameBuffer->Unbind();
+    glDisable(GL_DEPTH_TEST);
+
+    _frameBuffer->Draw();
 
     Debug::Log::Message("Draw Calls: " + std::to_string(numDrawCalls));
 

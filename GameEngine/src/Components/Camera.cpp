@@ -10,10 +10,11 @@ using namespace GameEngine::Components;
 using namespace GameEngine::Rendering;
 using namespace GameEngine;
 
-Camera::Camera(const float fovInDegrees, const float zNear, const float zFar) :
+Camera::Camera(const float fovInDegrees, const float zNear, const float zFar, Shader* frameBufferShader):
     _fovInDegrees(fovInDegrees),
     _zNear(zNear),
-    _zFar(zFar)
+    _zFar(zFar),
+    _frameBuffer(new FrameBuffer(frameBufferShader))
 {
     UpdateProjectionMatrix();
     Window::GetCurrentWindow()->AddFramebufferSizeCallback([this](Window* window) { UpdateProjectionMatrix(); });
@@ -21,6 +22,7 @@ Camera::Camera(const float fovInDegrees, const float zNear, const float zFar) :
 
 void Camera::OnUpdateEnd()
 {
+    Renderer::SetFrameBuffer(_frameBuffer);
     Renderer::SetProjectionMatrix(_projectionMatrix);
     Renderer::SetViewMatrix(glm::inverse(GetTransform()->GetTRS()));
     Renderer::SetViewPosition(_transform->GetPosition());

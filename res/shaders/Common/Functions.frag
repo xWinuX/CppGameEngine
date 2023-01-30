@@ -38,5 +38,5 @@
     float specular = pow(max(dot(normal, halfwayVector), 0.0), shininess*1000);
     specularSum += color * intensity * specular * diffuse;
 
-    return vec4(normal, 1.0);
+    return diffuseSum + specularSum;
 }

@@ -28,7 +28,7 @@ namespace GameEngine
 
             WindowResizeCallbackFunction ResizeCallback(Window* window);
 
-            glm::ivec2                                 GetSize() const;
+            glm::uvec2                                 GetSize() const;
             std::vector<std::function<void(Window*)>>& GetResizeCallbacks();
             static Window*                             GetCurrentWindow();
             GLFWwindow*                                GetGlWindow() const;
@@ -36,7 +36,7 @@ namespace GameEngine
         private:
             static Window*                            _currentWindow;
             GLFWwindow*                               _glWindow = nullptr;
-            glm::ivec2                                _size     = glm::ivec2(500);
+            glm::uvec2                                _size     = glm::uvec2(500);
             std::vector<std::function<void(Window*)>> _resizeCallbacks;
     };
 }

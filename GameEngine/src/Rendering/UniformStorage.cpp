@@ -1,4 +1,4 @@
-﻿#include "GameEngine/Rendering/UniformBuffer.h"
+﻿#include "GameEngine/Rendering/UniformStorage.h"
 
 using namespace GameEngine::Rendering;
 
@@ -12,16 +12,16 @@ for (auto& uniform##suffix : _uniform##suffix##s) \
 #define COPY_UNIFORM(type,suffix) \
 for (auto uniform##suffix : _uniform##suffix##s) \
 { \
-    uniformBuffer->InitializeUniform<##type##>(uniform##suffix##.second.Uniform.GetName(), uniform##suffix##.second.Uniform.GetDefaultValue(), uniform##suffix##.second.ApplyInQueue, uniform##suffix##.second.ResetAfterApply); \
+    uniformStorage->InitializeUniform<##type##>(uniform##suffix##.second.Uniform.GetName(), uniform##suffix##.second.Uniform.GetDefaultValue(), uniform##suffix##.second.ApplyInQueue, uniform##suffix##.second.ResetAfterApply); \
 }
 
-UniformBuffer::UniformBuffer():
+UniformStorage::UniformStorage():
     _isTemplate(true) {}
 
-UniformBuffer::UniformBuffer(const GLuint programID):
+UniformStorage::UniformStorage(const GLuint programID):
     _programID(programID) {}
 
-void UniformBuffer::Apply()
+void UniformStorage::Apply()
 {
     if (_isTemplate)
     {
@@ -47,7 +47,7 @@ void UniformBuffer::Apply()
 }
 
 
-int UniformBuffer::GetUniformLocation(const std::string& uniformName)
+int UniformStorage::GetUniformLocation(const std::string& uniformName)
 {
     if (_isTemplate)
     {
@@ -64,16 +64,16 @@ int UniformBuffer::GetUniformLocation(const std::string& uniformName)
     return _uniformNameLocationMap[uniformName];
 }
 
-UniformBuffer* UniformBuffer::Copy(const GLuint programID) const
+UniformStorage* UniformStorage::Copy(const GLuint programID) const
 {
-    UniformBuffer* uniformBuffer = new UniformBuffer(programID);
+    UniformStorage* uniformStorage = new UniformStorage(programID);
 
-    CopyTo(uniformBuffer);
+    CopyTo(uniformStorage);
 
-    return uniformBuffer;
+    return uniformStorage;
 }
 
-void UniformBuffer::CopyTo(UniformBuffer* uniformBuffer) const
+void UniformStorage::CopyTo(UniformStorage* uniformStorage) const
 {
     COPY_UNIFORM(glm::mat4, Mat4F)
     COPY_UNIFORM(glm::vec4, 4F)
@@ -86,7 +86,7 @@ void UniformBuffer::CopyTo(UniformBuffer* uniformBuffer) const
     COPY_UNIFORM(Texture*, Texture)
 }
 
-void UniformBuffer::CopyFrom(const UniformBuffer* uniformBuffer)
+void UniformStorage::CopyFrom(const UniformStorage* uniformStorage)
 {
-    uniformBuffer->CopyTo(this);
+    uniformStorage->CopyTo(this);
 }

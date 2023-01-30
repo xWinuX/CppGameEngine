@@ -14,14 +14,15 @@ namespace GameEngine
             public:
                 enum FilterMode
                 {
-                    Linear = GL_LINEAR,
+                    Linear  = GL_LINEAR,
                     Nearest = GL_NEAREST,
                 };
 
                 enum WrapMode
                 {
-                    Clamp = GL_CLAMP,
-                    Repeat = GL_REPEAT,
+                    Clamp          = GL_CLAMP,
+                    ClampToEdge    = GL_CLAMP_TO_EDGE,
+                    Repeat         = GL_REPEAT,
                     MirroredRepeat = GL_MIRRORED_REPEAT,
                 };
 
@@ -33,6 +34,7 @@ namespace GameEngine
                     unsigned int        AnisotropyLevels = 8;
                     GLenum              Format           = GL_RGBA;
                     GLenum              InternalFormat   = GL_RGBA8;
+                    GLenum              ChannelDataType  = GL_UNSIGNED_BYTE;
                 };
 
                 explicit Texture(const std::string& filePath, ImportSettings importSettings = ImportSettings());
@@ -44,6 +46,7 @@ namespace GameEngine
 
                 const glm::uvec2& GetSize() const;
                 unsigned char*    GetBuffer() const;
+                GLuint GetTextureID() const;
 
             private:
                 GLuint         _textureID = 0;

@@ -13,5 +13,5 @@ void main()
 { 
 #include "../Sprite/Main.vert"
 
-    v_TBN = mat3(vec3(1.0, 0.0, 0.0),vec3(0.0, 1.0, 0.0),vec3(1.0, 0.0, 0.0));
+    v_TBN = mat3(vec3(1.0, 0.0, 0.0),vec3(0.0, 1.0, 0.0),vec3(0.0, 0.0, 1.0));
 }

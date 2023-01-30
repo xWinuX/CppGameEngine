@@ -60,7 +60,7 @@ void Window::AddFramebufferSizeCallback(const std::function<void(Window*)>& call
 
 bool Window::ShouldClose() const { return glfwWindowShouldClose(_glWindow); }
 
-glm::ivec2 Window::GetSize() const { return _size; }
+glm::uvec2 Window::GetSize() const { return _size; }
 
 std::vector<std::function<void(Window*)>>& Window::GetResizeCallbacks() { return _resizeCallbacks; }
 

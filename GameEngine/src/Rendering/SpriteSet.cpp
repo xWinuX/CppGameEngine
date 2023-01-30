@@ -6,9 +6,9 @@
 
 using namespace GameEngine::Rendering;
 
-SpriteSet::SpriteSet(Texture* texture) { _sprites.push_back(new Sprite(texture)); }
+SpriteSet::SpriteSet(Texture* texture, const unsigned int pixelsPerUnit) { _sprites.push_back(new Sprite(texture, pixelsPerUnit)); }
 
-SpriteSet::SpriteSet(Texture* texture, const unsigned int numFrames, const glm::uvec2 frameSize)
+SpriteSet::SpriteSet(Texture* texture, const unsigned int numFrames, const glm::uvec2 frameSize, const unsigned int pixelsPerUnit)
 {
     const float uStep = 1.0f / static_cast<float>(numFrames);
     for (unsigned int i = 0; i < numFrames; i++)
@@ -16,11 +16,11 @@ SpriteSet::SpriteSet(Texture* texture, const unsigned int numFrames, const glm::
         const glm::vec2 uvTopLeft     = glm::vec2(uStep * static_cast<float>(i), 1.0f);
         const glm::vec2 uvBottomRight = glm::vec2(uStep * static_cast<float>(i + 1), 1.0f);
 
-        _sprites.push_back(new Sprite(texture, glm::uvec2(static_cast<unsigned int>(frameSize.x) * i, 0), frameSize, uvTopLeft, uvBottomRight));
+        _sprites.push_back(new Sprite(texture, glm::uvec2(static_cast<unsigned int>(frameSize.x) * i, 0), frameSize, uvTopLeft, uvBottomRight, pixelsPerUnit));
     }
 }
 
-SpriteSet::SpriteSet(Texture* texture, const msdf_atlas::FontGeometry& fontGeometry)
+SpriteSet::SpriteSet(Texture* texture, const msdf_atlas::FontGeometry& fontGeometry, const unsigned int pixelsPerUnit)
 {
     const glm::vec2 texelSize = glm::vec2(1.0f / static_cast<float>(texture->GetSize().x), 1.0f / static_cast<float>(texture->GetSize().y));
 
@@ -43,7 +43,7 @@ SpriteSet::SpriteSet(Texture* texture, const msdf_atlas::FontGeometry& fontGeome
         const glm::vec2 uvTopLeft     = glm::vec2(il, it);
         const glm::vec2 uvBottomRight = glm::vec2(ir, ib);
 
-        _sprites.push_back(new Sprite(texture, pixelPosition, glm::vec4(pl, pr, pt, pb), uvTopLeft, uvBottomRight));
+        _sprites.push_back(new Sprite(texture, pixelPosition, glm::vec4(pl, pr, pt, pb), uvTopLeft, uvBottomRight, pixelsPerUnit));
     }
 }
 

@@ -57,6 +57,7 @@ namespace GameEngine
                 const GLint       _location = -1;
                 const Texture*    _defaultValue;
                 const Texture*    _value;
+                int               _previousSlot = 0;
 
             public:
                 Uniform():
@@ -69,11 +70,13 @@ namespace GameEngine
                     _defaultValue(defaultValue),
                     _value(defaultValue) { }
 
-                void Apply(const int slot = 0) const
+                void Apply(int slot = -1)
                 {
                     LOCATION_CHECK
+                    if (slot == -1) { slot = _previousSlot; }
                     _value->Bind(slot);
                     glUniform1i(_location, slot);
+                    _previousSlot = slot;
                 }
 
                 void Set(const Texture* value) { _value = value; }
