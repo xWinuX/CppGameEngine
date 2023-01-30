@@ -2,6 +2,7 @@
 
 #include <glm/ext/matrix_clip_space.hpp>
 
+#include "GameEngine/Time.h"
 #include "GameEngine/Components/Transform.h"
 #include "GameEngine/Window.h"
 #include "GameEngine/Rendering/Renderer.h"

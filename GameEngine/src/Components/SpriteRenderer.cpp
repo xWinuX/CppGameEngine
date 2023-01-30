@@ -2,6 +2,7 @@
 
 #include <glm/gtx/integer.hpp>
 
+#include "GameEngine/Time.h"
 #include "GameEngine/Components/Transform.h"
 #include "GameEngine/Rendering/Renderer.h"
 #include "GameEngine/Rendering/Sprite.h"

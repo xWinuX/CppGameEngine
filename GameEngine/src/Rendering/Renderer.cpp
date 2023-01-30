@@ -17,7 +17,9 @@ using namespace GameEngine::Components;
 
 std::vector<RenderTarget*> Renderer::_renderTargets = std::vector<RenderTarget*>();
 
-unsigned char*     Renderer::_renderable2DVertexData        = new unsigned char[10000 * sizeof(Sprite::QuadData)];
+const size_t   Renderer::Renderable2DBatchMaxQuads = 10000;
+const size_t   Renderer::Renderable2DBatchMaxSize  = Renderable2DBatchMaxQuads * sizeof(Sprite::QuadData);
+unsigned char* Renderer::_renderable2DVertexData   = new unsigned char[Renderable2DBatchMaxSize];
 
 IndexBuffer*       Renderer::_renderable2DIndexBuffer       = nullptr;
 VertexBuffer*      Renderer::_renderable2DVertexBuffer      = nullptr;
@@ -37,13 +39,11 @@ void Renderer::Initialize()
     glLineWidth(2);
     glEnable(GL_CULL_FACE);
 
-
     unsigned short* indices = new unsigned short[6]{2, 1, 0, 1, 2, 3};
-
 
     _renderable2DIndexBuffer = new IndexBuffer(reinterpret_cast<unsigned char*>(indices), sizeof(unsigned short), 6);
 
-    _renderable2DVertexBuffer      = new VertexBuffer(nullptr, sizeof(Sprite::QuadData), 10000, GL_DYNAMIC_DRAW);
+    _renderable2DVertexBuffer      = new VertexBuffer(nullptr, sizeof(Sprite::QuadData), Renderable2DBatchMaxQuads, GL_DYNAMIC_DRAW);
     _renderable2DVertexArrayObject = new VertexArrayObject(_renderable2DVertexBuffer, _renderable2DIndexBuffer, new VertexBufferLayout(new VertexBufferAttribute[12]
                                                            {
                                                                // Transform
@@ -74,7 +74,7 @@ void Renderer::SubmitBatchRenderable2D(Renderable2D* renderable2D)
 {
     if (_opaqueBatchRenderable2Ds[renderable2D->GetMaterial()][renderable2D->GetTexture()].empty())
     {
-        _opaqueBatchRenderable2Ds[renderable2D->GetMaterial()][renderable2D->GetTexture()].reserve(10000);
+        _opaqueBatchRenderable2Ds[renderable2D->GetMaterial()][renderable2D->GetTexture()].reserve(50000);
     }
     _opaqueBatchRenderable2Ds[renderable2D->GetMaterial()][renderable2D->GetTexture()].push_back(renderable2D);
 }
@@ -85,10 +85,7 @@ void Renderer::SubmitRenderable(Renderable* renderable)
     else { _opaqueRenderables[renderable->GetMaterial()].push_back(renderable); }
 }
 
-void Renderer::SubmitRenderTarget(RenderTarget* renderTarget)
-{
-    _renderTargets.push_back(renderTarget);
-}
+void Renderer::SubmitRenderTarget(RenderTarget* renderTarget) { _renderTargets.push_back(renderTarget); }
 
 unsigned int Renderer::Render2DBatches(const std::pair<Material*, std::map<Texture*, std::vector<Renderable2D*>>>& materialPair)
 {
@@ -97,19 +94,36 @@ unsigned int Renderer::Render2DBatches(const std::pair<Material*, std::map<Textu
     const Material* material = materialPair.first;
     for (const std::pair<Texture* const, std::vector<Renderable2D*>>& texturePair : materialPair.second)
     {
-        size_t offset   = 0;
-        size_t numQuads = 0;
-        for (Renderable2D* renderable2D : texturePair.second)
-        {
-            renderable2D->CopyQuadData(_renderable2DVertexData + offset);
-            offset += renderable2D->GetCopySize();
-            numQuads += renderable2D->GetCopySize() / renderable2D->GetQuadSize();
-        }
+        unsigned int               renderable2DIndex = 0;
+        std::vector<Renderable2D*> renderable2Ds     = texturePair.second;
 
-        _renderable2DVertexBuffer->UpdateData(_renderable2DVertexData, numQuads);
-        material->GetUniformStorage()->SetUniformInstant<Texture*>("u_Texture", texturePair.first);
-        _renderable2DVertexArrayObject->RenderInstanced(6, static_cast<int>(numQuads));
-        numDrawCalls++;
+        // Loop until all renderables have been rendered
+        while (renderable2DIndex < renderable2Ds.size())
+        {
+            size_t offset   = 0;
+            size_t numQuads = 0;
+
+            // Loop trough as many renderables until the buffer is full
+            while (renderable2DIndex < renderable2Ds.size())
+            {
+                Renderable2D* renderable2D = renderable2Ds[renderable2DIndex];
+                const size_t  copySize     = renderable2D->GetCopySize();
+                
+                if (offset + copySize > Renderable2DBatchMaxSize) { break; }
+
+                renderable2D->CopyQuadData(_renderable2DVertexData + offset);
+                offset += copySize;
+                numQuads += copySize / renderable2D->GetQuadSize();
+
+                renderable2DIndex++;
+            }
+
+            // Render the batch
+            _renderable2DVertexBuffer->UpdateData(_renderable2DVertexData, numQuads);
+            material->GetUniformStorage()->SetUniformInstant<Texture*>("u_Texture", texturePair.first);
+            _renderable2DVertexArrayObject->RenderInstanced(6, static_cast<int>(numQuads));
+            numDrawCalls++;
+        }
     }
     _renderable2DVertexArrayObject->Unbind();
     return numDrawCalls;
@@ -141,9 +155,9 @@ void Renderer::Draw()
         // Clear TODO: Abstract this away
         glClearColor(0.05f, 0.15f, 0.3f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
-        
+
         glEnable(GL_DEPTH_TEST);
-        
+
         // Opaque
         numDrawCalls += RenderRenderables<std::vector<Renderable*>, &RenderDefault>(renderTarget, _opaqueRenderables);
 
@@ -156,7 +170,7 @@ void Renderer::Draw()
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
         numDrawCalls += RenderRenderables<std::vector<Renderable*>, &RenderDefault>(renderTarget, _transparentRenderables);
         glDisable(GL_BLEND);
-        
+
         renderTarget->Unbind();
     }
 
@@ -170,7 +184,7 @@ void Renderer::Draw()
 
     // Cleanup render target
     _renderTargets.clear();
-    
+
     // Cleanup renderables
     _opaqueRenderables.clear();
     _opaqueBatchRenderable2Ds.clear();

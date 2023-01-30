@@ -18,30 +18,32 @@ namespace GameEngine
         class Renderer
         {
             private:
-                static std::vector<RenderTarget*> _renderTargets;
-
+                static std::vector<RenderTarget*>                  _renderTargets;
                 static std::vector<GameEngine::Components::Light*> _lights;
-            
+
                 // 3D
                 static std::map<Material*, std::vector<Renderable*>> _opaqueRenderables;
                 static std::map<Material*, std::vector<Renderable*>> _transparentRenderables;
 
                 // 2D Batch Vars
+                static const size_t Renderable2DBatchMaxQuads;
+                static const size_t Renderable2DBatchMaxSize;
+
                 static unsigned char*     _renderable2DVertexData;
                 static VertexArrayObject* _renderable2DVertexArrayObject;
                 static VertexBuffer*      _renderable2DVertexBuffer;
                 static IndexBuffer*       _renderable2DIndexBuffer;
 
                 static std::map<Material*, std::map<Texture*, std::vector<Renderable2D*>>> _opaqueBatchRenderable2Ds;
-            
+
             public:
-                static void         Initialize();
-            
-                static void         SubmitLight(GameEngine::Components::Light* light);
-                static void         SubmitBatchRenderable2D(Renderable2D* renderable2D);
-                static void         SubmitRenderable(Renderable* renderable);
-                static void         SubmitRenderTarget(RenderTarget* renderTarget);
-            
+                static void Initialize();
+
+                static void SubmitLight(GameEngine::Components::Light* light);
+                static void SubmitBatchRenderable2D(Renderable2D* renderable2D);
+                static void SubmitRenderable(Renderable* renderable);
+                static void SubmitRenderTarget(RenderTarget* renderTarget);
+
                 static unsigned int Render2DBatches(const std::pair<Material*, std::map<Texture*, std::vector<Renderable2D*>>>& materialPair);
                 static unsigned int RenderDefault(const std::pair<Material*, std::vector<Renderable*>>& materialRenderables);
                 static void         Draw();

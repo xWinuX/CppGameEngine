@@ -239,7 +239,7 @@ void GraphicDemoApplication::Initialize(Scene& scene)
 
     // Carsten
     CarstenPrefab carstenPrefab = CarstenPrefab();
-    for (unsigned int i = 0; i < 5; i++)
+    for (unsigned int i = 0; i < 20000; i++)
     {
         GameObject*     gameObject     = carstenPrefab.Instantiate();
         const glm::vec2 randomPosition = glm::diskRand(30.0f);

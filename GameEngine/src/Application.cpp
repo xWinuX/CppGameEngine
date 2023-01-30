@@ -3,6 +3,7 @@
 #include <tiny_gltf.h>
 
 #include "GameEngine/Input.h"
+#include "GameEngine/Time.h"
 #include "GameEngine/Audio/AudioManager.h"
 #include "GameEngine/Physics/PhysicsManager.h"
 #include "GameEngine/Rendering/Renderer.h"

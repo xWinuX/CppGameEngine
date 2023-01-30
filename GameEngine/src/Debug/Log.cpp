@@ -12,4 +12,9 @@ void Log::Message(const std::string& message)
     #endif
 }
 
-void Log::Error(const std::string& message) { std::cerr << message << std::endl; }
+void Log::Error(const std::string& message)
+{
+    //#if defined(_DEBUG)
+    std::cerr << message << std::endl;
+    //#endif
+}
