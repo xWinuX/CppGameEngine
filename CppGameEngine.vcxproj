@@ -77,6 +77,7 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="GameEngine\include\GameEngine\Rendering\RenderTarget.cpp" />
     <ClCompile Include="GameEngine\src\Application.cpp">
       <AssemblerOutput>NoListing</AssemblerOutput>
       <AssemblerListingLocation>x64\Release\</AssemblerListingLocation>
@@ -1098,6 +1099,7 @@
     <ClInclude Include="GameEngine\include\GameEngine\Rendering\RenderablePrimitive.h" />
     <ClInclude Include="GameEngine\include\GameEngine\Rendering\RenderableSprite.h" />
     <ClInclude Include="GameEngine\include\GameEngine\Rendering\Renderer.h" />
+    <ClInclude Include="GameEngine\include\GameEngine\Rendering\RenderTarget.h" />
     <ClInclude Include="GameEngine\include\GameEngine\Rendering\Shader.h" />
     <ClInclude Include="GameEngine\include\GameEngine\Rendering\Sprite.h" />
     <ClInclude Include="GameEngine\include\GameEngine\Rendering\SpriteAtlas.h" />

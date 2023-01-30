@@ -4,8 +4,7 @@
 
 using namespace GameEngine::Rendering;
 
-FrameBuffer::FrameBuffer(Shader* shader):
-    _shader(shader)
+FrameBuffer::FrameBuffer()
 {
         const glm::uvec2 currentWindowSize = Window::GetCurrentWindow()->GetSize();
 
@@ -66,7 +65,6 @@ FrameBuffer::~FrameBuffer()
 
 void FrameBuffer::Draw() const
 {
-    _shader->Use();
     _vertexArrayObject->Bind();
     _framebufferTexture->Bind(0);
     _vertexArrayObject->Render();

@@ -60,7 +60,7 @@ void TextRenderer::OnUpdateEnd()
     // Update quads needed
     if (_needsUpdate) { UpdateQuads(); }
 
-    Renderer::SubmitRenderable2D(this);
+    Renderer::SubmitBatchRenderable2D(this);
 }
 
 Material* TextRenderer::GetMaterial() { return _material; }

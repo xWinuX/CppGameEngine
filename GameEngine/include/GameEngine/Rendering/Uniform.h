@@ -41,7 +41,7 @@ namespace GameEngine
                 void Apply() { Debug::Log::Message("This should never appear"); }
 
                 void Set(T value) { _value = value; }
-
+            
                 void Reset() { _value = _defaultValue; }
 
                 std::string GetName() const { return _name; }
