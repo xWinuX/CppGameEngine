@@ -28,6 +28,13 @@
             SetUniform<type>(uniformLocation, value); \
         } \
         template<> \
+        inline Uniform<type>* UniformStorage::GetUniformPtr<type>(std::string uniformName) \
+        { \
+            const int uniformLocation = GetUniformLocation(uniformName); \
+            if (uniformLocation < 0) { return nullptr; } \
+            return &_uniform##suffix##s[uniformLocation].Uniform; \
+        } \
+        template<> \
         inline void UniformStorage::SetUniformInstant<type>(const int uniformLocation, type value) \
         { \
             _uniform##suffix##s[uniformLocation].Uniform.Set(value); \
@@ -116,8 +123,8 @@ namespace GameEngine
                 int GetUniformLocation(const std::string& uniformName);
 
                 UniformStorage* Copy(const GLuint programID) const;
-                void           CopyTo(UniformStorage* uniformStorage) const;
-                void           CopyFrom(const UniformStorage* uniformStorage);
+                void            CopyTo(UniformStorage* uniformStorage) const;
+                void            CopyFrom(const UniformStorage* uniformStorage);
 
                 template <typename T>
                 static void ShowUniformNotSupportedError() { Debug::Log::Error("Uniform type " + std::string(typeid(T).name()) + " is not supported"); }
@@ -127,6 +134,9 @@ namespace GameEngine
                 {
                     ShowUniformNotSupportedError<T>();
                 }
+
+                template <typename T>
+                Uniform<T>* GetUniformPtr(std::string uniformName) { ShowUniformNotSupportedError<T>(); }
 
                 template <typename T>
                 void SetUniform(int location, T value) { ShowUniformNotSupportedError<T>(); }

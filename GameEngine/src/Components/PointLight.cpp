@@ -17,7 +17,7 @@ void PointLight::SetIntensity(const float intensity) { _intensity = intensity; }
 
 void PointLight::OnUpdateEnd()
 {
-    ImGui::ColorPicker4("Light Color", glm::value_ptr(_color), 0, glm::value_ptr(_color));
+    //ImGui::ColorPicker4("Light Color", glm::value_ptr(_color), 0, glm::value_ptr(_color));
     
     _positions.push_back(_transform->GetPosition());
     _colors.emplace_back(_color);

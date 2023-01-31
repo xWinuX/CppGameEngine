@@ -190,6 +190,14 @@ void GraphicDemoApplication::LoadShaders() const
 
     // Frame Buffer
     Shader* frameBufferShader = ADD_SHADER(FrameBuffer, new Shader("res/shaders/FrameBuffer/FrameBuffer.vert", "res/shaders/FrameBuffer/FrameBuffer.frag"));
+
+    frameBufferShader->InitializeUniform<int>("u_Grayscale", 0);
+    frameBufferShader->InitializeUniform<int>("u_UseHSV", 0);
+    frameBufferShader->InitializeUniform<float>("u_Brightness", 1.0f);
+    frameBufferShader->InitializeUniform<float>("u_Contrast", 1.0f);
+    frameBufferShader->InitializeUniform<float>("u_Hue", 1.0f);
+    frameBufferShader->InitializeUniform<float>("u_Saturation", 1.0f);
+    frameBufferShader->InitializeUniform<float>("u_Value", 1.0f);
 }
 
 void GraphicDemoApplication::LoadMaterials() const
@@ -370,9 +378,8 @@ void GraphicDemoApplication::CustomRun()
                                                                        Math::Sin01(Time::GetTimeSinceStart() + 750),
                                                                        1.0f
                                                                       ));
-
-
-    // Rotate s
+    
+    // Rotate
     suzanneObject->GetTransform()->Rotate(glm::vec3(0.0f, 45.0f * Time::GetDeltaTime(), 0.0f));
 
     // Rotate child crate to test hierarchy
@@ -387,4 +394,19 @@ void GraphicDemoApplication::GuiDraw()
 {
     // render your GUI
 
+    Uniform<float>* brightnessUniform = GET_SHADER(FrameBuffer)->GetUniformStorage()->GetUniformPtr<float>("u_Brightness");
+    Uniform<float>* contrastUniform = GET_SHADER(FrameBuffer)->GetUniformStorage()->GetUniformPtr<float>("u_Contrast");
+    Uniform<float>* hueUniform = GET_SHADER(FrameBuffer)->GetUniformStorage()->GetUniformPtr<float>("u_Hue");
+    Uniform<float>* saturationUniform = GET_SHADER(FrameBuffer)->GetUniformStorage()->GetUniformPtr<float>("u_Saturation");
+    Uniform<float>* valueUniform = GET_SHADER(FrameBuffer)->GetUniformStorage()->GetUniformPtr<float>("u_Value");
+    Uniform<int>* grayscaleUniform = GET_SHADER(FrameBuffer)->GetUniformStorage()->GetUniformPtr<int>("u_Grayscale");
+    Uniform<int>* useHSVUniform = GET_SHADER(FrameBuffer)->GetUniformStorage()->GetUniformPtr<int>("u_UseHSV");
+    
+    ImGui::SliderFloat("Brightness",  brightnessUniform->GetValuePtr(), 0.0f, 1.0);
+    ImGui::SliderFloat("Contrast",  contrastUniform->GetValuePtr(), 0.0f, 1.0);
+    ImGui::Checkbox("Grayscale", reinterpret_cast<bool*>(grayscaleUniform->GetValuePtr()));
+    ImGui::Checkbox("Use HSV", reinterpret_cast<bool*>(useHSVUniform->GetValuePtr()));
+    ImGui::SliderFloat("Hue",  hueUniform->GetValuePtr(), 0.0f, 1.0);
+    ImGui::SliderFloat("Saturation",  saturationUniform->GetValuePtr(), 0.0f, 1.0);
+    ImGui::SliderFloat("Value",  valueUniform->GetValuePtr(), 0.0f, 1.0);
 }
