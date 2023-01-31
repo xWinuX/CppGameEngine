@@ -46,7 +46,8 @@ namespace GameEngine
 
                 static unsigned int Render2DBatches(const std::pair<Material*, std::map<Texture*, std::vector<Renderable2D*>>>& materialPair);
                 static unsigned int RenderDefault(const std::pair<Material*, std::vector<Renderable*>>& materialRenderables);
-                static void         Draw();
+                static void         RenderSubmitted();
+                static void         DrawFrame();
 
                 template <typename T, unsigned int(*RenderFunc)(const std::pair<Material*, T>&)>
                 static unsigned int RenderRenderables(RenderTarget* renderTarget, std::map<Material*, T>& map)

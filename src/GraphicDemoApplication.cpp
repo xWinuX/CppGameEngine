@@ -1,6 +1,7 @@
 ﻿#include "GraphicDemoApplication.h"
 
 #include "Asset.h"
+#include "imgui.h"
 #include "Components/SimpleWalker.h"
 #include "Components/CameraControllerPOV.h"
 #include "Components/CharacterController.h"
@@ -79,21 +80,21 @@ void GraphicDemoApplication::LoadSprites()
     pixelArtTextureImportSettings.MipMapLevels     = 0;
     pixelArtTextureImportSettings.FilterMode       = Texture::FilterMode::Nearest;
 
-    Texture* theDudeSpriteTexture          = new Texture("res/sprites/TheDudeSprite.png", pixelArtTextureImportSettings);
-    Texture* drLSpriteTexture              = new Texture("res/sprites/DrLSprite.png", pixelArtTextureImportSettings);
-    Texture* gamerDudeSpriteTexture        = new Texture("res/sprites/GamerDudeSprite.png", pixelArtTextureImportSettings);
-    Texture* testSpriteTexture             = new Texture("res/sprites/TestSprite.png", pixelArtTextureImportSettings);
+    Texture* theDudeSpriteTexture            = new Texture("res/sprites/TheDudeSprite.png", pixelArtTextureImportSettings);
+    Texture* drLSpriteTexture                = new Texture("res/sprites/DrLSprite.png", pixelArtTextureImportSettings);
+    Texture* gamerDudeSpriteTexture          = new Texture("res/sprites/GamerDudeSprite.png", pixelArtTextureImportSettings);
+    Texture* testSpriteTexture               = new Texture("res/sprites/TestSprite.png", pixelArtTextureImportSettings);
     Texture* gamerDudeWalkRightSpriteTexture = new Texture("res/sprites/GamerDudeWalkRight.png", pixelArtTextureImportSettings);
     Texture* gamerDudeWalkLeftSpriteTexture  = new Texture("res/sprites/GamerDudeWalkLeft.png", pixelArtTextureImportSettings);
 
-    SpriteSet* theDude          = ADD_SPRITE(TheDude, new SpriteSet(theDudeSpriteTexture, 2, glm::vec2(30, 49)));
-    SpriteSet* drL              = ADD_SPRITE(DrL, new SpriteSet(drLSpriteTexture));
-    SpriteSet* gamerDude        = ADD_SPRITE(GamerDude, new SpriteSet(gamerDudeSpriteTexture));
-    SpriteSet* test             = ADD_SPRITE(Test, new SpriteSet(testSpriteTexture, 12, glm::uvec2(32, 32)));
+    SpriteSet* theDude   = ADD_SPRITE(TheDude, new SpriteSet(theDudeSpriteTexture, 2, glm::vec2(30, 49)));
+    SpriteSet* drL       = ADD_SPRITE(DrL, new SpriteSet(drLSpriteTexture));
+    SpriteSet* gamerDude = ADD_SPRITE(GamerDude, new SpriteSet(gamerDudeSpriteTexture));
+    SpriteSet* test      = ADD_SPRITE(Test, new SpriteSet(testSpriteTexture, 12, glm::uvec2(32, 32)));
 
     Sprite::AdditionalInfo additionalInfo;
-    additionalInfo.PixelsPerUnit = 90;
-    additionalInfo.Origin = glm::vec2(0.5f, 0.0f);
+    additionalInfo.PixelsPerUnit  = 90;
+    additionalInfo.Origin         = glm::vec2(0.5f, 0.0f);
     SpriteSet* gamerDudeWalkRight = ADD_SPRITE(GamerDudeWalkRight, new SpriteSet(gamerDudeWalkRightSpriteTexture, 6, glm::uvec2(119, 190), additionalInfo));
     SpriteSet* gamerDudeWalkLeft  = ADD_SPRITE(GamerDudeWalkLeft, new SpriteSet(gamerDudeWalkLeftSpriteTexture, 6, glm::uvec2(119, 190), additionalInfo));
 
@@ -109,7 +110,10 @@ void GraphicDemoApplication::LoadSprites()
     spriteAtlas->Pack();
 }
 
-void GraphicDemoApplication::LoadFonts() const { ADD_FONT(Roboto, new Font("res/fonts/Roboto-Regular.ttf")); }
+void GraphicDemoApplication::LoadFonts() const
+{
+    ADD_FONT(Roboto, new Font("res/fonts/Roboto-Regular.ttf"));
+}
 
 void GraphicDemoApplication::LoadSounds() const
 {
@@ -248,17 +252,17 @@ void GraphicDemoApplication::Initialize(Scene& scene)
     playerObject->AddComponent(new CharacterController());
     playerObject->AddComponent(new MeshRenderer(GET_MODEL(Cube)->GetMesh(0), GET_MATERIAL(Crate)));
     scene.AddGameObject(playerObject);
-    
+
     // Camera
     cameraObject = new GameObject();
     cameraObject->AddComponent(new Camera(60, 0.01f, 1000.0f, GET_SHADER(FrameBuffer)));
     cameraObject->AddComponent(new CameraControllerPOV());
     cameraObject->AddComponent(new AudioListener());
     scene.AddGameObject(cameraObject);
-    
+
     playerObject->GetComponent<CharacterController>()->SetCameraController(cameraObject->GetComponent<CameraControllerPOV>());
     cameraObject->GetComponent<CameraControllerPOV>()->SetFollowTransform(playerObject->GetTransform());
-    
+
     // Gamer Dude Spawner
     GamerDudePrefab gamerDudePrefab = GamerDudePrefab();
     for (unsigned int i = 0; i < 1000; i++)
@@ -269,7 +273,7 @@ void GraphicDemoApplication::Initialize(Scene& scene)
         gameObject->GetTransform()->SetLocalScale(glm::linearRand(0.05f, 4.0f) * glm::vec3(1.0));
         scene.AddGameObject(gameObject);
     }
-    
+
     // Red light
     redLightObject               = new GameObject();
     Transform* redLightTransform = redLightObject->GetTransform();
@@ -354,10 +358,9 @@ void GraphicDemoApplication::CustomRun()
         fullscreen = !fullscreen;
         Window::GetCurrentWindow()->SetFullscreen(fullscreen);
     }
-    
+
     // Close window if escape key is pressed
     if (Input::GetKeyPressed(GLFW_KEY_ESCAPE)) { glfwSetWindowShouldClose(Application::_window.GetGlWindow(), true); }
-
 
 
     // Change rainbow light color
@@ -369,7 +372,7 @@ void GraphicDemoApplication::CustomRun()
                                                                       ));
 
 
-    // Rotate 
+    // Rotate s
     suzanneObject->GetTransform()->Rotate(glm::vec3(0.0f, 45.0f * Time::GetDeltaTime(), 0.0f));
 
     // Rotate child crate to test hierarchy
@@ -378,5 +381,10 @@ void GraphicDemoApplication::CustomRun()
     // Move lights
     redLightObject->GetTransform()->SetLocalPosition(glm::vec3(0.0, 0.0f, sin(Time::GetTimeSinceStart()) * 20.0f));
     rainbowLightObject->GetTransform()->SetLocalPosition(glm::vec3(sin(Time::GetTimeSinceStart()) * 20.0f, 0.0f, 0.0f));
+}
+
+void GraphicDemoApplication::GuiDraw()
+{
+    // render your GUI
 
 }

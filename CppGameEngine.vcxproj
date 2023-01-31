@@ -30,9 +30,9 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup>
-    <IncludePath>$(IncludePath);$(SolutionDir)\vendor\GLAD\include;$(SolutionDir)\vendor\GLFW\include;$(SolutionDir)\vendor\glm\include;$(SolutionDir)\vendor\reactphysics3d\include;$(SolutionDir)\vendor\stb_image\include;$(SolutionDir)\vendor\tinygltf\include;$(SolutionDir)vendor\msdf-atlas-gen\include;$(SolutionDir)vendor\freetype\include;$(SolutionDir)vendor\msdfgen\include;$(SolutionDir)vendor\skia\include;$(SolutionDir)vendor\fmod\api\core\inc;$(SolutionDir)vendor\fmod\api\studio\inc;$(SolutionDir)GameEngine\include</IncludePath>
+    <IncludePath>$(IncludePath);$(SolutionDir)\vendor\GLAD\include;$(SolutionDir)\vendor\GLFW\include;$(SolutionDir)\vendor\glm\include;$(SolutionDir)\vendor\reactphysics3d\include;$(SolutionDir)\vendor\stb_image\include;$(SolutionDir)\vendor\tinygltf\include;$(SolutionDir)vendor\msdf-atlas-gen\include;$(SolutionDir)vendor\freetype\include;$(SolutionDir)vendor\msdfgen\include;$(SolutionDir)vendor\skia\include;$(SolutionDir)vendor\imgui\include;$(SolutionDir)vendor\fmod\api\core\inc;$(SolutionDir)vendor\fmod\api\studio\inc;$(SolutionDir)GameEngine\include</IncludePath>
     <OutDir>$(SolutionDir)\build\$(Platform)\$(Configuration)\</OutDir>
-    <SourcePath>$(SolutionDir)\vendor\tinygltf\src;$(SolutionDir)\vendor\stb_image\src;$(SolutionDir)\vendor\GLAD\src;$(SourcePath);$(SolutionDir)GameEngine\src</SourcePath>
+    <SourcePath>$(SolutionDir)\vendor\tinygltf\src;$(SolutionDir)\vendor\stb_image\src;$(SolutionDir)\vendor\GLAD\src;$(SolutionDir)\vendor\imgui\src;$(SourcePath);$(SolutionDir)GameEngine\src</SourcePath>
   </PropertyGroup>
   <ItemDefinitionGroup>
     <PostBuildEvent>
@@ -1128,6 +1128,12 @@
     <ClCompile Include="src\Prefabs\GamerDudePrefab.cpp" />
     <ClCompile Include="vendor\GLAD\src\glad.c" />
     <ClCompile Include="vendor\glm\include\glm\detail\glm.cpp" />
+    <ClCompile Include="vendor\imgui\src\imgui.cpp" />
+    <ClCompile Include="vendor\imgui\src\imgui_draw.cpp" />
+    <ClCompile Include="vendor\imgui\src\imgui_impl_glfw.cpp" />
+    <ClCompile Include="vendor\imgui\src\imgui_impl_opengl3.cpp" />
+    <ClCompile Include="vendor\imgui\src\imgui_tables.cpp" />
+    <ClCompile Include="vendor\imgui\src\imgui_widgets.cpp" />
     <ClCompile Include="vendor\stb_image\src\stb_image.cpp" />
     <ClCompile Include="vendor\tinygltf\src\tiny_gltf.cpp" />
   </ItemGroup>
@@ -1634,6 +1640,15 @@
     <ClInclude Include="vendor\glm\include\glm\vec3.hpp" />
     <ClInclude Include="vendor\glm\include\glm\vec4.hpp" />
     <ClInclude Include="vendor\glm\include\glm\vector_relational.hpp" />
+    <ClInclude Include="vendor\imgui\include\imconfig.h" />
+    <ClInclude Include="vendor\imgui\include\imgui.h" />
+    <ClInclude Include="vendor\imgui\include\imgui_impl_glfw.h" />
+    <ClInclude Include="vendor\imgui\include\imgui_impl_opengl3.h" />
+    <ClInclude Include="vendor\imgui\include\imgui_impl_opengl3_loader.h" />
+    <ClInclude Include="vendor\imgui\include\imgui_internal.h" />
+    <ClInclude Include="vendor\imgui\include\imstb_rectpack.h" />
+    <ClInclude Include="vendor\imgui\include\imstb_textedit.h" />
+    <ClInclude Include="vendor\imgui\include\imstb_truetype.h" />
     <ClInclude Include="vendor\msdf-atlas-gen\include\msdf-atlas-gen\artery-font-export.h" />
     <ClInclude Include="vendor\msdf-atlas-gen\include\msdf-atlas-gen\AtlasGenerator.h" />
     <ClInclude Include="vendor\msdf-atlas-gen\include\msdf-atlas-gen\AtlasStorage.h" />
@@ -1893,6 +1908,7 @@
     <Content Include="vendor\freetype\LICENSE.TXT" />
     <Content Include="vendor\GLFW\libs\glfw3_Release_x64.lib" />
     <Content Include="vendor\glm\include\glm\CMakeLists.txt" />
+    <Content Include="vendor\imgui\LICENSE.txt" />
     <Content Include="vendor\msdf-atlas-gen\libs\msdf-atlas-gen_Release_x64.lib" />
     <Content Include="vendor\msdfgen\libs\msdfgen-core_Release_x64.lib" />
     <Content Include="vendor\msdfgen\libs\msdfgen-ext_Release_x64.lib" />

@@ -1,9 +1,13 @@
 ﻿#include "GameEngine/Rendering/Renderer.h"
 
+#include <complex.h>
 #include <numeric>
 #include <GLFW/glfw3.h>
 #include <glm/ext/matrix_transform.hpp>
 
+#include "imgui.h"
+#include "imgui_impl_glfw.h"
+#include "imgui_impl_opengl3.h"
 #include "GameEngine/Window.h"
 #include "GameEngine/Rendering/IndexBuffer.h"
 #include "GameEngine/Rendering/Material.h"
@@ -144,7 +148,7 @@ unsigned int Renderer::RenderDefault(const std::pair<Material*, std::vector<Rend
 }
 
 
-void Renderer::Draw()
+void Renderer::RenderSubmitted()
 {
     unsigned int numDrawCalls = 0;
 
@@ -173,11 +177,7 @@ void Renderer::Draw()
 
         renderTarget->Unbind();
     }
-
-    Debug::Log::Message("Draw Calls: " + std::to_string(numDrawCalls));
-
-    glfwSwapBuffers(Window::GetCurrentWindow()->GetGlWindow());
-
+    
     // Cleanup lights
     for (Light* light : _lights) { light->OnFrameEnd(); }
     _lights.clear();
@@ -189,4 +189,9 @@ void Renderer::Draw()
     _opaqueRenderables.clear();
     _opaqueBatchRenderable2Ds.clear();
     _transparentRenderables.clear();
+}
+
+void Renderer::DrawFrame()
+{
+    glfwSwapBuffers(Window::GetCurrentWindow()->GetGlWindow());
 }

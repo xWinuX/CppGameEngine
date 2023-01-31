@@ -21,6 +21,7 @@ namespace GameEngine
             void Run();
 
             virtual void CustomRun() {}
+            virtual void GuiDraw() {}
             virtual void OnEnd() {}
     };
 }

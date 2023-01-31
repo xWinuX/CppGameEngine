@@ -15,7 +15,10 @@ float verticalAngle = 0.0f;
 float speed      = 3.0f; // 3 units / second
 float mouseSpeed = 0.005f;
 
-void CameraControllerPOV::OnStart() { glfwSetInputMode(Window::GetCurrentWindow()->GetGlWindow(), GLFW_CURSOR, GLFW_CURSOR_DISABLED); }
+void CameraControllerPOV::OnStart()
+{
+    //glfwSetInputMode(Window::GetCurrentWindow()->GetGlWindow(), GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+}
 
 void CameraControllerPOV::OnLateUpdate()
 {
@@ -23,7 +26,7 @@ void CameraControllerPOV::OnLateUpdate()
     glm::vec2  mousePosition = Input::GetMousePosition();
 
     // Reset mouse position for next frame
-    glfwSetCursorPos(Window::GetCurrentWindow()->GetGlWindow(), static_cast<float>(windowSize.x) / 2.0f, static_cast<float>(windowSize.y) / 2.0f);
+   // glfwSetCursorPos(Window::GetCurrentWindow()->GetGlWindow(), static_cast<float>(windowSize.x) / 2.0f, static_cast<float>(windowSize.y) / 2.0f);
 
     // Compute new orientation
     horizontalAngle += mouseSpeed * (static_cast<float>(windowSize.x) / 2.0f - mousePosition.x);
@@ -54,7 +57,7 @@ void CameraControllerPOV::OnLateUpdate()
                                       );
 
     
-    _transform->SetRotation(glm::slerp(_transform->GetRotation(), lookAt, 0.3f));
+    //_transform->SetRotation(glm::slerp(_transform->GetRotation(), lookAt, 0.3f));
     _transform->SetPosition(glm::mix(_transform->GetPosition(), _followTransform->GetPosition(), 0.5f));
 }
 
