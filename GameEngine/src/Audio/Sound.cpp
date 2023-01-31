@@ -16,6 +16,7 @@ Sound::Sound(const std::string& filePath, const bool is3D):
     const FMOD_MODE mode = is3D ? FMOD_3D : FMOD_DEFAULT;
     FMOD_CALLS_BEGIN
     FMOD_CALL(AudioManager::GetFMODSystem()->createSound(filePath.c_str(), mode, 0, &_fmodSound), "Failed to create sound")
+    FMOD_CALL(_fmodSound->set3DMinMaxDistance(1.0f, 10000.0f))
 }
 
 FMOD::Sound* Sound::GetFMODSound() const { return _fmodSound; }

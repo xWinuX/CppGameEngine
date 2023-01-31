@@ -1,7 +1,9 @@
 ﻿#include "GraphicDemoApplication.h"
 
 #include "Asset.h"
-#include "CarstenBehaviour.h"
+#include "Components/SimpleWalker.h"
+#include "Components/CameraControllerPOV.h"
+#include "Components/CharacterController.h"
 #include "GameEngine/Components/BoxCollider.h"
 #include "GameEngine/Components/Camera.h"
 #include "GameEngine/Components/MeshRenderer.h"
@@ -28,8 +30,9 @@
 #include "GameEngine/Components/AudioSource.h"
 #include "GameEngine/Components/CapsuleCollider.h"
 #include "GameEngine/Components/SpriteRenderer.h"
+#include "glm/gtc/random.hpp"
 #include "glm/gtx/string_cast.hpp"
-#include "Prefabs/CarstenPrefab.h"
+#include "Prefabs/GamerDudePrefab.h"
 
 
 using namespace GameEngine;
@@ -49,11 +52,12 @@ GameObject* theMissingObject;
 GameObject* crateObject;
 GameObject* childCrateObject;
 GameObject* childOfChildCrateObject;
-GameObject* carstenObject;
 
 SpriteAtlas* spriteAtlas;
 
 Cube* cube;
+
+bool fullscreen = false;
 
 void GraphicDemoApplication::LoadTextures()
 {
@@ -79,15 +83,19 @@ void GraphicDemoApplication::LoadSprites()
     Texture* drLSpriteTexture              = new Texture("res/sprites/DrLSprite.png", pixelArtTextureImportSettings);
     Texture* gamerDudeSpriteTexture        = new Texture("res/sprites/GamerDudeSprite.png", pixelArtTextureImportSettings);
     Texture* testSpriteTexture             = new Texture("res/sprites/TestSprite.png", pixelArtTextureImportSettings);
-    Texture* carstenWalkRightSpriteTexture = new Texture("res/sprites/CarstenWalkRight.png", pixelArtTextureImportSettings);
-    Texture* carstenWalkLeftSpriteTexture  = new Texture("res/sprites/CarstenWalkLeft.png", pixelArtTextureImportSettings);
+    Texture* gamerDudeWalkRightSpriteTexture = new Texture("res/sprites/GamerDudeWalkRight.png", pixelArtTextureImportSettings);
+    Texture* gamerDudeWalkLeftSpriteTexture  = new Texture("res/sprites/GamerDudeWalkLeft.png", pixelArtTextureImportSettings);
 
     SpriteSet* theDude          = ADD_SPRITE(TheDude, new SpriteSet(theDudeSpriteTexture, 2, glm::vec2(30, 49)));
     SpriteSet* drL              = ADD_SPRITE(DrL, new SpriteSet(drLSpriteTexture));
     SpriteSet* gamerDude        = ADD_SPRITE(GamerDude, new SpriteSet(gamerDudeSpriteTexture));
     SpriteSet* test             = ADD_SPRITE(Test, new SpriteSet(testSpriteTexture, 12, glm::uvec2(32, 32)));
-    SpriteSet* carstenWalkRight = ADD_SPRITE(CarstenWalkRight, new SpriteSet(carstenWalkRightSpriteTexture, 6, glm::uvec2(119, 190), 90));
-    SpriteSet* carstenWalkLeft  = ADD_SPRITE(CarstenWalkLeft, new SpriteSet(carstenWalkLeftSpriteTexture, 6, glm::uvec2(119, 190), 90));
+
+    Sprite::AdditionalInfo additionalInfo;
+    additionalInfo.PixelsPerUnit = 90;
+    additionalInfo.Origin = glm::vec2(0.5f, 0.0f);
+    SpriteSet* gamerDudeWalkRight = ADD_SPRITE(GamerDudeWalkRight, new SpriteSet(gamerDudeWalkRightSpriteTexture, 6, glm::uvec2(119, 190), additionalInfo));
+    SpriteSet* gamerDudeWalkLeft  = ADD_SPRITE(GamerDudeWalkLeft, new SpriteSet(gamerDudeWalkLeftSpriteTexture, 6, glm::uvec2(119, 190), additionalInfo));
 
     spriteAtlas = new SpriteAtlas(glm::ivec2(1024), pixelArtTextureImportSettings);
 
@@ -95,8 +103,8 @@ void GraphicDemoApplication::LoadSprites()
     spriteAtlas->AddSprite(drL);
     spriteAtlas->AddSprite(gamerDude);
     spriteAtlas->AddSprite(test);
-    spriteAtlas->AddSprite(carstenWalkRight);
-    spriteAtlas->AddSprite(carstenWalkLeft);
+    spriteAtlas->AddSprite(gamerDudeWalkRight);
+    spriteAtlas->AddSprite(gamerDudeWalkLeft);
 
     spriteAtlas->Pack();
 }
@@ -106,7 +114,7 @@ void GraphicDemoApplication::LoadFonts() const { ADD_FONT(Roboto, new Font("res/
 void GraphicDemoApplication::LoadSounds() const
 {
     ADD_SOUND(Dirty, new Sound("res/audio/Test.mp3", true));
-    ADD_SOUND(Hey, new Sound("res/audio/CarstenHey.ogg", true));
+    ADD_SOUND(Hey, new Sound("res/audio/Hey.ogg", true));
 }
 
 void GraphicDemoApplication::LoadModels() const
@@ -231,20 +239,34 @@ void GraphicDemoApplication::Initialize(Scene& scene)
 
     cube = new Cube();
 
+    // Player
+    GameObject* playerObject = new GameObject();
+    playerObject->GetTransform()->SetLocalPosition(glm::vec3(0.0f, 7.0f, 0.0f));
+
+    playerObject->AddComponent(new CapsuleCollider());
+    playerObject->AddComponent(new Rigidbody());
+    playerObject->AddComponent(new CharacterController());
+    playerObject->AddComponent(new MeshRenderer(GET_MODEL(Cube)->GetMesh(0), GET_MATERIAL(Crate)));
+    scene.AddGameObject(playerObject);
+    
     // Camera
     cameraObject = new GameObject();
-    cameraObject->AddComponent(new Camera(60, 0.01f, 10000.0f, GET_SHADER(FrameBuffer)));
+    cameraObject->AddComponent(new Camera(60, 0.01f, 1000.0f, GET_SHADER(FrameBuffer)));
+    cameraObject->AddComponent(new CameraControllerPOV());
     cameraObject->AddComponent(new AudioListener());
     scene.AddGameObject(cameraObject);
-
-    // Carsten
-    CarstenPrefab carstenPrefab = CarstenPrefab();
-    for (unsigned int i = 0; i < 20000; i++)
+    
+    playerObject->GetComponent<CharacterController>()->SetCameraController(cameraObject->GetComponent<CameraControllerPOV>());
+    cameraObject->GetComponent<CameraControllerPOV>()->SetFollowTransform(playerObject->GetTransform());
+    
+    // Gamer Dude Spawner
+    GamerDudePrefab gamerDudePrefab = GamerDudePrefab();
+    for (unsigned int i = 0; i < 1000; i++)
     {
-        GameObject*     gameObject     = carstenPrefab.Instantiate();
+        GameObject*     gameObject     = gamerDudePrefab.Instantiate();
         const glm::vec2 randomPosition = glm::diskRand(30.0f);
         gameObject->GetTransform()->SetPosition(glm::vec3(randomPosition.x, 0.0f, randomPosition.y));
-        gameObject->GetTransform()->SetLocalScale(glm::linearRand(0.25f, 5.0f) * glm::vec3(1.0));
+        gameObject->GetTransform()->SetLocalScale(glm::linearRand(0.05f, 4.0f) * glm::vec3(1.0));
         scene.AddGameObject(gameObject);
     }
     
@@ -254,7 +276,7 @@ void GraphicDemoApplication::Initialize(Scene& scene)
     redLightTransform->SetLocalPosition(glm::vec3(2.0f, 0.0f, 0.0f));
     redLightTransform->SetLocalScale(glm::vec3(0.1f));
     redLightObject->AddComponent(new MeshRenderer(GET_MODEL(Sphere)->GetMesh(0), GET_MATERIAL(Dude)));
-    //redLightObject->AddComponent(new PointLight(glm::vec4(1.0f, 0.0f, 0.0f, 1.0f), 5.0f, 2.0f));
+    redLightObject->AddComponent(new PointLight(glm::vec4(1.0f, 0.0f, 0.0f, 1.0f), 15.0f, 5.0f));
     scene.AddGameObject(redLightObject);
 
     // Rainbow light
@@ -262,17 +284,15 @@ void GraphicDemoApplication::Initialize(Scene& scene)
     Transform* rainbowLightTransform = rainbowLightObject->GetTransform();
     rainbowLightTransform->SetPosition(glm::vec3(-2.0f, 0.0f, 0.0f));
     rainbowLightTransform->SetLocalScale(glm::vec3(0.1f));
-    rainbowLightObject->AddComponent(new AudioSource(GET_SOUND(Dirty)));
     rainbowLightObject->AddComponent(new MeshRenderer(GET_MODEL(Sphere)->GetMesh(0), GET_MATERIAL(Dude)));
-    rainbowLightObject->AddComponent(new PointLight(glm::vec4(1.0f, 1.0f, 1.0f, 1.0f), 5.0f, 5.0f));
+    rainbowLightObject->AddComponent(new PointLight(glm::vec4(1.0f, 1.0f, 1.0f, 1.0f), 15.0f, 5.0f));
     scene.AddGameObject(rainbowLightObject);
 
     // Suzanne
     suzanneObject = new GameObject();
     suzanneObject->GetTransform()->SetLocalPosition(glm::vec3(0.0f, 2.0f, 0.0f));
-    // suzanneObject->AddComponent(new MeshRenderer(suzanneModel->GetMesh(0), dudeMaterial));
-    // suzanneObject->AddComponent(new SpriteRenderer(pixelFont->GetSprite(), msdfFontMaterial));
-    //suzanneObject->AddComponent(new TextRenderer(GET_FONT(Roboto), GET_MATERIAL(MSDFFont)));
+    suzanneObject->AddComponent(new MeshRenderer(GET_MODEL(Suzanne)->GetMesh(0), GET_MATERIAL(Dude)));
+    suzanneObject->AddComponent(new TextRenderer(GET_FONT(Roboto), GET_MATERIAL(MSDFFont)));
     scene.AddGameObject(suzanneObject);
 
     // The Missing
@@ -285,11 +305,11 @@ void GraphicDemoApplication::Initialize(Scene& scene)
 
     // Crate
     crateObject = new GameObject();
-    crateObject->GetTransform()->SetLocalPosition(glm::vec3(0.0f, -1.5f, 0.0f));
+    crateObject->GetTransform()->SetLocalPosition(glm::vec3(0.0f, 5.0f, 0.0f));
     crateObject->AddComponent(new MeshRenderer(GET_MODEL(Cube)->GetMesh(0), GET_MATERIAL(Crate)));
     crateObject->AddComponent(new SpriteRenderer(GET_SPRITE(TheDude), GET_MATERIAL(SpriteLit)));
     crateObject->AddComponent(new BoxCollider(glm::vec3(0.5f)));
-    crateObject->AddComponent(new Rigidbody(reactphysics3d::BodyType::DYNAMIC));
+    crateObject->AddComponent(new Rigidbody());
     scene.AddGameObject(crateObject);
 
     // Child crate
@@ -307,22 +327,21 @@ void GraphicDemoApplication::Initialize(Scene& scene)
     // Floor
     GameObject*                        floorObject    = new GameObject();
     GameEngine::Components::Transform* floorTransform = floorObject->GetTransform();
-    floorTransform->SetLocalPosition(glm::vec3(0.0f, -2.0f, 0.0f));
-    floorTransform->SetLocalScale(glm::vec3(2.0f, 2.0f, 2.0f));
-    floorObject->AddComponent(new MeshRenderer(GET_MODEL(Sphere)->GetMesh(0), GET_MATERIAL(Crate)));
-    floorObject->AddComponent(new BoxCollider(glm::vec3(5.0f, 0.5f, 5.0f)));
+    floorTransform->SetLocalPosition(glm::vec3(0.0f, -1.0f, 0.0f));
+    floorTransform->SetLocalScale(glm::vec3(200.0f, 2.0f, 200.0f));
+    floorObject->AddComponent(new MeshRenderer(GET_MODEL(Cube)->GetMesh(0), GET_MATERIAL(Crate)));
+    floorObject->AddComponent(new BoxCollider(glm::vec3(100.0f, 1.0f, 100.0f)));
     floorObject->AddComponent(new Rigidbody(reactphysics3d::BodyType::STATIC));
     scene.AddGameObject(floorObject);
 
     // Water
     GameObject* waterObject = new GameObject();
-    waterObject->GetTransform()->SetLocalPosition(glm::vec3(0.0f, -2.0f, 0.0f));
-    // waterObject->AddComponent(new MeshRenderer(highPolyPlane->GetMesh(0), waterMaterial));
+    waterObject->GetTransform()->SetLocalPosition(glm::vec3(0.0f, 2.0f, 0.0f));
+    //waterObject->AddComponent(new MeshRenderer(GET_MODEL(HighPolyPlane)->GetMesh(0), GET_MATERIAL(Water)));
     scene.AddGameObject(waterObject);
 
     // Setup physics debug
     PhysicsManager::SetDebugRendererMaterial(GET_MATERIAL(PhysicsDebug));
-    PhysicsManager::ToggleDebugWireframe();
 }
 
 void GraphicDemoApplication::CustomRun()
@@ -330,29 +349,16 @@ void GraphicDemoApplication::CustomRun()
     // Toggle physics debug wireframe
     if (Input::GetKeyPressed(GLFW_KEY_P)) { PhysicsManager::ToggleDebugWireframe(); }
 
-    // Camera movement
-    glm::vec4 cameraVelocity = glm::vec4(0.0f);
-    if (Input::GetKeyDown(GLFW_KEY_D)) { cameraVelocity.x += 5.0f * Time::GetDeltaTime(); }
-    if (Input::GetKeyDown(GLFW_KEY_A)) { cameraVelocity.x -= 5.0f * Time::GetDeltaTime(); }
-    if (Input::GetKeyDown(GLFW_KEY_W)) { cameraVelocity.z -= 5.0f * Time::GetDeltaTime(); }
-    if (Input::GetKeyDown(GLFW_KEY_S)) { cameraVelocity.z += 5.0f * Time::GetDeltaTime(); }
-    if (Input::GetKeyDown(GLFW_KEY_LEFT_SHIFT)) { cameraVelocity.y -= 5.0f * Time::GetDeltaTime(); }
-    if (Input::GetKeyDown(GLFW_KEY_SPACE)) { cameraVelocity.y += 5.0f * Time::GetDeltaTime(); }
-
-    // Crate movement
-    glm::vec4 crateVelocity = glm::vec4(0.0f);
-    if (Input::GetKeyDown(GLFW_KEY_RIGHT)) { crateVelocity.x += 5.0f * Time::GetDeltaTime(); }
-    if (Input::GetKeyDown(GLFW_KEY_LEFT)) { crateVelocity.x -= 5.0f * Time::GetDeltaTime(); }
-    if (Input::GetKeyDown(GLFW_KEY_UP)) { crateVelocity.z -= 5.0f * Time::GetDeltaTime(); }
-    if (Input::GetKeyDown(GLFW_KEY_DOWN)) { crateVelocity.z += 5.0f * Time::GetDeltaTime(); }
-    if (Input::GetKeyDown(GLFW_KEY_C)) { crateVelocity.y -= 5.0f * Time::GetDeltaTime(); }
-    if (Input::GetKeyDown(GLFW_KEY_V)) { crateVelocity.y += 5.0f * Time::GetDeltaTime(); }
-
+    if (Input::GetKeyPressed(GLFW_KEY_F))
+    {
+        fullscreen = !fullscreen;
+        Window::GetCurrentWindow()->SetFullscreen(fullscreen);
+    }
+    
     // Close window if escape key is pressed
     if (Input::GetKeyPressed(GLFW_KEY_ESCAPE)) { glfwSetWindowShouldClose(Application::_window.GetGlWindow(), true); }
 
 
-    if (Input::GetKeyPressed(GLFW_KEY_M)) { rainbowLightObject->GetComponent<AudioSource>()->PlayLooped(); }
 
     // Change rainbow light color
     rainbowLightObject->GetComponent<PointLight>()->SetColor(glm::vec4(
@@ -362,31 +368,15 @@ void GraphicDemoApplication::CustomRun()
                                                                        1.0f
                                                                       ));
 
-    childCrateObject->GetTransform()->SetLocalScale(glm::vec3(2.0, 2.0, 2.0));
 
     // Rotate 
-    // theMissingObject->GetTransform()->Rotate(glm::vec3(0.0f, 0.0f, 45.0f * Time::GetDeltaTime()));
     suzanneObject->GetTransform()->Rotate(glm::vec3(0.0f, 45.0f * Time::GetDeltaTime(), 0.0f));
 
     // Rotate child crate to test hierarchy
     childCrateObject->GetTransform()->RotateLocal(glm::vec3(0.0f, 0.0f, 45.0f * Time::GetDeltaTime()));
 
     // Move lights
-    //  rainbowLightObject->GetTransform()->SetLocalPosition(glm::vec3(sin(Time::GetTimeSinceStart()) * 7.0f, -1.0f, 0.0f));
-    redLightObject->GetTransform()->SetLocalPosition(glm::vec3(0.0, -1.0f, sin(Time::GetTimeSinceStart()) * 7.0f));
+    redLightObject->GetTransform()->SetLocalPosition(glm::vec3(0.0, 0.0f, sin(Time::GetTimeSinceStart()) * 20.0f));
+    rainbowLightObject->GetTransform()->SetLocalPosition(glm::vec3(sin(Time::GetTimeSinceStart()) * 20.0f, 0.0f, 0.0f));
 
-    rainbowLightObject->GetTransform()->Move(cameraVelocity);
-    // Move crate
-    //crateObject->GetComponent<Rigidbody>()->ApplyForce(crateVelocity * 100.0f);
-    //crateObject->GetComponent<Rigidbody>()->ApplyTorque(crateVelocity * 100.0f);
-
-    // Move camera
-    cameraObject->GetTransform()->Move(crateVelocity);
-
-
-    GameEngine::Debug::Log::Message(glm::to_string(rainbowLightObject->GetTransform()->GetPosition()));
-    GameEngine::Debug::Log::Message(glm::to_string(rainbowLightObject->GetTransform()->GetLocalPosition()));
-    GameEngine::Debug::Log::Message(glm::to_string(cameraObject->GetTransform()->GetPosition()));
-    GameEngine::Debug::Log::Message(glm::to_string(cameraObject->GetTransform()->GetLocalPosition()));
-    std::cout << "FPS: " << std::to_string(1 / Time::GetDeltaTime()) << std::endl;
 }

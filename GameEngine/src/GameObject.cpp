@@ -8,13 +8,13 @@ using namespace GameEngine::Debug;
 using namespace GameEngine;
 
 
-#define DO_FUNCTION(funcName) \
+#define DO_FUNCTION(func) \
 for (GameEngine::Components::Component* component : _components) \
 { \
     if (!component->GetEnabled()) { continue; } \
-    component->funcName(); \
+    component->func; \
 } \
-for (const GameObject* child : _children) { child->funcName(); }
+for (const GameObject* child : _children) { child->func; }
 
 GameObject::GameObject():
     _transform(new GameEngine::Components::Transform()) { AddComponent(_transform); }
@@ -71,9 +71,10 @@ void GameObject::SetParent(GameObject* newParent)
 
 GameObject* GameObject::GetParent() const { return _parent; }
 
-void GameObject::OnStart() const { DO_FUNCTION(OnStart) }
-void GameObject::OnUpdateBegin() const { DO_FUNCTION(OnUpdateBegin) }
-void GameObject::OnPhysicsUpdate() const { DO_FUNCTION(OnPhysicsUpdate) }
-void GameObject::OnUpdate() const { DO_FUNCTION(OnUpdate) }
-void GameObject::OnLateUpdate() const { DO_FUNCTION(OnLateUpdate) }
-void GameObject::OnUpdateEnd() const { DO_FUNCTION(OnUpdateEnd) }
+void GameObject::OnStart() const { DO_FUNCTION(OnStart()) }
+void GameObject::OnUpdateBegin() const { DO_FUNCTION(OnUpdateBegin()) }
+void GameObject::OnPhysicsUpdate() const { DO_FUNCTION(OnPhysicsUpdate()) }
+void GameObject::OnPhysicsUpdateEnd(const float interpolationFactor) const { DO_FUNCTION(OnPhysicsUpdateEnd(interpolationFactor)) }
+void GameObject::OnUpdate() const { DO_FUNCTION(OnUpdate()) }
+void GameObject::OnLateUpdate() const { DO_FUNCTION(OnLateUpdate()) }
+void GameObject::OnUpdateEnd() const { DO_FUNCTION(OnUpdateEnd()) }

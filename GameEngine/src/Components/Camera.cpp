@@ -18,7 +18,12 @@ Camera::Camera(const float fovInDegrees, const float zNear, const float zFar, Sh
     _zFar(zFar)
 {
     UpdateProjectionMatrix();
-    Window::GetCurrentWindow()->AddFramebufferSizeCallback([this](Window* window) { UpdateProjectionMatrix(); });
+    ResizeFrameBuffer(Window::GetCurrentWindow()->GetSize());
+    Window::GetCurrentWindow()->AddFramebufferSizeCallback([this](const Window* window)
+    {
+        ResizeFrameBuffer(window->GetSize());
+        UpdateProjectionMatrix();
+    });
 }
 
 void Camera::OnUpdateEnd()

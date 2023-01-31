@@ -2,6 +2,7 @@
 #include <vector>
 
 #include "RenderableSprite.h"
+#include "Sprite.h"
 #include "Texture.h"
 
 #include "glm/mat4x4.hpp"
@@ -17,9 +18,9 @@ namespace GameEngine
         class SpriteSet : public RenderableSprite
         {
             public:
-                explicit SpriteSet(Texture* texture, unsigned int pixelsPerUnit = 30);
-                SpriteSet(Texture* texture, unsigned int numFrames, glm::uvec2 frameSize, unsigned int pixelsPerUnit = 30);
-                SpriteSet(Texture* texture, const msdf_atlas::FontGeometry& fontGeometry, unsigned int pixelsPerUnit = 30);
+                explicit SpriteSet(Texture* texture, Sprite::AdditionalInfo additionalInfo = Sprite::AdditionalInfo());
+                SpriteSet(Texture* texture, unsigned int numFrames, glm::uvec2 frameSize, Sprite::AdditionalInfo additionalInfo = Sprite::AdditionalInfo());
+                SpriteSet(Texture* texture, const msdf_atlas::FontGeometry& fontGeometry, Sprite::AdditionalInfo additionalInfo = Sprite::AdditionalInfo());
 
                 ~SpriteSet() override;
 

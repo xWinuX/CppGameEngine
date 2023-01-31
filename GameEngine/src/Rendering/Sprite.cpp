@@ -4,29 +4,29 @@
 
 using namespace GameEngine::Rendering;
 
-Sprite::Sprite(Texture* texture, const unsigned int pixelsPerUnit):
+Sprite::Sprite(Texture* texture, const AdditionalInfo additionalInfo):
     _sourceTexture(texture),
     _texture(texture),
     _pixelPosition(glm::uvec2(0, 0)),
     _size(texture->GetSize()),
-    _pixelsPerUnit(pixelsPerUnit),
-    _pixelsPerUnitFactor(1.0f / static_cast<float>(pixelsPerUnit)) { CreateSpriteQuad(glm::vec2(0.0f, 0.0f), glm::vec2(1.0f, 1.0f)); }
+    _pixelsPerUnit(additionalInfo.PixelsPerUnit),
+    _pixelsPerUnitFactor(1.0f / static_cast<float>(additionalInfo.PixelsPerUnit)) { CreateSpriteQuad(glm::vec2(0.0f, 0.0f), glm::vec2(1.0f, 1.0f), additionalInfo.Origin); }
 
-Sprite::Sprite(Texture* texture, const glm::uvec2 pixelPosition, const glm::uvec2 size, const glm::vec2 uvTopLeft, const glm::vec2 uvBottomRight, const unsigned int pixelsPerUnit):
+Sprite::Sprite(Texture* texture, const glm::uvec2 pixelPosition, const glm::uvec2 size, const glm::vec2 uvTopLeft, const glm::vec2 uvBottomRight, const AdditionalInfo additionalInfo):
     _sourceTexture(texture),
     _texture(texture),
     _pixelPosition(pixelPosition),
     _size(size),
-    _pixelsPerUnit(pixelsPerUnit),
-    _pixelsPerUnitFactor(1.0f / static_cast<float>(pixelsPerUnit)) { CreateSpriteQuad(uvTopLeft, uvBottomRight); }
+    _pixelsPerUnit(additionalInfo.PixelsPerUnit),
+    _pixelsPerUnitFactor(1.0f / static_cast<float>(_pixelsPerUnit)) { CreateSpriteQuad(uvTopLeft, uvBottomRight, additionalInfo.Origin); }
 
-Sprite::Sprite(Texture* texture, const glm::uvec2 pixelPosition, const glm::vec4 posLRTB, const glm::vec2 uvTopLeft, const glm::vec2 uvBottomRight, const unsigned pixelsPerUnit):
+Sprite::Sprite(Texture* texture, const glm::uvec2 pixelPosition, const glm::vec4 posLRTB, const glm::vec2 uvTopLeft, const glm::vec2 uvBottomRight, const AdditionalInfo additionalInfo):
     _sourceTexture(texture),
     _texture(texture),
     _pixelPosition(pixelPosition),
     _size(glm::vec2(abs(posLRTB.x - posLRTB.y), abs(posLRTB.z - posLRTB.w))),
-    _pixelsPerUnit(pixelsPerUnit),
-    _pixelsPerUnitFactor(1.0f / static_cast<float>(pixelsPerUnit))
+    _pixelsPerUnit(additionalInfo.PixelsPerUnit),
+    _pixelsPerUnitFactor(1.0f / static_cast<float>(_pixelsPerUnit))
 {
     _quadData = new QuadData{
 

@@ -4,7 +4,7 @@
 #include "GameEngine/Components/SpriteRenderer.h"
 #include "glm/gtc/random.hpp"
 
-class CarstenBehaviour final : public GameEngine::Components::Component
+class SimpleWalker final : public GameEngine::Components::Component
 {
     private:
         GameEngine::Components::AudioSource*    _audioSource     = nullptr;

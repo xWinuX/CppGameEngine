@@ -24,3 +24,11 @@ bool Input::GetKeyPressed(const int key)
 
     return false;
 }
+
+glm::vec2 Input::GetMousePosition()
+{
+    double xPos, yPos;
+    glfwGetCursorPos(Window::GetCurrentWindow()->GetGlWindow(), &xPos, &yPos);
+
+    return {static_cast<float>(xPos), static_cast<float>(yPos)};
+}

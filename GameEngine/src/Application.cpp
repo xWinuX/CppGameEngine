@@ -2,9 +2,15 @@
 
 #include <tiny_gltf.h>
 
+#include <glad/glad.h>
+#include <GLFW/glfw3.h>
+
 #include "GameEngine/Input.h"
 #include "GameEngine/Time.h"
 #include "GameEngine/Audio/AudioManager.h"
+#include "GameEngine/IO/Importer/GLTF.h"
+#include "GameEngine/IO/Importer/GLTF.h"
+#include "GameEngine/IO/Importer/GLTF.h"
 #include "GameEngine/Physics/PhysicsManager.h"
 #include "GameEngine/Rendering/Renderer.h"
 
@@ -25,8 +31,6 @@ Application::Application()
     // Initialize Systems
     Renderer::Initialize();
     Audio::AudioManager::Initialize();
-
-    glfwSwapInterval(0);
 }
 
 void Application::Run()
@@ -39,15 +43,16 @@ void Application::Run()
 
     while (!_window.ShouldClose())
     {
+        
         Time::Update();
         Input::Update();
 
-        // Executes als OnPhysicsUpdates on game objects if a pyhsics time step happens, also updates the physics world
+        // Executes als OnPhysicsUpdates on game objects if a physics time step happens, also updates the physics world
         PhysicsManager::Update(&scene);
-
+        
         // Execute Update calls on each game object in the current scene
         scene.Update();
-
+        
         CustomRun();
 
         // Audio Update
@@ -55,6 +60,8 @@ void Application::Run()
 
         // Render
         Renderer::Draw();
+
+        std::cout << "FPS: " << std::to_string(1 / Time::GetDeltaTime()) << std::endl;
     }
 
     OnEnd();

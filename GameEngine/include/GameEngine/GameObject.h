@@ -27,9 +27,10 @@ namespace GameEngine
             void OnStart() const;
             void OnUpdateBegin() const;
             void OnUpdate() const;
-            void OnPhysicsUpdate() const;
             void OnLateUpdate() const;
             void OnUpdateEnd() const;
+            void OnPhysicsUpdate() const;
+            void OnPhysicsUpdateEnd(float interpolationFactor) const;
 
         public:
             GameObject();
@@ -54,6 +55,19 @@ namespace GameEngine
                 return nullptr;
             }
 
+            template <typename T>
+            T* GetComponentInChildren()
+            {
+                T* component = nullptr;
+                for (GameObject* child : _children)
+                {
+                    component = child->GetComponent<T>();
+                    if (component != nullptr) { break; }
+                }
+                
+                return component;
+            }
+        
             template <typename T>
             std::vector<T*> GetComponents()
             {

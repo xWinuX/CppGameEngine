@@ -25,8 +25,8 @@ namespace Asset
         DrL,
         GamerDude,
         Test,
-        CarstenWalkRight,
-        CarstenWalkLeft,
+        GamerDudeWalkRight,
+        GamerDudeWalkLeft,
     };
 
     enum class Font : size_t

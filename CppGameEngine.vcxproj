@@ -77,7 +77,6 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="GameEngine\include\GameEngine\Rendering\RenderTarget.cpp" />
     <ClCompile Include="GameEngine\src\Application.cpp">
       <AssemblerOutput>NoListing</AssemblerOutput>
       <AssemblerListingLocation>x64\Release\</AssemblerListingLocation>
@@ -821,6 +820,7 @@
     <ClCompile Include="GameEngine\src\Rendering\Primitive.cpp" />
     <ClCompile Include="GameEngine\src\Rendering\RenderablePrimitive.cpp" />
     <ClCompile Include="GameEngine\src\Rendering\Renderer.cpp" />
+    <ClCompile Include="GameEngine\src\Rendering\RenderTarget.cpp" />
     <ClCompile Include="GameEngine\src\Rendering\Shader.cpp" />
     <ClCompile Include="GameEngine\src\Rendering\Sprite.cpp" />
     <ClCompile Include="GameEngine\src\Rendering\SpriteAtlas.cpp" />
@@ -1050,9 +1050,82 @@
       <LinkCompiled>true</LinkCompiled>
     </ClCompile>
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="src\CarstenBehaviour.cpp" />
+    <ClCompile Include="src\Components\CameraControllerPOV.cpp" />
+    <ClCompile Include="src\Components\CharacterController.cpp" />
+    <ClCompile Include="src\Components\SimpleWalker.cpp">
+      <AssemblerOutput>NoListing</AssemblerOutput>
+      <AssemblerListingLocation>x64\Release\</AssemblerListingLocation>
+      <UndefineAllPreprocessorDefinitions>false</UndefineAllPreprocessorDefinitions>
+      <BrowseInformation>false</BrowseInformation>
+      <BrowseInformationFile>x64\Release\</BrowseInformationFile>
+      <BasicRuntimeChecks>Default</BasicRuntimeChecks>
+      <CompileAs>Default</CompileAs>
+      <ConformanceMode>Default</ConformanceMode>
+      <DiagnosticsFormat>Column</DiagnosticsFormat>
+      <DisableLanguageExtensions>false</DisableLanguageExtensions>
+      <ErrorReporting>Prompt</ErrorReporting>
+      <ExpandAttributedSource>false</ExpandAttributedSource>
+      <ExceptionHandling>Sync</ExceptionHandling>
+      <EnableASAN>false</EnableASAN>
+      <EnableFuzzer>false</EnableFuzzer>
+      <EnableFiberSafeOptimizations>false</EnableFiberSafeOptimizations>
+      <EnableEnhancedInstructionSet>NotSet</EnableEnhancedInstructionSet>
+      <FloatingPointModel>Precise</FloatingPointModel>
+      <ForceConformanceInForLoopScope>true</ForceConformanceInForLoopScope>
+      <GenerateModuleDependencies>false</GenerateModuleDependencies>
+      <GenerateSourceDependencies>false</GenerateSourceDependencies>
+      <GenerateXMLDocumentationFiles>false</GenerateXMLDocumentationFiles>
+      <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <IgnoreStandardIncludePath>false</IgnoreStandardIncludePath>
+      <LanguageStandard>Default</LanguageStandard>
+      <LanguageStandard_C>Default</LanguageStandard_C>
+      <MinimalRebuild>false</MinimalRebuild>
+      <ModuleDependenciesFile>x64\Release\</ModuleDependenciesFile>
+      <ModuleOutputFile>x64\Release\</ModuleOutputFile>
+      <OmitDefaultLibName>false</OmitDefaultLibName>
+      <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
+      <WholeProgramOptimization>true</WholeProgramOptimization>
+      <Optimization>MaxSpeed</Optimization>
+      <ObjectFileName>x64\Release\</ObjectFileName>
+      <CallingConvention>Cdecl</CallingConvention>
+      <ProgramDataBaseFileName>x64\Release\vc143.pdb</ProgramDataBaseFileName>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <PrecompiledHeaderFile>stdafx.h</PrecompiledHeaderFile>
+      <PrecompiledHeaderOutputFile>x64\Release\CppGameEngine.pch</PrecompiledHeaderOutputFile>
+      <PreprocessToFile>false</PreprocessToFile>
+      <PreprocessKeepComments>false</PreprocessKeepComments>
+      <PreprocessSuppressLineNumbers>false</PreprocessSuppressLineNumbers>
+      <RemoveUnreferencedCodeData>true</RemoveUnreferencedCodeData>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <ScanSourceForModuleDependencies>false</ScanSourceForModuleDependencies>
+      <ShowIncludes>false</ShowIncludes>
+      <SourceDependenciesFile>x64\Release\</SourceDependenciesFile>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <BufferSecurityCheck>false</BufferSecurityCheck>
+      <SmallerTypeCheck>false</SmallerTypeCheck>
+      <SpectreMitigation>false</SpectreMitigation>
+      <StructMemberAlignment>Default</StructMemberAlignment>
+      <SupportJustMyCode>false</SupportJustMyCode>
+      <TrackerLogDirectory>x64\Release\CppGameEngine.tlog\</TrackerLogDirectory>
+      <TranslateIncludes>false</TranslateIncludes>
+      <MinimalRebuildFromTracking>true</MinimalRebuildFromTracking>
+      <TreatWarningAsError>false</TreatWarningAsError>
+      <TreatWChar_tAsBuiltInType>true</TreatWChar_tAsBuiltInType>
+      <UseFullPaths>true</UseFullPaths>
+      <WarningLevel>TurnOffAllWarnings</WarningLevel>
+      <XMLDocumentationFileName>x64\Release\</XMLDocumentationFileName>
+      <DebugInformationFormat>None</DebugInformationFormat>
+      <IntelJCCErratum>false</IntelJCCErratum>
+      <TreatAngleIncludeAsExternal>false</TreatAngleIncludeAsExternal>
+      <ExternalWarningLevel>InheritWarningLevel</ExternalWarningLevel>
+      <TreatExternalTemplatesAsInternal>true</TreatExternalTemplatesAsInternal>
+      <DisableAnalyzeExternal>false</DisableAnalyzeExternal>
+      <UndefinePreprocessorDefinitions>_DEBUG</UndefinePreprocessorDefinitions>
+      <LinkCompiled>true</LinkCompiled>
+    </ClCompile>
     <ClCompile Include="src\GraphicDemoApplication.cpp" />
-    <ClCompile Include="src\Prefabs\CarstenPrefab.cpp" />
+    <ClCompile Include="src\Prefabs\GamerDudePrefab.cpp" />
     <ClCompile Include="vendor\GLAD\src\glad.c" />
     <ClCompile Include="vendor\glm\include\glm\detail\glm.cpp" />
     <ClCompile Include="vendor\stb_image\src\stb_image.cpp" />
@@ -1118,9 +1191,11 @@
     <ClInclude Include="GameEngine\include\GameEngine\Utils\String.h" />
     <ClInclude Include="GameEngine\include\GameEngine\Window.h" />
     <ClInclude Include="src\Asset.h" />
-    <ClInclude Include="src\CarstenBehaviour.h" />
+    <ClInclude Include="src\Components\CameraControllerPOV.h" />
+    <ClInclude Include="src\Components\CharacterController.h" />
+    <ClInclude Include="src\Components\SimpleWalker.h" />
     <ClInclude Include="src\GraphicDemoApplication.h" />
-    <ClInclude Include="src\Prefabs\CarstenPrefab.h" />
+    <ClInclude Include="src\Prefabs\GamerDudePrefab.h" />
     <ClInclude Include="vendor\fmod\api\core\inc\fmod.h" />
     <ClInclude Include="vendor\fmod\api\core\inc\fmod.hpp" />
     <ClInclude Include="vendor\fmod\api\core\inc\fmod_codec.h" />

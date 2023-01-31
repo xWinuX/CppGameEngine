@@ -14,6 +14,8 @@ void Scene::Update() const
     _sceneRoot->OnUpdateEnd();
 }
 
-void Scene::PhysicsUpdate() const { _sceneRoot->OnPhysicsUpdate(); }
+void Scene::OnPhysicsUpdate() const { _sceneRoot->OnPhysicsUpdate(); }
+
+void Scene::OnPhysicsUpdateEnd(const float interpolationFactor) const { _sceneRoot->OnPhysicsUpdateEnd(interpolationFactor); }
 
 void Scene::AddGameObject(GameObject* gameObject) const { gameObject->SetParent(_sceneRoot); }

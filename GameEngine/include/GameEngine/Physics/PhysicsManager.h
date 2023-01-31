@@ -34,6 +34,7 @@ namespace GameEngine
                 static reactphysics3d::PhysicsCommon*   GetPhysicsCommon();
                 static reactphysics3d::MemoryAllocator& GetMemoryAllocator();
                 static void                             ToggleDebugWireframe();
+                static float                            GetPhysicsTimeStep();
                 static void                             SetDebugRendererMaterial(Rendering::Material* material);
         };
     }

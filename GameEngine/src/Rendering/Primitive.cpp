@@ -15,6 +15,7 @@ Primitive::~Primitive()
     delete _vertexBuffer;
     delete _indexBuffer;
     delete _vertexBufferLayout;
+    delete _vertexArrayObject;
 }
 
 VertexArrayObject*  Primitive::GetVertexArrayObject() const { return _vertexArrayObject; }

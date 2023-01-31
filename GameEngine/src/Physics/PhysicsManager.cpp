@@ -20,18 +20,19 @@ bool  PhysicsManager::_renderDebugWireFrame = false;
 
 void PhysicsManager::Update(const Scene* scene)
 {
-    const float deltaTime = std::min(Time::GetDeltaTime(), 0.25f);
-
-    _frameAccumulator += deltaTime;
+    _frameAccumulator +=  Time::GetDeltaTime();
 
     // This executes the physics as many time as needed to catch up to real time again
     while (_frameAccumulator >= _physicsTimeStep)
     {
-        scene->PhysicsUpdate();
+        scene->OnPhysicsUpdate();
         _physicsWorld->update(_physicsTimeStep);
         _frameAccumulator -= _physicsTimeStep;
     }
 
+    const float interpolationFactor = _frameAccumulator/_physicsTimeStep;
+    scene->OnPhysicsUpdateEnd(interpolationFactor);
+    
     if (_renderDebugWireFrame)
     {
         if (_debugRenderer == nullptr)
@@ -63,6 +64,8 @@ void PhysicsManager::ToggleDebugWireframe()
 
     Debug::Log::Message("Toggled physics debug is now: " + std::to_string(_renderDebugWireFrame));
 }
+
+float PhysicsManager::GetPhysicsTimeStep() { return _physicsTimeStep; }
 
 void PhysicsManager::SetDebugRendererMaterial(Rendering::Material* material)
 {

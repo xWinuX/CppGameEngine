@@ -9,6 +9,7 @@ namespace GameEngine
     {
         class VertexArrayObject;
 
+        // TODO: evaluate if this is even needed, i could just put all this info in the vao class
         class Primitive
         {
             private:

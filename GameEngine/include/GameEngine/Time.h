@@ -14,6 +14,7 @@ namespace GameEngine
 
         public:
             static float GetDeltaTime();
+            static float GetPhysicsDeltaTime();
             static float GetTimeSinceStart();
     };
 }

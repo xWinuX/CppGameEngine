@@ -45,12 +45,12 @@ void Transform::SetLocalPosition(const glm::vec3& localPosition)
     CalculateTRS();
 }
 
-void Transform::SetRotation(const glm::quat quaternion) { SetLocalRotation(quaternion * GetRotation()); }
+void Transform::SetRotation(const glm::quat quaternion) { SetLocalRotation(GetParentRotation() * quaternion); }
 
 void Transform::SetLocalRotation(const glm::quat quaternion)
 {
     _localRotation = quaternion;
-    _physicsTransform.setOrientation(reactphysics3d::Quaternion(_localRotation.x, _localRotation.y, _localRotation.z, _localRotation.w));
+    //_physicsTransform.setOrientation(reactphysics3d::Quaternion(_localRotation.x, _localRotation.y, _localRotation.z, _localRotation.w));
     CalculateTRS();
 }
 
@@ -60,15 +60,10 @@ void Transform::SetLocalScale(const glm::vec3& scale)
     CalculateTRS();
 }
 
-glm::mat4 Transform::GetParentTRS() const
-{
-    if (_gameObject->GetParent() != nullptr) { return _gameObject->GetParent()->GetTransform()->GetTRS(); }
-    return glm::identity<glm::mat4>();
-}
 
 glm::quat Transform::GetParentRotation() const
 {
-    if (_gameObject->GetParent() != nullptr) { return _gameObject->GetParent()->GetTransform()->GetLocalRotation(); }
+    if (_gameObject->GetParent() != nullptr) { return _gameObject->GetParent()->GetTransform()->GetRotation(); }
 
     return {1.0f, 0.0f, 0.0f, 0.0f};
 }
@@ -85,18 +80,27 @@ void Transform::Rotate(const glm::vec3& eulerAngles)
 void Transform::RotateLocal(const glm::vec3& eulerAngles) { SetLocalRotation(GetLocalRotation() * glm::quat(radians(eulerAngles))); }
 
 
-glm::vec3 Transform::ToWorldSpace(const glm::vec3 vec3) const { return GetTRS() * glm::vec4(vec3, 0.0f); }
-glm::vec3 Transform::ToLocalSpace(const glm::vec3 vec3) const { return inverse(GetTRS()) * glm::vec4(vec3, 0.0f); }
+glm::vec3 Transform::ToWorldSpace(const glm::vec3 vec3) const { return GetParentTRS() * glm::vec4(vec3, 1.0f); }
+glm::vec3 Transform::ToLocalSpace(const glm::vec3 vec3) const { return inverse(GetParentTRS()) * glm::vec4(vec3, 0.0f); }
+
+
+glm::mat4 Transform::GetParentTRS() const
+{
+    if (_gameObject->GetParent() != nullptr)
+    {
+        _gameObject->GetParent()->GetTransform()->CalculateTRS();
+        return _gameObject->GetParent()->GetTransform()->GetTRS();
+    }
+    return glm::identity<glm::mat4>();
+}
 
 void Transform::CalculateTRS()
 {
-    _trs = glm::identity<glm::mat4>();
-
-    _trs *= GetParentTRS();
-
-    _trs = glm::scale(_trs, _localScale);
-    _trs = _trs * glm::mat4_cast(_localRotation);
-    _trs = glm::translate(_trs, _localPosition);
+    _trs =
+        GetParentTRS()
+        * glm::translate(glm::identity<glm::mat4>(), _localPosition)
+        * mat4_cast(_localRotation)
+        * glm::scale(glm::identity<glm::mat4>(), _localScale);
 }
 
 void Transform::OnUpdateEnd() { CalculateTRS(); }

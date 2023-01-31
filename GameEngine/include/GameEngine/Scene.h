@@ -16,7 +16,8 @@ namespace GameEngine
             virtual      ~Scene();
             virtual void InitializeScene() const;
             virtual void Update() const;
-            virtual void PhysicsUpdate() const;
+            virtual void OnPhysicsUpdate() const;
+            virtual void OnPhysicsUpdateEnd(float interpolationFactor) const;
             void         AddGameObject(GameObject* gameObject) const;
     };
 }

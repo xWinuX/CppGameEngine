@@ -15,10 +15,12 @@ namespace GameEngine
                 GLuint _renderBufferID = 0;
 
                 GameEngine::Rendering::Texture* _framebufferTexture = nullptr;
-                VertexArrayObject*              _vertexArrayObject;
+
+                Primitive* _primitive;
+  
 
             public:
-                explicit FrameBuffer();
+                explicit FrameBuffer(glm::uvec2 size);
                 ~FrameBuffer();
                 void Draw() const;
                 void Bind() const;

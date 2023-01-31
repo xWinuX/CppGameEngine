@@ -20,6 +20,8 @@ namespace GameEngine
 
             void CreateContext();
 
+            void SetFullscreen(bool fullscreen) const; 
+            
             void SetSize(glm::ivec2 newSize);
 
             void AddFramebufferSizeCallback(const std::function<void(Window*)>& callbackFunction);
