@@ -38,7 +38,6 @@
 #include "glm/gtx/string_cast.hpp"
 #include "Prefabs/GamerDudePrefab.h"
 
-
 using namespace GameEngine;
 using namespace GameEngine::Debug;
 using namespace GameEngine::Audio;
@@ -80,45 +79,30 @@ void GraphicDemoApplication::LoadTextures()
 
 void GraphicDemoApplication::LoadSprites()
 {
-    Debug::Log::Message("sprite loading begine");
     Texture::ImportSettings pixelArtTextureImportSettings;
     pixelArtTextureImportSettings.AnisotropyLevels = 0;
     pixelArtTextureImportSettings.MipMapLevels     = 0;
     pixelArtTextureImportSettings.FilterMode       = Texture::FilterMode::Nearest;
 
-    Debug::Log::Message("dude");
     Texture* theDudeSpriteTexture            = new Texture("res/sprites/TheDudeSprite.png", pixelArtTextureImportSettings);
-    Debug::Log::Message("L");
     Texture* drLSpriteTexture                = new Texture("res/sprites/DrLSprite.png", pixelArtTextureImportSettings);
-    Debug::Log::Message("gamer");
     Texture* gamerDudeSpriteTexture          = new Texture("res/sprites/GamerDudeSprite.png", pixelArtTextureImportSettings);
-    Debug::Log::Message("test");
     Texture* testSpriteTexture               = new Texture("res/sprites/TestSprite.png", pixelArtTextureImportSettings);
-    Debug::Log::Message("right");
     Texture* gamerDudeWalkRightSpriteTexture = new Texture("res/sprites/GamerDudeWalkRight.png", pixelArtTextureImportSettings);
-    Debug::Log::Message("left");
     Texture* gamerDudeWalkLeftSpriteTexture  = new Texture("res/sprites/GamerDudeWalkLeft.png", pixelArtTextureImportSettings);
 
     SpriteSet* theDude   = ADD_SPRITE(TheDude, new SpriteSet(theDudeSpriteTexture, 2, glm::vec2(30, 49)));
     SpriteSet* drL       = ADD_SPRITE(DrL, new SpriteSet(drLSpriteTexture));
     SpriteSet* gamerDude = ADD_SPRITE(GamerDude, new SpriteSet(gamerDudeSpriteTexture));
     SpriteSet* test      = ADD_SPRITE(Test, new SpriteSet(testSpriteTexture, 12, glm::uvec2(32, 32)));
-
-    Debug::Log::Message("after sprite set");
     
     Sprite::AdditionalInfo additionalInfo;
     additionalInfo.PixelsPerUnit  = 90;
     additionalInfo.Origin         = glm::vec2(0.5f, 0.0f);
     SpriteSet* gamerDudeWalkRight = ADD_SPRITE(GamerDudeWalkRight, new SpriteSet(gamerDudeWalkRightSpriteTexture, 6, glm::uvec2(119, 190), additionalInfo));
     SpriteSet* gamerDudeWalkLeft  = ADD_SPRITE(GamerDudeWalkLeft, new SpriteSet(gamerDudeWalkLeftSpriteTexture, 6, glm::uvec2(119, 190), additionalInfo));
-
-    Debug::Log::Message("after gamer sprite set");
-
     
     spriteAtlas = new SpriteAtlas(glm::ivec2(1024), pixelArtTextureImportSettings);
-
-    Debug::Log::Message("after atlas gen");
-
     
     spriteAtlas->AddSprite(theDude);
     spriteAtlas->AddSprite(drL);
@@ -126,12 +110,8 @@ void GraphicDemoApplication::LoadSprites()
     spriteAtlas->AddSprite(test);
     spriteAtlas->AddSprite(gamerDudeWalkRight);
     spriteAtlas->AddSprite(gamerDudeWalkLeft);
-
-    Debug::Log::Message("atlas add");
-
     
     spriteAtlas->Pack();
-    Debug::Log::Message("sprite loading end");
 }
 
 void GraphicDemoApplication::LoadFonts() const { ADD_FONT(Roboto, new Font("res/fonts/Roboto-Regular.ttf")); }
@@ -266,22 +246,15 @@ void GraphicDemoApplication::LoadAssets()
     LoadFonts();
     LoadSounds();
     LoadTextures();
-    Debug::Log::Message("Textures loaded");
     LoadSprites();
-    Debug::Log::Message("Sprites loaded");
     LoadModels();
-    Debug::Log::Message("Models loaded");
     LoadShaders();
-    Debug::Log::Message("Shaders loaded");
     LoadMaterials();
-    Debug::Log::Message("Materials loaded");
 }
 
 void GraphicDemoApplication::Initialize(Scene& scene)
 {
     LoadAssets();
-
-    Debug::Log::Message("Assets loaded");
     
     cube = new Cube();
 

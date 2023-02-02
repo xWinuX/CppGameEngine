@@ -37,27 +37,15 @@ CubeMap::CubeMap(const std::string& filePathWithoutExtension, const std::string&
     glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
     glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 
-    Debug::Log::Message("before image load");
     for (unsigned int i = 0; i < SuffixOrder.size(); i++)
     {
         int width, height, numChannels;
         std::string filePath = filePathWithoutExtension + SuffixOrder[i] + extension;
-        Debug::Log::Message(filePath);
         stbi_uc* data = stbi_load(filePath.c_str(), &width, &height, &numChannels, 3);
-        Debug::Log::Message(std::to_string(width));
-        Debug::Log::Message(std::to_string(height));
-        Debug::Log::Message(std::to_string(numChannels));
         stbi_set_flip_vertically_on_load(false);
-        Debug::Log::Message("stbi load done");
-        if (!data)
-        {
-                Debug::Log::Message("failed to load");
-        }
         glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
-        Debug::Log::Message("gl tex done");
         stbi_image_free(data);
     }
-    Debug::Log::Message("After image load");
 }
 
 CubeMap::~CubeMap()
