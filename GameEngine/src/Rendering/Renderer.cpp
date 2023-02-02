@@ -38,7 +38,6 @@ std::map<Material*, std::map<Texture*, std::vector<Renderable2D*>>> Renderer::_o
 
 void Renderer::Initialize()
 {
-    glDepthFunc(GL_LESS);
     glDepthRange(0.0, 1.0);
     glLineWidth(2);
     glEnable(GL_CULL_FACE);
@@ -160,7 +159,7 @@ void Renderer::RenderSubmitted()
         glClearColor(0.05f, 0.15f, 0.3f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 
-        glEnable(GL_DEPTH_TEST);
+        glDepthFunc(GL_LESS);
 
         // Opaque
         numDrawCalls += RenderRenderables<std::vector<Renderable*>, &RenderDefault>(renderTarget, _opaqueRenderables);
@@ -175,8 +174,12 @@ void Renderer::RenderSubmitted()
         numDrawCalls += RenderRenderables<std::vector<Renderable*>, &RenderDefault>(renderTarget, _transparentRenderables);
         glDisable(GL_BLEND);
 
+        glDisable(GL_DEPTH_TEST);
         renderTarget->Unbind();
+        glEnable(GL_DEPTH_TEST);
     }
+
+    
     
     // Cleanup lights
     for (Light* light : _lights) { light->OnFrameEnd(); }

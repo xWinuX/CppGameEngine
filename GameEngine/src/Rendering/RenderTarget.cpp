@@ -10,7 +10,6 @@ void GameEngine::Rendering::RenderTarget::Bind() const { _frameBuffer->Bind(); }
 void GameEngine::Rendering::RenderTarget::Unbind() const
 {
     _frameBuffer->Unbind();
-    glDisable(GL_DEPTH_TEST);
     _shader->Use();
     _shader->GetUniformStorage()->Apply();
     _frameBuffer->Draw();

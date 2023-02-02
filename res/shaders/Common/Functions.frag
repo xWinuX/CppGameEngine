@@ -26,17 +26,18 @@
 
     // Diffuse
     float distance = length(lightPosition - fragPosition);
-    vec3 lightVector = normalize(lightPosition - fragPosition);
-    float diffuse = max(dot(normal, lightVector), 0.1);
-    diffuse = diffuse * clamp(1.0 - distance*distance/(range*range), 0.0, 1.0);
-    diffuseSum += color * intensity * diffuse;
+    vec3 lightDirection = normalize(lightPosition - fragPosition);
+    float diffuse = max(dot(normal, lightDirection), 0.1);
+    float distanceFactor = clamp(1.0 - distance*distance/(range*range), 0.0, 1.0);
+    diffuseSum += color * intensity * diffuse * distanceFactor;
 
     // Specular
-    vec4 specularSum = vec4(0);
+    float lambertian = max(dot(lightDirection, normal), 0.0);
+    
     vec3 viewVector = normalize(viewPosition-fragPosition);
-    vec3 halfwayVector = normalize(lightVector + viewVector);
-    float specular = pow(max(dot(normal, halfwayVector), 0.0), shininess*1000);
-    specularSum += color * intensity * specular * diffuse;
+    vec3 halfwayVector = normalize(lightDirection + viewVector);
+    float specular = pow(max(dot(normal, halfwayVector), 0.0), 1 + (shininess*1000));
+    vec4 specularSum = color * intensity * specular * distanceFactor * lambertian;
 
     return diffuseSum + specularSum;
 }

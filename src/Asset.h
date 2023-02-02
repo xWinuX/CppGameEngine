@@ -4,6 +4,7 @@
 #include "GameEngine/Rendering/Texture.h"
 #include "GameEngine/Rendering/SpriteSet.h"
 #include "GameEngine/Rendering/Model.h"
+#include "GameEngine/Rendering/CubeMap.h"
 #include "GameEngine/Audio/Sound.h"
 
 namespace Asset
@@ -58,6 +59,7 @@ namespace Asset
         MSDFFont,
         VertexColor,
         FrameBuffer,
+        Skybox,
     };
 
     enum class Material : size_t
@@ -69,10 +71,17 @@ namespace Asset
         Water,
         MSDFFont,
         VertexColor,
+        Skybox,
+    };
+
+    enum class CubeMap : size_t
+    {
+        SkyBox,
     };
 }
 
 #define ADD_TEXTURE(id, asset) GameEngine::AssetDatabase::Add<GameEngine::Rendering::Texture*>(Asset::Texture::id, asset)
+#define ADD_CUBEMAP(id, asset) GameEngine::AssetDatabase::Add<GameEngine::Rendering::CubeMap*>(Asset::CubeMap::id, asset)
 #define ADD_SPRITE(id, asset) GameEngine::AssetDatabase::Add<GameEngine::Rendering::SpriteSet*>(Asset::Sprite::id, asset)
 #define ADD_FONT(id, asset) GameEngine::AssetDatabase::Add<GameEngine::Rendering::Font*>(Asset::Font::id, asset)
 #define ADD_MODEL(id, asset) GameEngine::AssetDatabase::Add<GameEngine::Rendering::Model*>(Asset::Model::id, asset)
@@ -81,6 +90,7 @@ namespace Asset
 #define ADD_MATERIAL(id, asset) GameEngine::AssetDatabase::Add<GameEngine::Rendering::Material*>(Asset::Material::##id, asset)
 
 #define GET_TEXTURE(id) GameEngine::AssetDatabase::Get<GameEngine::Rendering::Texture*>(Asset::Texture::id)
+#define GET_CUBEMAP(id) GameEngine::AssetDatabase::Get<GameEngine::Rendering::CubeMap*>(Asset::CubeMap::id)
 #define GET_SPRITE(id) GameEngine::AssetDatabase::Get<GameEngine::Rendering::SpriteSet*>(Asset::Sprite::id)
 #define GET_FONT(id) GameEngine::AssetDatabase::Get<GameEngine::Rendering::Font*>(Asset::Font::id)
 #define GET_MODEL(id) GameEngine::AssetDatabase::Get<GameEngine::Rendering::Model*>(Asset::Model::id)

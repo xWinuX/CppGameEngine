@@ -1,7 +1,7 @@
-#version 400 core
+#include "../Common/Version.glsl"
 in vec3 v_Color;
 
-out vec4 fragColor;
+#include "../Common/IO.frag"
 
 void main()
 {

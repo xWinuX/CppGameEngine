@@ -4,10 +4,51 @@
 #include "glad/glad.h"
 #include <glm/mat4x4.hpp>
 
+#include "CubeMap.h"
 #include "Texture.h"
 #include "glm/gtc/type_ptr.hpp"
 
 #define LOCATION_CHECK if (_location < 0) { Debug::Log::Message(std::string(_name) + "'s location not found"); return; }
+
+
+#define SAMPLER_SPECIFICATION(type) \
+template <> \
+class Uniform<type> \
+{ \
+    private: \
+        const std::string _name; \
+        const GLint       _location = -1; \
+        const type    _defaultValue; \
+        const type    _value; \
+        int               _previousSlot = 0; \
+\
+    public: \
+        Uniform(): \
+            _defaultValue(), \
+            _value() { } \
+\
+        Uniform(const std::string uniformName, const GLint location, const type defaultValue): \
+            _name(uniformName), \
+            _location(location), \
+            _defaultValue(defaultValue), \
+            _value(defaultValue) { } \
+\
+        void Apply(int slot = -1) \
+        { \
+            LOCATION_CHECK \
+            if (slot == -1) { slot = _previousSlot; } \
+            _value->Bind(slot); \
+            glUniform1i(_location, slot); \
+            _previousSlot = slot; \
+        } \
+\
+        void Set(const type value) { _value = value; } \
+\
+        void        Reset() { _value = _defaultValue; } \
+        std::string GetName() const { return _name; } \
+        type    GetDefaultValue() const { return const_cast<type>(_defaultValue); } \
+}; \
+
 
 namespace GameEngine
 {
@@ -37,7 +78,6 @@ namespace GameEngine
                     Debug::Log::Message(std::to_string(_location));
                 }
 
-                // ReSharper disable once CppMemberFunctionMayBeStatic (No it's not...)
                 void Apply() { Debug::Log::Message("This should never appear"); }
 
                 void Set(T value) { _value = value; }
@@ -51,43 +91,8 @@ namespace GameEngine
                 T* GetValuePtr() { return &_value; }
         };
 
-
-        template <>
-        class Uniform<Texture*>
-        {
-            private:
-                const std::string _name;
-                const GLint       _location = -1;
-                const Texture*    _defaultValue;
-                const Texture*    _value;
-                int               _previousSlot = 0;
-
-            public:
-                Uniform():
-                    _defaultValue(),
-                    _value() { }
-
-                Uniform(const std::string uniformName, const GLint location, const Texture* defaultValue):
-                    _name(uniformName),
-                    _location(location),
-                    _defaultValue(defaultValue),
-                    _value(defaultValue) { }
-
-                void Apply(int slot = -1)
-                {
-                    LOCATION_CHECK
-                    if (slot == -1) { slot = _previousSlot; }
-                    _value->Bind(slot);
-                    glUniform1i(_location, slot);
-                    _previousSlot = slot;
-                }
-
-                void Set(const Texture* value) { _value = value; }
-
-                void        Reset() { _value = _defaultValue; }
-                std::string GetName() const { return _name; }
-                Texture*    GetDefaultValue() const { return const_cast<Texture*>(_defaultValue); }
-        };
+        SAMPLER_SPECIFICATION(Texture*)
+        SAMPLER_SPECIFICATION(CubeMap*)
 
         template <>
         inline void Uniform<float>::Apply()

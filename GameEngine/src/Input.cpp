@@ -4,7 +4,13 @@
 
 using namespace GameEngine;
 
-void Input::Update() { glfwPollEvents(); }
+glm::vec2 Input::_previousMousePosition = glm::zero<glm::vec2>();
+
+void Input::Update()
+{
+    _previousMousePosition =  GetMousePosition();
+    glfwPollEvents();
+}
 
 bool Input::GetKeyDown(const int key) { return glfwGetKey(Window::GetCurrentWindow()->GetGlWindow(), key) == GLFW_PRESS; }
 
@@ -31,4 +37,9 @@ glm::vec2 Input::GetMousePosition()
     glfwGetCursorPos(Window::GetCurrentWindow()->GetGlWindow(), &xPos, &yPos);
 
     return {static_cast<float>(xPos), static_cast<float>(yPos)};
+}
+
+glm::vec2 Input::GetMouseDelta()
+{
+    return _previousMousePosition - GetMousePosition();
 }

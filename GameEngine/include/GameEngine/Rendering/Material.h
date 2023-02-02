@@ -23,25 +23,35 @@ namespace GameEngine
                     Wireframe = GL_LINE
                 };
 
+                enum DepthFunc
+                {
+                    Equal = GL_EQUAL,
+                    LEqual = GL_LEQUAL,
+                    Less  = GL_LESS,
+                };
+
                 explicit Material(Shader* shader);
                 ~Material();
-                Shader*        GetShader() const;
+                Shader*         GetShader() const;
                 UniformStorage* GetUniformStorage() const;
 
                 RenderMode GetRenderMode() const;
                 CullFace   GetCullFace() const;
+                DepthFunc GetDepthFunc() const;
                 bool       GetTransparent() const;
-            
+
                 void SetRenderMode(RenderMode renderMode);
                 void SetCullFace(CullFace cullFace);
+                void SetDepthFunc(DepthFunc depthFunc);
                 void SetTransparent(bool transparent);
 
             private:
-                Shader*        _shader;
+                Shader*         _shader;
                 UniformStorage* _uniformStorage;
-                CullFace       _cullFace               = CullFace::Back;
-                RenderMode     _renderMode             = RenderMode::Fill;
-                bool           _transparent            = false;
+                CullFace        _cullFace    = CullFace::Back;
+                RenderMode      _renderMode  = RenderMode::Fill;
+                DepthFunc       _depthFunc   = DepthFunc::Less;
+                bool            _transparent = false;
         };
     }
 }

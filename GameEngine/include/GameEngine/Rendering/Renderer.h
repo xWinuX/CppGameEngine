@@ -56,6 +56,7 @@ namespace GameEngine
                     Shader*              shader            = nullptr;
                     Material::CullFace   currentCullFace   = Material::CullFace::Back;
                     Material::RenderMode currentRenderMode = Material::RenderMode::Fill;
+                    Material::DepthFunc  currentDepthFunc  = Material::DepthFunc::Less;
                     bool                 firstLoop         = true;
 
                     for (auto& pair : map)
@@ -63,6 +64,7 @@ namespace GameEngine
                         const Material*            material   = pair.first;
                         const Material::CullFace   cullFace   = material->GetCullFace();
                         const Material::RenderMode renderMode = material->GetRenderMode();
+                        const Material::DepthFunc  depthFunc  = material->GetDepthFunc();
 
                         // Choose if new shader should get activated
                         Shader* newShader = material->GetShader();
@@ -83,22 +85,29 @@ namespace GameEngine
                             currentRenderMode = renderMode;
                         }
 
-                        // Face Culling
-                        if (cullFace != currentCullFace || firstLoop)
+                        // Depth func
+                        if (depthFunc != currentDepthFunc || firstLoop)
                         {
-                            if (cullFace == Material::CullFace::None)
-                            {
-                                glDisable(GL_CULL_FACE);
-                                glCullFace(GL_BACK);
-                            }
-                            else
-                            {
-                                glEnable(GL_CULL_FACE);
-                                glCullFace(cullFace);
-                            }
-
-                            currentCullFace = cullFace;
+                            glDepthFunc(depthFunc);
+                            currentDepthFunc = depthFunc;
                         }
+
+                            // Face Culling
+                            if (cullFace != currentCullFace || firstLoop)
+                            {
+                                if (cullFace == Material::CullFace::None)
+                                {
+                                    glDisable(GL_CULL_FACE);
+                                    glCullFace(GL_BACK);
+                                }
+                                else
+                                {
+                                    glEnable(GL_CULL_FACE);
+                                    glCullFace(cullFace);
+                                }
+
+                                currentCullFace = cullFace;
+                            }
 
                         // Apply material uniforms that are in the queue
                         material->GetUniformStorage()->Apply();

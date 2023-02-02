@@ -11,9 +11,11 @@ Material::Material(Shader* shader) :
 Material::~Material() { delete _uniformStorage; }
 
 Shader*              Material::GetShader() const { return _shader; }
-UniformStorage*       Material::GetUniformStorage() const { return _uniformStorage; }
+UniformStorage*      Material::GetUniformStorage() const { return _uniformStorage; }
 Material::RenderMode Material::GetRenderMode() const { return _renderMode; }
 Material::CullFace   Material::GetCullFace() const { return _cullFace; }
+Material::DepthFunc  Material::GetDepthFunc() const { return _depthFunc; }
+void                 Material::SetDepthFunc(const DepthFunc depthFunc) { _depthFunc = depthFunc; }
 bool                 Material::GetTransparent() const { return _transparent; }
 void                 Material::SetTransparent(const bool transparent) { _transparent = transparent; }
 

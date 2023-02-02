@@ -46,7 +46,7 @@ namespace GameEngine
 
                 const glm::uvec2& GetSize() const;
                 unsigned char*    GetBuffer() const;
-                GLuint GetTextureID() const;
+                GLuint            GetTextureID() const;
 
             private:
                 GLuint         _textureID = 0;

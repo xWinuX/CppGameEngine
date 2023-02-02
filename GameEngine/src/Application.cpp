@@ -8,6 +8,7 @@
 
 #include "imgui_impl_glfw.h"
 #include "imgui_impl_opengl3.h"
+#include "GameEngine/Debug/DebugGUIManager.h"
 #include "GameEngine/Input.h"
 #include "GameEngine/Time.h"
 #include "GameEngine/Audio/AudioManager.h"
@@ -34,17 +35,7 @@ Application::Application()
     // Initialize Systems
     Renderer::Initialize();
     Audio::AudioManager::Initialize();
-
-    IMGUI_CHECKVERSION();
-    ImGui::CreateContext();
-    ImGuiIO &io = ImGui::GetIO();
-    // Setup Platform/Renderer bindings
-    ImGui_ImplGlfw_InitForOpenGL(Window::GetCurrentWindow()->GetGlWindow(), true);
-    ImGui_ImplOpenGL3_Init();
-    // Setup Dear ImGui style
-    ImGui::StyleColorsDark();
-    ImGui::SetNextWindowSize({200, 200});
-
+    DebugGUIManager::Initialize();
 }
 
 void Application::Run()
@@ -57,17 +48,13 @@ void Application::Run()
 
     while (!_window.ShouldClose())
     {
+        DebugGUIManager::BeginNewFrame();
         
         Time::Update();
         Input::Update();
 
         // Executes als OnPhysicsUpdates on game objects if a physics time step happens, also updates the physics world
         PhysicsManager::Update(&scene);
-
-        ImGui_ImplOpenGL3_NewFrame();
-        ImGui_ImplGlfw_NewFrame();
-        ImGui::NewFrame();
-        ImGui::Begin("Demo window");
         
         // Execute Update calls on each game object in the current scene
         scene.Update();
@@ -79,15 +66,9 @@ void Application::Run()
         
         // Render
         Renderer::RenderSubmitted();
-
-
         
-        GuiDraw();
-        ImGui::End();
-
         // Render dear imgui into screen
-        ImGui::Render();
-        ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+        DebugGUIManager::Draw();
 
         Renderer::DrawFrame();
 

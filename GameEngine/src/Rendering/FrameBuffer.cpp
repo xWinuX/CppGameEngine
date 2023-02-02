@@ -16,11 +16,12 @@ FrameBuffer::FrameBuffer(glm::uvec2 size)
 
     // Bind Color Texture
     Texture::ImportSettings importSettings;
-    importSettings.FilterMode     = Texture::Nearest;
-    importSettings.WrapMode       = Texture::ClampToEdge;
-    importSettings.InternalFormat = GL_RGB;
-    importSettings.Format         = GL_RGB;
-    _framebufferTexture           = new Texture(nullptr, size, importSettings);
+    importSettings.FilterMode      = Texture::Nearest;
+    importSettings.WrapMode        = Texture::ClampToEdge;
+    importSettings.InternalFormat  = GL_RGB32F;
+    importSettings.Format          = GL_RGB;
+    importSettings.ChannelDataType = GL_FLOAT;
+    _framebufferTexture            = new Texture(nullptr, size, importSettings);
     glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, _framebufferTexture->GetTextureID(), 0);
 
     // Create render buffer
@@ -28,7 +29,7 @@ FrameBuffer::FrameBuffer(glm::uvec2 size)
     glBindRenderbuffer(GL_RENDERBUFFER, _renderBufferID);
     glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, static_cast<GLsizei>(size.x), static_cast<GLsizei>(size.y));
     glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, _renderBufferID);
-    
+
     const Vertex vertices[] = {
         {{-1, -1}, {0, 0}}, // Top Left
         {{1, -1}, {1, 0}},  // Top Right

@@ -5,7 +5,7 @@
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 
-#include "GameEngine/Rendering/FrameBuffer.h"
+#include "GameEngine/Rendering/RenderablePrimitive.h"
 #include "GameEngine/Rendering/RenderTarget.h"
 
 namespace GameEngine
@@ -19,8 +19,11 @@ namespace GameEngine
                 float     _zNear;
                 float     _zFar;
                 glm::mat4 _projectionMatrix = glm::identity<glm::mat4>();
-            
-                void UpdateProjectionMatrix();
+
+                Rendering::Material*            _skyboxMaterial;
+                Rendering::RenderablePrimitive* _skyboxCube;
+
+                void      UpdateProjectionMatrix();
 
                 void OnShaderUse(Rendering::Shader* shader) override;
 
@@ -28,9 +31,11 @@ namespace GameEngine
                 void OnUpdateEnd() override;
 
             public:
-                Camera(float fovInDegrees, float zNear, float zFar, Rendering::Shader* frameBufferShader);
+                Camera(float fovInDegrees, float zNear, float zFar, Rendering::Shader* frameBufferShader, Rendering::Material* skyboxMaterial);
                 float GetFOVInDegrees() const;
                 void  SetFOVInDegrees(float value);
+                glm::mat4 GetViewMatrix();
+
         };
     }
 }

@@ -2,9 +2,11 @@
 
 #include "Asset.h"
 #include "imgui.h"
+#include "GameEngine/Debug/DebugGUIManager.h"
 #include "Components/SimpleWalker.h"
 #include "Components/CameraControllerPOV.h"
 #include "Components/CharacterController.h"
+#include "Components/GameManager.h"
 #include "GameEngine/Components/BoxCollider.h"
 #include "GameEngine/Components/Camera.h"
 #include "GameEngine/Components/MeshRenderer.h"
@@ -31,6 +33,7 @@
 #include "GameEngine/Components/AudioSource.h"
 #include "GameEngine/Components/CapsuleCollider.h"
 #include "GameEngine/Components/SpriteRenderer.h"
+#include "GameEngine/Debug/DebugGUIManager.h"
 #include "glm/gtc/random.hpp"
 #include "glm/gtx/string_cast.hpp"
 #include "Prefabs/GamerDudePrefab.h"
@@ -71,20 +74,29 @@ void GraphicDemoApplication::LoadTextures()
     ADD_TEXTURE(TheDude, new Texture("res/textures/TheDude.png"));
     ADD_TEXTURE(Crate, new Texture("res/textures/Crate.jpg"));
     ADD_TEXTURE(CrateNormalMap, new Texture("res/textures/CrateNormalMap.png"));
+
+    ADD_CUBEMAP(SkyBox, new CubeMap("res/textures/Skybox/Skybox", ".png"));
 }
 
 void GraphicDemoApplication::LoadSprites()
 {
+    Debug::Log::Message("sprite loading begine");
     Texture::ImportSettings pixelArtTextureImportSettings;
     pixelArtTextureImportSettings.AnisotropyLevels = 0;
     pixelArtTextureImportSettings.MipMapLevels     = 0;
     pixelArtTextureImportSettings.FilterMode       = Texture::FilterMode::Nearest;
 
+    Debug::Log::Message("dude");
     Texture* theDudeSpriteTexture            = new Texture("res/sprites/TheDudeSprite.png", pixelArtTextureImportSettings);
+    Debug::Log::Message("L");
     Texture* drLSpriteTexture                = new Texture("res/sprites/DrLSprite.png", pixelArtTextureImportSettings);
+    Debug::Log::Message("gamer");
     Texture* gamerDudeSpriteTexture          = new Texture("res/sprites/GamerDudeSprite.png", pixelArtTextureImportSettings);
+    Debug::Log::Message("test");
     Texture* testSpriteTexture               = new Texture("res/sprites/TestSprite.png", pixelArtTextureImportSettings);
+    Debug::Log::Message("right");
     Texture* gamerDudeWalkRightSpriteTexture = new Texture("res/sprites/GamerDudeWalkRight.png", pixelArtTextureImportSettings);
+    Debug::Log::Message("left");
     Texture* gamerDudeWalkLeftSpriteTexture  = new Texture("res/sprites/GamerDudeWalkLeft.png", pixelArtTextureImportSettings);
 
     SpriteSet* theDude   = ADD_SPRITE(TheDude, new SpriteSet(theDudeSpriteTexture, 2, glm::vec2(30, 49)));
@@ -92,14 +104,22 @@ void GraphicDemoApplication::LoadSprites()
     SpriteSet* gamerDude = ADD_SPRITE(GamerDude, new SpriteSet(gamerDudeSpriteTexture));
     SpriteSet* test      = ADD_SPRITE(Test, new SpriteSet(testSpriteTexture, 12, glm::uvec2(32, 32)));
 
+    Debug::Log::Message("after sprite set");
+    
     Sprite::AdditionalInfo additionalInfo;
     additionalInfo.PixelsPerUnit  = 90;
     additionalInfo.Origin         = glm::vec2(0.5f, 0.0f);
     SpriteSet* gamerDudeWalkRight = ADD_SPRITE(GamerDudeWalkRight, new SpriteSet(gamerDudeWalkRightSpriteTexture, 6, glm::uvec2(119, 190), additionalInfo));
     SpriteSet* gamerDudeWalkLeft  = ADD_SPRITE(GamerDudeWalkLeft, new SpriteSet(gamerDudeWalkLeftSpriteTexture, 6, glm::uvec2(119, 190), additionalInfo));
 
+    Debug::Log::Message("after gamer sprite set");
+
+    
     spriteAtlas = new SpriteAtlas(glm::ivec2(1024), pixelArtTextureImportSettings);
 
+    Debug::Log::Message("after atlas gen");
+
+    
     spriteAtlas->AddSprite(theDude);
     spriteAtlas->AddSprite(drL);
     spriteAtlas->AddSprite(gamerDude);
@@ -107,13 +127,14 @@ void GraphicDemoApplication::LoadSprites()
     spriteAtlas->AddSprite(gamerDudeWalkRight);
     spriteAtlas->AddSprite(gamerDudeWalkLeft);
 
+    Debug::Log::Message("atlas add");
+
+    
     spriteAtlas->Pack();
+    Debug::Log::Message("sprite loading end");
 }
 
-void GraphicDemoApplication::LoadFonts() const
-{
-    ADD_FONT(Roboto, new Font("res/fonts/Roboto-Regular.ttf"));
-}
+void GraphicDemoApplication::LoadFonts() const { ADD_FONT(Roboto, new Font("res/fonts/Roboto-Regular.ttf")); }
 
 void GraphicDemoApplication::LoadSounds() const
 {
@@ -140,11 +161,12 @@ void GraphicDemoApplication::LoadShaders() const
     commonUniforms.InitializeUniform<glm::mat4>("u_Transform", glm::identity<glm::mat4>(), false);
 
     UniformStorage litUniforms = UniformStorage();
-    litUniforms.InitializeUniform<float>("u_Shininess", 0.7f);
+    litUniforms.InitializeUniform<float>("u_Shininess", 0.0f);
     litUniforms.InitializeUniform<Texture*>("u_NormalMap", GET_TEXTURE(NormalMapDefault));
 
+    litUniforms.InitializeUniform<CubeMap*>("u_SkyboxCubeMap", GET_CUBEMAP(SkyBox));
     litUniforms.InitializeUniform<glm::vec4>("u_AmbientLightColor", glm::vec4(1.0));
-    litUniforms.InitializeUniform<float>("u_AmbientLightIntensity", 0.3f);
+    litUniforms.InitializeUniform<float>("u_AmbientLightIntensity", 1.0f);
 
     litUniforms.InitializeUniform<int>("u_NumPointLights", 0, false);
     litUniforms.InitializeUniform<std::vector<glm::vec3>*>("u_PointLightPositions", nullptr, false);
@@ -175,7 +197,7 @@ void GraphicDemoApplication::LoadShaders() const
     spriteLitShader->GetUniformStorage()->CopyFrom(&litUniforms);
 
     // Physics Debug
-    Shader* physicsDebugShader = ADD_SHADER(PhysicsDebug, new Shader("res/shaders/PhysicsDebugShader.vsh", "res/shaders/PhysicsDebugShader.fsh"));
+    Shader* physicsDebugShader = ADD_SHADER(PhysicsDebug, new Shader("res/shaders/PhysicsDebug/PhysicsDebug.vert", "res/shaders/PhysicsDebug/PhysicsDebug.frag"));
     physicsDebugShader->InitializeUniform<glm::mat4>("u_ViewProjection", glm::identity<glm::mat4>(), false);
 
     // MSDF Font
@@ -190,21 +212,21 @@ void GraphicDemoApplication::LoadShaders() const
 
     // Frame Buffer
     Shader* frameBufferShader = ADD_SHADER(FrameBuffer, new Shader("res/shaders/FrameBuffer/FrameBuffer.vert", "res/shaders/FrameBuffer/FrameBuffer.frag"));
-
-    frameBufferShader->InitializeUniform<int>("u_Grayscale", 0);
-    frameBufferShader->InitializeUniform<int>("u_UseHSV", 0);
-    frameBufferShader->InitializeUniform<float>("u_Brightness", 1.0f);
-    frameBufferShader->InitializeUniform<float>("u_Contrast", 1.0f);
-    frameBufferShader->InitializeUniform<float>("u_Hue", 1.0f);
-    frameBufferShader->InitializeUniform<float>("u_Saturation", 1.0f);
-    frameBufferShader->InitializeUniform<float>("u_Value", 1.0f);
+    frameBufferShader->GetUniformStorage()->CopyFrom(&commonUniforms);
+    
+    Shader* skyboxShader = ADD_SHADER(Skybox, new Shader("res/shaders/Skybox/Skybox.vert", "res/shaders/Skybox/Skybox.frag"));
+    skyboxShader->GetUniformStorage()->CopyFrom(&commonUniforms);
+    skyboxShader->InitializeUniform<CubeMap*>("u_CubeMap", GET_CUBEMAP(SkyBox));
+    skyboxShader->InitializeUniform<glm::mat4>("u_View", glm::identity<glm::mat4>());
+    skyboxShader->InitializeUniform<glm::mat4>("u_Projection", glm::identity<glm::mat4>());
 }
 
 void GraphicDemoApplication::LoadMaterials() const
 {
     // Dude
     Material* dudeMaterial = ADD_MATERIAL(Dude, new Material(GET_SHADER(Lit)));
-    dudeMaterial->GetUniformStorage()->SetUniform("u_Texture", GET_TEXTURE(TheDude));
+    dudeMaterial->GetUniformStorage()->SetUniform<Texture*>("u_Texture", GET_TEXTURE(TheDude));
+    dudeMaterial->GetUniformStorage()->SetUniform<float>("u_Shininess", 1.0);
 
     // Crate
     Material* crateMaterial = ADD_MATERIAL(Crate, new Material(GET_SHADER(Lit)));
@@ -232,6 +254,11 @@ void GraphicDemoApplication::LoadMaterials() const
 
     // Vertex Color
     ADD_MATERIAL(VertexColor, new Material(GET_SHADER(VertexColor)));
+
+    // Skybox
+    Material* skyboxMaterial = ADD_MATERIAL(Skybox, new Material(GET_SHADER(Skybox)));
+    skyboxMaterial->SetCullFace(Material::Front);
+    skyboxMaterial->SetDepthFunc(Material::DepthFunc::LEqual);
 }
 
 void GraphicDemoApplication::LoadAssets()
@@ -239,18 +266,29 @@ void GraphicDemoApplication::LoadAssets()
     LoadFonts();
     LoadSounds();
     LoadTextures();
+    Debug::Log::Message("Textures loaded");
     LoadSprites();
+    Debug::Log::Message("Sprites loaded");
     LoadModels();
+    Debug::Log::Message("Models loaded");
     LoadShaders();
+    Debug::Log::Message("Shaders loaded");
     LoadMaterials();
+    Debug::Log::Message("Materials loaded");
 }
 
 void GraphicDemoApplication::Initialize(Scene& scene)
 {
     LoadAssets();
 
+    Debug::Log::Message("Assets loaded");
+    
     cube = new Cube();
 
+    GameObject* gameManagerObject = new GameObject();
+    gameManagerObject->AddComponent(new GameManager());
+    scene.AddGameObject(gameManagerObject);
+    
     // Player
     GameObject* playerObject = new GameObject();
     playerObject->GetTransform()->SetLocalPosition(glm::vec3(0.0f, 7.0f, 0.0f));
@@ -263,7 +301,7 @@ void GraphicDemoApplication::Initialize(Scene& scene)
 
     // Camera
     cameraObject = new GameObject();
-    cameraObject->AddComponent(new Camera(60, 0.01f, 1000.0f, GET_SHADER(FrameBuffer)));
+    cameraObject->AddComponent(new Camera(60, 0.01f, 1000.0f, GET_SHADER(FrameBuffer), GET_MATERIAL(Skybox)));
     cameraObject->AddComponent(new CameraControllerPOV());
     cameraObject->AddComponent(new AudioListener());
     scene.AddGameObject(cameraObject);
@@ -273,10 +311,10 @@ void GraphicDemoApplication::Initialize(Scene& scene)
 
     // Gamer Dude Spawner
     GamerDudePrefab gamerDudePrefab = GamerDudePrefab();
-    for (unsigned int i = 0; i < 1000; i++)
+    for (unsigned int i = 0; i < 20; i++)
     {
         GameObject*     gameObject     = gamerDudePrefab.Instantiate();
-        const glm::vec2 randomPosition = glm::diskRand(30.0f);
+        const glm::vec2 randomPosition = glm::diskRand(100.0f);
         gameObject->GetTransform()->SetPosition(glm::vec3(randomPosition.x, 0.0f, randomPosition.y));
         gameObject->GetTransform()->SetLocalScale(glm::linearRand(0.05f, 4.0f) * glm::vec3(1.0));
         scene.AddGameObject(gameObject);
@@ -366,11 +404,7 @@ void GraphicDemoApplication::CustomRun()
         fullscreen = !fullscreen;
         Window::GetCurrentWindow()->SetFullscreen(fullscreen);
     }
-
-    // Close window if escape key is pressed
-    if (Input::GetKeyPressed(GLFW_KEY_ESCAPE)) { glfwSetWindowShouldClose(Application::_window.GetGlWindow(), true); }
-
-
+    
     // Change rainbow light color
     rainbowLightObject->GetComponent<PointLight>()->SetColor(glm::vec4(
                                                                        Math::Sin01(Time::GetTimeSinceStart() + 250),
@@ -378,7 +412,7 @@ void GraphicDemoApplication::CustomRun()
                                                                        Math::Sin01(Time::GetTimeSinceStart() + 750),
                                                                        1.0f
                                                                       ));
-    
+
     // Rotate
     suzanneObject->GetTransform()->Rotate(glm::vec3(0.0f, 45.0f * Time::GetDeltaTime(), 0.0f));
 
@@ -386,27 +420,11 @@ void GraphicDemoApplication::CustomRun()
     childCrateObject->GetTransform()->RotateLocal(glm::vec3(0.0f, 0.0f, 45.0f * Time::GetDeltaTime()));
 
     // Move lights
-    redLightObject->GetTransform()->SetLocalPosition(glm::vec3(0.0, 0.0f, sin(Time::GetTimeSinceStart()) * 20.0f));
-    rainbowLightObject->GetTransform()->SetLocalPosition(glm::vec3(sin(Time::GetTimeSinceStart()) * 20.0f, 0.0f, 0.0f));
+    //redLightObject->GetTransform()->SetLocalPosition(glm::vec3(0.0, 1.0f, sin(Time::GetTimeSinceStart()) * 20.0f));
+    //rainbowLightObject->GetTransform()->SetLocalPosition(glm::vec3(sin(Time::GetTimeSinceStart()) * 20.0f, 1.0f, 0.0f));
 }
 
 void GraphicDemoApplication::GuiDraw()
 {
-    // render your GUI
 
-    Uniform<float>* brightnessUniform = GET_SHADER(FrameBuffer)->GetUniformStorage()->GetUniformPtr<float>("u_Brightness");
-    Uniform<float>* contrastUniform = GET_SHADER(FrameBuffer)->GetUniformStorage()->GetUniformPtr<float>("u_Contrast");
-    Uniform<float>* hueUniform = GET_SHADER(FrameBuffer)->GetUniformStorage()->GetUniformPtr<float>("u_Hue");
-    Uniform<float>* saturationUniform = GET_SHADER(FrameBuffer)->GetUniformStorage()->GetUniformPtr<float>("u_Saturation");
-    Uniform<float>* valueUniform = GET_SHADER(FrameBuffer)->GetUniformStorage()->GetUniformPtr<float>("u_Value");
-    Uniform<int>* grayscaleUniform = GET_SHADER(FrameBuffer)->GetUniformStorage()->GetUniformPtr<int>("u_Grayscale");
-    Uniform<int>* useHSVUniform = GET_SHADER(FrameBuffer)->GetUniformStorage()->GetUniformPtr<int>("u_UseHSV");
-    
-    ImGui::SliderFloat("Brightness",  brightnessUniform->GetValuePtr(), 0.0f, 1.0);
-    ImGui::SliderFloat("Contrast",  contrastUniform->GetValuePtr(), 0.0f, 1.0);
-    ImGui::Checkbox("Grayscale", reinterpret_cast<bool*>(grayscaleUniform->GetValuePtr()));
-    ImGui::Checkbox("Use HSV", reinterpret_cast<bool*>(useHSVUniform->GetValuePtr()));
-    ImGui::SliderFloat("Hue",  hueUniform->GetValuePtr(), 0.0f, 1.0);
-    ImGui::SliderFloat("Saturation",  saturationUniform->GetValuePtr(), 0.0f, 1.0);
-    ImGui::SliderFloat("Value",  valueUniform->GetValuePtr(), 0.0f, 1.0);
 }

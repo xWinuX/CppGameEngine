@@ -1,5 +1,7 @@
 ﻿#include "GameEngine/Rendering/UniformStorage.h"
 
+#include "GameEngine/Rendering/CubeMap.h"
+
 using namespace GameEngine::Rendering;
 
 #define APPLY_UNIFORM(suffix) \
@@ -8,6 +10,15 @@ for (auto& uniform##suffix : _uniform##suffix##s) \
     if (uniform##suffix##.second.ApplyInQueue) { uniform##suffix##.second.Uniform.Apply(); } \
     if (uniform##suffix##.second.ResetAfterApply) { uniform##suffix##.second.Uniform.Reset(); } \
 }
+
+#define APPLY_SAMPLER_UNIFORM(suffix) \
+for (auto& uniform##suffix : _uniform##suffix##s) \
+{ \
+    uniform##suffix##.second.Uniform.Apply(slot); \
+    slot++; \
+    if (uniform##suffix##.second.ResetAfterApply) { uniform##suffix##.second.Uniform.Reset(); } \
+} \
+
 
 #define COPY_UNIFORM(type,suffix) \
 for (auto uniform##suffix : _uniform##suffix##s) \
@@ -39,11 +50,8 @@ void UniformStorage::Apply()
     APPLY_UNIFORM(Mat4F)
 
     int slot = 0;
-    for (auto& uniformTexture : _uniformTextures)
-    {
-        uniformTexture.second.Uniform.Apply(slot);
-        slot++;
-    }
+    APPLY_SAMPLER_UNIFORM(Texture)
+    APPLY_SAMPLER_UNIFORM(CubeMap)
 }
 
 
@@ -84,6 +92,7 @@ void UniformStorage::CopyTo(UniformStorage* uniformStorage) const
     COPY_UNIFORM(float, 1F)
     COPY_UNIFORM(std::vector<float>*, 1FV)
     COPY_UNIFORM(Texture*, Texture)
+    COPY_UNIFORM(CubeMap*, CubeMap)
 }
 
 void UniformStorage::CopyFrom(const UniformStorage* uniformStorage)
