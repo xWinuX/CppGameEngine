@@ -33,8 +33,8 @@ namespace GameEngine
                     _uniformStorage->InitializeUniform<T>(uniformName, defaultValue, includeInApplyQueue);
                 }
 
-                template <typename T>
-                void SetUniformInstant(const GLchar* uniformName, T value) { _uniformStorage->SetUniformInstant<T>(uniformName, value); }
+                //template <typename T>
+                //void SetUniformInstant(const GLchar* uniformName, T value) { _uniformStorage->SetUniformInstant<T>(uniformName, value); }
 
                 GLuint GetProgramID() const;
 

@@ -37,8 +37,8 @@ void Camera::OnUpdateEnd()
     viewMatrix[3][0] = 0;
     viewMatrix[3][1] = 0;
     viewMatrix[3][2] = 0;
-    _skyboxMaterial->GetUniformStorage()->SetUniform("u_View", viewMatrix);
-    _skyboxMaterial->GetUniformStorage()->SetUniform("u_Projection", _projectionMatrix);
+    //_skyboxMaterial->GetUniformStorage()->SetUniform("u_View", viewMatrix);
+    //_skyboxMaterial->GetUniformStorage()->SetUniform("u_Projection", _projectionMatrix);
     Renderer::SubmitRenderable(_skyboxCube);
 }
 
@@ -54,9 +54,9 @@ void Camera::OnShaderUse(Rendering::Shader* shader)
 {
     const glm::mat4 viewMatrix = GetViewMatrix();
     
-    shader->GetUniformStorage()->SetUniformInstant<float>("u_Time", Time::GetTimeSinceStart());
-    shader->GetUniformStorage()->SetUniformInstant<glm::mat4>("u_ViewProjection", _projectionMatrix * viewMatrix);
-    shader->GetUniformStorage()->SetUniformInstant<glm::vec3>("u_ViewPosition", _transform->GetPosition());
+    //shader->GetUniformStorage()->SetUniformInstant<float>("u_Time", Time::GetTimeSinceStart());
+    //shader->GetUniformStorage()->SetUniformInstant<glm::mat4>("u_ViewProjection", _projectionMatrix * viewMatrix);
+    //shader->GetUniformStorage()->SetUniformInstant<glm::vec3>("u_ViewPosition", _transform->GetPosition());
 }
 
 float Camera::GetFOVInDegrees() const { return _fovInDegrees; }

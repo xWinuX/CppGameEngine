@@ -11,7 +11,7 @@ RenderablePrimitive::RenderablePrimitive(Primitive* primitive, Material* materia
 void RenderablePrimitive::OnBeforeDraw()
 {
     if (_transform == nullptr) { return; }
-    _material->GetUniformStorage()->SetUniformInstant<glm::mat4>("u_Transform", _transform->GetTRS());
+    //_material->GetUniformStorage()->SetUniformInstant<glm::mat4>("u_Transform", _transform->GetTRS());
 }
 
 void RenderablePrimitive::OnDraw()

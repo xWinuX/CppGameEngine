@@ -8,91 +8,11 @@
 #include "Texture.h"
 #include "glm/gtc/type_ptr.hpp"
 
-#define LOCATION_CHECK if (_location < 0) { Debug::Log::Message(std::string(_name) + "'s location not found"); return; }
+#define LOCATION_CHECK if (this->GetLocation() < 0) { Debug::Log::Message(std::string(this->GetName()) + "'s location not found"); return; }
 
-
-#define SAMPLER_SPECIFICATION(type) \
-template <> \
-class Uniform<type> \
-{ \
-    private: \
-        const std::string   _name; \
-        const GLint         _location = -1; \
-        type                _defaultValue; \
-        type                _value; \
-        int                 _previousSlot = 0; \
-\
-    public: \
-        Uniform(): \
-            _defaultValue(), \
-            _value() { } \
-\
-        Uniform(const std::string uniformName, const GLint location, type defaultValue): \
-            _name(uniformName), \
-            _location(location), \
-            _defaultValue(defaultValue), \
-            _value(defaultValue) { } \
-\
-        void Apply(int slot = -1) \
-        { \
-            LOCATION_CHECK \
-            if (slot == -1) { slot = _previousSlot; } \
-            _value->Bind(slot); \
-            glUniform1i(_location, slot); \
-            _previousSlot = slot; \
-        } \
-\
-        void Set(type value) { _value = value; } \
-\
-        void        Reset() { _value = _defaultValue; } \
-        std::string GetName() const { return _name; } \
-        type    GetDefaultValue() const { return _defaultValue; } \
-};
-
-
-#define ARRAY_SPECIFICATION(type) \
-template <> \
-class Uniform \
-{ \
-    private: \
-        const std::string   _name; \
-        const GLint         _location = -1; \
-        std::vector<type>   _defaultValue; \
-        std::vector<type>   _value; \
-        size_t _maxSize; \
-\
-    public: \
-        Uniform(): \
-            _defaultValue(), \
-            _value() { } \
-\
-        Uniform(const std::string uniformName, const GLint location, std::vector<type> defaultValue): \
-            _name(uniformName), \
-            _location(location), \
-            _defaultValue(defaultValue), \
-            _value(defaultValue),\
-            _maxSize(_value.capacity()) {} \
-\
-        void Apply() { Debug::Log::Message("This should never appear"); } \
-\
-        void Set(type value, size_t index) \
-        { \
-            if (index >= _maxSize) \
-            { \
-                Debug::Log::Error("Uniform " + _name + " array index out of range!"); \
-                return; \
-            }\
-            _value[index] = value; \
-        } \
-\
-        void Reset() { _value = _defaultValue; } \
-\
-        std::string GetName() const { return _name; } \
-\
-        std::vector<type> GetDefaultValue() { return _defaultValue; } \
-\
-        std::vector<type>* GetValuePtr() { return &_value; } \
-};
+#define LOCATION_CHECK_ARRAY \
+LOCATION_CHECK \
+if (_value.empty()) { return; }
 
 namespace GameEngine
 {
@@ -101,7 +21,7 @@ namespace GameEngine
         template <typename T>
         class Uniform
         {
-            private:
+            protected:
                 const std::string _name;
                 const GLint       _location = -1;
                 const T           _defaultValue;
@@ -110,13 +30,14 @@ namespace GameEngine
             public:
                 Uniform():
                     _defaultValue(),
-                    _value() { }
+                    _value() {}
 
                 Uniform(const std::string uniformName, const GLint location, T defaultValue):
                     _name(uniformName),
                     _location(location),
                     _defaultValue(defaultValue),
                     _value(defaultValue) { }
+
 
                 void Apply() { Debug::Log::Message("This should never appear"); }
 
@@ -125,34 +46,140 @@ namespace GameEngine
                 void Reset() { _value = _defaultValue; }
 
                 std::string GetName() const { return _name; }
+                GLint       GetLocation() { return _location; }
 
                 T GetDefaultValue() { return _defaultValue; }
 
                 T* GetValuePtr() { return &_value; }
         };
 
-        SAMPLER_SPECIFICATION(Texture*)
+        template <typename T>
+        class SamplerUniform : public Uniform<T>
+        {
+            private:
+                int _previousSlot = 0;
 
-        SAMPLER_SPECIFICATION(CubeMap*)
+            public:
+                SamplerUniform():
+                    Uniform<T>() {}
 
-        ARRAY_SPECIFICATION(glm::vec3)
-        ARRAY_SPECIFICATION(glm::vec4)
-        ARRAY_SPECIFICATION(float)
+                SamplerUniform(const std::string& uniformName, GLint location, T defaultValue):
+                    Uniform<T>(uniformName, location, defaultValue) {}
+
+                virtual void Apply(int slot = -1)
+                {
+                    LOCATION_CHECK
+                    if (slot == -1) { slot = _previousSlot; }
+                    this->_value->Bind(slot);
+                    glUniform1i(this->_location, slot);
+                    _previousSlot = slot;
+                }
+        };
+
+        template <typename T>
+        class ArrayUniform : public Uniform<T>
+        {
+            protected:
+                size_t _maxSize = 0;
+
+            public:
+                ArrayUniform():
+                    Uniform<T>() {}
+
+                ArrayUniform(const std::string& uniformName, GLint location, T defaultValue):
+                    Uniform<T>(uniformName, location, defaultValue),
+                    _maxSize(defaultValue.size()) {}
+
+                void Set(T value, size_t index)
+                {
+                    if (index >= _maxSize)
+                    {
+                        Debug::Log::Error("Uniform " + _name + " array index out of range!");
+                        return;
+                    }
+
+                    this->_value[index] = value;
+                }
+        };
+
+        template <typename T>
+        class ArraySamplerUniform final : public SamplerUniform<T>, public ArrayUniform<T>
+        {
+            private:
+                std::vector<int> _slotIndices;
+
+            public:
+                ArraySamplerUniform():
+                    Uniform<T>() {}
+
+                ArraySamplerUniform(const std::string& uniformName, GLint location, T defaultValue):
+                    SamplerUniform<T>(uniformName, location, defaultValue),
+                    ArrayUniform<T>(uniformName, location, defaultValue),
+                    _slotIndices(std::vector<int>(defaultValue.size())) {}
+
+            private:
+                void Apply(int slot = -1) override
+                {
+                    LOCATION_CHECK
+                    if (slot == -1) { slot = this->_previousSlot; }
+                    for (size_t i = 0; i < this->_value.size(); i++)
+                    {
+                        this->_value->Bind(slot + i);
+                        _slotIndices[i] = slot + i;
+                    }
+                    glUniform1iv(this->_location, _slotIndices.size(), _slotIndices.data());
+                    this->_previousSlot = slot;
+                }
+        };
+
+
+        template <>
+        inline void Uniform<std::vector<int>>::Apply()
+        {
+            LOCATION_CHECK_ARRAY
+            glUniform1iv(_location, static_cast<GLsizei>(_value.size()), _value.data());
+        }
+
+        template <>
+        inline void Uniform<std::vector<float>>::Apply()
+        {
+            LOCATION_CHECK_ARRAY
+            glUniform1fv(_location, static_cast<GLsizei>(_value.size()), _value.data());
+        }
+
+        template <>
+        inline void Uniform<std::vector<glm::vec2>>::Apply()
+        {
+            LOCATION_CHECK_ARRAY
+            glUniform2fv(_location, static_cast<GLsizei>(_value.size()), reinterpret_cast<GLfloat*>(_value.data()));
+        }
+
+        template <>
+        inline void Uniform<std::vector<glm::vec3>>::Apply()
+        {
+            LOCATION_CHECK_ARRAY
+            glUniform3fv(_location, static_cast<GLsizei>(_value.size()), reinterpret_cast<GLfloat*>(_value.data()));
+        }
+
+        template <>
+        inline void Uniform<std::vector<glm::vec4>>::Apply()
+        {
+            LOCATION_CHECK_ARRAY
+            glUniform4fv(_location, static_cast<GLsizei>(_value.size()), reinterpret_cast<GLfloat*>(_value.data()));
+        }
+
+        template <>
+        inline void Uniform<int>::Apply()
+        {
+            LOCATION_CHECK
+            glUniform1i(_location, _value);
+        }
 
         template <>
         inline void Uniform<float>::Apply()
         {
             LOCATION_CHECK
             glUniform1f(_location, _value);
-        }
-
-        template <>
-        inline void Uniform<std::vector<float>>::Apply()
-        {
-            LOCATION_CHECK
-            if (_value.empty()) { return; }
-            
-            glUniform1fv(_location, static_cast<int>(_value.size()), _value.data());
         }
 
         template <>
@@ -163,15 +190,6 @@ namespace GameEngine
         }
 
         template <>
-        inline void Uniform<std::vector<glm::vec4>>::Apply()
-        {
-            LOCATION_CHECK
-            if (_value.empty()) { return; }
-
-            glUniform4fv(_location, static_cast<int>(_value.size()), reinterpret_cast<GLfloat*>(_value.data()));
-        }
-
-        template <>
         inline void Uniform<glm::vec3>::Apply()
         {
             LOCATION_CHECK
@@ -179,26 +197,10 @@ namespace GameEngine
         }
 
         template <>
-        inline void Uniform<std::vector<glm::vec3>>::Apply()
-        {
-            LOCATION_CHECK
-            if (_value.empty()) { return; }
-
-            glUniform3fv(_location, static_cast<int>(_value.size()), reinterpret_cast<GLfloat*>(_value.data()));
-        }
-
-        template <>
         inline void Uniform<glm::mat4>::Apply()
         {
             LOCATION_CHECK
             glUniformMatrix4fv(_location, 1, GL_FALSE, glm::value_ptr(_value));
-        }
-
-        template <>
-        inline void Uniform<int>::Apply()
-        {
-            LOCATION_CHECK
-            glUniform1i(_location, _value);
         }
     }
 }

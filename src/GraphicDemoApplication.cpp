@@ -151,17 +151,19 @@ void GraphicDemoApplication::LoadShaders() const
     litUniforms.InitializeUniform<float>("u_AmbientLightIntensity", 0.6f);
 
     // Directional Lights
+    constexpr size_t maxDirectionalLights = 3;
     litUniforms.InitializeUniform<int>("u_NumDirectionalLights", 0, false);
-    litUniforms.InitializeUniform<std::vector<glm::vec3>*>("u_DirectionalLightDirections", nullptr, false);
-    litUniforms.InitializeUniform<std::vector<glm::vec4>*>("u_DirectionalLightColors", nullptr, false);
-    litUniforms.InitializeUniform<std::vector<float>*>("u_DirectionalLightIntensities", nullptr, false);
+    litUniforms.InitializeUniform<std::vector<glm::vec3>>("u_DirectionalLightDirections", std::vector<glm::vec3>(maxDirectionalLights), false);
+    litUniforms.InitializeUniform<std::vector<glm::vec4>>("u_DirectionalLightColors", std::vector<glm::vec4>(maxDirectionalLights), false);
+    litUniforms.InitializeUniform<std::vector<float>>("u_DirectionalLightIntensities", std::vector<float>(maxDirectionalLights), false);
     
     // Point Lights
+    constexpr size_t maxPointLights = 16;
     litUniforms.InitializeUniform<int>("u_NumPointLights", 0, false);
-    litUniforms.InitializeUniform<std::vector<glm::vec3>*>("u_PointLightPositions", nullptr, false);
-    litUniforms.InitializeUniform<std::vector<glm::vec4>*>("u_PointLightColors", nullptr, false);
-    litUniforms.InitializeUniform<std::vector<float>*>("u_PointLightIntensities", nullptr, false);
-    litUniforms.InitializeUniform<std::vector<float>*>("u_PointLightRanges", nullptr, false);
+    litUniforms.InitializeUniform<std::vector<glm::vec3>>("u_PointLightPositions", std::vector<glm::vec3>(maxPointLights), false);
+    litUniforms.InitializeUniform<std::vector<glm::vec4>>("u_PointLightColors", std::vector<glm::vec4>(maxPointLights), false);
+    litUniforms.InitializeUniform<std::vector<float>>("u_PointLightIntensities", std::vector<float>(maxPointLights), false);
+    litUniforms.InitializeUniform<std::vector<float>>("u_PointLightRanges", std::vector<float>(maxPointLights), false);
 
     UniformStorage spriteUniforms = UniformStorage();
     spriteUniforms.InitializeUniform<Texture*>("u_Texture", GET_TEXTURE(White), false);

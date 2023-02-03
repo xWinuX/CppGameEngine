@@ -133,7 +133,7 @@ unsigned int Renderer::Render2DBatches(const std::pair<Material*, std::map<Textu
 
             // Render the batch
             _renderable2DVertexBuffer->UpdateData(_renderable2DVertexData, numQuads);
-            material->GetUniformStorage()->SetUniformInstant<Texture*>("u_Texture", texturePair.first);
+            //material->GetUniformStorage()->SetUniformInstant<Texture*>("u_Texture", texturePair.first);
             _renderable2DVertexArrayObject->RenderInstanced(6, static_cast<int>(numQuads));
             numDrawCalls++;
         }
