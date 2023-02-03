@@ -6,7 +6,7 @@ Scene::~Scene() { delete _sceneRoot; }
 
 void Scene::InitializeScene() const { _sceneRoot->OnStart(); }
 
-void Scene::Update() const
+void Scene::OnUpdate() const
 {
     _sceneRoot->OnUpdateBegin();
     _sceneRoot->OnUpdate();

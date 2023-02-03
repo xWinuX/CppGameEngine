@@ -83,12 +83,29 @@ namespace GameEngine
                 UNIFORM(glm::vec3, 3F)
                 UNIFORM(std::vector<glm::vec3>*, 3FV)
                 UNIFORM(int, 1I)
-                UNIFORM(float, 1F)
                 UNIFORM(std::vector<float>*, 1FV)
                 UNIFORM(Texture*, Texture)
                 UNIFORM(CubeMap*, CubeMap)
 
-                template <typename T, std::map<int, UniformEntry<T>> UniformStorage::*MapPtr>
+                template<typename T>
+                std::map<int, UniformEntry<T>> _uniformEntries;
+            
+            public:
+                explicit UniformStorage();
+                explicit UniformStorage(const GLuint programID);
+
+                void Apply();
+
+                int GetUniformLocation(const std::string& uniformName);
+
+                UniformStorage* Copy(const GLuint programID) const;
+                void            CopyTo(UniformStorage* uniformStorage) const;
+                void            CopyFrom(const UniformStorage* uniformStorage);
+
+                template <typename T>
+                static void ShowUniformNotSupportedError() { Debug::Log::Error("Uniform type " + std::string(typeid(T).name()) + " is not supported"); }
+
+                template <typename T>
                 void InitializeUniform(std::string uniformName, T defaultVar, const bool includeInApplyQueue = true, const bool resetAfterApply = false)
                 {
                     Debug::Log::Message("Initializing uniform " + uniformName);
@@ -112,43 +129,37 @@ namespace GameEngine
                     }
 
                     _uniformNameLocationMap[uniformName] = location;
-                    (this->*MapPtr).emplace(location, UniformEntry<T>{Uniform<T>{uniformName, location, defaultVar}, includeInApplyQueue, resetAfterApply});
+                    _uniformEntries<T>.emplace(location, UniformEntry<T>{Uniform<T>{uniformName, location, defaultVar}, includeInApplyQueue, resetAfterApply});
 
                     if (location < 0 && !_isTemplate) { Debug::Log::Error("Something went wrong initializing uniform \"" + std::string(uniformName)); }
                 }
 
-            public:
-                explicit UniformStorage();
-                explicit UniformStorage(const GLuint programID);
-
-                void Apply();
-
-                int GetUniformLocation(const std::string& uniformName);
-
-                UniformStorage* Copy(const GLuint programID) const;
-                void            CopyTo(UniformStorage* uniformStorage) const;
-                void            CopyFrom(const UniformStorage* uniformStorage);
-
                 template <typename T>
-                static void ShowUniformNotSupportedError() { Debug::Log::Error("Uniform type " + std::string(typeid(T).name()) + " is not supported"); }
-
-                template <typename T>
-                void InitializeUniform(std::string uniformName, T defaultVar, const bool includeInApplyQueue = true, const bool resetAfterApply = false)
+                Uniform<T>* GetUniformPtr(std::string uniformName)
                 {
-                    ShowUniformNotSupportedError<T>();
+                    return &_uniformEntries<T>[uniformName].Uniform;
                 }
 
                 template <typename T>
-                Uniform<T>* GetUniformPtr(std::string uniformName) { ShowUniformNotSupportedError<T>(); }
+                void SetUniform(int location, T value)
+                {
+                    _uniformEntries<T>[location].Uniform.Set(value);
+                }
 
                 template <typename T>
-                void SetUniform(int location, T value) { ShowUniformNotSupportedError<T>(); }
+                void SetUniform(const std::string uniformName, T value)
+                {
+                    const int uniformLocation = GetUniformLocation(uniformName); \
+                    if (uniformLocation < 0) { return; }
+                    SetUniform<T>(uniformLocation, value);
+                }
 
                 template <typename T>
-                void SetUniform(std::string uniformName, T value) { ShowUniformNotSupportedError<T>(); }
-
-                template <typename T>
-                void SetUniformInstant(int location, T value) { ShowUniformNotSupportedError<T>(); }
+                void SetUniformInstant(int location, T value)
+                {
+                    _uniformEntries<T>[location].Uniform.Set(value);
+                    _uniformEntries<T>[location].Uniform.Apply();
+                }
 
                 template <typename T>
                 void SetUniformInstant(std::string uniformName, T value) { ShowUniformNotSupportedError<T>(); }
@@ -161,7 +172,47 @@ namespace GameEngine
         ADD_UNIFORM_SPECIALIZATION(std::vector<glm::vec4>*, 4FV)
         ADD_UNIFORM_SPECIALIZATION(glm::vec3, 3F)
         ADD_UNIFORM_SPECIALIZATION(std::vector<glm::vec3>*, 3FV)
-        ADD_UNIFORM_SPECIALIZATION(float, 1F)
+
+        template <>
+        inline void UniformStorage::InitializeUniform<float>(std::string uniformName, float value, const bool includeInApplyQueue, const bool resetAfterApply)
+        {
+            InitializeUniform<float, &UniformStorage::_uniform1Fs>(uniformName, value, includeInApplyQueue, resetAfterApply);
+        }
+
+        template <>
+        inline void UniformStorage::SetUniform<float>(const int uniformLocation, float value) { _uniform1Fs[uniformLocation].Uniform.Set(value); }
+
+        template <>
+        inline void UniformStorage::SetUniform<float>(std::string uniformName, float value)
+        {
+            const int uniformLocation = GetUniformLocation(uniformName);
+            if (uniformLocation < 0) { return; }
+            SetUniform<float>(uniformLocation, value);
+        }
+
+        template <>
+        inline Uniform<float>* UniformStorage::GetUniformPtr<float>(std::string uniformName)
+        {
+            const int uniformLocation = GetUniformLocation(uniformName);
+            if (uniformLocation < 0) { return nullptr; }
+            return &_uniform1Fs[uniformLocation].Uniform;
+        }
+
+        template <>
+        inline void UniformStorage::SetUniformInstant<float>(const int uniformLocation, float value)
+        {
+            _uniform1Fs[uniformLocation].Uniform.Set(value);
+            _uniform1Fs[uniformLocation].Uniform.Apply();
+        }
+
+        template <>
+        inline void UniformStorage::SetUniformInstant<float>(std::string uniformName, float value)
+        {
+            const int uniformLocation = GetUniformLocation(uniformName);
+            if (uniformLocation < 0) { return; }
+            SetUniformInstant<float>(uniformLocation, value);
+        }
+
         ADD_UNIFORM_SPECIALIZATION(std::vector<float>*, 1FV)
         ADD_UNIFORM_SPECIALIZATION(int, 1I)
     }

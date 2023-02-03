@@ -16,18 +16,18 @@ template <> \
 class Uniform<type> \
 { \
     private: \
-        const std::string _name; \
-        const GLint       _location = -1; \
-        const type    _defaultValue; \
-        const type    _value; \
-        int               _previousSlot = 0; \
+        const std::string   _name; \
+        const GLint         _location = -1; \
+        type                _defaultValue; \
+        type                _value; \
+        int                 _previousSlot = 0; \
 \
     public: \
         Uniform(): \
             _defaultValue(), \
             _value() { } \
 \
-        Uniform(const std::string uniformName, const GLint location, const type defaultValue): \
+        Uniform(const std::string uniformName, const GLint location, type defaultValue): \
             _name(uniformName), \
             _location(location), \
             _defaultValue(defaultValue), \
@@ -42,13 +42,57 @@ class Uniform<type> \
             _previousSlot = slot; \
         } \
 \
-        void Set(const type value) { _value = value; } \
+        void Set(type value) { _value = value; } \
 \
         void        Reset() { _value = _defaultValue; } \
         std::string GetName() const { return _name; } \
-        type    GetDefaultValue() const { return const_cast<type>(_defaultValue); } \
-}; \
+        type    GetDefaultValue() const { return _defaultValue; } \
+};
 
+
+#define ARRAY_SPECIFICATION(type) \
+template <> \
+class Uniform \
+{ \
+    private: \
+        const std::string   _name; \
+        const GLint         _location = -1; \
+        std::vector<type>   _defaultValue; \
+        std::vector<type>   _value; \
+        size_t _maxSize; \
+\
+    public: \
+        Uniform(): \
+            _defaultValue(), \
+            _value() { } \
+\
+        Uniform(const std::string uniformName, const GLint location, std::vector<type> defaultValue): \
+            _name(uniformName), \
+            _location(location), \
+            _defaultValue(defaultValue), \
+            _value(defaultValue),\
+            _maxSize(_value.capacity()) {} \
+\
+        void Apply() { Debug::Log::Message("This should never appear"); } \
+\
+        void Set(type value, size_t index) \
+        { \
+            if (index >= _maxSize) \
+            { \
+                Debug::Log::Error("Uniform " + _name + " array index out of range!"); \
+                return; \
+            }\
+            _value[index] = value; \
+        } \
+\
+        void Reset() { _value = _defaultValue; } \
+\
+        std::string GetName() const { return _name; } \
+\
+        std::vector<type> GetDefaultValue() { return _defaultValue; } \
+\
+        std::vector<type>* GetValuePtr() { return &_value; } \
+};
 
 namespace GameEngine
 {
@@ -72,11 +116,7 @@ namespace GameEngine
                     _name(uniformName),
                     _location(location),
                     _defaultValue(defaultValue),
-                    _value(defaultValue)
-                {
-                    Debug::Log::Message(_name);
-                    Debug::Log::Message(std::to_string(_location));
-                }
+                    _value(defaultValue) { }
 
                 void Apply() { Debug::Log::Message("This should never appear"); }
 
@@ -92,7 +132,12 @@ namespace GameEngine
         };
 
         SAMPLER_SPECIFICATION(Texture*)
+
         SAMPLER_SPECIFICATION(CubeMap*)
+
+        ARRAY_SPECIFICATION(glm::vec3)
+        ARRAY_SPECIFICATION(glm::vec4)
+        ARRAY_SPECIFICATION(float)
 
         template <>
         inline void Uniform<float>::Apply()
@@ -102,10 +147,12 @@ namespace GameEngine
         }
 
         template <>
-        inline void Uniform<std::vector<float>*>::Apply()
+        inline void Uniform<std::vector<float>>::Apply()
         {
             LOCATION_CHECK
-            glUniform1fv(_location, static_cast<int>(_value->size()), _value->data());
+            if (_value.empty()) { return; }
+            
+            glUniform1fv(_location, static_cast<int>(_value.size()), _value.data());
         }
 
         template <>
@@ -116,12 +163,12 @@ namespace GameEngine
         }
 
         template <>
-        inline void Uniform<std::vector<glm::vec4>*>::Apply()
+        inline void Uniform<std::vector<glm::vec4>>::Apply()
         {
             LOCATION_CHECK
-            if (_value == nullptr) { return; }
+            if (_value.empty()) { return; }
 
-            glUniform4fv(_location, static_cast<int>(_value->size()), reinterpret_cast<GLfloat*>(_value->data()));
+            glUniform4fv(_location, static_cast<int>(_value.size()), reinterpret_cast<GLfloat*>(_value.data()));
         }
 
         template <>
@@ -132,12 +179,12 @@ namespace GameEngine
         }
 
         template <>
-        inline void Uniform<std::vector<glm::vec3>*>::Apply()
+        inline void Uniform<std::vector<glm::vec3>>::Apply()
         {
             LOCATION_CHECK
-            if (_value == nullptr) { return; }
+            if (_value.empty()) { return; }
 
-            glUniform3fv(_location, static_cast<int>(_value->size()), reinterpret_cast<GLfloat*>(_value->data()));
+            glUniform3fv(_location, static_cast<int>(_value.size()), reinterpret_cast<GLfloat*>(_value.data()));
         }
 
         template <>

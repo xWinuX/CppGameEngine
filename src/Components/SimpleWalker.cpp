@@ -66,7 +66,7 @@ void SimpleWalker::OnUpdate()
     if (_soundTimer > 0) { _soundTimer -= GameEngine::Time::GetDeltaTime(); }
     else
     {
-        //_audioSource->PlayPitch(1 / _transform->GetLocalScale().x);
+        _audioSource->PlayPitch(1 / _transform->GetLocalScale().x);
         RandomizeSoundTimer();
     }
 }

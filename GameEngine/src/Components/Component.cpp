@@ -18,4 +18,4 @@ void Component::OnOtherComponentAdded(Component* component) {}
 void Component::SetEnabled(const bool enabled) { _enabled = enabled; }
 
 bool       Component::GetEnabled() const { return _enabled; }
-Transform* Component::GetTransform() { return _transform; }
+Transform* Component::GetTransform() const { return _transform; }

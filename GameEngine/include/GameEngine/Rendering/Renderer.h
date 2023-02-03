@@ -6,6 +6,7 @@
 #include "Renderable.h"
 #include "Renderable2D.h"
 #include "RenderTarget.h"
+#include "ShaderUseCallback.h"
 #include "VertexArrayObject.h"
 #include "VertexBuffer.h"
 #include "SpriteSet.h"
@@ -18,6 +19,7 @@ namespace GameEngine
         class Renderer
         {
             private:
+                static std::vector<ShaderUseCallback*>             _shaderUseCallbacks;
                 static std::vector<RenderTarget*>                  _renderTargets;
                 static std::vector<GameEngine::Components::Light*> _lights;
 
@@ -39,6 +41,7 @@ namespace GameEngine
             public:
                 static void Initialize();
 
+                static void SubmitShaderUseCallback(ShaderUseCallback* shaderUseCallback);
                 static void SubmitLight(GameEngine::Components::Light* light);
                 static void SubmitBatchRenderable2D(Renderable2D* renderable2D);
                 static void SubmitRenderable(Renderable* renderable);
@@ -73,9 +76,7 @@ namespace GameEngine
                             shader = newShader;
                             shader->Use();
 
-                            for (Components::Light*& light : _lights) { light->OnShaderUse(shader); }
-
-                            renderTarget->OnShaderUse(shader);
+                            for (ShaderUseCallback* shaderUseCallback : _shaderUseCallbacks) { shaderUseCallback->OnShaderUse(shader); }
                         }
 
                         // Update polygon mode if needed
@@ -92,22 +93,22 @@ namespace GameEngine
                             currentDepthFunc = depthFunc;
                         }
 
-                            // Face Culling
-                            if (cullFace != currentCullFace || firstLoop)
+                        // Face Culling
+                        if (cullFace != currentCullFace || firstLoop)
+                        {
+                            if (cullFace == Material::CullFace::None)
                             {
-                                if (cullFace == Material::CullFace::None)
-                                {
-                                    glDisable(GL_CULL_FACE);
-                                    glCullFace(GL_BACK);
-                                }
-                                else
-                                {
-                                    glEnable(GL_CULL_FACE);
-                                    glCullFace(cullFace);
-                                }
-
-                                currentCullFace = cullFace;
+                                glDisable(GL_CULL_FACE);
+                                glCullFace(GL_BACK);
                             }
+                            else
+                            {
+                                glEnable(GL_CULL_FACE);
+                                glCullFace(cullFace);
+                            }
+
+                            currentCullFace = cullFace;
+                        }
 
                         // Apply material uniforms that are in the queue
                         material->GetUniformStorage()->Apply();

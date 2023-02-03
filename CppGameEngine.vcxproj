@@ -86,6 +86,7 @@
     <ClCompile Include="GameEngine\src\Components\Camera.cpp" />
     <ClCompile Include="GameEngine\src\Components\CapsuleCollider.cpp" />
     <ClCompile Include="GameEngine\src\Components\Component.cpp" />
+    <ClCompile Include="GameEngine\src\Components\DirectionalLight.cpp" />
     <ClCompile Include="GameEngine\src\Components\Light.cpp" />
     <ClCompile Include="GameEngine\src\Components\MeshRenderer.cpp" />
     <ClCompile Include="GameEngine\src\Components\PointLight.cpp" />
@@ -336,6 +337,7 @@
     <ClInclude Include="GameEngine\include\GameEngine\Rendering\Renderer.h" />
     <ClInclude Include="GameEngine\include\GameEngine\Rendering\RenderTarget.h" />
     <ClInclude Include="GameEngine\include\GameEngine\Rendering\Shader.h" />
+    <ClInclude Include="GameEngine\include\GameEngine\Rendering\ShaderUseCallback.h" />
     <ClInclude Include="GameEngine\include\GameEngine\Rendering\Sprite.h" />
     <ClInclude Include="GameEngine\include\GameEngine\Rendering\SpriteAtlas.h" />
     <ClInclude Include="GameEngine\include\GameEngine\Rendering\SpriteSet.h" />
@@ -353,6 +355,7 @@
     <ClInclude Include="GameEngine\include\GameEngine\Utils\Math.h" />
     <ClInclude Include="GameEngine\include\GameEngine\Utils\String.h" />
     <ClInclude Include="GameEngine\include\GameEngine\Window.h" />
+    <ClInclude Include="GameEngine\src\Components\DirectionalLight.h" />
     <ClInclude Include="src\Asset.h" />
     <ClInclude Include="src\Components\CameraControllerPOV.h" />
     <ClInclude Include="src\Components\CharacterController.h" />

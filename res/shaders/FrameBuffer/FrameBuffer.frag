@@ -5,7 +5,7 @@ uniform sampler2D u_Texture;
 
 const vec2 screenSize = vec2(1920, 1080);
 const vec3 bloomFactor = vec3(1.0, 1.0, 1.0);
-const int blurSize = 3;
+const int blurSize = 2;
 
 vec4 sampleColor(sampler2D tex, vec2 uv, vec2 offset)
 {
@@ -24,7 +24,7 @@ void main()
     {
         for (int j = -blurSize; j <= blurSize; j++)
         {
-            vec2 offset = vec2(float(i), float(j))*3;
+            vec2 offset = vec2(float(i), float(j))*2;
             bloom += sampleColor(u_Texture, v_UVs, offset);
         }
     }

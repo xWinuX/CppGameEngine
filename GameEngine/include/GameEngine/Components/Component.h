@@ -46,7 +46,7 @@ namespace GameEngine
                 void SetEnabled(const bool enabled);
                 bool GetEnabled() const;
 
-                Transform* GetTransform();
+                Transform* GetTransform() const;
         };
     }
 }

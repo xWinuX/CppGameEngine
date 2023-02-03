@@ -57,7 +57,7 @@ void Application::Run()
         PhysicsManager::Update(&scene);
         
         // Execute Update calls on each game object in the current scene
-        scene.Update();
+        scene.OnUpdate();
         
         CustomRun();
 
@@ -71,7 +71,7 @@ void Application::Run()
         DebugGUIManager::Draw();
 
         Renderer::DrawFrame();
-
+        
         std::cout << "FPS: " << std::to_string(1 / Time::GetDeltaTime()) << std::endl;
     }
 

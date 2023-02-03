@@ -2,6 +2,7 @@
 
 #include "Asset.h"
 #include "imgui.h"
+#include "../GameEngine/src/Components/DirectionalLight.h"
 #include "GameEngine/Debug/DebugGUIManager.h"
 #include "Components/SimpleWalker.h"
 #include "Components/CameraControllerPOV.h"
@@ -144,10 +145,18 @@ void GraphicDemoApplication::LoadShaders() const
     litUniforms.InitializeUniform<float>("u_Shininess", 0.0f);
     litUniforms.InitializeUniform<Texture*>("u_NormalMap", GET_TEXTURE(NormalMapDefault));
 
+    // Ambient Light
     litUniforms.InitializeUniform<CubeMap*>("u_SkyboxCubeMap", GET_CUBEMAP(SkyBox));
     litUniforms.InitializeUniform<glm::vec4>("u_AmbientLightColor", glm::vec4(1.0));
-    litUniforms.InitializeUniform<float>("u_AmbientLightIntensity", 1.0f);
+    litUniforms.InitializeUniform<float>("u_AmbientLightIntensity", 0.6f);
 
+    // Directional Lights
+    litUniforms.InitializeUniform<int>("u_NumDirectionalLights", 0, false);
+    litUniforms.InitializeUniform<std::vector<glm::vec3>*>("u_DirectionalLightDirections", nullptr, false);
+    litUniforms.InitializeUniform<std::vector<glm::vec4>*>("u_DirectionalLightColors", nullptr, false);
+    litUniforms.InitializeUniform<std::vector<float>*>("u_DirectionalLightIntensities", nullptr, false);
+    
+    // Point Lights
     litUniforms.InitializeUniform<int>("u_NumPointLights", 0, false);
     litUniforms.InitializeUniform<std::vector<glm::vec3>*>("u_PointLightPositions", nullptr, false);
     litUniforms.InitializeUniform<std::vector<glm::vec4>*>("u_PointLightColors", nullptr, false);
@@ -272,6 +281,12 @@ void GraphicDemoApplication::Initialize(Scene& scene)
     playerObject->AddComponent(new MeshRenderer(GET_MODEL(Cube)->GetMesh(0), GET_MATERIAL(Crate)));
     scene.AddGameObject(playerObject);
 
+    // Directional Light
+    GameObject* directionalLight = new GameObject();
+    directionalLight->GetTransform()->SetRotation(glm::quat(glm::vec3(-0.3f, 0.3f, 0.3f)));
+    directionalLight->AddComponent(new DirectionalLight(glm::vec4(1.0f), 0.6f));
+    scene.AddGameObject(directionalLight);
+    
     // Camera
     cameraObject = new GameObject();
     cameraObject->AddComponent(new Camera(60, 0.01f, 1000.0f, GET_SHADER(FrameBuffer), GET_MATERIAL(Skybox)));
@@ -296,19 +311,19 @@ void GraphicDemoApplication::Initialize(Scene& scene)
     // Red light
     redLightObject               = new GameObject();
     Transform* redLightTransform = redLightObject->GetTransform();
-    redLightTransform->SetLocalPosition(glm::vec3(2.0f, 0.0f, 0.0f));
+    redLightTransform->SetLocalPosition(glm::vec3(2.0f, 1.0f, 0.0f));
     redLightTransform->SetLocalScale(glm::vec3(0.1f));
     redLightObject->AddComponent(new MeshRenderer(GET_MODEL(Sphere)->GetMesh(0), GET_MATERIAL(Dude)));
-    redLightObject->AddComponent(new PointLight(glm::vec4(1.0f, 0.0f, 0.0f, 1.0f), 15.0f, 5.0f));
+    redLightObject->AddComponent(new PointLight(glm::vec4(1.0f, 0.0f, 0.0f, 1.0f), 15.0f, 0.5f));
     scene.AddGameObject(redLightObject);
 
     // Rainbow light
     rainbowLightObject               = new GameObject();
     Transform* rainbowLightTransform = rainbowLightObject->GetTransform();
-    rainbowLightTransform->SetPosition(glm::vec3(-2.0f, 0.0f, 0.0f));
+    rainbowLightTransform->SetPosition(glm::vec3(-2.0f, 1.0f, 0.0f));
     rainbowLightTransform->SetLocalScale(glm::vec3(0.1f));
     rainbowLightObject->AddComponent(new MeshRenderer(GET_MODEL(Sphere)->GetMesh(0), GET_MATERIAL(Dude)));
-    rainbowLightObject->AddComponent(new PointLight(glm::vec4(1.0f, 1.0f, 1.0f, 1.0f), 15.0f, 5.0f));
+    rainbowLightObject->AddComponent(new PointLight(glm::vec4(1.0f, 1.0f, 1.0f, 1.0f), 15.0f, 0.5f));
     scene.AddGameObject(rainbowLightObject);
 
     // Suzanne
@@ -377,6 +392,7 @@ void GraphicDemoApplication::CustomRun()
         fullscreen = !fullscreen;
         Window::GetCurrentWindow()->SetFullscreen(fullscreen);
     }
+
     
     // Change rainbow light color
     rainbowLightObject->GetComponent<PointLight>()->SetColor(glm::vec4(
@@ -385,7 +401,7 @@ void GraphicDemoApplication::CustomRun()
                                                                        Math::Sin01(Time::GetTimeSinceStart() + 750),
                                                                        1.0f
                                                                       ));
-
+    
     // Rotate
     suzanneObject->GetTransform()->Rotate(glm::vec3(0.0f, 45.0f * Time::GetDeltaTime(), 0.0f));
 

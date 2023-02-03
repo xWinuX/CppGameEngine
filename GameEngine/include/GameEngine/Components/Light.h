@@ -1,6 +1,6 @@
 ﻿#pragma once
 #include "Component.h"
-#include "../Rendering/Shader.h"
+#include "GameEngine/Rendering/ShaderUseCallback.h"
 
 namespace GameEngine
 {
@@ -11,14 +11,14 @@ namespace GameEngine
     
     namespace Components
     {
-        class Light : public Component
+        class Light : public Component, public Rendering::ShaderUseCallback
         {
             friend Rendering::Renderer;
-            
+            private:
+                static bool _alreadySubmitted = false;
             protected:
-
+                void OnUpdateBegin() override;
                 void OnUpdateEnd() override;
-                virtual void OnShaderUse(Rendering::Shader* shader) = 0;
                 virtual void OnFrameEnd() = 0;
         };
     }

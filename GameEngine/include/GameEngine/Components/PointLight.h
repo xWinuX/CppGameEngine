@@ -27,10 +27,7 @@ namespace GameEngine
                 void OnShaderUse(Rendering::Shader* shader) override;
 
             public:
-                explicit PointLight(const glm::vec4 color = glm::vec4(1.0), const float range = 1.0f, const float intensity = 1.0f):
-                    _color(color),
-                    _range(range),
-                    _intensity(intensity) {}
+                explicit PointLight(const glm::vec4 color = glm::vec4(1.0), const float range = 1.0f, const float intensity = 1.0f);
 
                 void SetColor(glm::vec4 color);
                 void SetRange(float range);

@@ -1,5 +1,6 @@
 ﻿#pragma once
 #include "FrameBuffer.h"
+#include "ShaderUseCallback.h"
 
 namespace GameEngine
 {
@@ -7,7 +8,7 @@ namespace GameEngine
     {
         class Renderer;
 
-        class RenderTarget
+        class RenderTarget : public ShaderUseCallback
         {
             friend Renderer;
 
@@ -21,7 +22,6 @@ namespace GameEngine
                 FrameBuffer* _frameBuffer;
                 Shader*      _shader;
 
-                virtual void OnShaderUse(Shader* shader) {}
                 void         Bind() const;
                 void         Unbind() const;
         };

@@ -16,6 +16,7 @@ void main()
 
     fragColor = vec4(0.0);
 #include "../Lit/Passes/AmbientLight.frag"
+#include "../Lit/Passes/DirectionalLight.frag"
 #include "../Lit/Passes/PointLight.frag"
     fragColor *= textureColor;
     fragColor *= v_Color;

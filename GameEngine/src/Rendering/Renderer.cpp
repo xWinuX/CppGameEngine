@@ -18,8 +18,8 @@
 using namespace GameEngine::Rendering;
 using namespace GameEngine::Components;
 
-
-std::vector<RenderTarget*> Renderer::_renderTargets = std::vector<RenderTarget*>();
+std::vector<ShaderUseCallback*> Renderer::_shaderUseCallbacks = std::vector<ShaderUseCallback*>();
+std::vector<RenderTarget*>      Renderer::_renderTargets      = std::vector<RenderTarget*>();
 
 const size_t   Renderer::Renderable2DBatchMaxQuads = 10000;
 const size_t   Renderer::Renderable2DBatchMaxSize  = Renderable2DBatchMaxQuads * sizeof(Sprite::QuadData);
@@ -71,7 +71,13 @@ void Renderer::Initialize()
     delete[] indices;
 }
 
-void Renderer::SubmitLight(Light* light) { _lights.push_back(light); }
+void Renderer::SubmitShaderUseCallback(ShaderUseCallback* shaderUseCallback) { _shaderUseCallbacks.push_back(shaderUseCallback); }
+
+void Renderer::SubmitLight(Light* light)
+{
+    _lights.push_back(light);
+    _shaderUseCallbacks.push_back(light);
+}
 
 void Renderer::SubmitBatchRenderable2D(Renderable2D* renderable2D)
 {
@@ -88,7 +94,11 @@ void Renderer::SubmitRenderable(Renderable* renderable)
     else { _opaqueRenderables[renderable->GetMaterial()].push_back(renderable); }
 }
 
-void Renderer::SubmitRenderTarget(RenderTarget* renderTarget) { _renderTargets.push_back(renderTarget); }
+void Renderer::SubmitRenderTarget(RenderTarget* renderTarget)
+{
+    _renderTargets.push_back(renderTarget);
+    _shaderUseCallbacks.push_back(renderTarget);
+}
 
 unsigned int Renderer::Render2DBatches(const std::pair<Material*, std::map<Texture*, std::vector<Renderable2D*>>>& materialPair)
 {
@@ -111,7 +121,7 @@ unsigned int Renderer::Render2DBatches(const std::pair<Material*, std::map<Textu
             {
                 Renderable2D* renderable2D = renderable2Ds[renderable2DIndex];
                 const size_t  copySize     = renderable2D->GetCopySize();
-                
+
                 if (offset + copySize > Renderable2DBatchMaxSize) { break; }
 
                 renderable2D->CopyQuadData(_renderable2DVertexData + offset);
@@ -179,8 +189,7 @@ void Renderer::RenderSubmitted()
         glEnable(GL_DEPTH_TEST);
     }
 
-    
-    
+
     // Cleanup lights
     for (Light* light : _lights) { light->OnFrameEnd(); }
     _lights.clear();
@@ -192,9 +201,9 @@ void Renderer::RenderSubmitted()
     _opaqueRenderables.clear();
     _opaqueBatchRenderable2Ds.clear();
     _transparentRenderables.clear();
+
+
+    _shaderUseCallbacks.clear();
 }
 
-void Renderer::DrawFrame()
-{
-    glfwSwapBuffers(Window::GetCurrentWindow()->GetGlWindow());
-}
+void Renderer::DrawFrame() { glfwSwapBuffers(Window::GetCurrentWindow()->GetGlWindow()); }

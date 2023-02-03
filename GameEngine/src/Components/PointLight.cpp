@@ -11,14 +11,17 @@ std::vector<glm::vec4> PointLight::_colors      = std::vector<glm::vec4>();
 std::vector<float>     PointLight::_intensities = std::vector<float>();
 std::vector<float>     PointLight::_ranges      = std::vector<float>();
 
+PointLight::PointLight(const glm::vec4 color, const float range, const float intensity):
+    _color(color),
+    _range(range),
+    _intensity(intensity) {}
+
 void PointLight::SetColor(const glm::vec4 color) { _color = color; }
 void PointLight::SetRange(const float range) { _range = range; }
 void PointLight::SetIntensity(const float intensity) { _intensity = intensity; }
 
 void PointLight::OnUpdateEnd()
 {
-    //ImGui::ColorPicker4("Light Color", glm::value_ptr(_color), 0, glm::value_ptr(_color));
-    
     _positions.push_back(_transform->GetPosition());
     _colors.emplace_back(_color);
     _intensities.push_back(_intensity);
@@ -34,6 +37,7 @@ void PointLight::OnShaderUse(Rendering::Shader* shader)
     shader->SetUniformInstant<std::vector<float>*>("u_PointLightIntensities", &_intensities);
     shader->SetUniformInstant<std::vector<float>*>("u_PointLightRanges", &_ranges);
 }
+
 
 void PointLight::OnFrameEnd()
 {
