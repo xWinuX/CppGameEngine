@@ -116,6 +116,7 @@ namespace GameEngine
                         location -= _invalidLocationsCounter;
                         _invalidLocationsCounter++;
                     }
+                    
                     else
                     {
                         location = glGetUniformLocation(_programID, uniformName.c_str());
