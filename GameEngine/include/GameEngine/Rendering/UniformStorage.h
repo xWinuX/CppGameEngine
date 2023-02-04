@@ -14,6 +14,10 @@ typedef type name; \
 typedef std::vector<type> ##name##V; \
 std::map<int, UniformEntry<##uniformType##<##name##>>> _uniformEntries_##name; \
 
+#define ARRAY_UNIFORM(type, nameBase, uniformType) \
+typedef std::vector<type> nameBase##V; \
+std::map<int, UniformEntry<##uniformType##<##nameBase##V>>> _uniformEntries_##nameBase##V; \
+
 
 #define TRY_GET_LOCATION(codeIf) \
 const int location = GetUniformLocation(uniformName); \
@@ -28,6 +32,15 @@ inline Uniform<UniformStorage::##type##>* UniformStorage::GetUniformPtr<UniformS
 template <> \
 inline void UniformStorage::InitializeUniform<UniformStorage::##type##>(std::string uniformName, type defaultVar, const bool includeInApplyQueue, const bool resetAfterApply)  \
 { InitializeUniform<##type##, uniformType##<##type##>, &UniformStorage::_uniformEntries_##type##>(uniformName, defaultVar, includeInApplyQueue, resetAfterApply); }
+
+#define ARRAY_UNIFORM_SPECIALIZATION(baseType, uniformType) \
+template <> \
+inline Uniform<UniformStorage::##baseType##>* UniformStorage::GetUniformPtr<UniformStorage::##baseType##>(int location) { return &_uniformEntries_##baseType##[location].Uniform; } \
+template <> \
+inline Uniform<UniformStorage::##baseType##>* UniformStorage::GetUniformPtr<UniformStorage::##baseType##>(const std::string& uniformName) { TRY_GET_LOCATION(return GetUniformPtr<##baseType##>(location);) } \
+template <> \
+inline void UniformStorage::InitializeUniform<UniformStorage::##baseType##>(std::string uniformName, baseType defaultVar, const bool includeInApplyQueue, const bool resetAfterApply)  \
+{ InitializeUniform<##baseType##, uniformType##<##baseType##>, &UniformStorage::_uniformEntries_##baseType##>(uniformName, defaultVar, includeInApplyQueue, resetAfterApply); }
 
 
 //std::map<int, UniformEntry<Array##uniformType##<std::vector<##type##>>>> _uniformEntries_##name##V; 
@@ -54,14 +67,25 @@ namespace GameEngine
 
 
                 UNIFORM(int, Int, Uniform)
+                ARRAY_UNIFORM(int, Int, ArrayUniform)
+            
                 UNIFORM(float, Float, Uniform)
+                ARRAY_UNIFORM(float, Float, ArrayUniform)
+            
                 UNIFORM(glm::vec4, Vec4, Uniform)
+                ARRAY_UNIFORM(glm::vec4, Vec4, ArrayUniform)
+            
                 UNIFORM(glm::vec3, Vec3, Uniform)
+                ARRAY_UNIFORM(glm::vec3, Vec3, ArrayUniform)
+
                 UNIFORM(glm::vec2, Vec2, Uniform)
+                ARRAY_UNIFORM(glm::vec2, Vec2, ArrayUniform)
+
                 UNIFORM(glm::mat4, Mat4, Uniform)
-            /*
+                ARRAY_UNIFORM(glm::mat4, Mat4, ArrayUniform)
+          
                 UNIFORM(Texture*, TexturePtr, SamplerUniform)
-                UNIFORM(CubeMap*, CubeMapPtr, SamplerUniform)*/
+                UNIFORM(CubeMap*, CubeMapPtr, SamplerUniform)
 
                 GLuint                          _programID;
                 std::map<std::string, int>      _uniformNameLocationMap;
@@ -134,7 +158,7 @@ namespace GameEngine
         UNIFORM_SPECIALIZATION(Vec4, Uniform)
         UNIFORM_SPECIALIZATION(Mat4, Uniform)
 
-        /*
+        
         UNIFORM_SPECIALIZATION(TexturePtr, SamplerUniform)
         UNIFORM_SPECIALIZATION(CubeMapPtr, SamplerUniform)
 
@@ -142,6 +166,6 @@ namespace GameEngine
         UNIFORM_SPECIALIZATION(FloatV, ArrayUniform)
         UNIFORM_SPECIALIZATION(Vec3V, ArrayUniform)
         UNIFORM_SPECIALIZATION(Vec4V, ArrayUniform)
-        UNIFORM_SPECIALIZATION(Mat4V, ArrayUniform)*/
+        UNIFORM_SPECIALIZATION(Mat4V, ArrayUniform)
     }
 }
