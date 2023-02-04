@@ -1,12 +1,14 @@
 ﻿#pragma once
-#include "tiny_gltf.h"
-#include "glad/glad.h"
+#include <tiny_gltf.h>
+#include <glad/glad.h>
+
+#include "Sampler.h"
 
 namespace GameEngine
 {
     namespace Rendering
     {
-        class CubeMap
+        class CubeMap : public Sampler
         {
             private:
                 GLuint                                _textureID = 0;
@@ -15,9 +17,9 @@ namespace GameEngine
             public:
                 explicit CubeMap(const std::string& filePathWithoutExtension, const std::string& extension);
                 ~CubeMap();
-                void        Bind(unsigned int slot) const;
-                static void Unbind();
-                GLuint      GetTextureID() const;
+                void   Bind(const unsigned int slot) const override;
+                void   Unbind() override;
+                GLuint GetTextureID() const;
         };
     }
 }

@@ -30,10 +30,10 @@ void DirectionalLight::OnUpdateEnd()
 
 void DirectionalLight::OnShaderUse(GameEngine::Rendering::Shader* shader)
 {
-    //shader->SetUniformInstant<int>("u_NumDirectionalLights", static_cast<int>(_directions.size()));
-    //shader->SetUniformInstant<std::vector<glm::vec3>>("u_DirectionalLightDirections", _directions);
-    //shader->SetUniformInstant<std::vector<glm::vec4>>("u_DirectionalLightColors", _colors);
-    //shader->SetUniformInstant<std::vector<float>>("u_DirectionalLightIntensities", _intensities);
+    shader->SetUniformInstantly<int>("u_NumDirectionalLights", static_cast<int>(_directions.size()));
+    shader->SetUniformInstantly<std::vector<glm::vec3>>("u_DirectionalLightDirections", _directions);
+    shader->SetUniformInstantly<std::vector<glm::vec4>>("u_DirectionalLightColors", _colors);
+    shader->SetUniformInstantly<std::vector<float>>("u_DirectionalLightIntensities", _intensities);
 }
 
 void DirectionalLight::OnFrameEnd()
