@@ -25,6 +25,47 @@ for (auto uniform : _uniformEntries_##type##) \
     uniformStorage->InitializeUniform<##type##>(uniform.second.Uniform.GetName(), uniform.second.Uniform.GetDefaultValue(), uniform.second.ApplyInQueue, uniform.second.ResetAfterApply); \
 }
 
+#define COPY_ARRAY_UNIFORM(type) \
+for (auto uniform : _uniformEntries_##type##V##) \
+{ \
+    uniformStorage->InitializeArrayUniform<##type##>(uniform.second.Uniform.GetName(), uniform.second.Uniform.GetDefaultValue(), uniform.second.ApplyInQueue, uniform.second.ResetAfterApply); \
+}
+
+#define COPY_SAMPLER_UNIFORM(type) \
+for (auto uniform : _uniformEntries_##type##) \
+{ \
+    uniformStorage->InitializeSamplerUniform<##type##>(uniform.second.Uniform.GetName(), uniform.second.Uniform.GetDefaultValue(), uniform.second.ApplyInQueue, uniform.second.ResetAfterApply); \
+}
+
+int UniformStorage::AddUniform(const std::string& uniformName) {
+    int location = 0;
+
+    if (_isTemplate)
+    {
+        location -= _invalidLocationsCounter;
+        _invalidLocationsCounter++;
+    }
+    else
+    {
+        location = glGetUniformLocation(_programID, uniformName.c_str());
+
+        if (location == -1)
+        {
+            location -= _invalidLocationsCounter;
+            _invalidLocationsCounter++;
+            Debug::Log::Message(std::to_string(_invalidLocationsCounter));
+        }
+    }
+
+    _uniformNameLocationMap[uniformName] = location;
+
+    return location;
+}
+
+void UniformStorage::CheckUniformLocation(const std::string& uniformName, const int location) const {
+    if (location < 0 && !_isTemplate) { Debug::Log::Error("Something went wrong initializing uniform " + uniformName); }
+}
+
 UniformStorage::UniformStorage():
     _isTemplate(true) {}
 
@@ -52,8 +93,8 @@ void UniformStorage::Apply()
     APPLY_UNIFORM(Mat4V)
 
     int slot = 0;
-    APPLY_SAMPLER_UNIFORM(TexturePtr)
-    APPLY_SAMPLER_UNIFORM(CubeMapPtr)
+    APPLY_SAMPLER_UNIFORM(TextureSampler)
+    APPLY_SAMPLER_UNIFORM(CubeMapSampler)
 }
 
 
@@ -91,14 +132,14 @@ void UniformStorage::CopyTo(UniformStorage* uniformStorage) const
     COPY_UNIFORM(Vec4)
     COPY_UNIFORM(Mat4)
 
-    COPY_UNIFORM(IntV)
-    COPY_UNIFORM(FloatV)
-    COPY_UNIFORM(Vec3V)
-    COPY_UNIFORM(Vec4V)
-    COPY_UNIFORM(Mat4V)
-    
-    COPY_UNIFORM(TexturePtr)
-    COPY_UNIFORM(CubeMapPtr)
+    COPY_ARRAY_UNIFORM(Int)
+    COPY_ARRAY_UNIFORM(Float)
+    COPY_ARRAY_UNIFORM(Vec3)
+    COPY_ARRAY_UNIFORM(Vec4)
+    COPY_ARRAY_UNIFORM(Mat4)
+
+    COPY_SAMPLER_UNIFORM(TextureSampler)
+    COPY_SAMPLER_UNIFORM(CubeMapSampler)
 }
 
 void UniformStorage::CopyFrom(const UniformStorage* uniformStorage) { uniformStorage->CopyTo(this); }

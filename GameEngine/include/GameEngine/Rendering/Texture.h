@@ -1,15 +1,17 @@
 ﻿#pragma once
 #include <string>
+#include <tiny_gltf.h>
 #include <glad/glad.h>
 #include <glm/vec2.hpp>
+#include <glm/gtc/constants.hpp>
 
-#include "glm/gtc/constants.hpp"
+#include "Sampler.h"
 
 namespace GameEngine
 {
     namespace Rendering
     {
-        class Texture
+        class Texture : public Sampler
         {
             public:
                 enum FilterMode
@@ -41,8 +43,8 @@ namespace GameEngine
                 explicit Texture(unsigned char* buffer, glm::uvec2 size, ImportSettings importSettings = ImportSettings());
                 ~Texture();
 
-                void        Bind(unsigned int slot) const;
-                static void Unbind();
+                void Bind(const unsigned int slot) const override;
+                void Unbind() override;
 
                 const glm::uvec2& GetSize() const;
                 unsigned char*    GetBuffer() const;

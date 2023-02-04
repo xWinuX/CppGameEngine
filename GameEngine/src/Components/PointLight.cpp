@@ -31,11 +31,11 @@ void PointLight::OnUpdateEnd()
 
 void PointLight::OnShaderUse(Rendering::Shader* shader)
 {
-    //shader->SetUniformInstant<int>("u_NumPointLights", static_cast<int>(_positions.size()));
-    //shader->SetUniformInstant<std::vector<glm::vec3>>("u_PointLightPositions", _positions);
-    //shader->SetUniformInstant<std::vector<glm::vec4>>("u_PointLightColors", _colors);
-    //shader->SetUniformInstant<std::vector<float>>("u_PointLightIntensities", _intensities);
-    //shader->SetUniformInstant<std::vector<float>>("u_PointLightRanges", _ranges);
+    shader->SetUniformInstantly<int>("u_NumPointLights", static_cast<int>(_positions.size()));
+    //shader->SetUniformArrayInstantly<glm::vec3>("u_PointLightPositions", _positions);
+    //shader->SetUniformArrayInstantly<glm::vec4>("u_PointLightColors", _colors);
+    //shader->SetUniformArrayInstantly<float>("u_PointLightIntensities", _intensities);
+    //shader->SetUniformArrayInstantly<float>("u_PointLightRanges", _ranges);
 }
 
 

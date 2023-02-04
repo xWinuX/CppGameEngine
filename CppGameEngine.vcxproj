@@ -336,6 +336,7 @@
     <ClInclude Include="GameEngine\include\GameEngine\Rendering\RenderableSprite.h" />
     <ClInclude Include="GameEngine\include\GameEngine\Rendering\Renderer.h" />
     <ClInclude Include="GameEngine\include\GameEngine\Rendering\RenderTarget.h" />
+    <ClInclude Include="GameEngine\include\GameEngine\Rendering\Sampler.h" />
     <ClInclude Include="GameEngine\include\GameEngine\Rendering\Shader.h" />
     <ClInclude Include="GameEngine\include\GameEngine\Rendering\ShaderUseCallback.h" />
     <ClInclude Include="GameEngine\include\GameEngine\Rendering\Sprite.h" />

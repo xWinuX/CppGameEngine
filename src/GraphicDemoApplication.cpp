@@ -143,30 +143,30 @@ void GraphicDemoApplication::LoadShaders() const
 
     UniformStorage litUniforms = UniformStorage();
     litUniforms.InitializeUniform<float>("u_Shininess", 0.0f);
-    litUniforms.InitializeUniform<Texture*>("u_NormalMap", GET_TEXTURE(NormalMapDefault));
+    litUniforms.InitializeSamplerUniform<Texture*>("u_NormalMap", GET_TEXTURE(NormalMapDefault));
 
     // Ambient Light
-    litUniforms.InitializeUniform<CubeMap*>("u_SkyboxCubeMap", GET_CUBEMAP(SkyBox));
+    litUniforms.InitializeSamplerUniform<CubeMap*>("u_SkyboxCubeMap", GET_CUBEMAP(SkyBox));
     litUniforms.InitializeUniform<glm::vec4>("u_AmbientLightColor", glm::vec4(1.0));
     litUniforms.InitializeUniform<float>("u_AmbientLightIntensity", 0.6f);
 
     // Directional Lights
     constexpr size_t maxDirectionalLights = 3;
     litUniforms.InitializeUniform<int>("u_NumDirectionalLights", 0, false);
-    litUniforms.InitializeUniform<std::vector<glm::vec3>>("u_DirectionalLightDirections", std::vector<glm::vec3>(maxDirectionalLights), false);
-    litUniforms.InitializeUniform<std::vector<glm::vec4>>("u_DirectionalLightColors", std::vector<glm::vec4>(maxDirectionalLights), false);
-    litUniforms.InitializeUniform<std::vector<float>>("u_DirectionalLightIntensities", std::vector<float>(maxDirectionalLights), false);
+    litUniforms.InitializeArrayUniform<glm::vec3>("u_DirectionalLightDirections", std::vector<glm::vec3>(maxDirectionalLights), false);
+    litUniforms.InitializeArrayUniform<glm::vec4>("u_DirectionalLightColors", std::vector<glm::vec4>(maxDirectionalLights), false);
+    litUniforms.InitializeArrayUniform<float>("u_DirectionalLightIntensities", std::vector<float>(maxDirectionalLights), false);
     
     // Point Lights
     constexpr size_t maxPointLights = 16;
     litUniforms.InitializeUniform<int>("u_NumPointLights", 0, false);
-    litUniforms.InitializeUniform<std::vector<glm::vec3>>("u_PointLightPositions", std::vector<glm::vec3>(maxPointLights), false);
-    litUniforms.InitializeUniform<std::vector<glm::vec4>>("u_PointLightColors", std::vector<glm::vec4>(maxPointLights), false);
-    litUniforms.InitializeUniform<std::vector<float>>("u_PointLightIntensities", std::vector<float>(maxPointLights), false);
-    litUniforms.InitializeUniform<std::vector<float>>("u_PointLightRanges", std::vector<float>(maxPointLights), false);
+    litUniforms.InitializeArrayUniform<glm::vec3>("u_PointLightPositions", std::vector<glm::vec3>(maxPointLights), false);
+    litUniforms.InitializeArrayUniform<glm::vec4>("u_PointLightColors", std::vector<glm::vec4>(maxPointLights), false);
+    litUniforms.InitializeArrayUniform<float>("u_PointLightIntensities", std::vector<float>(maxPointLights), false);
+    litUniforms.InitializeArrayUniform<float>("u_PointLightRanges", std::vector<float>(maxPointLights), false);
 
     UniformStorage spriteUniforms = UniformStorage();
-    spriteUniforms.InitializeUniform<Texture*>("u_Texture", GET_TEXTURE(White), false);
+    spriteUniforms.InitializeSamplerUniform<Texture*>("u_Texture", GET_TEXTURE(White), false);
     #pragma endregion
 
     // Lit
@@ -175,7 +175,7 @@ void GraphicDemoApplication::LoadShaders() const
     litShader->GetUniformStorage()->CopyFrom(&litUniforms);
 
     litShader->InitializeUniform<glm::vec4>("u_ColorTint", glm::vec4(1.0f));
-    litShader->InitializeUniform<Texture*>("u_Texture", GET_TEXTURE(White));
+    litShader->InitializeSamplerUniform<Texture*>("u_Texture", GET_TEXTURE(White));
 
     // Water
     Shader* waterShader = ADD_SHADER(Water, new Shader("res/shaders/Water/Water.vert", "res/shaders/Water/Water.frag"));
@@ -199,7 +199,7 @@ void GraphicDemoApplication::LoadShaders() const
     // Vertex Color
     Shader* vertexColorShader = ADD_SHADER(VertexColor, new Shader("res/shaders/VertexColor/VertexColor.vert", "res/shaders/VertexColor/VertexColor.frag"));
     vertexColorShader->GetUniformStorage()->CopyFrom(&commonUniforms);
-    vertexColorShader->InitializeUniform<Texture*>("u_Texture", GET_TEXTURE(Crate));
+    vertexColorShader->InitializeSamplerUniform<Texture*>("u_Texture", GET_TEXTURE(Crate));
 
     // Frame Buffer
     Shader* frameBufferShader = ADD_SHADER(FrameBuffer, new Shader("res/shaders/FrameBuffer/FrameBuffer.vert", "res/shaders/FrameBuffer/FrameBuffer.frag"));
@@ -207,7 +207,7 @@ void GraphicDemoApplication::LoadShaders() const
     
     Shader* skyboxShader = ADD_SHADER(Skybox, new Shader("res/shaders/Skybox/Skybox.vert", "res/shaders/Skybox/Skybox.frag"));
     skyboxShader->GetUniformStorage()->CopyFrom(&commonUniforms);
-    skyboxShader->InitializeUniform<CubeMap*>("u_CubeMap", GET_CUBEMAP(SkyBox));
+    skyboxShader->InitializeSamplerUniform<CubeMap*>("u_CubeMap", GET_CUBEMAP(SkyBox));
     skyboxShader->InitializeUniform<glm::mat4>("u_View", glm::identity<glm::mat4>());
     skyboxShader->InitializeUniform<glm::mat4>("u_Projection", glm::identity<glm::mat4>());
 }
@@ -216,15 +216,15 @@ void GraphicDemoApplication::LoadMaterials() const
 {
     // Dude
     Material* dudeMaterial = ADD_MATERIAL(Dude, new Material(GET_SHADER(Lit)));
-    //dudeMaterial->GetUniformStorage()->SetUniform<Texture*>("u_Texture", GET_TEXTURE(TheDude));
-    //dudeMaterial->GetUniformStorage()->SetUniform<float>("u_Shininess", 1.0);
+    dudeMaterial->GetUniformStorage()->SetUniform<Texture*>("u_Texture", GET_TEXTURE(TheDude));
+    dudeMaterial->GetUniformStorage()->SetUniform<float>("u_Shininess", 1.0);
 
     // Crate
     Material* crateMaterial = ADD_MATERIAL(Crate, new Material(GET_SHADER(Lit)));
 
-    //crateMaterial->GetUniformStorage()->SetUniform("u_Texture", GET_TEXTURE(Crate));
-    //crateMaterial->GetUniformStorage()->SetUniform("u_NormalMap", GET_TEXTURE(CrateNormalMap));
-    //crateMaterial->GetUniformStorage()->SetUniform("u_NormalMapIntensity", 1.0f);
+    crateMaterial->GetUniformStorage()->SetUniform("u_Texture", GET_TEXTURE(Crate));
+    crateMaterial->GetUniformStorage()->SetUniform("u_NormalMap", GET_TEXTURE(CrateNormalMap));
+    crateMaterial->GetUniformStorage()->SetUniform("u_NormalMapIntensity", 1.0f);
 
     // Physics Debug
     Material* physicsMaterial = ADD_MATERIAL(PhysicsDebug, new Material(GET_SHADER(PhysicsDebug)));
