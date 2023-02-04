@@ -22,8 +22,8 @@ namespace GameEngine
                 float     _intensity;
 
             protected:
+                void OnUpdateBegin() override;
                 void OnUpdateEnd() override;
-                void OnFrameEnd() override;
                 void OnShaderUse(Rendering::Shader* shader) override;
 
             public:

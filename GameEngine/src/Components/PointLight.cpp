@@ -20,6 +20,14 @@ void PointLight::SetColor(const glm::vec4 color) { _color = color; }
 void PointLight::SetRange(const float range) { _range = range; }
 void PointLight::SetIntensity(const float intensity) { _intensity = intensity; }
 
+void PointLight::OnUpdateBegin()
+{
+    _positions.clear();
+    _colors.clear();
+    _intensities.clear();
+    _ranges.clear();
+}
+
 void PointLight::OnUpdateEnd()
 {
     _positions.push_back(_transform->GetPosition());
@@ -36,13 +44,4 @@ void PointLight::OnShaderUse(Rendering::Shader* shader)
     //shader->SetUniformArrayInstantly<glm::vec4>("u_PointLightColors", _colors);
     //shader->SetUniformArrayInstantly<float>("u_PointLightIntensities", _intensities);
     //shader->SetUniformArrayInstantly<float>("u_PointLightRanges", _ranges);
-}
-
-
-void PointLight::OnFrameEnd()
-{
-    _positions.clear();
-    _colors.clear();
-    _intensities.clear();
-    _ranges.clear();
 }

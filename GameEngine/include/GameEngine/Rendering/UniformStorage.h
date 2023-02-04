@@ -21,15 +21,15 @@ codeIf
 
 #define UNIFORM(type, name) \
 typedef type name; \
-std::map<int, UniformEntry<Uniform<##type##>>> _uniformEntries_##name;
+std::map<int, UniformEntry<Uniform<type>>> _uniformEntries_##name;
 
 #define SAMPLER_UNIFORM(type, name) \
 typedef type name##Sampler; \
-std::map<int, UniformEntry<SamplerUniform<##type##>>> _uniformEntries_##name##Sampler;
+std::map<int, UniformEntry<SamplerUniform<type>>> _uniformEntries_##name##Sampler;
 
 #define ARRAY_UNIFORM(baseType, nameBase) \
-typedef std::vector<##baseType##> nameBase##V; \
-std::map<int, UniformEntry<ArrayUniform<##baseType##>>> _uniformEntries_##nameBase##V;
+typedef std::vector<baseType> nameBase##V; \
+std::map<int, UniformEntry<ArrayUniform<baseType>>> _uniformEntries_##nameBase##V;
 
 /**
  * \brief Create a template specialization for a Uniform
@@ -37,27 +37,28 @@ std::map<int, UniformEntry<ArrayUniform<##baseType##>>> _uniformEntries_##nameBa
  */
 #define UNIFORM_INIT(name) \
 template <> \
-void UniformStorage::InitializeUniform<UniformStorage::##name##>(const std::string uniformName, name defaultValue, const bool includeInApplyQueue, const bool resetAfterApply) \
+inline void UniformStorage::InitializeUniform<UniformStorage::name>(const std::string uniformName, name defaultValue, const bool includeInApplyQueue, const bool resetAfterApply) \
 { \
     const int location = AddUniform(uniformName); \
     InitializeUniform<##name##, &UniformStorage::_uniformEntries_##name##>(uniformName, location, defaultValue, includeInApplyQueue, resetAfterApply); \
 } \
 \
-template<> Uniform<UniformStorage::##name>* UniformStorage::GetUniform(const int location) { return &_uniformEntries_##name##[location].Uniform; } \
+template<> inline Uniform<UniformStorage::name>* UniformStorage::GetUniform(const int location) { return &_uniformEntries_##name##[location].Uniform; } \
 \
-template<> Uniform<UniformStorage::##name>* UniformStorage::GetUniform(const std::string& uniformName) { TRY_GET_LOCATION(return GetUniform<name>(location)); } \
-\
-template <> \
-void UniformStorage::SetUniform<UniformStorage::##name>(const std::string& uniformName, const name value) { TRY_GET_LOCATION_NORET(SetUniform<name>(location, value);) } \
+template<> inline Uniform<UniformStorage::name>* UniformStorage::GetUniform(const std::string& uniformName) { TRY_GET_LOCATION(return GetUniform<name>(location)); } \
 \
 template <> \
-void UniformStorage::SetUniform<UniformStorage::##name>(const int location, const name value) { _uniformEntries_##name##[location].Uniform.Set(value); } \
+inline void UniformStorage::SetUniform<UniformStorage::name>(const int location, const name value) { _uniformEntries_##name##[location].Uniform.Set(value); } \
 \
 template <> \
-void UniformStorage::SetUniformInstantly<UniformStorage::##name>(const std::string& uniformName, const name value) { TRY_GET_LOCATION_NORET(SetUniformInstantly<name>(location, value);) } \
+inline void UniformStorage::SetUniform<UniformStorage::name>(const std::string& uniformName, const name value) { TRY_GET_LOCATION_NORET(SetUniform<name>(location, value);) } \
 \
 template <> \
-void UniformStorage::SetUniformInstantly<UniformStorage::##name>(const int location, const name value) { _uniformEntries_##name##[location].Uniform.SetInstantly(value); }
+inline void UniformStorage::SetUniformInstantly<UniformStorage::name>(const int location, const name value) { _uniformEntries_##name##[location].Uniform.SetInstantly(value); } \
+\
+template <> \
+inline void UniformStorage::SetUniformInstantly<UniformStorage::name>(const std::string& uniformName, const name value) { TRY_GET_LOCATION_NORET(SetUniformInstantly<name>(location, value);) } \
+
 
 
 /**
@@ -66,27 +67,28 @@ void UniformStorage::SetUniformInstantly<UniformStorage::##name>(const int locat
  */
 #define SAMPLER_UNIFORM_INIT(name) \
 template <> \
-void UniformStorage::InitializeSamplerUniform<UniformStorage::##name##>(const std::string uniformName, name defaultValue, const bool includeInApplyQueue, const bool resetAfterApply) \
+inline void UniformStorage::InitializeSamplerUniform<UniformStorage::name>(const std::string uniformName, name defaultValue, const bool includeInApplyQueue, const bool resetAfterApply) \
 { \
     const int location = AddUniform(uniformName); \
     InitializeSamplerUniform<##name##, &UniformStorage::_uniformEntries_##name##>(uniformName, location, defaultValue, includeInApplyQueue, resetAfterApply); \
 } \
 \
-template<> SamplerUniform<UniformStorage::##name>* UniformStorage::GetSamplerUniform(const int location) { return &_uniformEntries_##name##[location].Uniform; } \
+template<> inline SamplerUniform<UniformStorage::name>* UniformStorage::GetSamplerUniform(const int location) { return &_uniformEntries_##name##[location].Uniform; } \
 \
-template<> SamplerUniform<UniformStorage::##name>* UniformStorage::GetSamplerUniform(const std::string& uniformName) { TRY_GET_LOCATION(return GetSamplerUniform<name>(location)); } \
-\
-template <> \
-void UniformStorage::SetSamplerUniform<UniformStorage::##name>(const std::string& uniformName, const name value) { TRY_GET_LOCATION_NORET(SetSamplerUniform<name>(location, value);) } \
+template<> inline SamplerUniform<UniformStorage::name>* UniformStorage::GetSamplerUniform(const std::string& uniformName) { TRY_GET_LOCATION(return GetSamplerUniform<name>(location)); } \
 \
 template <> \
-void UniformStorage::SetSamplerUniform<UniformStorage::##name>(const int location, const name value) { _uniformEntries_##name##[location].Uniform.Set(value); } \
+inline void UniformStorage::SetSamplerUniform<UniformStorage::name>(const int location, const name value) { _uniformEntries_##name##[location].Uniform.Set(value); } \
 \
 template <> \
-void UniformStorage::SetSamplerUniformInstantly<UniformStorage::##name>(const std::string& uniformName, const name value) { TRY_GET_LOCATION_NORET(SetSamplerUniformInstantly<name>(location, value);) } \
+inline void UniformStorage::SetSamplerUniform<UniformStorage::name>(const std::string& uniformName, const name value) { TRY_GET_LOCATION_NORET(SetSamplerUniform<name>(location, value);) } \
 \
 template <> \
-void UniformStorage::SetSamplerUniformInstantly<UniformStorage::##name>(const int location, const name value) { _uniformEntries_##name##[location].Uniform.SetInstantly(value); }
+inline void UniformStorage::SetSamplerUniformInstantly<UniformStorage::name>(const int location, const name value) { _uniformEntries_##name##[location].Uniform.SetInstantly(value); } \
+\
+template <> \
+inline void UniformStorage::SetSamplerUniformInstantly<UniformStorage::name>(const std::string& uniformName, const name value) { TRY_GET_LOCATION_NORET(SetSamplerUniformInstantly<name>(location, value);) } \
+
 
 /**
  * \brief Create a template specialization for a ArrayUniform 
@@ -94,31 +96,28 @@ void UniformStorage::SetSamplerUniformInstantly<UniformStorage::##name>(const in
  */
 #define ARRAY_UNIFORM_INIT(baseName) \
 template <> \
-void UniformStorage::InitializeArrayUniform<UniformStorage::##baseName##>(const std::string uniformName, std::vector<##baseName##> defaultValue, const bool includeInApplyQueue, const bool resetAfterApply) \
+inline void UniformStorage::InitializeArrayUniform<UniformStorage::##baseName##>(const std::string uniformName, std::vector<##baseName##> defaultValue, const bool includeInApplyQueue, const bool resetAfterApply) \
 { \
     const int location = AddUniform(uniformName); \
     InitializeArrayUniform<##baseName##, &UniformStorage::_uniformEntries_##baseName##V##>(uniformName, location, defaultValue, includeInApplyQueue, resetAfterApply); \
 } \
 \
-template<> ArrayUniform<UniformStorage::##baseName>* UniformStorage::GetArrayUniform(const int location) {  return &_uniformEntries_##baseName##V##[location].Uniform; } \
+template<> inline ArrayUniform<UniformStorage::baseName>* UniformStorage::GetArrayUniform(const int location) {  return &_uniformEntries_##baseName##V##[location].Uniform; } \
 \
-template<> ArrayUniform<UniformStorage::##baseName>* UniformStorage::GetArrayUniform(const std::string& uniformName) { TRY_GET_LOCATION(return GetArrayUniform<baseName>(location)); }  \
-\
-template <> \
-void UniformStorage::SetArrayUniform<UniformStorage::##baseName>(const std::string& uniformName, const baseName value, size_t index) \
-{ TRY_GET_LOCATION_NORET(SetArrayUniform<baseName>(location, value, index);) } \
+template<> inline ArrayUniform<UniformStorage::baseName>* UniformStorage::GetArrayUniform(const std::string& uniformName) { TRY_GET_LOCATION(return GetArrayUniform<baseName>(location)); }  \
 \
 template <> \
-void UniformStorage::SetArrayUniform<UniformStorage::##baseName>(const int location, const baseName value, size_t index) \
-{ _uniformEntries_##baseName##V##[location].Uniform.Set(value, index); } \
+inline void UniformStorage::SetArrayUniform<UniformStorage::baseName>(const int location, const baseName value, size_t index) { _uniformEntries_##baseName##V##[location].Uniform.Set(value, index); } \
 \
 template <> \
-void UniformStorage::SetArrayUniformInstantly<UniformStorage::##baseName>(const std::string& uniformName, const baseName value, size_t index) \
-{ TRY_GET_LOCATION_NORET(SetArrayUniformInstantly<baseName>(location, value, index);) } \
+inline void UniformStorage::SetArrayUniform<UniformStorage::baseName>(const std::string& uniformName, const baseName value, size_t index) { TRY_GET_LOCATION_NORET(SetArrayUniform<baseName>(location, value, index);) } \
 \
 template <> \
-void UniformStorage::SetArrayUniformInstantly<UniformStorage::##baseName>(const int location, const baseName value, size_t index) \
-{ _uniformEntries_##baseName##V##[location].Uniform.SetInstantly(value, index); }
+inline void UniformStorage::SetArrayUniformInstantly<UniformStorage::baseName>(const int location, const baseName value, size_t index) { _uniformEntries_##baseName##V##[location].Uniform.SetInstantly(value, index); } \
+\
+template <> \
+inline void UniformStorage::SetArrayUniformInstantly<UniformStorage::baseName>(const std::string& uniformName, const baseName value, size_t index) { TRY_GET_LOCATION_NORET(SetArrayUniformInstantly<baseName>(location, value, index);) } \
+
 
 namespace GameEngine
 {
@@ -178,7 +177,7 @@ namespace GameEngine
                     const bool  resetAfterApply     = false
                 )
                 {
-                    (this->*MapPtr).emplace(location, UniformEntry<Uniform<T>>{Uniform<T>{uniformName, location, defaultVar}, includeInApplyQueue, resetAfterApply});
+                    (this->*MapPtr).emplace(location, UniformEntry<Uniform<T>>{Uniform<T>{_programID, uniformName, location, defaultVar}, includeInApplyQueue, resetAfterApply});
 
                     CheckUniformLocation(uniformName, location);
                 }
@@ -192,7 +191,7 @@ namespace GameEngine
                     const bool  resetAfterApply     = false
                 )
                 {
-                    (this->*MapPtr).emplace(location, UniformEntry<ArrayUniform<T>>{ArrayUniform<T>{uniformName, location, defaultValue}, includeInApplyQueue, resetAfterApply});
+                    (this->*MapPtr).emplace(location, UniformEntry<ArrayUniform<T>>{ArrayUniform<T>{_programID, uniformName, location, defaultValue}, includeInApplyQueue, resetAfterApply});
 
                     CheckUniformLocation(uniformName, location);
                 }
@@ -206,7 +205,7 @@ namespace GameEngine
                 )
                 {
                     (this->*MapPtr).emplace(location, UniformEntry<SamplerUniform<T>>{
-                                                SamplerUniform<T>{uniformName, location, defaultValue}, includeInApplyQueue, resetAfterApply
+                                                SamplerUniform<T>{_programID, uniformName, location, defaultValue}, includeInApplyQueue, resetAfterApply
                                             });
 
                     CheckUniformLocation(uniformName, location);

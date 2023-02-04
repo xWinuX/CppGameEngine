@@ -19,8 +19,8 @@ class DirectionalLight : public GameEngine::Components::Light
         float     _intensity;
 
     protected:
+        void OnUpdateBegin() override;
         void OnUpdateEnd() override;
-        void OnFrameEnd() override;
         void OnShaderUse(GameEngine::Rendering::Shader* shader) override;
 
     public:

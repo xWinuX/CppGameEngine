@@ -77,6 +77,8 @@ namespace GameEngine
                             shader->Use();
 
                             for (ShaderUseCallback* shaderUseCallback : _shaderUseCallbacks) { shaderUseCallback->OnShaderUse(shader); }
+
+                            
                         }
 
                         // Update polygon mode if needed

@@ -14,8 +14,7 @@ namespace GameEngine
         class Light : public Component, public Rendering::ShaderUseCallback
         {
             friend Rendering::Renderer;
-            protected:
-                virtual void OnFrameEnd() = 0;
+
         };
     }
 }

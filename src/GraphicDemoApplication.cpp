@@ -216,14 +216,14 @@ void GraphicDemoApplication::LoadMaterials() const
 {
     // Dude
     Material* dudeMaterial = ADD_MATERIAL(Dude, new Material(GET_SHADER(Lit)));
-    dudeMaterial->GetUniformStorage()->SetUniform<Texture*>("u_Texture", GET_TEXTURE(TheDude));
+    dudeMaterial->GetUniformStorage()->SetSamplerUniform<Texture*>("u_Texture", GET_TEXTURE(TheDude));
     dudeMaterial->GetUniformStorage()->SetUniform<float>("u_Shininess", 1.0);
 
     // Crate
     Material* crateMaterial = ADD_MATERIAL(Crate, new Material(GET_SHADER(Lit)));
 
-    crateMaterial->GetUniformStorage()->SetUniform("u_Texture", GET_TEXTURE(Crate));
-    crateMaterial->GetUniformStorage()->SetUniform("u_NormalMap", GET_TEXTURE(CrateNormalMap));
+    crateMaterial->GetUniformStorage()->SetSamplerUniform("u_Texture", GET_TEXTURE(Crate));
+    crateMaterial->GetUniformStorage()->SetSamplerUniform("u_NormalMap", GET_TEXTURE(CrateNormalMap));
     crateMaterial->GetUniformStorage()->SetUniform("u_NormalMapIntensity", 1.0f);
 
     // Physics Debug

@@ -6,7 +6,6 @@
 
 #include "CubeMap.h"
 #include "Texture.h"
-#include "Sampler.h"
 #include "glm/gtc/type_ptr.hpp"
 
 #define LOCATION_CHECK if (this->GetLocation() < 0) { Debug::Log::Message(std::string(this->GetName()) + "'s location not found"); return; }
@@ -23,7 +22,7 @@ namespace GameEngine
         class Uniform
         {
             protected:
-                const GLuint      _shaderProgramID;
+                const GLuint      _shaderProgramID = 0;
                 const std::string _name;
                 const GLint       _location = -1;
                 const T           _defaultValue;
@@ -51,8 +50,7 @@ namespace GameEngine
                  * \param value Value to set uniform to
                  */
                 void Set(T value) { _value = value; }
-
-
+            
                 /**
                  * \brief Sets a value to the uniform and call apply right after (This should only really be used inside the render loop since the shader needs to be bound) 
                  * \param value Value to set
@@ -92,21 +90,22 @@ namespace GameEngine
                  */
                 T* GetValuePtr() { return &_value; }
         };
-        
-        class SamplerUniform : public Uniform<Sampler*>
+
+        template <typename T>
+        class SamplerUniform : public Uniform<T>
         {
             private:
                 int _previousSlot = 0;
 
             public:
                 SamplerUniform():
-                    Uniform() {}
+                    Uniform<T>() {}
 
-                SamplerUniform(const GLuint shaderProgramID, const std::string& uniformName, GLint location, Sampler* defaultValue):
-                    Uniform(shaderProgramID, uniformName, location, defaultValue) {}
+                SamplerUniform(const GLuint shaderProgramID, const std::string& uniformName, GLint location, T defaultValue):
+                    Uniform<T>(shaderProgramID, uniformName, location, defaultValue) {}
 
                 /**
-                 * \brief Binds the sampler and sets the uniform to its index
+                 * \brief Binds the sampler and sets the uniform to its index 
                  * \param slot Slot to bind the sampler to
                  */
                 virtual void Apply(int slot = -1)
@@ -160,7 +159,40 @@ namespace GameEngine
                     this->Apply();
                 }
         };
-        
+
+        template <typename T>
+        class ArraySamplerUniform final : public SamplerUniform<T>, public ArrayUniform<T>
+        {
+            private:
+                std::vector<int> _slotIndices;
+
+            public:
+                ArraySamplerUniform():
+                    ArrayUniform<T>() {}
+
+                ArraySamplerUniform(const GLuint shaderProgramID, const std::string& uniformName, GLint location, T defaultValue):
+                    ArrayUniform<T>(shaderProgramID, uniformName, location, defaultValue),
+                    _slotIndices(std::vector<int>(defaultValue.size())) {}
+
+                /**
+                 * \brief Applies all sampler inside the array and bind them beforehand
+                 * \param slot Where to start binding the samplers (Default is the previous slot position)
+                 */
+                void Apply(int slot = -1) override
+                {
+                    LOCATION_CHECK
+                    if (slot == -1) { slot = this->_previousSlot; }
+                    for (size_t i = 0; i < this->_value.size(); i++)
+                    {
+                        this->_value->Bind(slot + i);
+                        _slotIndices[i] = slot + i;
+                    }
+                    glUniform1iv(this->_location, _slotIndices.size(), _slotIndices.data());
+                    this->_previousSlot = slot;
+                }
+        };
+
+
         template <>
         inline void Uniform<std::vector<int>>::Apply()
         {
