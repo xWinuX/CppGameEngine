@@ -2,11 +2,9 @@
 
 layout (location = 0) in vec3 a_Pos;
 
-out vec3 v_TexCoords;
-
 #include "../Common/Uniforms.glsl"
-uniform mat4 u_Projection;
-uniform mat4 u_View;
+
+out vec3 v_TexCoords;
 
 void main() 
 {

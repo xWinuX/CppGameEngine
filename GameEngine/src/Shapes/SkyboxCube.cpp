@@ -10,7 +10,7 @@ using namespace GameEngine::Rendering;
 
 Primitive* SkyboxCube::GetPrimitive()
 {
-     glm::vec3 positions[] =
+    glm::vec3 positions[] =
     {
         {-1.0f, -1.0f, 1.0f},
         {1.0f, -1.0f, 1.0f},
@@ -22,7 +22,7 @@ Primitive* SkyboxCube::GetPrimitive()
         {-1.0f, 1.0f, -1.0f}
     };
 
-     unsigned int indices[] =
+    unsigned int indices[] =
     {
         // Right
         1, 2, 6,

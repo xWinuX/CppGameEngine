@@ -27,7 +27,7 @@ namespace GameEngine
                 };
 
                 // Note that no vec3 where used to fit the std140 padding rule without creating padding struct members
-                struct LightData
+                struct UniformBufferData
                 {
                     glm::vec4 AmbientLightColor = glm::vec4(1.0);
 
@@ -45,11 +45,10 @@ namespace GameEngine
                     int       NumDirectionalLights = 0;
                 };
 
-                static LightData* _lightData;
+                static UniformBufferData* _lightData;
 
                 virtual void OnFrameEnd() = 0;
                 static void  Initialize();
-                static void  Bind();
 
             private:
                 static UniformBuffer* _lightUniformBuffer;

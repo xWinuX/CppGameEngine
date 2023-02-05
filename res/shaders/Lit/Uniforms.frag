@@ -10,7 +10,7 @@ uniform float u_Shininess;
 #define MAX_POINT_LIGHTS 16
 #define MAX_DIRECTIONAL_LIGHTS 3
 
-layout(std140, binding = 0) uniform Lights {
+layout(std140, binding = 2) uniform Lights {
     vec4 u_AmbientLightColor;
 
     vec4 u_PointLightPositions[MAX_POINT_LIGHTS];

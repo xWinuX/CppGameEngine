@@ -27,19 +27,15 @@ Camera::Camera(const float fovInDegrees, const float zNear, const float zFar, Sh
         ResizeFrameBuffer(window->GetSize());
         UpdateProjectionMatrix();
     });
+
+    _uniformBufferData   = new UniformBufferData();
+    _cameraUniformBuffer = new UniformBuffer(reinterpret_cast<unsigned char*>(_uniformBufferData), sizeof(UniformBufferData), 1, GL_DYNAMIC_DRAW);
 }
 
 void Camera::OnUpdateEnd()
 {
-    Renderer::SubmitRenderTarget(this);
-
-    glm::mat4 viewMatrix = GetViewMatrix();
-    viewMatrix[3][0] = 0;
-    viewMatrix[3][1] = 0;
-    viewMatrix[3][2] = 0;
-    _skyboxMaterial->GetUniformStorage()->SetUniform("u_View", viewMatrix);
-    _skyboxMaterial->GetUniformStorage()->SetUniform("u_Projection", _projectionMatrix);
     Renderer::SubmitRenderable(_skyboxCube);
+    Renderer::SubmitRenderTarget(this);
 }
 
 void Camera::UpdateProjectionMatrix()
@@ -48,15 +44,30 @@ void Camera::UpdateProjectionMatrix()
     _projectionMatrix          = glm::perspective(glm::radians(_fovInDegrees), windowSize.x / windowSize.y, _zNear, _zFar);
 }
 
-glm::mat4 Camera::GetViewMatrix() { return glm::inverse(GetTransform()->GetTRS()); }
+glm::mat4 Camera::GetViewMatrix() const { return glm::inverse(GetTransform()->GetTRS()); }
 
 void Camera::OnShaderUse(Rendering::Shader* shader)
 {
-    const glm::mat4 viewMatrix = GetViewMatrix();
-    
     shader->GetUniformStorage()->SetUniformInstant<float>("u_Time", Time::GetTimeSinceStart());
-    shader->GetUniformStorage()->SetUniformInstant<glm::mat4>("u_ViewProjection", _projectionMatrix * viewMatrix);
-    shader->GetUniformStorage()->SetUniformInstant<glm::vec3>("u_ViewPosition", _transform->GetPosition());
+}
+
+void Camera::Bind() 
+{
+    glm::mat4 viewMatrix = GetViewMatrix();
+    _uniformBufferData->ViewProjection = _projectionMatrix * viewMatrix;
+    _uniformBufferData->Projection = _projectionMatrix;
+    _uniformBufferData->ViewPosition = _transform->GetPosition();
+
+    // Remove position from view matrix
+    viewMatrix[3][0]     = 0;
+    viewMatrix[3][1]     = 0;
+    viewMatrix[3][2]     = 0;
+    _uniformBufferData->View = viewMatrix;
+
+    _cameraUniformBuffer->UpdateData(reinterpret_cast<unsigned char*>(_uniformBufferData), 1);
+    
+    _cameraUniformBuffer->Bind(1);
+    RenderTarget::Bind();
 }
 
 float Camera::GetFOVInDegrees() const { return _fovInDegrees; }

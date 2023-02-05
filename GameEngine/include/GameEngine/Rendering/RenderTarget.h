@@ -16,14 +16,13 @@ namespace GameEngine
                 explicit RenderTarget(Shader* shader);
 
             protected:
-                void ResizeFrameBuffer(glm::uvec2 newSize);
+                void         ResizeFrameBuffer(glm::uvec2 newSize);
+                virtual void Bind();
+                virtual void Unbind() const;
 
             private:
                 FrameBuffer* _frameBuffer;
                 Shader*      _shader;
-
-                void         Bind() const;
-                void         Unbind() const;
         };
     }
 }

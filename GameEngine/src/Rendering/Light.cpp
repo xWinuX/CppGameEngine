@@ -5,16 +5,15 @@
 using namespace GameEngine::Components;
 using namespace GameEngine::Rendering;
 
-Light::LightData* Light::_lightData          = new Light::LightData();
+Light::UniformBufferData* Light::_lightData          = new Light::UniformBufferData();
 UniformBuffer*    Light::_lightUniformBuffer = nullptr;
 
 void Light::Initialize()
 {
-    _lightUniformBuffer = new UniformBuffer(reinterpret_cast<const unsigned char*>(_lightData), sizeof(Light::LightData), 1, GL_DYNAMIC_DRAW);
-    _lightUniformBuffer->Bind(0);
+    _lightUniformBuffer = new UniformBuffer(reinterpret_cast<const unsigned char*>(_lightData), sizeof(Light::UniformBufferData), 1, GL_DYNAMIC_DRAW);
+    _lightUniformBuffer->Bind(2);
 }
 
-void Light::Bind() { _lightUniformBuffer->Bind(0); }
 
 void Light::Update()
 {
