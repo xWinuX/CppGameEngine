@@ -4,66 +4,26 @@
 
 using namespace GameEngine::Rendering;
 
-#define APPLY_UNIFORM(type) \
-for (auto& uniform : _uniformEntries_##type##) \
+#define APPLY_UNIFORM(suffix) \
+for (auto& uniform##suffix : _uniform##suffix##s) \
 { \
-    if (uniform.second.ApplyInQueue) { uniform.second.Uniform.Apply(); } \
-    if (uniform.second.ResetAfterApply) { uniform.second.Uniform.Reset(); } \
+    if (uniform##suffix##.second.ApplyInQueue) { uniform##suffix##.second.Uniform.Apply(); } \
+    if (uniform##suffix##.second.ResetAfterApply) { uniform##suffix##.second.Uniform.Reset(); } \
 }
 
-#define APPLY_SAMPLER_UNIFORM(type) \
-for (auto& uniform : _uniformEntries_##type##) \
+#define APPLY_SAMPLER_UNIFORM(suffix) \
+for (auto& uniform##suffix : _uniform##suffix##s) \
 { \
-    uniform.second.Uniform.Apply(slot); \
+    uniform##suffix##.second.Uniform.Apply(slot); \
     slot++; \
-    if (uniform.second.ResetAfterApply) { uniform.second.Uniform.Reset(); } \
-}
+    if (uniform##suffix##.second.ResetAfterApply) { uniform##suffix##.second.Uniform.Reset(); } \
+} \
 
-#define COPY_UNIFORM(type) \
-for (auto uniform : _uniformEntries_##type##) \
+
+#define COPY_UNIFORM(type,suffix) \
+for (auto uniform##suffix : _uniform##suffix##s) \
 { \
-    uniformStorage->InitializeUniform<##type##>(uniform.second.Uniform.GetName(), uniform.second.Uniform.GetDefaultValue(), uniform.second.ApplyInQueue, uniform.second.ResetAfterApply); \
-}
-
-#define COPY_ARRAY_UNIFORM(type) \
-for (auto uniform : _uniformEntries_##type##V##) \
-{ \
-    uniformStorage->InitializeArrayUniform<##type##>(uniform.second.Uniform.GetName(), uniform.second.Uniform.GetDefaultValue(), uniform.second.ApplyInQueue, uniform.second.ResetAfterApply); \
-}
-
-#define COPY_SAMPLER_UNIFORM(type) \
-for (auto uniform : _uniformEntries_##type##) \
-{ \
-    uniformStorage->InitializeSamplerUniform<##type##>(uniform.second.Uniform.GetName(), uniform.second.Uniform.GetDefaultValue(), uniform.second.ApplyInQueue, uniform.second.ResetAfterApply); \
-}
-
-int UniformStorage::AddUniform(const std::string& uniformName) {
-    int location = 0;
-
-    if (_isTemplate)
-    {
-        location -= _invalidLocationsCounter;
-        _invalidLocationsCounter++;
-    }
-    else
-    {
-        location = glGetUniformLocation(_programID, uniformName.c_str());
-
-        if (location == -1)
-        {
-            location -= _invalidLocationsCounter;
-            _invalidLocationsCounter++;
-            Debug::Log::Message(std::to_string(_invalidLocationsCounter));
-        }
-    }
-
-    _uniformNameLocationMap[uniformName] = location;
-
-    return location;
-}
-
-void UniformStorage::CheckUniformLocation(const std::string& uniformName, const int location) const {
-    if (location < 0 && !_isTemplate) { Debug::Log::Error("Something went wrong initializing uniform " + uniformName); }
+    uniformStorage->InitializeUniform<##type##>(uniform##suffix##.second.Uniform.GetName(), uniform##suffix##.second.Uniform.GetDefaultValue(), uniform##suffix##.second.ApplyInQueue, uniform##suffix##.second.ResetAfterApply); \
 }
 
 UniformStorage::UniformStorage():
@@ -79,22 +39,19 @@ void UniformStorage::Apply()
         Debug::Log::Error("Can't apply template uniform buffer!");
         return;
     }
-
-    APPLY_UNIFORM(Int)
-    APPLY_UNIFORM(Float)
-    APPLY_UNIFORM(Vec3)
-    APPLY_UNIFORM(Vec4)
-    APPLY_UNIFORM(Mat4)
-
-    APPLY_UNIFORM(IntV)
-    APPLY_UNIFORM(FloatV)
-    APPLY_UNIFORM(Vec3V)
-    APPLY_UNIFORM(Vec4V)
-    APPLY_UNIFORM(Mat4V)
+    
+    APPLY_UNIFORM(1I)
+    APPLY_UNIFORM(4F)
+    APPLY_UNIFORM(4FV)
+    APPLY_UNIFORM(3F)
+    APPLY_UNIFORM(3FV)
+    APPLY_UNIFORM(1F)
+    APPLY_UNIFORM(1FV)
+    APPLY_UNIFORM(Mat4F)
 
     int slot = 0;
-    APPLY_SAMPLER_UNIFORM(TextureSampler)
-    APPLY_SAMPLER_UNIFORM(CubeMapSampler)
+    APPLY_SAMPLER_UNIFORM(Texture)
+    APPLY_SAMPLER_UNIFORM(CubeMap)
 }
 
 
@@ -105,7 +62,7 @@ int UniformStorage::GetUniformLocation(const std::string& uniformName)
         Debug::Log::Error("Can't get location of template uniform buffer");
         return -1;
     }
-
+    
     if (_uniformNameLocationMap.find(uniformName) == _uniformNameLocationMap.end())
     {
         Debug::Log::Message(std::string(uniformName) + "not found");
@@ -126,20 +83,19 @@ UniformStorage* UniformStorage::Copy(const GLuint programID) const
 
 void UniformStorage::CopyTo(UniformStorage* uniformStorage) const
 {
-    COPY_UNIFORM(Int)
-    COPY_UNIFORM(Float)
-    COPY_UNIFORM(Vec3)
-    COPY_UNIFORM(Vec4)
-    COPY_UNIFORM(Mat4)
-
-    COPY_ARRAY_UNIFORM(Int)
-    COPY_ARRAY_UNIFORM(Float)
-    COPY_ARRAY_UNIFORM(Vec3)
-    COPY_ARRAY_UNIFORM(Vec4)
-    COPY_ARRAY_UNIFORM(Mat4)
-
-    COPY_SAMPLER_UNIFORM(TextureSampler)
-    COPY_SAMPLER_UNIFORM(CubeMapSampler)
+    COPY_UNIFORM(glm::mat4, Mat4F)
+    COPY_UNIFORM(glm::vec4, 4F)
+    COPY_UNIFORM(std::vector<glm::vec4>*, 4FV)
+    COPY_UNIFORM(glm::vec3, 3F)
+    COPY_UNIFORM(std::vector<glm::vec3>*, 3FV)
+    COPY_UNIFORM(int, 1I)
+    COPY_UNIFORM(float, 1F)
+    COPY_UNIFORM(std::vector<float>*, 1FV)
+    COPY_UNIFORM(Texture*, Texture)
+    COPY_UNIFORM(CubeMap*, CubeMap)
 }
 
-void UniformStorage::CopyFrom(const UniformStorage* uniformStorage) { uniformStorage->CopyTo(this); }
+void UniformStorage::CopyFrom(const UniformStorage* uniformStorage)
+{
+    uniformStorage->CopyTo(this);
+}

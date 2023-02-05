@@ -2,6 +2,7 @@
 #include <map>
 
 #include "FrameBuffer.h"
+#include "Light.h"
 #include "Material.h"
 #include "Renderable.h"
 #include "Renderable2D.h"
@@ -10,7 +11,6 @@
 #include "VertexArrayObject.h"
 #include "VertexBuffer.h"
 #include "SpriteSet.h"
-#include "../Components/Light.h"
 
 namespace GameEngine
 {
@@ -21,7 +21,6 @@ namespace GameEngine
             private:
                 static std::vector<ShaderUseCallback*>             _shaderUseCallbacks;
                 static std::vector<RenderTarget*>                  _renderTargets;
-                static std::vector<GameEngine::Components::Light*> _lights;
 
                 // 3D
                 static std::map<Material*, std::vector<Renderable*>> _opaqueRenderables;
@@ -42,7 +41,6 @@ namespace GameEngine
                 static void Initialize();
 
                 static void SubmitShaderUseCallback(ShaderUseCallback* shaderUseCallback);
-                static void SubmitLight(GameEngine::Components::Light* light);
                 static void SubmitBatchRenderable2D(Renderable2D* renderable2D);
                 static void SubmitRenderable(Renderable* renderable);
                 static void SubmitRenderTarget(RenderTarget* renderTarget);
@@ -75,10 +73,8 @@ namespace GameEngine
                         {
                             shader = newShader;
                             shader->Use();
-
-                            for (ShaderUseCallback* shaderUseCallback : _shaderUseCallbacks) { shaderUseCallback->OnShaderUse(shader); }
-
                             
+                            for (ShaderUseCallback* shaderUseCallback : _shaderUseCallbacks) { shaderUseCallback->OnShaderUse(shader); }
                         }
 
                         // Update polygon mode if needed

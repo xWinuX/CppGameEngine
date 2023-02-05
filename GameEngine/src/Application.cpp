@@ -8,13 +8,11 @@
 
 #include "imgui_impl_glfw.h"
 #include "imgui_impl_opengl3.h"
-#include "GameEngine/Debug/DebugGUIManager.h"
 #include "GameEngine/Input.h"
 #include "GameEngine/Time.h"
 #include "GameEngine/Audio/AudioManager.h"
-#include "GameEngine/IO/Importer/GLTF.h"
-#include "GameEngine/IO/Importer/GLTF.h"
-#include "GameEngine/IO/Importer/GLTF.h"
+
+#include "GameEngine/Debug/DebugGUIManager.h"
 #include "GameEngine/Physics/PhysicsManager.h"
 #include "GameEngine/Rendering/Renderer.h"
 
@@ -60,7 +58,7 @@ void Application::Run()
         scene.OnUpdate();
         
         CustomRun();
-
+        
         // Audio Update
         AudioManager::Update();
         
@@ -69,7 +67,7 @@ void Application::Run()
         
         // Render dear imgui into screen
         DebugGUIManager::Draw();
-
+        
         Renderer::DrawFrame();
         
         std::cout << "FPS: " << std::to_string(1 / Time::GetDeltaTime()) << std::endl;

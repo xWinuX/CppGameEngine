@@ -54,9 +54,9 @@ void Camera::OnShaderUse(Rendering::Shader* shader)
 {
     const glm::mat4 viewMatrix = GetViewMatrix();
     
-    shader->GetUniformStorage()->SetUniformInstantly<float>("u_Time", Time::GetTimeSinceStart());
-    shader->GetUniformStorage()->SetUniformInstantly<glm::mat4>("u_ViewProjection", _projectionMatrix * viewMatrix);
-    shader->GetUniformStorage()->SetUniformInstantly<glm::vec3>("u_ViewPosition", _transform->GetPosition());
+    shader->GetUniformStorage()->SetUniformInstant<float>("u_Time", Time::GetTimeSinceStart());
+    shader->GetUniformStorage()->SetUniformInstant<glm::mat4>("u_ViewProjection", _projectionMatrix * viewMatrix);
+    shader->GetUniformStorage()->SetUniformInstant<glm::vec3>("u_ViewPosition", _transform->GetPosition());
 }
 
 float Camera::GetFOVInDegrees() const { return _fovInDegrees; }

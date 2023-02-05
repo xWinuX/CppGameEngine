@@ -22,9 +22,9 @@ namespace GameEngine
                     _drawType(drawType)
                 {
                     glGenBuffers(1, &_bufferID);
-                    Bind();
+                    glBindBuffer(BufferType, _bufferID);
                     glBufferData(BufferType, static_cast<GLsizeiptr>(numElements * elementSize), buffer, _drawType);
-                    Unbind();
+                    glBindBuffer(BufferType, 0);
                 }
 
                 ~Buffer()
@@ -42,21 +42,23 @@ namespace GameEngine
 
                 static void Unbind()
                 {
-                    glBindBuffer(GL_ARRAY_BUFFER, 0);
+                    glBindBuffer(BufferType, 0);
                 }
 
                 void UpdateData(const unsigned char* data, const size_t numElements)
                 {
-                    if (_drawType != GL_DYNAMIC_DRAW)
-                    {
-                        Debug::Log::Error("You can't update data on a static vertex buffer!");
-                        return;
-                    }
-
                     _numElements = numElements;
 
-                    Bind();
+                    glBindBuffer(BufferType, _bufferID);
                     glBufferSubData(BufferType, 0, _numElements * _elementSize, data);
+                    glBindBuffer(BufferType, 0);
+                }
+
+                void UpdateDataRange(const unsigned char* data, const size_t startOffset, const size_t numBytes) const
+                {
+                    glBindBuffer(BufferType, _bufferID);
+                    glBufferSubData(BufferType, startOffset, startOffset+numBytes, data);
+                    glBindBuffer(BufferType, 0);
                 }
         };
     }
