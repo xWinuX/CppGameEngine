@@ -1,15 +1,12 @@
 ﻿#include "GameEngine/Rendering/Renderer.h"
 
-#include <complex.h>
 #include <numeric>
 #include <GLFW/glfw3.h>
-#include <glm/ext/matrix_transform.hpp>
 
 #include "imgui.h"
-#include "imgui_impl_glfw.h"
-#include "imgui_impl_opengl3.h"
 #include "GameEngine/Window.h"
 #include "GameEngine/Rendering/IndexBuffer.h"
+#include "GameEngine/Rendering/Light.h"
 #include "GameEngine/Rendering/Material.h"
 #include "GameEngine/Rendering/Sprite.h"
 #include "GameEngine/Rendering/VertexArrayObject.h"
@@ -28,8 +25,6 @@ unsigned char* Renderer::_renderable2DVertexData   = new unsigned char[Renderabl
 IndexBuffer*       Renderer::_renderable2DIndexBuffer       = nullptr;
 VertexBuffer*      Renderer::_renderable2DVertexBuffer      = nullptr;
 VertexArrayObject* Renderer::_renderable2DVertexArrayObject = nullptr;
-
-std::vector<Light*> Renderer::_lights = std::vector<Light*>();
 
 std::map<Material*, std::vector<Renderable*>> Renderer::_opaqueRenderables      = std::map<Material*, std::vector<Renderable*>>();
 std::map<Material*, std::vector<Renderable*>> Renderer::_transparentRenderables = std::map<Material*, std::vector<Renderable*>>();
@@ -69,15 +64,11 @@ void Renderer::Initialize()
                                                            }, 12));
 
     delete[] indices;
+
+    Light::Initialize();
 }
 
 void Renderer::SubmitShaderUseCallback(ShaderUseCallback* shaderUseCallback) { _shaderUseCallbacks.push_back(shaderUseCallback); }
-
-void Renderer::SubmitLight(Light* light)
-{
-    _lights.push_back(light);
-    _shaderUseCallbacks.push_back(light);
-}
 
 void Renderer::SubmitBatchRenderable2D(Renderable2D* renderable2D)
 {
@@ -161,6 +152,9 @@ void Renderer::RenderSubmitted()
 {
     unsigned int numDrawCalls = 0;
 
+    // Update Light
+    Light::Update();
+    
     for (RenderTarget* renderTarget : _renderTargets)
     {
         renderTarget->Bind();
@@ -188,12 +182,7 @@ void Renderer::RenderSubmitted()
         renderTarget->Unbind();
         glEnable(GL_DEPTH_TEST);
     }
-
-
-    // Cleanup lights
-    for (Light* light : _lights) { light->OnFrameEnd(); }
-    _lights.clear();
-
+    
     // Cleanup render target
     _renderTargets.clear();
 

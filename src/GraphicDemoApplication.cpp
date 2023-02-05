@@ -2,9 +2,8 @@
 
 #include "Asset.h"
 #include "imgui.h"
-#include "../GameEngine/src/Components/DirectionalLight.h"
-#include "GameEngine/Debug/DebugGUIManager.h"
-#include "Components/SimpleWalker.h"
+#include "GameEngine/Components/DirectionalLight.h"
+
 #include "Components/CameraControllerPOV.h"
 #include "Components/CharacterController.h"
 #include "Components/GameManager.h"
@@ -31,10 +30,9 @@
 #include "GameEngine/Audio/AudioManager.h"
 #include "GameEngine/Audio/Sound.h"
 #include "GameEngine/Components/AudioListener.h"
-#include "GameEngine/Components/AudioSource.h"
 #include "GameEngine/Components/CapsuleCollider.h"
 #include "GameEngine/Components/SpriteRenderer.h"
-#include "GameEngine/Debug/DebugGUIManager.h"
+#include "GameEngine/Rendering/UniformBuffer.h"
 #include "glm/gtc/random.hpp"
 #include "glm/gtx/string_cast.hpp"
 #include "Prefabs/GamerDudePrefab.h"
@@ -147,22 +145,7 @@ void GraphicDemoApplication::LoadShaders() const
 
     // Ambient Light
     litUniforms.InitializeUniform<CubeMap*>("u_SkyboxCubeMap", GET_CUBEMAP(SkyBox));
-    litUniforms.InitializeUniform<glm::vec4>("u_AmbientLightColor", glm::vec4(1.0));
-    litUniforms.InitializeUniform<float>("u_AmbientLightIntensity", 0.6f);
-
-    // Directional Lights
-    litUniforms.InitializeUniform<int>("u_NumDirectionalLights", 0, false);
-    litUniforms.InitializeUniform<std::vector<glm::vec3>*>("u_DirectionalLightDirections", nullptr, false);
-    litUniforms.InitializeUniform<std::vector<glm::vec4>*>("u_DirectionalLightColors", nullptr, false);
-    litUniforms.InitializeUniform<std::vector<float>*>("u_DirectionalLightIntensities", nullptr, false);
     
-    // Point Lights
-    litUniforms.InitializeUniform<int>("u_NumPointLights", 0, false);
-    litUniforms.InitializeUniform<std::vector<glm::vec3>*>("u_PointLightPositions", nullptr, false);
-    litUniforms.InitializeUniform<std::vector<glm::vec4>*>("u_PointLightColors", nullptr, false);
-    litUniforms.InitializeUniform<std::vector<float>*>("u_PointLightIntensities", nullptr, false);
-    litUniforms.InitializeUniform<std::vector<float>*>("u_PointLightRanges", nullptr, false);
-
     UniformStorage spriteUniforms = UniformStorage();
     spriteUniforms.InitializeUniform<Texture*>("u_Texture", GET_TEXTURE(White), false);
     #pragma endregion

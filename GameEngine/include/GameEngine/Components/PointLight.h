@@ -1,7 +1,7 @@
 ﻿#pragma once
 
 #include "Component.h"
-#include "Light.h"
+
 #include "glm/vec3.hpp"
 #include "../Rendering/Shader.h"
 
@@ -9,7 +9,7 @@ namespace GameEngine
 {
     namespace Components
     {
-        class PointLight final : public Light
+        class PointLight final : public Component
         {
             private:
                 static std::vector<glm::vec3> _positions;
@@ -23,8 +23,6 @@ namespace GameEngine
 
             protected:
                 void OnUpdateEnd() override;
-                void OnFrameEnd() override;
-                void OnShaderUse(Rendering::Shader* shader) override;
 
             public:
                 explicit PointLight(const glm::vec4 color = glm::vec4(1.0), const float range = 1.0f, const float intensity = 1.0f);

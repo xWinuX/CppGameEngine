@@ -3,7 +3,7 @@
     fragColor += calculateDirectionalLightColor(
     v_Position,
     u_ViewPosition,
-    u_DirectionalLightDirections[i],
+    vec3(u_DirectionalLightDirections[i]),
     u_DirectionalLightColors[i],
     u_DirectionalLightIntensities[i],
     u_Shininess,

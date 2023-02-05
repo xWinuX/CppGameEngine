@@ -3,7 +3,7 @@
     fragColor += calculatePointLightColor(
     v_Position, 
     u_ViewPosition,
-    u_PointLightPositions[i], 
+    vec3(u_PointLightPositions[i]), 
     u_PointLightColors[i], 
     u_PointLightRanges[i], 
     u_PointLightIntensities[i],
