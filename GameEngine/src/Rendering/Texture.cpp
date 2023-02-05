@@ -34,6 +34,7 @@ void Texture::GenerateTexture(unsigned char* buffer, const Texture::ImportSettin
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, importSettings.WrapMode);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, importSettings.WrapMode);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAX_LEVEL, importSettings.MipMapLevels);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAX_ANISOTROPY_EXT, importSettings.AnisotropyLevels);
 
     _buffer = buffer;
     glTexImage2D(GL_TEXTURE_2D, 0, importSettings.InternalFormat, static_cast<GLsizei>(_size.x), static_cast<GLsizei>(_size.y), 0, importSettings.Format,
