@@ -6,7 +6,7 @@
 #include "GameEngine/Components/Transform.h"
 #include "GameEngine/Window.h"
 #include "GameEngine/Rendering/Renderer.h"
-#include "GameEngine/Shapes/SkyboxCube.h"
+#include "GameEngine/Rendering/Primitives/SkyboxCube.h"
 
 using namespace GameEngine::Components;
 using namespace GameEngine::Rendering;
@@ -18,7 +18,7 @@ Camera::Camera(const float fovInDegrees, const float zNear, const float zFar, Sh
     _zNear(zNear),
     _zFar(zFar),
     _skyboxMaterial(skyboxMaterial),
-    _skyboxCube(new Rendering::RenderablePrimitive(SkyboxCube::GetPrimitive(), skyboxMaterial))
+    _skyboxCube(new Rendering::RenderablePrimitive(Primitives::SkyboxCube::GetPrimitive(), skyboxMaterial))
 {
     UpdateProjectionMatrix();
     ResizeFrameBuffer(Window::GetCurrentWindow()->GetSize());

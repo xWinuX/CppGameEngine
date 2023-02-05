@@ -19,9 +19,6 @@ namespace GameEngine
             virtual void Initialize(GameEngine::Scene& scene) {}
 
             void Run();
-
-            virtual void CustomRun() {}
-            virtual void GuiDraw() {}
             virtual void OnEnd() {}
     };
 }

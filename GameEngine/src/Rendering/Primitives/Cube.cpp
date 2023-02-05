@@ -1,11 +1,11 @@
-﻿#include "GameEngine/Shapes/Cube.h"
+﻿#include "GameEngine/Rendering/Primitives/Cube.h"
 
 #include <glad/glad.h>
 
 #include "GameEngine/Rendering/VertexBufferAttribute.h"
 
 using namespace GameEngine::Rendering;
-using namespace GameEngine::Shapes;
+using namespace GameEngine::Rendering::Primitives;
 
 
 Primitive* Cube::GetPrimitive()

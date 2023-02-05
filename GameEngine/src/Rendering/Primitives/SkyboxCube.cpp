@@ -1,13 +1,14 @@
-﻿#include "GameEngine/Shapes/SkyboxCube.h"
+﻿#include "GameEngine/Rendering/Primitives/SkyboxCube.h"
+
+
 #include <glm/vec3.hpp>
 
 #include "tiny_gltf.h"
 
-// Vertices and indices source: https://github.com/VictorGordan/opengl-tutorials/blob/main/YoutubeOpenGL%2019%20-%20Cubemaps%20%26%20Skyboxes/Main.cpp
-
-
 using namespace GameEngine::Rendering;
+using namespace GameEngine::Rendering::Primitives;
 
+// Vertices and indices source: https://github.com/VictorGordan/opengl-tutorials/blob/main/YoutubeOpenGL%2019%20-%20Cubemaps%20%26%20Skyboxes/Main.cpp
 Primitive* SkyboxCube::GetPrimitive()
 {
     glm::vec3 positions[] =

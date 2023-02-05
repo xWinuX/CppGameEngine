@@ -57,8 +57,6 @@ void Application::Run()
         // Execute Update calls on each game object in the current scene
         scene.OnUpdate();
         
-        CustomRun();
-        
         // Audio Update
         AudioManager::Update();
         

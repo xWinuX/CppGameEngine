@@ -256,27 +256,89 @@
     <ClCompile Include="GameEngine\src\Rendering\Mesh.cpp" />
     <ClCompile Include="GameEngine\src\Rendering\Model.cpp" />
     <ClCompile Include="GameEngine\src\Rendering\Primitive.cpp" />
-    <ClCompile Include="GameEngine\src\Rendering\RenderablePrimitive.cpp" />
-    <ClCompile Include="GameEngine\src\Rendering\Renderer.cpp" />
-    <ClCompile Include="GameEngine\src\Rendering\RenderTarget.cpp" />
-    <ClCompile Include="GameEngine\src\Rendering\Shader.cpp" />
-    <ClCompile Include="GameEngine\src\Rendering\Sprite.cpp" />
-    <ClCompile Include="GameEngine\src\Rendering\SpriteAtlas.cpp" />
-    <ClCompile Include="GameEngine\src\Rendering\SpriteSet.cpp" />
-    <ClCompile Include="GameEngine\src\Rendering\Texture.cpp" />
-    <ClCompile Include="GameEngine\src\Rendering\UniformStorage.cpp" />
-    <ClCompile Include="GameEngine\src\Rendering\VertexArrayObject.cpp" />
-    <ClCompile Include="GameEngine\src\Rendering\VertexBufferAttribute.cpp" />
-    <ClCompile Include="GameEngine\src\Rendering\VertexBufferLayout.cpp" />
-    <ClCompile Include="GameEngine\src\Scene.cpp" />
-    <ClCompile Include="GameEngine\src\Shapes\Cube.cpp" />
-    <ClCompile Include="GameEngine\src\Shapes\SkyboxCube.cpp">
+    <ClCompile Include="GameEngine\src\Rendering\Primitives\Cube.cpp">
+      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <Optimization>Disabled</Optimization>
+      <SupportJustMyCode>true</SupportJustMyCode>
+      <AssemblerOutput>NoListing</AssemblerOutput>
+      <AssemblerListingLocation>x64\Debug\</AssemblerListingLocation>
+      <UndefineAllPreprocessorDefinitions>false</UndefineAllPreprocessorDefinitions>
+      <BrowseInformation>false</BrowseInformation>
+      <BrowseInformationFile>x64\Debug\</BrowseInformationFile>
+      <CompileAs>Default</CompileAs>
+      <ConformanceMode>Default</ConformanceMode>
+      <DiagnosticsFormat>Column</DiagnosticsFormat>
+      <DisableLanguageExtensions>false</DisableLanguageExtensions>
+      <ErrorReporting>Prompt</ErrorReporting>
+      <ExpandAttributedSource>false</ExpandAttributedSource>
+      <ExceptionHandling>Sync</ExceptionHandling>
+      <EnableASAN>false</EnableASAN>
+      <EnableFuzzer>false</EnableFuzzer>
+      <EnableFiberSafeOptimizations>false</EnableFiberSafeOptimizations>
+      <EnableEnhancedInstructionSet>NotSet</EnableEnhancedInstructionSet>
+      <FloatingPointModel>Precise</FloatingPointModel>
+      <ForceConformanceInForLoopScope>true</ForceConformanceInForLoopScope>
+      <GenerateModuleDependencies>false</GenerateModuleDependencies>
+      <GenerateSourceDependencies>false</GenerateSourceDependencies>
+      <GenerateXMLDocumentationFiles>false</GenerateXMLDocumentationFiles>
+      <InlineFunctionExpansion>Default</InlineFunctionExpansion>
+      <IntrinsicFunctions>false</IntrinsicFunctions>
+      <IgnoreStandardIncludePath>false</IgnoreStandardIncludePath>
+      <LanguageStandard>Default</LanguageStandard>
+      <LanguageStandard_C>Default</LanguageStandard_C>
+      <MinimalRebuild>false</MinimalRebuild>
+      <ModuleDependenciesFile>x64\Debug\</ModuleDependenciesFile>
+      <ModuleOutputFile>x64\Debug\</ModuleOutputFile>
+      <OmitDefaultLibName>false</OmitDefaultLibName>
+      <FavorSizeOrSpeed>Neither</FavorSizeOrSpeed>
+      <WholeProgramOptimization>false</WholeProgramOptimization>
+      <ObjectFileName>x64\Debug\</ObjectFileName>
+      <CallingConvention>Cdecl</CallingConvention>
+      <ProgramDataBaseFileName>x64\Debug\vc143.pdb</ProgramDataBaseFileName>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <PrecompiledHeaderFile>stdafx.h</PrecompiledHeaderFile>
+      <PrecompiledHeaderOutputFile>x64\Debug\CppGameEngine.pch</PrecompiledHeaderOutputFile>
+      <PreprocessToFile>false</PreprocessToFile>
+      <PreprocessKeepComments>false</PreprocessKeepComments>
+      <PreprocessSuppressLineNumbers>false</PreprocessSuppressLineNumbers>
+      <RemoveUnreferencedCodeData>true</RemoveUnreferencedCodeData>
+      <ScanSourceForModuleDependencies>false</ScanSourceForModuleDependencies>
+      <ShowIncludes>false</ShowIncludes>
+      <SourceDependenciesFile>x64\Debug\</SourceDependenciesFile>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <BufferSecurityCheck>true</BufferSecurityCheck>
+      <SmallerTypeCheck>false</SmallerTypeCheck>
+      <SpectreMitigation>false</SpectreMitigation>
+      <StructMemberAlignment>Default</StructMemberAlignment>
+      <TrackerLogDirectory>x64\Debug\CppGameEngine.tlog\</TrackerLogDirectory>
+      <TranslateIncludes>false</TranslateIncludes>
+      <MinimalRebuildFromTracking>true</MinimalRebuildFromTracking>
+      <TreatWarningAsError>false</TreatWarningAsError>
+      <TreatWChar_tAsBuiltInType>true</TreatWChar_tAsBuiltInType>
+      <UseFullPaths>true</UseFullPaths>
+      <WarningLevel>Level1</WarningLevel>
+      <XMLDocumentationFileName>x64\Debug\</XMLDocumentationFileName>
+      <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
+      <IntelJCCErratum>false</IntelJCCErratum>
+      <TreatAngleIncludeAsExternal>false</TreatAngleIncludeAsExternal>
+      <ExternalWarningLevel>InheritWarningLevel</ExternalWarningLevel>
+      <TreatExternalTemplatesAsInternal>true</TreatExternalTemplatesAsInternal>
+      <DisableAnalyzeExternal>false</DisableAnalyzeExternal>
+      <PreprocessorDefinitions>_DEBUG</PreprocessorDefinitions>
+      <AdditionalOptions>/MTd</AdditionalOptions>
+      <LinkCompiled>true</LinkCompiled>
+    </ClCompile>
+    <ClCompile Include="GameEngine\src\Rendering\Primitives\SkyboxCube.cpp">
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <BasicRuntimeChecks>Default</BasicRuntimeChecks>
+      <Optimization>MaxSpeed</Optimization>
+      <SupportJustMyCode>false</SupportJustMyCode>
       <AssemblerOutput>NoListing</AssemblerOutput>
       <AssemblerListingLocation>x64\Release\</AssemblerListingLocation>
       <UndefineAllPreprocessorDefinitions>false</UndefineAllPreprocessorDefinitions>
       <BrowseInformation>false</BrowseInformation>
       <BrowseInformationFile>x64\Release\</BrowseInformationFile>
-      <BasicRuntimeChecks>Default</BasicRuntimeChecks>
       <CompileAs>Default</CompileAs>
       <ConformanceMode>Default</ConformanceMode>
       <DiagnosticsFormat>Column</DiagnosticsFormat>
@@ -304,7 +366,6 @@
       <OmitDefaultLibName>false</OmitDefaultLibName>
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
       <WholeProgramOptimization>true</WholeProgramOptimization>
-      <Optimization>MaxSpeed</Optimization>
       <ObjectFileName>x64\Release\</ObjectFileName>
       <CallingConvention>Cdecl</CallingConvention>
       <ProgramDataBaseFileName>x64\Release\vc143.pdb</ProgramDataBaseFileName>
@@ -315,7 +376,6 @@
       <PreprocessKeepComments>false</PreprocessKeepComments>
       <PreprocessSuppressLineNumbers>false</PreprocessSuppressLineNumbers>
       <RemoveUnreferencedCodeData>true</RemoveUnreferencedCodeData>
-      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <ScanSourceForModuleDependencies>false</ScanSourceForModuleDependencies>
       <ShowIncludes>false</ShowIncludes>
       <SourceDependenciesFile>x64\Release\</SourceDependenciesFile>
@@ -324,7 +384,6 @@
       <SmallerTypeCheck>false</SmallerTypeCheck>
       <SpectreMitigation>false</SpectreMitigation>
       <StructMemberAlignment>Default</StructMemberAlignment>
-      <SupportJustMyCode>false</SupportJustMyCode>
       <TrackerLogDirectory>x64\Release\CppGameEngine.tlog\</TrackerLogDirectory>
       <TranslateIncludes>false</TranslateIncludes>
       <MinimalRebuildFromTracking>true</MinimalRebuildFromTracking>
@@ -339,9 +398,24 @@
       <ExternalWarningLevel>InheritWarningLevel</ExternalWarningLevel>
       <TreatExternalTemplatesAsInternal>true</TreatExternalTemplatesAsInternal>
       <DisableAnalyzeExternal>false</DisableAnalyzeExternal>
-      <UndefinePreprocessorDefinitions>_DEBUG</UndefinePreprocessorDefinitions>
+      <PreprocessorDefinitions>_DEBUG</PreprocessorDefinitions>
+      <AdditionalOptions>/MTd</AdditionalOptions>
       <LinkCompiled>true</LinkCompiled>
+      <UndefinePreprocessorDefinitions>_DEBUG</UndefinePreprocessorDefinitions>
     </ClCompile>
+    <ClCompile Include="GameEngine\src\Rendering\RenderablePrimitive.cpp" />
+    <ClCompile Include="GameEngine\src\Rendering\Renderer.cpp" />
+    <ClCompile Include="GameEngine\src\Rendering\RenderTarget.cpp" />
+    <ClCompile Include="GameEngine\src\Rendering\Shader.cpp" />
+    <ClCompile Include="GameEngine\src\Rendering\Sprite.cpp" />
+    <ClCompile Include="GameEngine\src\Rendering\SpriteAtlas.cpp" />
+    <ClCompile Include="GameEngine\src\Rendering\SpriteSet.cpp" />
+    <ClCompile Include="GameEngine\src\Rendering\Texture.cpp" />
+    <ClCompile Include="GameEngine\src\Rendering\UniformStorage.cpp" />
+    <ClCompile Include="GameEngine\src\Rendering\VertexArrayObject.cpp" />
+    <ClCompile Include="GameEngine\src\Rendering\VertexBufferAttribute.cpp" />
+    <ClCompile Include="GameEngine\src\Rendering\VertexBufferLayout.cpp" />
+    <ClCompile Include="GameEngine\src\Scene.cpp" />
     <ClCompile Include="GameEngine\src\Time.cpp" />
     <ClCompile Include="GameEngine\src\Utils\Math.cpp" />
     <ClCompile Include="GameEngine\src\Utils\String.cpp" />
@@ -350,6 +424,7 @@
     <ClCompile Include="src\Components\CameraControllerPOV.cpp" />
     <ClCompile Include="src\Components\CharacterController.cpp" />
     <ClCompile Include="src\Components\GameManager.cpp" />
+    <ClCompile Include="src\Components\RainbowLight.cpp" />
     <ClCompile Include="src\Components\SimpleWalker.cpp" />
     <ClCompile Include="src\GraphicDemoApplication.cpp" />
     <ClCompile Include="src\Prefabs\GamerDudePrefab.cpp" />
@@ -404,6 +479,8 @@
     <ClInclude Include="GameEngine\include\GameEngine\Rendering\Mesh.h" />
     <ClInclude Include="GameEngine\include\GameEngine\Rendering\Model.h" />
     <ClInclude Include="GameEngine\include\GameEngine\Rendering\Primitive.h" />
+    <ClInclude Include="GameEngine\include\GameEngine\Rendering\Primitives\Cube.h" />
+    <ClInclude Include="GameEngine\include\GameEngine\Rendering\Primitives\SkyboxCube.h" />
     <ClInclude Include="GameEngine\include\GameEngine\Rendering\Renderable.h" />
     <ClInclude Include="GameEngine\include\GameEngine\Rendering\Renderable2D.h" />
     <ClInclude Include="GameEngine\include\GameEngine\Rendering\RenderablePrimitive.h" />
@@ -424,8 +501,6 @@
     <ClInclude Include="GameEngine\include\GameEngine\Rendering\VertexBufferAttribute.h" />
     <ClInclude Include="GameEngine\include\GameEngine\Rendering\VertexBufferLayout.h" />
     <ClInclude Include="GameEngine\include\GameEngine\Scene.h" />
-    <ClInclude Include="GameEngine\include\GameEngine\Shapes\Cube.h" />
-    <ClInclude Include="GameEngine\include\GameEngine\Shapes\SkyboxCube.h" />
     <ClInclude Include="GameEngine\include\GameEngine\Time.h" />
     <ClInclude Include="GameEngine\include\GameEngine\Utils\Math.h" />
     <ClInclude Include="GameEngine\include\GameEngine\Utils\String.h" />
@@ -434,6 +509,7 @@
     <ClInclude Include="src\Components\CameraControllerPOV.h" />
     <ClInclude Include="src\Components\CharacterController.h" />
     <ClInclude Include="src\Components\GameManager.h" />
+    <ClInclude Include="src\Components\RainbowLight.h" />
     <ClInclude Include="src\Components\SimpleWalker.h" />
     <ClInclude Include="src\GraphicDemoApplication.h" />
     <ClInclude Include="src\Prefabs\GamerDudePrefab.h" />

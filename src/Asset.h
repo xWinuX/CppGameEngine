@@ -78,6 +78,11 @@ namespace Asset
     {
         SkyBox,
     };
+
+    enum class SpriteAtlas : size_t
+    {
+        Default
+    };
 }
 
 #define ADD_TEXTURE(id, asset) GameEngine::AssetDatabase::Add<GameEngine::Rendering::Texture*>(Asset::Texture::id, asset)
@@ -88,6 +93,7 @@ namespace Asset
 #define ADD_SOUND(id, asset) GameEngine::AssetDatabase::Add<Sound*>(Asset::Sound::id, asset)
 #define ADD_SHADER(id, asset) GameEngine::AssetDatabase::Add<GameEngine::Rendering::Shader*>(Asset::Shader::id, asset)
 #define ADD_MATERIAL(id, asset) GameEngine::AssetDatabase::Add<GameEngine::Rendering::Material*>(Asset::Material::##id, asset)
+#define ADD_SPRITE_ATLAS(id, asset) GameEngine::AssetDatabase::Add<GameEngine::Rendering::SpriteAtlas*>(Asset::SpriteAtlas::##id, asset)
 
 #define GET_TEXTURE(id) GameEngine::AssetDatabase::Get<GameEngine::Rendering::Texture*>(Asset::Texture::id)
 #define GET_CUBEMAP(id) GameEngine::AssetDatabase::Get<GameEngine::Rendering::CubeMap*>(Asset::CubeMap::id)
@@ -97,3 +103,4 @@ namespace Asset
 #define GET_SOUND(id) GameEngine::AssetDatabase::Get<GameEngine::Audio::Sound*>(Asset::Sound::id)
 #define GET_SHADER(id) GameEngine::AssetDatabase::Get<GameEngine::Rendering::Shader*>(Asset::Shader::id)
 #define GET_MATERIAL(id) GameEngine::AssetDatabase::Get<GameEngine::Rendering::Material*>(Asset::Material::id)
+#define GET_SPRITE_ATLAS(id) GameEngine::AssetDatabase::Get<GameEngine::Rendering::SpriteAtlas*>(Asset::SpriteAtlas::id)

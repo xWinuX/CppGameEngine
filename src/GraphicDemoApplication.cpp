@@ -1,12 +1,12 @@
 ﻿#include "GraphicDemoApplication.h"
 
 #include "Asset.h"
-#include "imgui.h"
 #include "GameEngine/Components/DirectionalLight.h"
 
 #include "Components/CameraControllerPOV.h"
 #include "Components/CharacterController.h"
 #include "Components/GameManager.h"
+#include "Components/RainbowLight.h"
 #include "GameEngine/Components/BoxCollider.h"
 #include "GameEngine/Components/Camera.h"
 #include "GameEngine/Components/MeshRenderer.h"
@@ -14,8 +14,7 @@
 #include "GameEngine/Components/Rigidbody.h"
 #include "GameEngine/Components/TextRenderer.h"
 #include "GameEngine/Components/Transform.h"
-#include "GameEngine/Window.h"
-#include "GameEngine/Input.h"
+
 #include "GameEngine/Physics/PhysicsManager.h"
 #include "GameEngine/Rendering/Font.h"
 #include "GameEngine/Rendering/Material.h"
@@ -25,14 +24,11 @@
 #include "GameEngine/Rendering/Texture.h"
 #include "GameEngine/Rendering/SpriteAtlas.h"
 #include "GameEngine/Utils/Math.h"
-#include "GameEngine/Shapes/Cube.h"
-#include "GameEngine/Time.h"
 #include "GameEngine/Audio/AudioManager.h"
 #include "GameEngine/Audio/Sound.h"
 #include "GameEngine/Components/AudioListener.h"
 #include "GameEngine/Components/CapsuleCollider.h"
 #include "GameEngine/Components/SpriteRenderer.h"
-#include "GameEngine/Rendering/UniformBuffer.h"
 #include "glm/gtc/random.hpp"
 #include "glm/gtx/string_cast.hpp"
 #include "Prefabs/GamerDudePrefab.h"
@@ -44,22 +40,6 @@ using namespace GameEngine::Utils;
 using namespace GameEngine::Rendering;
 using namespace GameEngine::Components;
 using namespace GameEngine::Physics;
-using namespace GameEngine::Shapes;
-
-GameObject* cameraObject;
-GameObject* redLightObject;
-GameObject* rainbowLightObject;
-GameObject* suzanneObject;
-GameObject* theMissingObject;
-GameObject* crateObject;
-GameObject* childCrateObject;
-GameObject* childOfChildCrateObject;
-
-SpriteAtlas* spriteAtlas;
-
-Cube* cube;
-
-bool fullscreen = false;
 
 void GraphicDemoApplication::LoadTextures()
 {
@@ -94,22 +74,23 @@ void GraphicDemoApplication::LoadSprites()
     SpriteSet* drL       = ADD_SPRITE(DrL, new SpriteSet(drLSpriteTexture));
     SpriteSet* gamerDude = ADD_SPRITE(GamerDude, new SpriteSet(gamerDudeSpriteTexture));
     SpriteSet* test      = ADD_SPRITE(Test, new SpriteSet(testSpriteTexture, 12, glm::uvec2(32, 32)));
-    
+
     Sprite::AdditionalInfo additionalInfo;
     additionalInfo.PixelsPerUnit  = 90;
     additionalInfo.Origin         = glm::vec2(0.5f, 0.0f);
     SpriteSet* gamerDudeWalkRight = ADD_SPRITE(GamerDudeWalkRight, new SpriteSet(gamerDudeWalkRightSpriteTexture, 6, glm::uvec2(119, 190), additionalInfo));
     SpriteSet* gamerDudeWalkLeft  = ADD_SPRITE(GamerDudeWalkLeft, new SpriteSet(gamerDudeWalkLeftSpriteTexture, 6, glm::uvec2(119, 190), additionalInfo));
-    
-    spriteAtlas = new SpriteAtlas(glm::ivec2(1024), pixelArtTextureImportSettings);
-    
+
+
+    SpriteAtlas* spriteAtlas = ADD_SPRITE_ATLAS(Default, new SpriteAtlas(glm::ivec2(1024), pixelArtTextureImportSettings));
+
     spriteAtlas->AddSprite(theDude);
     spriteAtlas->AddSprite(drL);
     spriteAtlas->AddSprite(gamerDude);
     spriteAtlas->AddSprite(test);
     spriteAtlas->AddSprite(gamerDudeWalkRight);
     spriteAtlas->AddSprite(gamerDudeWalkLeft);
-    
+
     spriteAtlas->Pack();
 }
 
@@ -145,7 +126,7 @@ void GraphicDemoApplication::LoadShaders() const
 
     // Ambient Light
     litUniforms.InitializeUniform<CubeMap*>("u_SkyboxCubeMap", GET_CUBEMAP(SkyBox));
-    
+
     UniformStorage spriteUniforms = UniformStorage();
     spriteUniforms.InitializeUniform<Texture*>("u_Texture", GET_TEXTURE(White), false);
     #pragma endregion
@@ -185,7 +166,7 @@ void GraphicDemoApplication::LoadShaders() const
     // Frame Buffer
     Shader* frameBufferShader = ADD_SHADER(FrameBuffer, new Shader("res/shaders/FrameBuffer/FrameBuffer.vert", "res/shaders/FrameBuffer/FrameBuffer.frag"));
     frameBufferShader->GetUniformStorage()->CopyFrom(&commonUniforms);
-    
+
     Shader* skyboxShader = ADD_SHADER(Skybox, new Shader("res/shaders/Skybox/Skybox.vert", "res/shaders/Skybox/Skybox.frag"));
     skyboxShader->GetUniformStorage()->CopyFrom(&commonUniforms);
     skyboxShader->InitializeUniform<CubeMap*>("u_CubeMap", GET_CUBEMAP(SkyBox));
@@ -247,13 +228,11 @@ void GraphicDemoApplication::LoadAssets()
 void GraphicDemoApplication::Initialize(Scene& scene)
 {
     LoadAssets();
-    
-    cube = new Cube();
 
     GameObject* gameManagerObject = new GameObject();
     gameManagerObject->AddComponent(new GameManager());
     scene.AddGameObject(gameManagerObject);
-    
+
     // Player
     GameObject* playerObject = new GameObject();
     playerObject->GetTransform()->SetLocalPosition(glm::vec3(0.0f, 7.0f, 0.0f));
@@ -269,9 +248,9 @@ void GraphicDemoApplication::Initialize(Scene& scene)
     directionalLight->GetTransform()->SetRotation(glm::quat(glm::vec3(-0.3f, 0.3f, 0.3f)));
     directionalLight->AddComponent(new DirectionalLight(glm::vec4(1.0f), 0.6f));
     scene.AddGameObject(directionalLight);
-    
+
     // Camera
-    cameraObject = new GameObject();
+    GameObject* cameraObject = new GameObject();
     cameraObject->AddComponent(new Camera(60, 0.01f, 1000.0f, GET_SHADER(FrameBuffer), GET_MATERIAL(Skybox)));
     cameraObject->AddComponent(new CameraControllerPOV());
     cameraObject->AddComponent(new AudioListener());
@@ -292,8 +271,8 @@ void GraphicDemoApplication::Initialize(Scene& scene)
     }
 
     // Red light
-    redLightObject               = new GameObject();
-    Transform* redLightTransform = redLightObject->GetTransform();
+    GameObject* redLightObject    = new GameObject();
+    Transform*  redLightTransform = redLightObject->GetTransform();
     redLightTransform->SetLocalPosition(glm::vec3(2.0f, 1.0f, 0.0f));
     redLightTransform->SetLocalScale(glm::vec3(0.1f));
     redLightObject->AddComponent(new MeshRenderer(GET_MODEL(Sphere)->GetMesh(0), GET_MATERIAL(Dude)));
@@ -301,23 +280,24 @@ void GraphicDemoApplication::Initialize(Scene& scene)
     scene.AddGameObject(redLightObject);
 
     // Rainbow light
-    rainbowLightObject               = new GameObject();
-    Transform* rainbowLightTransform = rainbowLightObject->GetTransform();
+    GameObject* rainbowLightObject    = new GameObject();
+    Transform*  rainbowLightTransform = rainbowLightObject->GetTransform();
     rainbowLightTransform->SetPosition(glm::vec3(-2.0f, 1.0f, 0.0f));
     rainbowLightTransform->SetLocalScale(glm::vec3(0.1f));
     rainbowLightObject->AddComponent(new MeshRenderer(GET_MODEL(Sphere)->GetMesh(0), GET_MATERIAL(Dude)));
     rainbowLightObject->AddComponent(new PointLight(glm::vec4(1.0f, 1.0f, 1.0f, 1.0f), 15.0f, 0.5f));
+    rainbowLightObject->AddComponent(new RainbowLight());
     scene.AddGameObject(rainbowLightObject);
 
     // Suzanne
-    suzanneObject = new GameObject();
+    GameObject* suzanneObject = new GameObject();
     suzanneObject->GetTransform()->SetLocalPosition(glm::vec3(0.0f, 2.0f, 0.0f));
     suzanneObject->AddComponent(new MeshRenderer(GET_MODEL(Suzanne)->GetMesh(0), GET_MATERIAL(Dude)));
     suzanneObject->AddComponent(new TextRenderer(GET_FONT(Roboto), GET_MATERIAL(MSDFFont)));
     scene.AddGameObject(suzanneObject);
 
     // The Missing
-    theMissingObject = new GameObject();
+    GameObject* theMissingObject = new GameObject();
     theMissingObject->GetTransform()->SetLocalScale(glm::vec3(5));
     theMissingObject->AddComponent(new MeshRenderer(GET_MODEL(TheMissing)->GetMesh(0), {GET_MATERIAL(Dude), GET_MATERIAL(Crate)}, 2));
     theMissingObject->AddComponent(new MeshRenderer(GET_MODEL(TheMissing)->GetMesh(1), GET_MATERIAL(Dude)));
@@ -325,7 +305,7 @@ void GraphicDemoApplication::Initialize(Scene& scene)
     scene.AddGameObject(theMissingObject);
 
     // Crate
-    crateObject = new GameObject();
+    GameObject* crateObject = new GameObject();
     crateObject->GetTransform()->SetLocalPosition(glm::vec3(0.0f, 5.0f, 0.0f));
     crateObject->AddComponent(new MeshRenderer(GET_MODEL(Cube)->GetMesh(0), GET_MATERIAL(Crate)));
     crateObject->AddComponent(new SpriteRenderer(GET_SPRITE(TheDude), GET_MATERIAL(SpriteLit)));
@@ -334,13 +314,13 @@ void GraphicDemoApplication::Initialize(Scene& scene)
     scene.AddGameObject(crateObject);
 
     // Child crate
-    childCrateObject = new GameObject();
+    GameObject* childCrateObject = new GameObject();
     childCrateObject->GetTransform()->SetLocalPosition(glm::vec3(5.0f, 0.0f, 0.0f));
     childCrateObject->AddComponent(new MeshRenderer(GET_MODEL(Cube)->GetMesh(0), GET_MATERIAL(Crate)));
     childCrateObject->SetParent(crateObject);
 
     // Child of child Crate
-    childOfChildCrateObject = new GameObject();
+    GameObject* childOfChildCrateObject = new GameObject();
     childOfChildCrateObject->GetTransform()->SetLocalPosition(glm::vec3(2.0f, 0.0f, 0.0f));
     childOfChildCrateObject->AddComponent(new MeshRenderer(GET_MODEL(Cube)->GetMesh(0), GET_MATERIAL(Crate)));
     childOfChildCrateObject->SetParent(childCrateObject);
@@ -363,40 +343,4 @@ void GraphicDemoApplication::Initialize(Scene& scene)
 
     // Setup physics debug
     PhysicsManager::SetDebugRendererMaterial(GET_MATERIAL(PhysicsDebug));
-}
-
-void GraphicDemoApplication::CustomRun()
-{
-    // Toggle physics debug wireframe
-    if (Input::GetKeyPressed(GLFW_KEY_P)) { PhysicsManager::ToggleDebugWireframe(); }
-
-    if (Input::GetKeyPressed(GLFW_KEY_F))
-    {
-        fullscreen = !fullscreen;
-        Window::GetCurrentWindow()->SetFullscreen(fullscreen);
-    }
-
-    
-    // Change rainbow light color
-    rainbowLightObject->GetComponent<PointLight>()->SetColor(glm::vec4(
-                                                                       Math::Sin01(Time::GetTimeSinceStart() + 250),
-                                                                       Math::Sin01(Time::GetTimeSinceStart() + 500),
-                                                                       Math::Sin01(Time::GetTimeSinceStart() + 750),
-                                                                       1.0f
-                                                                      ));
-    
-    // Rotate
-    suzanneObject->GetTransform()->Rotate(glm::vec3(0.0f, 45.0f * Time::GetDeltaTime(), 0.0f));
-
-    // Rotate child crate to test hierarchy
-    childCrateObject->GetTransform()->RotateLocal(glm::vec3(0.0f, 0.0f, 45.0f * Time::GetDeltaTime()));
-
-    // Move lights
-    //redLightObject->GetTransform()->SetLocalPosition(glm::vec3(0.0, 1.0f, sin(Time::GetTimeSinceStart()) * 20.0f));
-    //rainbowLightObject->GetTransform()->SetLocalPosition(glm::vec3(sin(Time::GetTimeSinceStart()) * 20.0f, 1.0f, 0.0f));
-}
-
-void GraphicDemoApplication::GuiDraw()
-{
-
 }
