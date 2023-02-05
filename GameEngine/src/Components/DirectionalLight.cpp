@@ -1,6 +1,7 @@
 ﻿#include "GameEngine/Components/DirectionalLight.h"
 
 #include "imgui.h"
+#include "GameEngine/Components/Transform.h"
 #include "GameEngine/Rendering/Light.h"
 #include "glm/gtc/type_ptr.hpp"
 
@@ -25,5 +26,6 @@ void DirectionalLight::OnUpdateEnd()
     ImGui::SliderFloat3("Directional Light Rotation", glm::value_ptr(_eulerAngles), 0.0f, 6.0f);
     
 
-    Light::AddDirectionalLight(_eulerAngles, _color, _intensity);
+    _transform->SetRotation(glm::quat(_eulerAngles)); 
+    Light::AddDirectionalLight(_transform->GetForward(), _color, _intensity);
 }
