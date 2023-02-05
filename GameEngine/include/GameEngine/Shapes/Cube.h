@@ -20,21 +20,8 @@ namespace GameEngine
                     glm::vec2 TexCoords;
                 };
 
-                static Rendering::VertexBufferAttribute* _vertexBufferAttributes;
-                static Rendering::VertexBufferLayout     _vertexBufferLayout;
-
-                Rendering::Mesh* _pMesh;
-
-                VertexPositionColorUV* _pCubeVertices;
-                const unsigned int     _numCubeVertices;
-
-                unsigned int*      _pCubeIndices;
-                const unsigned int _numCubeIndices;
-
             public:
-                Cube();
-                ~Cube();
-                Rendering::Mesh* GetMesh() const;
+                static Rendering::Primitive* GetPrimitive();
         };
     }
 }
