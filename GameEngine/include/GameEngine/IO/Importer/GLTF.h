@@ -42,7 +42,7 @@ namespace GameEngine
                     static const std::map<int, GLTF::TinyGLTFComponentTypeLookupEntry> TinyGltfComponentTypeLookup;
 
                 public:
-                    static std::vector<GameEngine::Rendering::Mesh*> ImportModel(std::string filePath);
+                    static std::vector<GameEngine::Rendering::Mesh*> ImportModel(const std::string& filePath, bool createCollider = false);
             };
         }
     }

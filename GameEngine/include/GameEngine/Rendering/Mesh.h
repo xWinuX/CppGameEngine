@@ -5,6 +5,7 @@
 #include "IndexBuffer.h"
 #include "VertexBufferLayout.h"
 #include "Primitive.h"
+#include "reactphysics3d/collision/TriangleMesh.h"
 
 namespace GameEngine
 {
@@ -18,11 +19,14 @@ namespace GameEngine
                 ~Mesh();
 
                 const std::vector<Primitive*>& GetPrimitives();
+                reactphysics3d::TriangleMesh*  GetColliderMesh() const;
 
                 void AddPrimitive(VertexBuffer* vertexBuffer, IndexBuffer* indexBuffer, VertexBufferLayout* vertexBufferLayout);
+                void SetColliderMesh(reactphysics3d::TriangleMesh* triangleMesh);
 
             private:
-                std::vector<Primitive*> _primitives;
+                std::vector<Primitive*>       _primitives;
+                reactphysics3d::TriangleMesh* _colliderMesh;
         };
     }
 }

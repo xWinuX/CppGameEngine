@@ -9,12 +9,12 @@
 using namespace GameEngine::Rendering;
 using namespace GameEngine::IO;
 
-Model::Model(const std::string& filePath)
+Model::Model(const std::string& filePath, const bool createCollider)
 {
     const std::string extension = filePath.substr(filePath.find_last_of('.') + 1);
 
     if (extension == "obj") { _meshes = IO::Importer::OBJ::ImportModel(filePath); }
-    else if (extension == "gltf") { _meshes = IO::Importer::GLTF::ImportModel(filePath); }
+    else if (extension == "gltf") { _meshes = IO::Importer::GLTF::ImportModel(filePath, createCollider); }
     else { Debug::Log::Error("Model file extension " + extension + " is not supported"); }
 }
 

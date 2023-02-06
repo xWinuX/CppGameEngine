@@ -11,6 +11,7 @@ Mesh::~Mesh()
 }
 
 const std::vector<Primitive*>& Mesh::GetPrimitives() { return _primitives; }
+reactphysics3d::TriangleMesh*  Mesh::GetColliderMesh() const { return _colliderMesh; }
 
 void Mesh::AddPrimitive(VertexBuffer* vertexBuffer, IndexBuffer* indexBuffer, VertexBufferLayout* vertexBufferLayout)
 {
@@ -18,3 +19,5 @@ void Mesh::AddPrimitive(VertexBuffer* vertexBuffer, IndexBuffer* indexBuffer, Ve
     Debug::Log::Message(std::to_string(indexBuffer->GetNumElements()));
     _primitives.push_back(new Primitive(vertexBuffer, indexBuffer, vertexBufferLayout));
 }
+
+void Mesh::SetColliderMesh(reactphysics3d::TriangleMesh* triangleMesh) { _colliderMesh = triangleMesh; }

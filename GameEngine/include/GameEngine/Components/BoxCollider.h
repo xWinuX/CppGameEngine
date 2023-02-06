@@ -11,7 +11,7 @@ namespace GameEngine
         class BoxCollider : public Collider
         {
             private:
-                reactphysics3d::BoxShape* _pBoxShape;
+                reactphysics3d::BoxShape* _boxShape;
 
             public:
                 explicit BoxCollider(glm::vec3 halfExtends);

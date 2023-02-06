@@ -88,6 +88,7 @@
     <ClCompile Include="GameEngine\src\Components\CapsuleCollider.cpp" />
     <ClCompile Include="GameEngine\src\Components\Component.cpp" />
     <ClCompile Include="GameEngine\src\Components\DirectionalLight.cpp" />
+    <ClCompile Include="GameEngine\src\Components\MeshCollider.cpp" />
     <ClCompile Include="GameEngine\src\Components\MeshRenderer.cpp" />
     <ClCompile Include="GameEngine\src\Components\PointLight.cpp" />
     <ClCompile Include="GameEngine\src\Components\Rigidbody.cpp" />
@@ -452,6 +453,7 @@
     <ClInclude Include="GameEngine\include\GameEngine\Components\Collider.h" />
     <ClInclude Include="GameEngine\include\GameEngine\Components\Component.h" />
     <ClInclude Include="GameEngine\include\GameEngine\Components\DirectionalLight.h" />
+    <ClInclude Include="GameEngine\include\GameEngine\Components\MeshCollider.h" />
     <ClInclude Include="GameEngine\include\GameEngine\Components\MeshRenderer.h" />
     <ClInclude Include="GameEngine\include\GameEngine\Components\PointLight.h" />
     <ClInclude Include="GameEngine\include\GameEngine\Components\Rigidbody.h" />

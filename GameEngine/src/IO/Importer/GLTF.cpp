@@ -2,6 +2,7 @@
 
 #include <tiny_gltf.h>
 
+#include "GameEngine/Physics/PhysicsManager.h"
 #include "GameEngine/Rendering/Mesh.h"
 
 using namespace GameEngine::Rendering;
@@ -27,9 +28,10 @@ const std::map<int, GLTF::TinyGLTFComponentTypeLookupEntry> GLTF::TinyGltfCompon
     {TINYGLTF_COMPONENT_TYPE_UNSIGNED_SHORT, {GL_UNSIGNED_SHORT, sizeof(GLushort)}},
 };
 
-std::vector<GameEngine::Rendering::Mesh*> GLTF::ImportModel(std::string filePath)
+std::vector<GameEngine::Rendering::Mesh*> GLTF::ImportModel(const std::string& filePath, bool createCollider)
 {
-    std::vector<GameEngine::Rendering::Mesh*> meshes;
+    std::vector<GameEngine::Rendering::Mesh*>  meshes;
+    std::vector<reactphysics3d::TriangleMesh*> colliderMeshes;
 
     tinygltf::TinyGLTF loader;
     tinygltf::Model    model;
@@ -50,7 +52,9 @@ std::vector<GameEngine::Rendering::Mesh*> GLTF::ImportModel(std::string filePath
 
     for (const tinygltf::Mesh& tinyGLTFMesh : model.meshes)
     {
-        Mesh* mesh = new Mesh();
+        Mesh*                         mesh = new Mesh();
+        reactphysics3d::TriangleMesh* triangleMesh;
+        if (createCollider) { triangleMesh = Physics::PhysicsManager::GetPhysicsCommon()->createTriangleMesh(); }
         for (const tinygltf::Primitive& primitive : tinyGLTFMesh.primitives)
         {
             std::vector<BufferInfo> bufferInfos = std::vector<BufferInfo>();
@@ -136,15 +140,35 @@ std::vector<GameEngine::Rendering::Mesh*> GLTF::ImportModel(std::string filePath
             auto start = indicesBuffer.data.begin() + static_cast<long long>(indicesAccessor.byteOffset + indicesBufferView.byteOffset);
             std::copy_n(start, (indicesAccessor.count * indexSize), indices);
 
+
+            if (createCollider)
+            {
+                Debug::Log::Message("num triangles = "  + std::to_string(static_cast<reactphysics3d::uint32>(indicesAccessor.count) / 3));
+                
+                reactphysics3d::TriangleVertexArray* triangleVertexArray = new reactphysics3d::TriangleVertexArray(
+                                                                                                                   static_cast<reactphysics3d::uint32>(numVertices),
+                                                                                                                   vertexBufferData,
+                                                                                                                   vertexSize,
+                                                                                                                   static_cast<reactphysics3d::uint32>(indicesAccessor.count) / 3,
+                                                                                                                   indices,
+                                                                                                                   static_cast<reactphysics3d::uint32>(indexSize),
+                                                                                                                   reactphysics3d::TriangleVertexArray::VertexDataType::VERTEX_FLOAT_TYPE,
+                                                                                                                   reactphysics3d::TriangleVertexArray::IndexDataType::INDEX_SHORT_TYPE
+                                                                                                                  );
+
+                
+                triangleMesh->addSubpart(triangleVertexArray);
+            }
             mesh->AddPrimitive(
                                new VertexBuffer(vertexBufferData, vertexSize, numVertices),
                                new IndexBuffer(indices, TinyGltfComponentTypeLookup.at(indicesAccessor.componentType).Size, indicesAccessor.count),
                                vertexBufferLayout
                               );
 
-            delete[] vertexBufferData;
-            delete[] indices;
+            //delete[] vertexBufferData;
+            //delete[] indices;
         }
+        if (createCollider) { mesh->SetColliderMesh(triangleMesh); }
         meshes.push_back(mesh);
     }
 

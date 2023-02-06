@@ -47,7 +47,9 @@ namespace Asset
         Suzanne,
         TheMissing,
         Sphere,
-        HighPolyPlane
+        WaterPlane,
+        Island,
+        IslandCollider,
     };
 
     enum class Shader : size_t

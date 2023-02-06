@@ -21,11 +21,13 @@ PhysicsDebugRenderer::~PhysicsDebugRenderer()
 
 void PhysicsDebugRenderer::EnableDebugRenderer(const bool enable)
 {
+    Debug::Log::Message("Enable Debug");
     reactphysics3d::PhysicsWorld* physicsWorld = PhysicsManager::GetPhysicsWorld();
     physicsWorld->setIsDebugRenderingEnabled(enable);
     physicsWorld->getDebugRenderer().setIsDebugItemDisplayed(reactphysics3d::DebugRenderer::DebugItem::COLLIDER_AABB, enable);
     physicsWorld->getDebugRenderer().setIsDebugItemDisplayed(reactphysics3d::DebugRenderer::DebugItem::CONTACT_POINT, enable);
     physicsWorld->getDebugRenderer().setIsDebugItemDisplayed(reactphysics3d::DebugRenderer::DebugItem::COLLISION_SHAPE, enable);
+    Debug::Log::Message("End enable debug");
 }
 
 void PhysicsDebugRenderer::Render()
@@ -40,6 +42,8 @@ void PhysicsDebugRenderer::Render()
     const reactphysics3d::DebugRenderer debugRenderer = PhysicsManager::GetPhysicsWorld()->getDebugRenderer();
     const unsigned int                  numTriangles  = debugRenderer.getNbTriangles();
 
+    Debug::Log::Message("num Debug triangles: " + std::to_string(numTriangles));
+    
     // Don't render if there aren't any triangles
     if (numTriangles == 0) { return; }
 
@@ -54,7 +58,7 @@ void PhysicsDebugRenderer::Render()
     // Update VertexBuffer
     memcpy(_vertices, triangles, numVertexBytes);
     _vertexBuffer->UpdateData(_vertices, numVertices);
-
+    
     // Update IndexBuffer
     for (unsigned int i = 0; i < numIndices; i++) { _indices[i] = i; }
     _indexBuffer->UpdateData(reinterpret_cast<unsigned char*>(_indices), numIndices);
@@ -67,8 +71,11 @@ void PhysicsDebugRenderer::Render()
 
 void PhysicsDebugRenderer::OnDraw()
 {
+    Debug::Log::Message("Before debug render");
     _vertexArrayObject->Bind();
+    Debug::Log::Message("after bind");
     _vertexArrayObject->Render();
+    Debug::Log::Message("After debug render");
 }
 
 GameEngine::Rendering::Material* PhysicsDebugRenderer::GetMaterial() { return _material; }

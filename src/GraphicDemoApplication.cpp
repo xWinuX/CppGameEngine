@@ -28,6 +28,7 @@
 #include "GameEngine/Audio/Sound.h"
 #include "GameEngine/Components/AudioListener.h"
 #include "GameEngine/Components/CapsuleCollider.h"
+#include "GameEngine/Components/MeshCollider.h"
 #include "GameEngine/Components/SpriteRenderer.h"
 #include "glm/gtc/random.hpp"
 #include "glm/gtx/string_cast.hpp"
@@ -108,7 +109,9 @@ void GraphicDemoApplication::LoadModels() const
     ADD_MODEL(Suzanne, new Model("res/models/Suzanne.gltf"));
     ADD_MODEL(TheMissing, new Model("res/models/TheMissing.gltf"));
     ADD_MODEL(Sphere, new Model("res/models/Sphere.gltf"));
-    ADD_MODEL(HighPolyPlane, new Model("res/models/HighPolyPlane.gltf"));
+    ADD_MODEL(WaterPlane, new Model("res/models/WaterPlane.gltf"));
+    ADD_MODEL(Island, new Model("res/models/Island.gltf", true));
+    ADD_MODEL(IslandCollider, new Model("res/models/IslandCollider.gltf", true));
 }
 
 void GraphicDemoApplication::LoadShaders() const
@@ -199,6 +202,7 @@ void GraphicDemoApplication::LoadMaterials() const
 
     // Water
     Material* waterMaterial = ADD_MATERIAL(Water, new Material(GET_SHADER(Water)));
+    waterMaterial->SetCullFace(Material::None);
     waterMaterial->SetTransparent(true);
 
     // MSDF Font
@@ -306,7 +310,7 @@ void GraphicDemoApplication::Initialize(Scene& scene)
 
     // Crate
     GameObject* crateObject = new GameObject();
-    crateObject->GetTransform()->SetLocalPosition(glm::vec3(0.0f, 5.0f, 0.0f));
+    crateObject->GetTransform()->SetLocalPosition(glm::vec3(0.0f, 10.0f, 0.0f));
     crateObject->AddComponent(new MeshRenderer(GET_MODEL(Cube)->GetMesh(0), GET_MATERIAL(Crate)));
     crateObject->AddComponent(new SpriteRenderer(GET_SPRITE(TheDude), GET_MATERIAL(SpriteLit)));
     crateObject->AddComponent(new BoxCollider(glm::vec3(0.5f)));
@@ -328,17 +332,15 @@ void GraphicDemoApplication::Initialize(Scene& scene)
     // Floor
     GameObject*                        floorObject    = new GameObject();
     GameEngine::Components::Transform* floorTransform = floorObject->GetTransform();
-    floorTransform->SetLocalPosition(glm::vec3(0.0f, -1.0f, 0.0f));
-    floorTransform->SetLocalScale(glm::vec3(200.0f, 2.0f, 200.0f));
-    floorObject->AddComponent(new MeshRenderer(GET_MODEL(Cube)->GetMesh(0), GET_MATERIAL(Crate)));
-    floorObject->AddComponent(new BoxCollider(glm::vec3(100.0f, 1.0f, 100.0f)));
+    floorObject->AddComponent(new MeshRenderer(GET_MODEL(Island)->GetMesh(0), GET_MATERIAL(Crate)));
+    floorObject->AddComponent(new MeshCollider(GET_MODEL(Island)->GetMesh(0)));
     floorObject->AddComponent(new Rigidbody(reactphysics3d::BodyType::STATIC));
     scene.AddGameObject(floorObject);
 
     // Water
     GameObject* waterObject = new GameObject();
-    waterObject->GetTransform()->SetLocalPosition(glm::vec3(0.0f, 2.0f, 0.0f));
-    //waterObject->AddComponent(new MeshRenderer(GET_MODEL(HighPolyPlane)->GetMesh(0), GET_MATERIAL(Water)));
+    waterObject->GetTransform()->SetLocalPosition(glm::vec3(0.0f, 0.0f, 0.0f));
+    waterObject->AddComponent(new MeshRenderer(GET_MODEL(WaterPlane)->GetMesh(0), GET_MATERIAL(Water)));
     scene.AddGameObject(waterObject);
 
     // Setup physics debug

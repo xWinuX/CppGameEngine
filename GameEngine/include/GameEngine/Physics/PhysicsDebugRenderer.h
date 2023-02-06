@@ -16,7 +16,7 @@ namespace GameEngine
         {
             private:
                 const unsigned int _vertexSize  = sizeof(reactphysics3d::DebugRenderer::DebugTriangle) / 3;
-                const unsigned int _maxVertices = 1024 * 3;
+                const unsigned int _maxVertices = 200000;
 
                 Rendering::VertexBuffer*          _vertexBuffer           = new Rendering::VertexBuffer(nullptr, _vertexSize, _maxVertices, GL_DYNAMIC_DRAW);
                 Rendering::IndexBuffer*           _indexBuffer            = new Rendering::IndexBuffer(nullptr, sizeof(unsigned int), _maxVertices, GL_DYNAMIC_DRAW);
