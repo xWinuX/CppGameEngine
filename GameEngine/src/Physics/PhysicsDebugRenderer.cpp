@@ -40,32 +40,30 @@ void PhysicsDebugRenderer::Render()
     }
 
     const reactphysics3d::DebugRenderer debugRenderer = PhysicsManager::GetPhysicsWorld()->getDebugRenderer();
-    const unsigned int                  numTriangles  = debugRenderer.getNbTriangles();
+    const size_t                        numTriangles  = debugRenderer.getNbTriangles();
 
     Debug::Log::Message("num Debug triangles: " + std::to_string(numTriangles));
-    
+
     // Don't render if there aren't any triangles
     if (numTriangles == 0) { return; }
 
-    const reactphysics3d::DebugRenderer::DebugTriangle* triangles = const_cast<reactphysics3d::DebugRenderer::DebugTriangle*>(debugRenderer.getTrianglesArray());
-
-    const unsigned int numVertices    = std::min(numTriangles * 3, _maxVertices);
-    const unsigned int numIndices     = numVertices;
-    const unsigned int numVertexBytes = numVertices * _vertexSize;
+    const size_t numVertices    = std::min(numTriangles * 3, _maxVertices);
+    const size_t numIndices     = std::min(numVertices, _maxVertices);
+    const size_t numVertexBytes = numVertices * _vertexSize;
 
     _vertexArrayObject->Bind();
 
     // Update VertexBuffer
-    memcpy(_vertices, triangles, numVertexBytes);
+    memcpy(_vertices, debugRenderer.getTrianglesArray(), numVertexBytes);
     _vertexBuffer->UpdateData(_vertices, numVertices);
-    
+
     // Update IndexBuffer
-    for (unsigned int i = 0; i < numIndices; i++) { _indices[i] = i; }
+    for (size_t i = 0; i < numIndices; i++) { _indices[i] = static_cast<unsigned int>(i); }
     _indexBuffer->UpdateData(reinterpret_cast<unsigned char*>(_indices), numIndices);
 
     // Submit for rendering
     Renderer::SubmitRenderable(this);
-    
+
     _vertexArrayObject->Unbind();
 }
 

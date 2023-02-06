@@ -10,10 +10,10 @@
 void main()
 {
     fragColor = vec4(0.0);
-    
-#include "Passes/AmbientLight.frag"
-#include "Passes/DirectionalLight.frag"
-#include "Passes/PointLight.frag"
-#include "Passes/Texture.frag"
-#include "Passes/ColorTint.frag"
+
+    #include "Passes/AmbientLight.frag"
+    #include "Passes/DirectionalLight.frag"
+    #include "Passes/PointLight.frag"
+    #include "Passes/Texture.frag"
+    #include "Passes/ColorTint.frag"
 }

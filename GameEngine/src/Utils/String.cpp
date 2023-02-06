@@ -53,7 +53,7 @@ std::string String::ReplaceIncludeMacros(const std::string& filePath)
 
     while (std::getline(in, line))
     {
-        if (line.find("#include") == 0)
+        if (line.find("#include") != std::string::npos)
         {
             size_t      start        = line.find('"') + 1;
             size_t      end          = line.find('"', start);

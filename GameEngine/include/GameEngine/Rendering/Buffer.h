@@ -51,14 +51,12 @@ namespace GameEngine
 
                     glBindBuffer(BufferType, _bufferID);
                     glBufferSubData(BufferType, 0, _numElements * _elementSize, data);
-                    glBindBuffer(BufferType, 0);
                 }
 
                 void UpdateDataRange(const unsigned char* data, const size_t startOffset, const size_t numBytes) const
                 {
                     glBindBuffer(BufferType, _bufferID);
                     glBufferSubData(BufferType, startOffset, startOffset+numBytes, data);
-                    glBindBuffer(BufferType, 0);
                 }
         };
     }

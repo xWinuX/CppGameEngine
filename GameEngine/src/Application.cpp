@@ -50,7 +50,7 @@ void Application::Run()
         
         Time::Update();
         Input::Update();
-
+        
         // Executes als OnPhysicsUpdates on game objects if a physics time step happens, also updates the physics world
         PhysicsManager::Update(&scene);
         

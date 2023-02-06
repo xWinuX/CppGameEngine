@@ -47,6 +47,9 @@ void GraphicDemoApplication::LoadTextures()
     ADD_TEXTURE(No, new Texture("res/textures/NoTexture.png"));
     ADD_TEXTURE(Black, new Texture("res/textures/Black.png"));
     ADD_TEXTURE(White, new Texture("res/textures/White.png"));
+    ADD_TEXTURE(Grass, new Texture("res/textures/Grass.png"));
+    ADD_TEXTURE(Dirt, new Texture("res/textures/Dirt.png"));
+    ADD_TEXTURE(Sand, new Texture("res/textures/Sand.png"));
     Texture::ImportSettings importSettings;
     importSettings.FilterMode = Texture::Nearest;
     ADD_TEXTURE(NormalMapDefault, new Texture("res/textures/NormalMapDefault.png", importSettings));
@@ -142,6 +145,14 @@ void GraphicDemoApplication::LoadShaders() const
     litShader->InitializeUniform<glm::vec4>("u_ColorTint", glm::vec4(1.0f));
     litShader->InitializeUniform<Texture*>("u_Texture", GET_TEXTURE(White));
 
+    // Island
+    Shader* islandShader = ADD_SHADER(Island, new Shader("res/shaders/Island/Island.vert", "res/shaders/Island/Island.frag"));
+    islandShader->UniformStorageFromShader(litShader);
+    islandShader->InitializeUniform<Texture*>("u_TextureRed", GET_TEXTURE(Dirt));
+    islandShader->InitializeUniform<Texture*>("u_TextureGreen", GET_TEXTURE(Grass));
+    islandShader->InitializeUniform<Texture*>("u_TextureBlue", GET_TEXTURE(Sand));
+    islandShader->InitializeUniform<float>("u_TilingFactor", 1.0f);
+        
     // Water
     Shader* waterShader = ADD_SHADER(Water, new Shader("res/shaders/Water/Water.vert", "res/shaders/Water/Water.frag"));
     waterShader->UniformStorageFromShader(litShader);
@@ -170,11 +181,10 @@ void GraphicDemoApplication::LoadShaders() const
     Shader* frameBufferShader = ADD_SHADER(FrameBuffer, new Shader("res/shaders/FrameBuffer/FrameBuffer.vert", "res/shaders/FrameBuffer/FrameBuffer.frag"));
     frameBufferShader->GetUniformStorage()->CopyFrom(&commonUniforms);
 
+    // Skybox
     Shader* skyboxShader = ADD_SHADER(Skybox, new Shader("res/shaders/Skybox/Skybox.vert", "res/shaders/Skybox/Skybox.frag"));
     skyboxShader->GetUniformStorage()->CopyFrom(&commonUniforms);
     skyboxShader->InitializeUniform<CubeMap*>("u_CubeMap", GET_CUBEMAP(SkyBox));
-    skyboxShader->InitializeUniform<glm::mat4>("u_View", glm::identity<glm::mat4>());
-    skyboxShader->InitializeUniform<glm::mat4>("u_Projection", glm::identity<glm::mat4>());
 }
 
 void GraphicDemoApplication::LoadMaterials() const
@@ -191,6 +201,9 @@ void GraphicDemoApplication::LoadMaterials() const
     crateMaterial->GetUniformStorage()->SetUniform("u_NormalMap", GET_TEXTURE(CrateNormalMap));
     crateMaterial->GetUniformStorage()->SetUniform("u_NormalMapIntensity", 1.0f);
 
+    // Island
+    Material* islandMaterial = ADD_MATERIAL(Island, new Material(GET_SHADER(Island)));
+    
     // Physics Debug
     Material* physicsMaterial = ADD_MATERIAL(PhysicsDebug, new Material(GET_SHADER(PhysicsDebug)));
     physicsMaterial->SetCullFace(Material::None);
@@ -310,7 +323,7 @@ void GraphicDemoApplication::Initialize(Scene& scene)
 
     // Crate
     GameObject* crateObject = new GameObject();
-    crateObject->GetTransform()->SetLocalPosition(glm::vec3(0.0f, 10.0f, 0.0f));
+    crateObject->GetTransform()->SetLocalPosition(glm::vec3(5.0f, 10.0f, 0.0f));
     crateObject->AddComponent(new MeshRenderer(GET_MODEL(Cube)->GetMesh(0), GET_MATERIAL(Crate)));
     crateObject->AddComponent(new SpriteRenderer(GET_SPRITE(TheDude), GET_MATERIAL(SpriteLit)));
     crateObject->AddComponent(new BoxCollider(glm::vec3(0.5f)));
@@ -332,7 +345,7 @@ void GraphicDemoApplication::Initialize(Scene& scene)
     // Floor
     GameObject*                        floorObject    = new GameObject();
     GameEngine::Components::Transform* floorTransform = floorObject->GetTransform();
-    floorObject->AddComponent(new MeshRenderer(GET_MODEL(Island)->GetMesh(0), GET_MATERIAL(Crate)));
+    floorObject->AddComponent(new MeshRenderer(GET_MODEL(Island)->GetMesh(0), GET_MATERIAL(Island)));
     floorObject->AddComponent(new MeshCollider(GET_MODEL(Island)->GetMesh(0)));
     floorObject->AddComponent(new Rigidbody(reactphysics3d::BodyType::STATIC));
     scene.AddGameObject(floorObject);

@@ -4,12 +4,13 @@
 
 #include "GameEngine/Physics/PhysicsManager.h"
 #include "GameEngine/Rendering/Mesh.h"
+#include "glm/gtx/string_cast.hpp"
 
 using namespace GameEngine::Rendering;
 using namespace GameEngine::IO::Importer;
 
 
-const std::vector<std::string> GLTF::GLTFAttributeOrder = {"POSITION", "NORMAL", "TANGENT", "TEXCOORD_0"};
+const std::vector<std::string> GLTF::GLTFAttributeOrder = {"POSITION", "NORMAL", "TANGENT", "TEXCOORD_0", "COLOR_0"};
 
 const std::map<int, GLTF::TinyGLTFTypeLookupEntry> GLTF::TinyGltfTypeLookup = {
     {TINYGLTF_TYPE_VEC4, {4}},
@@ -100,6 +101,7 @@ std::vector<GameEngine::Rendering::Mesh*> GLTF::ImportModel(const std::string& f
                 const tinygltf::BufferView view = model.bufferViews[accessor.bufferView];
                 bufferInfos.push_back({&model.buffers[view.buffer], size, (accessor.byteOffset + view.byteOffset)});
 
+                Debug::Log::Message("accessor count: " + std::to_string(accessor.count));
                 numVertices = accessor.count;
             }
 
@@ -143,20 +145,33 @@ std::vector<GameEngine::Rendering::Mesh*> GLTF::ImportModel(const std::string& f
 
             if (createCollider)
             {
-                Debug::Log::Message("num triangles = "  + std::to_string(static_cast<reactphysics3d::uint32>(indicesAccessor.count) / 3));
-                
+                reactphysics3d::TriangleVertexArray::IndexDataType indexType = indexSize == 2 ? reactphysics3d::TriangleVertexArray::IndexDataType::INDEX_SHORT_TYPE : reactphysics3d::TriangleVertexArray::IndexDataType::INDEX_INTEGER_TYPE;
+                Debug::Log::Message("num vertices = " + std::to_string(numVertices));
+                Debug::Log::Message("num triangles = " + std::to_string(static_cast<reactphysics3d::uint32>(indicesAccessor.count) / 3));
+
                 reactphysics3d::TriangleVertexArray* triangleVertexArray = new reactphysics3d::TriangleVertexArray(
                                                                                                                    static_cast<reactphysics3d::uint32>(numVertices),
                                                                                                                    vertexBufferData,
                                                                                                                    vertexSize,
-                                                                                                                   static_cast<reactphysics3d::uint32>(indicesAccessor.count) / 3,
+                                                                                                                   vertexBufferData + sizeof(glm::vec3),
+                                                                                                                   vertexSize,
+                                                                                                                   indicesAccessor.count / 3,
                                                                                                                    indices,
-                                                                                                                   static_cast<reactphysics3d::uint32>(indexSize),
+                                                                                                                   static_cast<reactphysics3d::uint32>(indexSize)*3,
                                                                                                                    reactphysics3d::TriangleVertexArray::VertexDataType::VERTEX_FLOAT_TYPE,
-                                                                                                                   reactphysics3d::TriangleVertexArray::IndexDataType::INDEX_SHORT_TYPE
+                                                                                                                   reactphysics3d::TriangleVertexArray::NormalDataType::NORMAL_FLOAT_TYPE,
+                                                                                                                   indexType
                                                                                                                   );
 
-                
+
+                for (size_t i = 0; i < numVertices; i++)
+                {
+                    reactphysics3d::Vector3 pNormal;
+                    triangleVertexArray->getNormal(i, &pNormal);
+                    glm::vec3 normal = glm::vec3(pNormal.x, pNormal.y, pNormal.z);
+                    if (glm::length(normal) < 0.01f) { Debug::Log::Message("normal after insertion: " + glm::to_string(normal)); }
+                }
+
                 triangleMesh->addSubpart(triangleVertexArray);
             }
             mesh->AddPrimitive(

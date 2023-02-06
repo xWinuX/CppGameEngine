@@ -17,7 +17,10 @@ namespace Asset
         NormalMapDefault,
         TheDude,
         Crate,
-        CrateNormalMap
+        CrateNormalMap,
+        Grass,
+        Dirt,
+        Sand
     };
 
     enum class Sprite : size_t
@@ -55,6 +58,7 @@ namespace Asset
     enum class Shader : size_t
     {
         Lit,
+        Island,
         Water,
         SpriteLit,
         PhysicsDebug,
@@ -68,6 +72,7 @@ namespace Asset
     {
         Dude,
         Crate,
+        Island,
         PhysicsDebug,
         SpriteLit,
         Water,
