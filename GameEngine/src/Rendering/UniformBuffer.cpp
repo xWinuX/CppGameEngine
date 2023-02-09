@@ -1,4 +1,4 @@
-﻿#include "UniformBuffer.h"
+﻿#include "GameEngine/Rendering/UniformBuffer.h"
 
 void UniformBuffer::Bind(const unsigned int bindingPoint) const
 {

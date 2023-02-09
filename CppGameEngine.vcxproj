@@ -77,7 +77,6 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="GameEngine\include\GameEngine\Rendering\UniformBuffer.cpp" />
     <ClCompile Include="GameEngine\src\Application.cpp" />
     <ClCompile Include="GameEngine\src\Audio\AudioManager.cpp" />
     <ClCompile Include="GameEngine\src\Audio\Sound.cpp" />
@@ -487,6 +486,7 @@
     <ClCompile Include="GameEngine\src\Rendering\SpriteAtlas.cpp" />
     <ClCompile Include="GameEngine\src\Rendering\SpriteSet.cpp" />
     <ClCompile Include="GameEngine\src\Rendering\Texture.cpp" />
+    <ClCompile Include="GameEngine\src\Rendering\UniformBuffer.cpp" />
     <ClCompile Include="GameEngine\src\Rendering\UniformStorage.cpp" />
     <ClCompile Include="GameEngine\src\Rendering\VertexArrayObject.cpp" />
     <ClCompile Include="GameEngine\src\Rendering\VertexBufferAttribute.cpp" />
