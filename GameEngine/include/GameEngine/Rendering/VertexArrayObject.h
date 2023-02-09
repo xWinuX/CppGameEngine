@@ -26,9 +26,9 @@ namespace GameEngine
                 void SetIndexBuffer(IndexBuffer* indexBuffer);
                 void Finalize() const;
                 void Bind() const;
-                void Render() const;
-                void Render(int numIndices, unsigned int offset) const;
-                void RenderInstanced(int numIndices, int instanceCount) const;
+                void Draw() const;
+                void Draw(int numIndices, unsigned int offset) const;
+                void DrawInstanced(int numIndices, int instanceCount) const;
                 void Unbind() const;
         };
     }

@@ -38,9 +38,6 @@ void OBJ::AddMesh(std::vector<VertexPositionUVNormal>& vertexBuffer, std::vector
                               new IndexBuffer(reinterpret_cast<unsigned char*>(indices), sizeof(unsigned int), indexBuffer.size()),
                               new VertexBufferLayout(pVertexAttributes, 3))
                     );
-
-    delete[] vertices;
-    delete[] indices;
 }
 
 std::vector<GameEngine::Rendering::Mesh*> OBJ::ImportModel(const std::string& filePath)

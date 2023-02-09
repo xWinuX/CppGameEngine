@@ -72,7 +72,7 @@ void PhysicsDebugRenderer::OnDraw()
     Debug::Log::Message("Before debug render");
     _vertexArrayObject->Bind();
     Debug::Log::Message("after bind");
-    _vertexArrayObject->Render();
+    _vertexArrayObject->Draw();
     Debug::Log::Message("After debug render");
 }
 

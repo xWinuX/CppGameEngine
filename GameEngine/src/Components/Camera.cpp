@@ -17,7 +17,6 @@ Camera::Camera(const float fovInDegrees, const float zNear, const float zFar, Sh
     _fovInDegrees(fovInDegrees),
     _zNear(zNear),
     _zFar(zFar),
-    _skyboxMaterial(skyboxMaterial),
     _skyboxCube(new Rendering::RenderablePrimitive(Primitives::SkyboxCube::GetPrimitive(), skyboxMaterial))
 {
     UpdateProjectionMatrix();

@@ -62,9 +62,7 @@ void Renderer::Initialize()
                                                                VertexBufferAttribute(4, GL_FLOAT, GL_FALSE, sizeof(Sprite::QuadData), (GLvoid*)(40 * sizeof(float)), 1),
                                                                VertexBufferAttribute(4, GL_FLOAT, GL_FALSE, sizeof(Sprite::QuadData), (GLvoid*)(44 * sizeof(float)), 1),
                                                            }, 12));
-
-    delete[] indices;
-
+    
     Light::Initialize();
 }
 
@@ -125,7 +123,7 @@ unsigned int Renderer::Render2DBatches(const std::pair<Material*, std::map<Textu
             // Render the batch
             _renderable2DVertexBuffer->UpdateData(_renderable2DVertexData, numQuads);
             material->GetUniformStorage()->SetUniformInstant<Texture*>("u_Texture", texturePair.first);
-            _renderable2DVertexArrayObject->RenderInstanced(6, static_cast<int>(numQuads));
+            _renderable2DVertexArrayObject->DrawInstanced(6, static_cast<int>(numQuads));
             numDrawCalls++;
         }
     }

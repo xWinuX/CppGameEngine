@@ -10,7 +10,7 @@ UniformBuffer*    Light::_lightUniformBuffer = nullptr;
 
 void Light::Initialize()
 {
-    _lightUniformBuffer = new UniformBuffer(reinterpret_cast<const unsigned char*>(_lightData), sizeof(Light::UniformBufferData), 1, GL_DYNAMIC_DRAW);
+    _lightUniformBuffer = new UniformBuffer(reinterpret_cast<unsigned char*>(_lightData), sizeof(Light::UniformBufferData), 1, GL_DYNAMIC_DRAW);
     _lightUniformBuffer->Bind(2);
 }
 

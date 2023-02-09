@@ -10,13 +10,15 @@ namespace GameEngine
         class Buffer
         {
             protected:
-                GLuint _bufferID = 0;
-                size_t _elementSize;
-                size_t _numElements;
-                GLenum _drawType;
+                unsigned char* _buffer;
+                GLuint         _bufferID = 0;
+                size_t         _elementSize;
+                size_t         _numElements;
+                GLenum         _drawType;
 
             public:
-                explicit Buffer(const unsigned char* buffer, const size_t elementSize, const size_t numElements, const GLenum drawType = GL_STATIC_DRAW):
+                explicit Buffer(unsigned char* buffer, const size_t elementSize, const size_t numElements, const GLenum drawType = GL_STATIC_DRAW):
+                    _buffer(buffer),
                     _elementSize(elementSize),
                     _numElements(numElements),
                     _drawType(drawType)
@@ -30,6 +32,8 @@ namespace GameEngine
                 ~Buffer()
                 {
                     glDeleteBuffers(1, &_bufferID);
+                    
+                    delete[] _buffer;
                 }
 
                 size_t GetElementSize() const { return _elementSize; }
@@ -45,18 +49,30 @@ namespace GameEngine
                     glBindBuffer(BufferType, 0);
                 }
 
-                void UpdateData(const unsigned char* data, const size_t numElements)
+                /**
+                 * \brief Updates data of the buffer with given data. The data will be updated from the start of the buffer
+                 * \param data New data
+                 * \param numElements Number of elements to update
+                 * \param updateInternalBuffer Should the internal buffer be updated? (Default value is false, setting it to true will cost performance because data will be copied)
+                 */
+                void UpdateData(const unsigned char* data, const size_t numElements, const bool updateInternalBuffer = false) const
                 {
-                    _numElements = numElements;
-
-                    glBindBuffer(BufferType, _bufferID);
-                    glBufferSubData(BufferType, 0, _numElements * _elementSize, data);
+                    UpdateDataRange(data, 0, numElements * _elementSize, updateInternalBuffer);
                 }
 
-                void UpdateDataRange(const unsigned char* data, const size_t startOffset, const size_t numBytes) const
+                /**
+                 * \brief 
+                 * \param data New data
+                 * \param startOffsetInBytes Offset in bytes where to start inserting data into the buffer
+                 * \param numBytes Number of bytes to insert
+                 * \param updateInternalBuffer Should the internal buffer be updated? (Default value is false, setting it to true will cost performance because data will be copied)
+                 */
+                void UpdateDataRange(const unsigned char* data, const size_t startOffsetInBytes, const size_t numBytes, const bool updateInternalBuffer = false) const
                 {
+                    if (updateInternalBuffer) { memcpy(_buffer, data, numBytes); }
+
                     glBindBuffer(BufferType, _bufferID);
-                    glBufferSubData(BufferType, startOffset, startOffset+numBytes, data);
+                    glBufferSubData(BufferType, startOffsetInBytes, startOffsetInBytes + numBytes, data);
                 }
         };
     }

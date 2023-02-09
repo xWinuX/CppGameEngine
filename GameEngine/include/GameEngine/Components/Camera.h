@@ -21,10 +21,8 @@ namespace GameEngine
                 float     _zFar;
                 glm::mat4 _projectionMatrix = glm::identity<glm::mat4>();
 
-                Rendering::Material*            _skyboxMaterial;
                 Rendering::RenderablePrimitive* _skyboxCube;
-
-
+            
                 struct UniformBufferData
                 {
                     glm::mat4 ViewProjection = glm::identity<glm::mat4>();
@@ -37,9 +35,7 @@ namespace GameEngine
                 UniformBuffer*     _cameraUniformBuffer;
 
                 void UpdateProjectionMatrix();
-
                 void OnShaderUse(Rendering::Shader* shader) override;
-
                 void Bind()  override;
 
             protected:

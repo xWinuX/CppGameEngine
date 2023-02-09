@@ -16,7 +16,7 @@ namespace GameEngine
                 Components::Transform* _transform = nullptr;
 
             public:
-                RenderablePrimitive(Primitive* primitive, Material* material = nullptr);
+                explicit  RenderablePrimitive(Primitive* primitive, Material* material = nullptr);
                 void      OnBeforeDraw() override;
                 void      OnDraw() override;
                 Material* GetMaterial() override;

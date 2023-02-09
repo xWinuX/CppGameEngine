@@ -151,7 +151,7 @@ void GraphicDemoApplication::LoadShaders() const
     islandShader->InitializeUniform<Texture*>("u_TextureRed", GET_TEXTURE(Dirt));
     islandShader->InitializeUniform<Texture*>("u_TextureGreen", GET_TEXTURE(Grass));
     islandShader->InitializeUniform<Texture*>("u_TextureBlue", GET_TEXTURE(Sand));
-    islandShader->InitializeUniform<float>("u_TilingFactor", 1.0f);
+    islandShader->InitializeUniform<float>("u_TilingFactor", 0.1f);
         
     // Water
     Shader* waterShader = ADD_SHADER(Water, new Shader("res/shaders/Water/Water.vert", "res/shaders/Water/Water.frag"));

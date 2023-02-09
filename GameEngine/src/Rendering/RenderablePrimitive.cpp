@@ -17,7 +17,7 @@ void RenderablePrimitive::OnBeforeDraw()
 void RenderablePrimitive::OnDraw()
 {
     _primitive->GetVertexArrayObject()->Bind();
-    _primitive->GetVertexArrayObject()->Render();
+    _primitive->GetVertexArrayObject()->Draw();
     _primitive->GetVertexArrayObject()->Unbind();
 }
 
