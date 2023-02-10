@@ -1,5 +1,6 @@
 ﻿#include "GameEngine/Components/TextRenderer.h"
 
+#include "GameEngine/GameObject.h"
 #include "GameEngine/Components/Transform.h"
 #include "GameEngine/Rendering/Renderer.h"
 
@@ -60,6 +61,7 @@ void TextRenderer::OnUpdateEnd()
     // Update quads needed
     if (_needsUpdate) { UpdateQuads(); }
 
+    SetLayer(_gameObject->GetLayer());
     Renderer::SubmitBatchRenderable2D(this);
 }
 

@@ -8,7 +8,8 @@ struct Vertex
     glm::vec2 UV;
 };
 
-FrameBuffer::FrameBuffer(glm::uvec2 size)
+FrameBuffer::FrameBuffer(glm::uvec2 size, const GLbitfield clearBits):
+    _clearBits(clearBits)
 {
     glGenFramebuffers(1, &_frameBufferID);
     glBindFramebuffer(GL_FRAMEBUFFER, _frameBufferID);
@@ -24,7 +25,7 @@ void FrameBuffer::AttachTexture(const Texture* texture, const GLenum attachment)
     glFramebufferTexture2D(GL_FRAMEBUFFER, attachment, GL_TEXTURE_2D, texture->GetTextureID(), 0);
 }
 
-void FrameBuffer::BindRenderBuffer(const RenderBuffer* renderBuffer, const GLenum attachment)
+void FrameBuffer::AttachRenderBuffer(const RenderBuffer* renderBuffer, const GLenum attachment)
 {
     renderBuffer->Bind();
     glFramebufferRenderbuffer(GL_FRAMEBUFFER, attachment, GL_RENDERBUFFER, renderBuffer->GetRenderBufferId());
@@ -34,6 +35,11 @@ void FrameBuffer::BindRenderBuffer(const RenderBuffer* renderBuffer, const GLenu
 void FrameBuffer::Bind() const
 {
     glBindFramebuffer(GL_FRAMEBUFFER, _frameBufferID);
+}
+
+void FrameBuffer::Clear() const
+{
+    glClear(_clearBits);
 }
 
 void FrameBuffer::Unbind()

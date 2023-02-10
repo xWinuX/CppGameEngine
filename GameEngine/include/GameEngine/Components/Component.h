@@ -16,16 +16,14 @@ namespace GameEngine
                 GameEngine::GameObject* _gameObject;
                 Transform*              _transform;
                 bool                    _enabled = true;
-
-
+            
                 virtual void OnStart();
                 virtual void OnUpdateBegin();
                 virtual void OnUpdate();
                 virtual void OnLateUpdate();
                 virtual void OnUpdateEnd();
                 virtual void OnPhysicsUpdate();
-
-
+            
                 /**
                  * \brief
                  * Runs at the end of a physics update cycle

@@ -8,9 +8,9 @@
 #include "Renderable2D.h"
 #include "RenderTarget.h"
 #include "ShaderUseCallback.h"
-#include "VertexArrayObject.h"
 #include "VertexBuffer.h"
 #include "SpriteSet.h"
+#include "../../../src/Rendering/ShadowMap.h"
 
 namespace GameEngine
 {
@@ -19,12 +19,16 @@ namespace GameEngine
         class Renderer
         {
             private:
-                static std::vector<ShaderUseCallback*>             _shaderUseCallbacks;
-                static std::vector<RenderTarget*>                  _renderTargets;
+                typedef std::map<Layer, std::map<Material*, std::vector<Renderable*>>>                       RenderableStructure;
+                typedef std::map<Layer, std::map<Material*, std::map<Texture*, std::vector<Renderable2D*>>>> Renderable2DBatchStructure;
+
+                static std::vector<ShadowMap*>         _shadowMaps;
+                static std::vector<ShaderUseCallback*> _shaderUseCallbacks;
+                static std::vector<RenderTarget*>      _renderTargets;
 
                 // 3D
-                static std::map<Material*, std::vector<Renderable*>> _opaqueRenderables;
-                static std::map<Material*, std::vector<Renderable*>> _transparentRenderables;
+                static RenderableStructure _opaqueRenderables;
+                static RenderableStructure _transparentRenderables;
 
                 // 2D Batch Vars
                 static const size_t Renderable2DBatchMaxQuads;
@@ -35,7 +39,8 @@ namespace GameEngine
                 static VertexBuffer*      _renderable2DVertexBuffer;
                 static IndexBuffer*       _renderable2DIndexBuffer;
 
-                static std::map<Material*, std::map<Texture*, std::vector<Renderable2D*>>> _opaqueBatchRenderable2Ds;
+                static Renderable2DBatchStructure _opaqueBatchRenderable2Ds;
+                static Renderable2DBatchStructure _transparentBatchRenderable2Ds;
 
             public:
                 static void Initialize();
@@ -73,7 +78,7 @@ namespace GameEngine
                         {
                             shader = newShader;
                             shader->Use();
-                            
+
                             for (ShaderUseCallback* shaderUseCallback : _shaderUseCallbacks) { shaderUseCallback->OnShaderUse(shader); }
                         }
 

@@ -1,9 +1,6 @@
 ﻿#pragma once
 #include "RenderBuffer.h"
-#include "Shader.h"
 #include "Texture.h"
-#include "VertexArrayObject.h"
-#include "GameEngine/Rendering/Primitives/ScreenQuad.h"
 #include "glad/glad.h"
 
 namespace GameEngine
@@ -13,14 +10,16 @@ namespace GameEngine
         class FrameBuffer
         {
             private:
-                GLuint _frameBufferID = 0;
+                GLuint     _frameBufferID = 0;
+                GLbitfield _clearBits;
 
             public:
-                explicit FrameBuffer(glm::uvec2 size);
+                explicit FrameBuffer(glm::uvec2 size, GLbitfield clearBits = GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
                 ~FrameBuffer();
                 void AttachTexture(const Texture* texture, const GLenum attachment);
-                void BindRenderBuffer(const RenderBuffer* renderBuffer, const GLenum attachment);
+                void AttachRenderBuffer(const RenderBuffer* renderBuffer, const GLenum attachment);
                 void Bind() const;
+                void Clear() const;
                 void Unbind();
         };
     }

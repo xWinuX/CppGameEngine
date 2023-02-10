@@ -14,7 +14,11 @@ SpriteRenderer::SpriteRenderer(Rendering::RenderableSprite* sprite, Rendering::M
     _sprite(sprite),
     _material(material) {}
 
-void SpriteRenderer::OnUpdateEnd() { Renderer::SubmitBatchRenderable2D(this); }
+void SpriteRenderer::OnUpdateEnd()
+{
+    SetLayer(_gameObject->GetLayer());
+    Renderer::SubmitBatchRenderable2D(this);
+}
 
 void SpriteRenderer::OnUpdate() { _frameIndex = fmod(_frameIndex + Time::GetDeltaTime() * _framesPerSecond, static_cast<float>(_sprite->GetNumFrames())); }
 

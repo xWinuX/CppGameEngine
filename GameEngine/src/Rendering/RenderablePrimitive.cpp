@@ -21,6 +21,6 @@ void RenderablePrimitive::OnDraw()
     _primitive->GetVertexArrayObject()->Unbind();
 }
 
-Material* RenderablePrimitive::GetMaterial() { return _material; }
-void      RenderablePrimitive::SetMaterial(Material* material) { _material = material; }
-void      RenderablePrimitive::SetTransform(Components::Transform* transform) { _transform = transform; }
+Material*         RenderablePrimitive::GetMaterial() { return _material; }
+void              RenderablePrimitive::SetMaterial(Material* material) { _material = material; }
+void              RenderablePrimitive::SetTransform(Components::Transform* transform) { _transform = transform; }

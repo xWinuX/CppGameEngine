@@ -3,6 +3,7 @@
 #include <vector>
 #include <glm/vec3.hpp>
 
+#include "Layer.h"
 #include "Components/Component.h"
 #include "Components/Transform.h"
 
@@ -14,23 +15,6 @@ namespace GameEngine
     class GameObject final
     {
         friend Scene;
-
-        private:
-            GameObject*                                     _parent   = nullptr;
-            std::list<GameEngine::GameObject*>              _children = std::list<GameEngine::GameObject*>();
-            std::vector<GameEngine::Components::Component*> _components;
-            GameEngine::Components::Transform*              _transform;
-
-            void AddChild(GameObject* child);
-            void RemoveChild(GameObject* child);
-
-            void OnStart() const;
-            void OnUpdateBegin() const;
-            void OnUpdate() const;
-            void OnLateUpdate() const;
-            void OnUpdateEnd() const;
-            void OnPhysicsUpdate() const;
-            void OnPhysicsUpdateEnd(float interpolationFactor) const;
 
         public:
             GameObject();
@@ -64,10 +48,10 @@ namespace GameEngine
                     component = child->GetComponent<T>();
                     if (component != nullptr) { break; }
                 }
-                
+
                 return component;
             }
-        
+
             template <typename T>
             std::vector<T*> GetComponents()
             {
@@ -85,8 +69,28 @@ namespace GameEngine
                 return castedComponents;
             }
 
+            Layer       GetLayer() const;
+            GameObject* GetParent() const;
+
+            void SetLayer(Layer layer);
             void SetParent(GameObject* newParent);
 
-            GameObject* GetParent() const;
+        private:
+            GameObject*                                     _parent   = nullptr;
+            Layer                                           _layer    = Layer::L_1;
+            std::list<GameEngine::GameObject*>              _children = std::list<GameEngine::GameObject*>();
+            std::vector<GameEngine::Components::Component*> _components;
+            GameEngine::Components::Transform*              _transform;
+
+            void AddChild(GameObject* child);
+            void RemoveChild(GameObject* child);
+
+            void OnStart() const;
+            void OnUpdateBegin() const;
+            void OnUpdate() const;
+            void OnLateUpdate() const;
+            void OnUpdateEnd() const;
+            void OnPhysicsUpdate() const;
+            void OnPhysicsUpdateEnd(float interpolationFactor) const;
     };
 }

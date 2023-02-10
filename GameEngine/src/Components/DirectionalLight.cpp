@@ -6,6 +6,7 @@
 #include "glm/gtc/type_ptr.hpp"
 
 using namespace GameEngine::Components;
+using namespace GameEngine::Rendering;
 
 std::vector<glm::vec3> DirectionalLight::_directions  = std::vector<glm::vec3>();
 std::vector<glm::vec4> DirectionalLight::_colors      = std::vector<glm::vec4>();
@@ -20,7 +21,6 @@ void DirectionalLight::SetIntensity(const float intensity) { _intensity = intens
 
 void DirectionalLight::OnUpdateEnd()
 {
-    
     ImGui::ColorPicker4("Directional Light Color", glm::value_ptr(_color));
     ImGui::SliderFloat("Directional Light Intensity", &_intensity, 0.0f, 10.0f);
     ImGui::SliderFloat3("Directional Light Rotation", glm::value_ptr(_eulerAngles), 0.0f, 6.0f);

@@ -59,6 +59,8 @@ void GameObject::AddChild(GameObject* child) { _children.push_back(child); }
 
 void GameObject::RemoveChild(GameObject* child) { _children.remove(child); }
 
+Layer GameObject::GetLayer() const { return _layer; }
+
 void GameObject::SetParent(GameObject* newParent)
 {
     if (newParent == nullptr) { Debug::Log::Message("Given Parent is null!"); }
@@ -70,6 +72,7 @@ void GameObject::SetParent(GameObject* newParent)
 }
 
 GameObject* GameObject::GetParent() const { return _parent; }
+void        GameObject::SetLayer(Layer layer) { _layer = layer; }
 
 void GameObject::OnStart() const { DO_FUNCTION(OnStart()) }
 void GameObject::OnUpdateBegin() const { DO_FUNCTION(OnUpdateBegin()) }

@@ -12,9 +12,18 @@
 #include "GameEngine/Rendering/VertexArrayObject.h"
 #include "GameEngine/Rendering/VertexBuffer.h"
 
+#define RENDER_CALL(renderStructure, call) \
+for (auto pair : (renderStructure)) \
+{ \
+    if (!renderTarget->HasActiveLayer(pair.first)) { continue; } \
+    ##call## \
+}
+
+
 using namespace GameEngine::Rendering;
 using namespace GameEngine::Components;
 
+std::vector<ShadowMap*>         Renderer::_shadowMaps         = std::vector<ShadowMap*>();
 std::vector<ShaderUseCallback*> Renderer::_shaderUseCallbacks = std::vector<ShaderUseCallback*>();
 std::vector<RenderTarget*>      Renderer::_renderTargets      = std::vector<RenderTarget*>();
 
@@ -26,10 +35,11 @@ IndexBuffer*       Renderer::_renderable2DIndexBuffer       = nullptr;
 VertexBuffer*      Renderer::_renderable2DVertexBuffer      = nullptr;
 VertexArrayObject* Renderer::_renderable2DVertexArrayObject = nullptr;
 
-std::map<Material*, std::vector<Renderable*>> Renderer::_opaqueRenderables      = std::map<Material*, std::vector<Renderable*>>();
-std::map<Material*, std::vector<Renderable*>> Renderer::_transparentRenderables = std::map<Material*, std::vector<Renderable*>>();
+Renderer::RenderableStructure Renderer::_opaqueRenderables      = Renderer::RenderableStructure();
+Renderer::RenderableStructure Renderer::_transparentRenderables = Renderer::RenderableStructure();
 
-std::map<Material*, std::map<Texture*, std::vector<Renderable2D*>>> Renderer::_opaqueBatchRenderable2Ds = std::map<Material*, std::map<Texture*, std::vector<Renderable2D*>>>();
+Renderer::Renderable2DBatchStructure Renderer::_opaqueBatchRenderable2Ds      = Renderer::Renderable2DBatchStructure();
+Renderer::Renderable2DBatchStructure Renderer::_transparentBatchRenderable2Ds = Renderer::Renderable2DBatchStructure();
 
 void Renderer::Initialize()
 {
@@ -62,7 +72,7 @@ void Renderer::Initialize()
                                                                VertexBufferAttribute(4, GL_FLOAT, GL_FALSE, sizeof(Sprite::QuadData), (GLvoid*)(40 * sizeof(float)), 1),
                                                                VertexBufferAttribute(4, GL_FLOAT, GL_FALSE, sizeof(Sprite::QuadData), (GLvoid*)(44 * sizeof(float)), 1),
                                                            }, 12));
-    
+
     Light::Initialize();
 }
 
@@ -70,17 +80,20 @@ void Renderer::SubmitShaderUseCallback(ShaderUseCallback* shaderUseCallback) { _
 
 void Renderer::SubmitBatchRenderable2D(Renderable2D* renderable2D)
 {
-    if (_opaqueBatchRenderable2Ds[renderable2D->GetMaterial()][renderable2D->GetTexture()].empty())
-    {
-        _opaqueBatchRenderable2Ds[renderable2D->GetMaterial()][renderable2D->GetTexture()].reserve(50000);
-    }
-    _opaqueBatchRenderable2Ds[renderable2D->GetMaterial()][renderable2D->GetTexture()].push_back(renderable2D);
+    Renderable2DBatchStructure& structure = renderable2D->GetMaterial()->GetTransparent() ? _transparentBatchRenderable2Ds : _opaqueBatchRenderable2Ds;
+
+    std::vector<Renderable2D*>& vector = structure[renderable2D->GetLayer()][renderable2D->GetMaterial()][renderable2D->GetTexture()];
+    if (vector.empty()) { vector.reserve(10000); }
+    vector.push_back(renderable2D);
 }
 
 void Renderer::SubmitRenderable(Renderable* renderable)
 {
-    if (renderable->GetMaterial()->GetTransparent()) { _transparentRenderables[renderable->GetMaterial()].push_back(renderable); }
-    else { _opaqueRenderables[renderable->GetMaterial()].push_back(renderable); }
+    RenderableStructure& structure = renderable->GetMaterial()->GetTransparent() ? _transparentRenderables : _opaqueRenderables;
+
+    auto& vector = structure[renderable->GetLayer()][renderable->GetMaterial()];
+    if (vector.empty()) { vector.reserve(1000); }
+    vector.push_back(renderable);
 }
 
 void Renderer::SubmitRenderTarget(RenderTarget* renderTarget)
@@ -145,42 +158,62 @@ unsigned int Renderer::RenderDefault(const std::pair<Material*, std::vector<Rend
     return numDrawCalls;
 }
 
-
 void Renderer::RenderSubmitted()
 {
     unsigned int numDrawCalls = 0;
 
     // Update Light
     Light::Update();
-    
+
     for (RenderTarget* renderTarget : _renderTargets)
     {
-        renderTarget->Bind();
+        if (renderTarget->_renderShadows)
+        {
+            for (ShadowMap* shadowMap : _shadowMaps)
+            {
+                RENDER_CALL(
+                            _opaqueRenderables,
+                            for (auto p : pair.second) { RenderDefault(p); }
+                           )
+            }
+        }
 
-        // Clear TODO: Abstract this away
-        glClearColor(0.05f, 0.15f, 0.3f, 1.0f);
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
+        renderTarget->Bind();
 
         glDepthFunc(GL_LESS);
 
         // Opaque
-        numDrawCalls += RenderRenderables<std::vector<Renderable*>, &RenderDefault>(renderTarget, _opaqueRenderables);
+        RENDER_CALL(
+                    _opaqueRenderables,
+                    (numDrawCalls += RenderRenderables<std::vector<Renderable*>, &RenderDefault>(renderTarget, pair.second));
+                   )
 
-        // Opaque 2D
-        numDrawCalls += RenderRenderables<std::map<Texture*, std::vector<Renderable2D*>>, &Render2DBatches>(renderTarget, _opaqueBatchRenderable2Ds);
+        RENDER_CALL(
+                    _opaqueBatchRenderable2Ds,
+                    (numDrawCalls += RenderRenderables<std::map<Texture*, std::vector<Renderable2D*>>, &Render2DBatches>(renderTarget, pair.second));
+                   )
+
 
         // Transparent
         // TODO: Sort triangles and objects based on distance to camera
         glEnable(GL_BLEND);
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-        numDrawCalls += RenderRenderables<std::vector<Renderable*>, &RenderDefault>(renderTarget, _transparentRenderables);
+        RENDER_CALL(
+                    _transparentRenderables,
+                    (numDrawCalls += RenderRenderables<std::vector<Renderable*>, &RenderDefault>(renderTarget, pair.second));
+                   )
+
+        RENDER_CALL(
+                    _transparentBatchRenderable2Ds,
+                    (numDrawCalls += RenderRenderables<std::map<Texture*, std::vector<Renderable2D*>>, &Render2DBatches>(renderTarget, pair.second));
+                   )
         glDisable(GL_BLEND);
 
         glDisable(GL_DEPTH_TEST);
         renderTarget->Unbind();
         glEnable(GL_DEPTH_TEST);
     }
-    
+
     // Cleanup render target
     _renderTargets.clear();
 
@@ -188,7 +221,6 @@ void Renderer::RenderSubmitted()
     _opaqueRenderables.clear();
     _opaqueBatchRenderable2Ds.clear();
     _transparentRenderables.clear();
-
 
     _shaderUseCallbacks.clear();
 }

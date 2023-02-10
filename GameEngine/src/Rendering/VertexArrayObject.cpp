@@ -61,11 +61,7 @@ void VertexArrayObject::Bind() const
 
 void VertexArrayObject::Draw() const
 {
-    Debug::Log::Message("Num elements: " + std::to_string(_indexBuffer->GetNumElements()));
-    Debug::Log::Message("indices type: " + std::to_string(_indexBuffer->GetIndicesType()));
     glDrawElements(GL_TRIANGLES, static_cast<int>(_indexBuffer->GetNumElements()), _indexBuffer->GetIndicesType(), nullptr);
-    Debug::Log::Message("after draw call");
-
 }
 
 void VertexArrayObject::Draw(const int numIndices, const unsigned int offset) const

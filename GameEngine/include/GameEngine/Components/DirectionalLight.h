@@ -2,6 +2,7 @@
 #include <vector>
 
 #include "GameEngine/Components/Component.h"
+#include "GameEngine/Rendering/FrameBuffer.h"
 #include "glm/vec3.hpp"
 #include "glm/vec4.hpp"
 #include "glm/gtc/constants.hpp"

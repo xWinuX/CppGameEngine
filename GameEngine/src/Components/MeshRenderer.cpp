@@ -1,5 +1,6 @@
 ﻿#include "GameEngine/Components/MeshRenderer.h"
 
+#include "GameEngine/GameObject.h"
 #include "GameEngine/Rendering/Renderer.h"
 
 using namespace GameEngine::Components;
@@ -31,6 +32,7 @@ void MeshRenderer::OnUpdateEnd()
     {
         if (renderablePrimitive->GetMaterial() == nullptr) { Debug::Log::Error("Can't submit a renderable without an material!"); }
 
+        renderablePrimitive->SetLayer(_gameObject->GetLayer());
         Renderer::SubmitRenderable(renderablePrimitive);
     }
 }
