@@ -66,6 +66,8 @@ namespace Asset
         VertexColor,
         FrameBuffer,
         Skybox,
+        ShadowMap,
+        ShadowMapSprite,
     };
 
     enum class Material : size_t

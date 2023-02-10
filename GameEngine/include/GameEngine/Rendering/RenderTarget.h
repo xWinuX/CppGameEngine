@@ -30,6 +30,7 @@ namespace GameEngine
                 void         ResizeFrameBuffer(glm::uvec2 size);
                 virtual void Bind();
                 virtual void Unbind() const;
+                virtual void Draw();
 
             private:
                 uint8_t _layerMask = 1;

@@ -20,6 +20,7 @@ void main()
     fragColor = vec4(0.0);
 
 #include "../Lit/Passes/AmbientLight.frag"
+#include "../Lit/Passes/Shadow.frag"
 #include "../Lit/Passes/DirectionalLight.frag"
 #include "../Lit/Passes/PointLight.frag"
     vec4 textureColor = vec4(0.0);

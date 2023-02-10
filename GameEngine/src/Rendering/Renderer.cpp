@@ -8,6 +8,7 @@
 #include "GameEngine/Rendering/IndexBuffer.h"
 #include "GameEngine/Rendering/Light.h"
 #include "GameEngine/Rendering/Material.h"
+#include "GameEngine/Rendering/ShadowMap.h"
 #include "GameEngine/Rendering/Sprite.h"
 #include "GameEngine/Rendering/VertexArrayObject.h"
 #include "GameEngine/Rendering/VertexBuffer.h"
@@ -31,6 +32,8 @@ const size_t   Renderer::Renderable2DBatchMaxQuads = 10000;
 const size_t   Renderer::Renderable2DBatchMaxSize  = Renderable2DBatchMaxQuads * sizeof(Sprite::QuadData);
 unsigned char* Renderer::_renderable2DVertexData   = new unsigned char[Renderable2DBatchMaxSize];
 
+Shader*            Renderer::_shadowShader                  = nullptr;
+Shader*            Renderer::_shadowSpriteShader            = nullptr;
 IndexBuffer*       Renderer::_renderable2DIndexBuffer       = nullptr;
 VertexBuffer*      Renderer::_renderable2DVertexBuffer      = nullptr;
 VertexArrayObject* Renderer::_renderable2DVertexArrayObject = nullptr;
@@ -76,6 +79,11 @@ void Renderer::Initialize()
     Light::Initialize();
 }
 
+void Renderer::SetShadowShader(Shader* shadowShader) { _shadowShader = shadowShader; }
+void Renderer::SetShadowSpriteShader(Shader* shadowSpriteShader) { _shadowSpriteShader = shadowSpriteShader; }
+
+void Renderer::SubmitShadowMap(ShadowMap* shadowMap) { _shadowMaps.push_back(shadowMap); }
+
 void Renderer::SubmitShaderUseCallback(ShaderUseCallback* shaderUseCallback) { _shaderUseCallbacks.push_back(shaderUseCallback); }
 
 void Renderer::SubmitBatchRenderable2D(Renderable2D* renderable2D)
@@ -106,7 +114,6 @@ unsigned int Renderer::Render2DBatches(const std::pair<Material*, std::map<Textu
 {
     int numDrawCalls = 0;
     _renderable2DVertexArrayObject->Bind();
-    const Material* material = materialPair.first;
     for (const std::pair<Texture* const, std::vector<Renderable2D*>>& texturePair : materialPair.second)
     {
         unsigned int               renderable2DIndex = 0;
@@ -135,7 +142,7 @@ unsigned int Renderer::Render2DBatches(const std::pair<Material*, std::map<Textu
 
             // Render the batch
             _renderable2DVertexBuffer->UpdateData(_renderable2DVertexData, numQuads);
-            material->GetUniformStorage()->SetUniformInstant<Texture*>("u_Texture", texturePair.first);
+            Shader::GetCurrentActiveShader()->GetUniformStorage()->SetUniformInstant<Texture*>("u_Texture", texturePair.first);
             _renderable2DVertexArrayObject->DrawInstanced(6, static_cast<int>(numQuads));
             numDrawCalls++;
         }
@@ -158,6 +165,8 @@ unsigned int Renderer::RenderDefault(const std::pair<Material*, std::vector<Rend
     return numDrawCalls;
 }
 
+glm::vec3 lightInvDir = glm::vec3(0, 5, 20);
+
 void Renderer::RenderSubmitted()
 {
     unsigned int numDrawCalls = 0;
@@ -165,17 +174,43 @@ void Renderer::RenderSubmitted()
     // Update Light
     Light::Update();
 
+
     for (RenderTarget* renderTarget : _renderTargets)
     {
         if (renderTarget->_renderShadows)
         {
-            for (ShadowMap* shadowMap : _shadowMaps)
+            glCullFace(GL_FRONT);
+            for (unsigned int i = 0; i < _shadowMaps.size() && i < Light::MaxShadowCasters; i++)
             {
+                const ShadowMap* shadowMap = _shadowMaps[i];
+                _shadowShader->Use();
+
+                glm::mat4       depthProjectionMatrix = glm::ortho<float>(-10, 10, -10, 10, -1, 100);
+                glm::mat4       depthViewMatrix       = glm::lookAt(lightInvDir, glm::vec3(0, 0, 0), glm::vec3(0, 1, 0));
+                const glm::mat4 lightSpace            = depthProjectionMatrix * depthViewMatrix;
+
+                _shadowShader->SetUniformInstant<glm::mat4>("u_LightSpace", lightSpace);
+
+                shadowMap->Bind();
+
                 RENDER_CALL(
                             _opaqueRenderables,
                             for (auto p : pair.second) { RenderDefault(p); }
                            )
+
+                _shadowSpriteShader->Use();
+                _shadowShader->SetUniformInstant<glm::mat4>("u_LightSpace", lightSpace);
+
+                RENDER_CALL(
+                            _opaqueBatchRenderable2Ds,
+                            for (auto p : pair.second) { Render2DBatches(p); }
+                           )
+
+                shadowMap->Unbind();
+
+                Light::AddShadowCaster(lightSpace);
             }
+            glCullFace(GL_BACK);
         }
 
         renderTarget->Bind();
@@ -211,17 +246,19 @@ void Renderer::RenderSubmitted()
 
         glDisable(GL_DEPTH_TEST);
         renderTarget->Unbind();
+        _shadowMaps[0]->GetTexture()->Bind(0);
+        renderTarget->Draw();
         glEnable(GL_DEPTH_TEST);
     }
 
-    // Cleanup render target
-    _renderTargets.clear();
 
-    // Cleanup renderables
+    // Cleanup
+    _shadowMaps.clear();
+    _renderTargets.clear();
     _opaqueRenderables.clear();
     _opaqueBatchRenderable2Ds.clear();
     _transparentRenderables.clear();
-
+    _transparentBatchRenderable2Ds.clear();
     _shaderUseCallbacks.clear();
 }
 

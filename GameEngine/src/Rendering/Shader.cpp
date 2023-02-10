@@ -10,6 +10,8 @@ using namespace GameEngine::Rendering;
 using namespace GameEngine::IO;
 using namespace GameEngine::Utils;
 
+const Shader* Shader::_currentActiveShader = nullptr;
+
 GLuint Shader::CompileShader(const std::string& shaderSource, const int type)
 {
     // Create shader
@@ -87,7 +89,10 @@ Shader::~Shader()
 void Shader::Use() const
 {
     glUseProgram(_programID);
+    _currentActiveShader = this;
 }
+
+const Shader* Shader::GetCurrentActiveShader() { return _currentActiveShader; }
 
 void Shader::UniformStorageFromShader(const Shader* shader)
 {

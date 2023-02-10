@@ -1,10 +1,11 @@
 ﻿#pragma once
+#include "GameEngine/Components/CharacterController.h"
 #include "GameEngine/Components/Component.h"
 #include "glm/vec2.hpp"
 #include "glm/gtc/constants.hpp"
 #include "reactphysics3d/mathematics/Transform.h"
 
-class CameraControllerPOV : public GameEngine::Components::Component
+class POVCameraController : public GameEngine::Components::Component
 {
     private:
         GameEngine::Components::Transform* _followTransform = nullptr;

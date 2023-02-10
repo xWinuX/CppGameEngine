@@ -43,7 +43,10 @@ void Camera::UpdateProjectionMatrix()
     _projectionMatrix          = glm::perspective(glm::radians(_fovInDegrees), windowSize.x / windowSize.y, _zNear, _zFar);
 }
 
-glm::mat4 Camera::GetViewMatrix() const { return glm::inverse(GetTransform()->GetTRS()); }
+glm::mat4 Camera::GetViewMatrix() const
+{
+    return glm::inverse(GetTransform()->GetTRS());
+}
 
 void Camera::OnShaderUse(Rendering::Shader* shader)
 {

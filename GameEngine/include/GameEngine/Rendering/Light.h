@@ -18,12 +18,14 @@ namespace GameEngine
             public:
                 static void AddPointLight(const glm::vec3 position, const glm::vec4 color, const float intensity, const float ranges);
                 static void AddDirectionalLight(const glm::vec3 direction, const glm::vec4 color, const float intensity);
+                static void AddShadowCaster(const glm::mat4 lightSpace);
 
             protected:
                 enum
                 {
                     MaxPointLights       = 16,
-                    MaxDirectionalLights = 3
+                    MaxDirectionalLights = 3,
+                    MaxShadowCasters     = 3
                 };
 
                 // Note that no vec3 where used to fit the std140 padding rule without creating padding struct members
@@ -39,16 +41,18 @@ namespace GameEngine
                     glm::vec4 DirectionalLightDirections[MaxDirectionalLights]{{0, 0, 0, 0}};
                     glm::vec4 DirectionalLightColors[MaxDirectionalLights]{{1, 1, 1, 1}};
                     glm::vec4 DirectionalLightIntensities[MaxDirectionalLights]{{1, 1, 1, 1}};
-                    
-                    float     AmbientIntensity  = 0.5f;
-                    int       NumPointLights = 2;
-                    int       NumDirectionalLights = 0;
+
+                    glm::mat4 LightSpaceMatrices[MaxShadowCasters]{glm::identity<glm::mat4>()};
+
+                    float AmbientIntensity     = 0.5f;
+                    int   NumPointLights       = 0;
+                    int   NumDirectionalLights = 0;
+                    int   NumShadowCasters     = 0;
                 };
 
                 static UniformBufferData* _lightData;
 
-                virtual void OnFrameEnd() = 0;
-                static void  Initialize();
+                static void Initialize();
 
             private:
                 static UniformBuffer* _lightUniformBuffer;

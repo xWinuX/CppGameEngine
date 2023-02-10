@@ -2,23 +2,26 @@
 
 #include "../Asset.h"
 #include "GameEngine/GameObject.h"
+#include "GameEngine/Input.h"
 #include "GameEngine/Time.h"
 #include "GameEngine/Rendering/SpriteSet.h"
 #include "glm/gtc/random.hpp"
 #include "glm/gtx/string_cast.hpp"
 
+using namespace GameEngine;
 using namespace GameEngine::Rendering;
 
 void SimpleWalker::OnStart()
 {
-    _audioSource    = _gameObject->GetComponent<GameEngine::Components::AudioSource>();
-    _spriteRenderer = _gameObject->GetComponent<GameEngine::Components::SpriteRenderer>();
+    _characterController = _gameObject->GetComponent<GameEngine::Components::CharacterController>();
+    _audioSource         = _gameObject->GetComponent<GameEngine::Components::AudioSource>();
+    _spriteRenderer      = _gameObject->GetComponent<GameEngine::Components::SpriteRenderer>();
 
     _walkLeftSprite  = GET_SPRITE(GamerDudeWalkLeft);
     _walkRightSprite = GET_SPRITE(GamerDudeWalkRight);
 
     _scale          = _transform->GetLocalScale().x;
-    _moveSpeed      = 2.0f / _scale;
+    _moveSpeed      = _moveSpeed / _scale;
     _animationSpeed = 10.0f / _scale;
 
     RandomizeMoveTimers();
@@ -48,10 +51,10 @@ void SimpleWalker::OnUpdate()
     {
         if (_moveTimer > 0)
         {
-            const glm::vec3       walkDir = glm::vec3(_randomDirection.x, 0, _randomDirection.y);
+            const glm::vec3 walkDir = glm::vec3(_randomDirection.x, 0, _randomDirection.y);
             const glm::quat lookDir = glm::quatLookAt(walkDir, _transform->GetUp());
-            _transform->Move((glm::vec3(_randomDirection.x, 0, _randomDirection.y) * _moveSpeed) * GameEngine::Time::GetDeltaTime());
-            _transform->SetRotation(glm::slerp(_transform->GetRotation(), lookDir, 0.125f/_scale));
+            _characterController->Move((glm::vec2(_randomDirection.x, _randomDirection.y) * _moveSpeed));
+            //_transform->SetRotation(glm::slerp(_transform->GetRotation(), lookDir, 0.125f / _scale));
             _moveTimer -= GameEngine::Time::GetDeltaTime();
         }
         else

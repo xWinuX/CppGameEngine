@@ -6,7 +6,7 @@ using namespace GameEngine::Components;
 using namespace GameEngine::Rendering;
 
 Light::UniformBufferData* Light::_lightData          = new Light::UniformBufferData();
-UniformBuffer*    Light::_lightUniformBuffer = nullptr;
+UniformBuffer*            Light::_lightUniformBuffer = nullptr;
 
 void Light::Initialize()
 {
@@ -21,6 +21,7 @@ void Light::Update()
 
     _lightData->NumDirectionalLights = 0;
     _lightData->NumPointLights       = 0;
+    _lightData->NumShadowCasters     = 0;
 }
 
 void Light::AddPointLight(const glm::vec3 position, const glm::vec4 color, const float intensity, const float ranges)
@@ -54,4 +55,10 @@ void Light::AddDirectionalLight(const glm::vec3 direction, const glm::vec4 color
     _lightData->DirectionalLightIntensities[num].x = intensity;
 
     _lightData->NumDirectionalLights++;
+}
+
+void Light::AddShadowCaster(const glm::mat4 lightSpace)
+{
+    _lightData->LightSpaceMatrices[_lightData->NumShadowCasters] = lightSpace;
+    _lightData->NumShadowCasters++;
 }

@@ -1,5 +1,6 @@
 ﻿#include "GameEngine/Rendering/RenderablePrimitive.h"
 
+#include "GameEngine/Rendering/Shader.h"
 #include "GameEngine/Rendering/VertexArrayObject.h"
 
 using namespace GameEngine::Rendering;
@@ -11,7 +12,7 @@ RenderablePrimitive::RenderablePrimitive(Primitive* primitive, Material* materia
 void RenderablePrimitive::OnBeforeDraw()
 {
     if (_transform == nullptr) { return; }
-    _material->GetUniformStorage()->SetUniformInstant<glm::mat4>("u_Transform", _transform->GetTRS());
+    Shader::GetCurrentActiveShader()->GetUniformStorage()->SetUniformInstant<glm::mat4>("u_Transform", _transform->GetTRS());
 }
 
 void RenderablePrimitive::OnDraw()
@@ -21,6 +22,6 @@ void RenderablePrimitive::OnDraw()
     _primitive->GetVertexArrayObject()->Unbind();
 }
 
-Material*         RenderablePrimitive::GetMaterial() { return _material; }
-void              RenderablePrimitive::SetMaterial(Material* material) { _material = material; }
-void              RenderablePrimitive::SetTransform(Components::Transform* transform) { _transform = transform; }
+Material* RenderablePrimitive::GetMaterial() { return _material; }
+void      RenderablePrimitive::SetMaterial(Material* material) { _material = material; }
+void      RenderablePrimitive::SetTransform(Components::Transform* transform) { _transform = transform; }

@@ -4,6 +4,7 @@ layout (location = 4) in vec4 a_Color;
 #include "../Common/Uniforms.glsl"
 #include "../Common/Functions.vert"
 
+#include "../Lit/Uniforms.frag"
 #include "../Lit/IO.vert"
 
 out vec4 v_Color;

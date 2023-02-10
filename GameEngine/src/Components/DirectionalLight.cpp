@@ -3,6 +3,7 @@
 #include "imgui.h"
 #include "GameEngine/Components/Transform.h"
 #include "GameEngine/Rendering/Light.h"
+#include "GameEngine/Rendering/Renderer.h"
 #include "glm/gtc/type_ptr.hpp"
 
 using namespace GameEngine::Components;
@@ -14,7 +15,8 @@ std::vector<float>     DirectionalLight::_intensities = std::vector<float>();
 
 DirectionalLight::DirectionalLight(const glm::vec4 color, const float intensity):
     _color(color),
-    _intensity(intensity) {}
+    _intensity(intensity),
+    _shadowMap(new ShadowMap(glm::uvec2(2048))) { }
 
 void DirectionalLight::SetColor(const glm::vec4 color) { _color = color; }
 void DirectionalLight::SetIntensity(const float intensity) { _intensity = intensity; }
@@ -28,4 +30,7 @@ void DirectionalLight::OnUpdateEnd()
 
     _transform->SetRotation(glm::quat(_eulerAngles)); 
     Light::AddDirectionalLight(_transform->GetForward(), _color, _intensity);
+
+    _shadowMap->SetPosition(_transform->GetPosition());
+    Renderer::SubmitShadowMap(_shadowMap);
 }

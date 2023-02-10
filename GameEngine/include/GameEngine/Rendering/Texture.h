@@ -3,6 +3,7 @@
 #include <glad/glad.h>
 #include <glm/vec2.hpp>
 
+#include "glm/vec4.hpp"
 #include "glm/gtc/constants.hpp"
 
 namespace GameEngine
@@ -22,6 +23,7 @@ namespace GameEngine
                 {
                     Clamp          = GL_CLAMP,
                     ClampToEdge    = GL_CLAMP_TO_EDGE,
+                    ClampToBorder  = GL_CLAMP_TO_BORDER,
                     Repeat         = GL_REPEAT,
                     MirroredRepeat = GL_MIRRORED_REPEAT,
                 };
@@ -35,6 +37,7 @@ namespace GameEngine
                     GLenum              Format           = GL_RGBA;
                     GLenum              InternalFormat   = GL_RGBA8;
                     GLenum              ChannelDataType  = GL_UNSIGNED_BYTE;
+                    glm::vec4           BorderColor      = glm::vec4(1.0f);
                 };
 
                 explicit Texture(const std::string& filePath, ImportSettings importSettings = ImportSettings());

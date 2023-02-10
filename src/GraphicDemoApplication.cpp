@@ -3,9 +3,9 @@
 #include "Asset.h"
 #include "GameEngine/Components/DirectionalLight.h"
 
-#include "Components/CameraControllerPOV.h"
-#include "Components/CharacterController.h"
+#include "Components/POVCameraController.h"
 #include "Components/GameManager.h"
+#include "Components/POVCharacterController.h"
 #include "Components/RainbowLight.h"
 #include "GameEngine/Components/BoxCollider.h"
 #include "GameEngine/Components/Camera.h"
@@ -30,6 +30,7 @@
 #include "GameEngine/Components/CapsuleCollider.h"
 #include "GameEngine/Components/MeshCollider.h"
 #include "GameEngine/Components/SpriteRenderer.h"
+#include "GameEngine/Rendering/Renderer.h"
 #include "glm/gtc/random.hpp"
 #include "glm/gtx/string_cast.hpp"
 #include "Prefabs/GamerDudePrefab.h"
@@ -81,7 +82,7 @@ void GraphicDemoApplication::LoadSprites()
 
     Sprite::AdditionalInfo additionalInfo;
     additionalInfo.PixelsPerUnit  = 90;
-    additionalInfo.Origin         = glm::vec2(0.5f, 0.0f);
+    additionalInfo.Origin         = glm::vec2(0.5f, 0.5f);
     SpriteSet* gamerDudeWalkRight = ADD_SPRITE(GamerDudeWalkRight, new SpriteSet(gamerDudeWalkRightSpriteTexture, 6, glm::uvec2(119, 190), additionalInfo));
     SpriteSet* gamerDudeWalkLeft  = ADD_SPRITE(GamerDudeWalkLeft, new SpriteSet(gamerDudeWalkLeftSpriteTexture, 6, glm::uvec2(119, 190), additionalInfo));
 
@@ -122,11 +123,11 @@ void GraphicDemoApplication::LoadShaders() const
     #pragma region Template Uniforms
     UniformStorage commonUniforms = UniformStorage();
     commonUniforms.InitializeUniform<float>("u_Time", 0.0f, false);
-    commonUniforms.InitializeUniform<glm::vec3>("u_ViewPosition", glm::zero<glm::vec3>(), false);
-    commonUniforms.InitializeUniform<glm::mat4>("u_ViewProjection", glm::identity<glm::mat4>(), false);
     commonUniforms.InitializeUniform<glm::mat4>("u_Transform", glm::identity<glm::mat4>(), false);
 
     UniformStorage litUniforms = UniformStorage();
+    litUniforms.InitializeUniform<Texture*>("u_ShadowMap", GET_TEXTURE(White), false);
+    
     litUniforms.InitializeUniform<float>("u_Shininess", 0.0f);
     litUniforms.InitializeUniform<Texture*>("u_NormalMap", GET_TEXTURE(NormalMapDefault));
 
@@ -185,6 +186,21 @@ void GraphicDemoApplication::LoadShaders() const
     Shader* skyboxShader = ADD_SHADER(Skybox, new Shader("res/shaders/Skybox/Skybox.vert", "res/shaders/Skybox/Skybox.frag"));
     skyboxShader->GetUniformStorage()->CopyFrom(&commonUniforms);
     skyboxShader->InitializeUniform<CubeMap*>("u_CubeMap", GET_CUBEMAP(SkyBox));
+
+    // Shadow Map
+    Shader* shadowMapShader = ADD_SHADER(ShadowMap, new Shader("res/shaders/ShadowMap/Shadowmap.vert","res/shaders/ShadowMap/Shadowmap.frag"));
+    shadowMapShader->GetUniformStorage()->CopyFrom(&commonUniforms);
+    shadowMapShader->InitializeUniform<glm::mat4>("u_LightSpace", glm::identity<glm::mat4>());
+
+    // Shadow Map
+    Shader* shadowMapSpriteShader = ADD_SHADER(ShadowMapSprite, new Shader("res/shaders/ShadowMapSprite/ShadowMapSprite.vert","res/shaders/ShadowMapSprite/ShadowMapSprite.frag"));
+    shadowMapSpriteShader->GetUniformStorage()->CopyFrom(&commonUniforms);
+    shadowMapSpriteShader->InitializeUniform<glm::mat4>("u_LightSpace", glm::identity<glm::mat4>());
+    shadowMapSpriteShader->InitializeUniform<Texture*>("u_Texture", GET_TEXTURE(Crate));
+
+    
+    Renderer::SetShadowShader(shadowMapShader); // TODO: remove this and move somewhere else
+    Renderer::SetShadowSpriteShader(shadowMapSpriteShader); // TODO: remove this and move somewhere else
 }
 
 void GraphicDemoApplication::LoadMaterials() const
@@ -257,6 +273,7 @@ void GraphicDemoApplication::Initialize(Scene& scene)
     playerObject->AddComponent(new CapsuleCollider());
     playerObject->AddComponent(new Rigidbody());
     playerObject->AddComponent(new CharacterController());
+    playerObject->AddComponent(new POVCharacterController());
     playerObject->AddComponent(new MeshRenderer(GET_MODEL(Cube)->GetMesh(0), GET_MATERIAL(Crate)));
     scene.AddGameObject(playerObject);
 
@@ -268,13 +285,13 @@ void GraphicDemoApplication::Initialize(Scene& scene)
 
     // Camera
     GameObject* cameraObject = new GameObject();
-    cameraObject->AddComponent(new Camera(60, 0.01f, 1000.0f, GET_SHADER(FrameBuffer), GET_MATERIAL(Skybox)));
-    cameraObject->AddComponent(new CameraControllerPOV());
+    cameraObject->AddComponent(new Camera(60, 0.01f, 500.0f, GET_SHADER(FrameBuffer), GET_MATERIAL(Skybox)));
+    cameraObject->AddComponent(new POVCameraController());
     cameraObject->AddComponent(new AudioListener());
     scene.AddGameObject(cameraObject);
 
-    playerObject->GetComponent<CharacterController>()->SetCameraController(cameraObject->GetComponent<CameraControllerPOV>());
-    cameraObject->GetComponent<CameraControllerPOV>()->SetFollowTransform(playerObject->GetTransform());
+    playerObject->GetComponent<POVCharacterController>()->SetCameraTransform(cameraObject->GetComponent<Transform>());
+    cameraObject->GetComponent<POVCameraController>()->SetFollowTransform(playerObject->GetTransform());
 
     // Gamer Dude Spawner
     GamerDudePrefab gamerDudePrefab = GamerDudePrefab();
@@ -282,7 +299,7 @@ void GraphicDemoApplication::Initialize(Scene& scene)
     {
         GameObject*     gameObject     = gamerDudePrefab.Instantiate();
         const glm::vec2 randomPosition = glm::diskRand(100.0f);
-        gameObject->GetTransform()->SetPosition(glm::vec3(randomPosition.x, 0.0f, randomPosition.y));
+        gameObject->GetTransform()->SetPosition(glm::vec3(randomPosition.x, 100.0f, randomPosition.y));
         gameObject->GetTransform()->SetLocalScale(glm::linearRand(0.05f, 4.0f) * glm::vec3(1.0));
         scene.AddGameObject(gameObject);
     }

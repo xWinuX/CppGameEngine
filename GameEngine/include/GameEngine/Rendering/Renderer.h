@@ -8,9 +8,9 @@
 #include "Renderable2D.h"
 #include "RenderTarget.h"
 #include "ShaderUseCallback.h"
+#include "ShadowMap.h"
 #include "VertexBuffer.h"
 #include "SpriteSet.h"
-#include "../../../src/Rendering/ShadowMap.h"
 
 namespace GameEngine
 {
@@ -22,9 +22,15 @@ namespace GameEngine
                 typedef std::map<Layer, std::map<Material*, std::vector<Renderable*>>>                       RenderableStructure;
                 typedef std::map<Layer, std::map<Material*, std::map<Texture*, std::vector<Renderable2D*>>>> Renderable2DBatchStructure;
 
-                static std::vector<ShadowMap*>         _shadowMaps;
+
                 static std::vector<ShaderUseCallback*> _shaderUseCallbacks;
                 static std::vector<RenderTarget*>      _renderTargets;
+
+                // Shadows
+                static Shader* _shadowShader;
+                static Shader* _shadowSpriteShader;
+
+                static std::vector<ShadowMap*> _shadowMaps;
 
                 // 3D
                 static RenderableStructure _opaqueRenderables;
@@ -45,6 +51,10 @@ namespace GameEngine
             public:
                 static void Initialize();
 
+                static void SetShadowShader(Shader* shadowShader);
+                static void SetShadowSpriteShader(Shader* shadowSpriteShader);
+
+                static void SubmitShadowMap(ShadowMap* shadowMap);
                 static void SubmitShaderUseCallback(ShaderUseCallback* shaderUseCallback);
                 static void SubmitBatchRenderable2D(Renderable2D* renderable2D);
                 static void SubmitRenderable(Renderable* renderable);
@@ -72,7 +82,9 @@ namespace GameEngine
                         const Material::RenderMode renderMode = material->GetRenderMode();
                         const Material::DepthFunc  depthFunc  = material->GetDepthFunc();
 
-                        // Choose if new shader should get activated
+                        material->GetUniformStorage()->SetUniform("u_ShadowMap", _shadowMaps[0]->GetTexture());
+
+                        // Check if new shader should be activated
                         Shader* newShader = material->GetShader();
                         if (shader == nullptr || shader != newShader)
                         {
@@ -89,14 +101,14 @@ namespace GameEngine
                             currentRenderMode = renderMode;
                         }
 
-                        // Depth func
+                        // Update depth func if needed
                         if (depthFunc != currentDepthFunc || firstLoop)
                         {
                             glDepthFunc(depthFunc);
                             currentDepthFunc = depthFunc;
                         }
 
-                        // Face Culling
+                        // Update face culling if needed
                         if (cullFace != currentCullFace || firstLoop)
                         {
                             if (cullFace == Material::CullFace::None)

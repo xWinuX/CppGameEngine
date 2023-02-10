@@ -48,6 +48,16 @@ void RenderTarget::Unbind() const
     _screenQuad->GetVertexArrayObject()->Unbind();
 }
 
+void RenderTarget::Draw()
+{
+    _shader->Use();
+    _shader->GetUniformStorage()->Apply();
+    _renderTexture->Bind(0);
+    _screenQuad->GetVertexArrayObject()->Bind();
+    _screenQuad->GetVertexArrayObject()->Draw();
+    _screenQuad->GetVertexArrayObject()->Unbind();
+}
+
 void RenderTarget::CreateRenderingSetup(const glm::uvec2 size)
 {
     _frameBuffer   = new FrameBuffer(size, GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);

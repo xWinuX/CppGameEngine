@@ -4,6 +4,8 @@
 #include <glad/glad.h>
 #include <stb_image.h>
 
+#include "glm/gtc/type_ptr.hpp"
+
 using namespace GameEngine::Rendering;
 
 Texture::Texture(const std::string& filePath, const ImportSettings importSettings)
@@ -35,7 +37,8 @@ void Texture::GenerateTexture(unsigned char* buffer, const Texture::ImportSettin
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, importSettings.WrapMode);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAX_LEVEL, importSettings.MipMapLevels);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAX_ANISOTROPY_EXT, importSettings.AnisotropyLevels);
-
+    glTexParameterfv(GL_TEXTURE_2D, GL_TEXTURE_BORDER_COLOR, glm::value_ptr(importSettings.BorderColor));
+    
     _buffer = buffer;
     glTexImage2D(GL_TEXTURE_2D, 0, importSettings.InternalFormat, static_cast<GLsizei>(_size.x), static_cast<GLsizei>(_size.y), 0, importSettings.Format,
                  importSettings.ChannelDataType, _buffer);

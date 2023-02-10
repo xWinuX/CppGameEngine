@@ -13,6 +13,8 @@ namespace GameEngine
         class Shader
         {
             private:
+                static const Shader* _currentActiveShader;
+            
                 GLuint         _programID     = 0;
                 UniformStorage* _uniformStorage = nullptr;
 
@@ -26,6 +28,8 @@ namespace GameEngine
                 ~Shader();
 
                 void Use() const;
+
+                static const Shader* GetCurrentActiveShader();
 
                 template <typename T>
                 void InitializeUniform(const GLchar* uniformName, T defaultValue, const bool includeInApplyQueue = true)
