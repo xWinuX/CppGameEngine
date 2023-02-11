@@ -20,7 +20,7 @@ FrameBuffer::~FrameBuffer()
     glDeleteFramebuffers(1, &_frameBufferID);
 }
 
-void FrameBuffer::AttachTexture(const Texture* texture, const GLenum attachment)
+void FrameBuffer::AttachTexture(const Texture2D* texture, const GLenum attachment)
 {
     glFramebufferTexture2D(GL_FRAMEBUFFER, attachment, GL_TEXTURE_2D, texture->GetTextureID(), 0);
 }

@@ -39,10 +39,10 @@ Font::Font(const std::string& ttsFilePath)
 
             const msdfgen::BitmapConstRef<byte, 3> atlasStorage = generator.atlasStorage();
 
-            Texture::ImportSettings importSettings;
-            importSettings.Format         = GL_RGB;
-            importSettings.InternalFormat = GL_RGB8;
-            _texture                      = new Texture(const_cast<unsigned char*>(atlasStorage.pixels), glm::uvec2(atlasStorage.width, atlasStorage.height), importSettings);
+            TextureParams textureParams;
+            textureParams.Format         = GL_RGB;
+            textureParams.InternalFormat = GL_RGB8;
+            _texture                      = new Texture2D(const_cast<unsigned char*>(atlasStorage.pixels), glm::uvec2(atlasStorage.width, atlasStorage.height), textureParams);
             _sprite                       = new SpriteSet(_texture, fontGeometry);
 
             _fontGeometry = fontGeometry;
@@ -67,7 +67,7 @@ Font::Font(const std::string& ttsFilePath)
 }
 
 SpriteSet* Font::GetSprite() const { return _sprite; }
-Texture*   Font::GetTexture() const { return _texture; }
+Texture2D*   Font::GetTexture() const { return _texture; }
 
 const Font::CharacterInfo* Font::GetCharacterInfo(const msdfgen::unicode_t character)
 {

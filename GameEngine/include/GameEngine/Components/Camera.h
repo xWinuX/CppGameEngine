@@ -16,13 +16,15 @@ namespace GameEngine
         class Camera final : public Component, public Rendering::RenderTarget
         {
             private:
-                float     _fovInDegrees;
-                float     _zNear;
-                float     _zFar;
-                glm::mat4 _projectionMatrix = glm::identity<glm::mat4>();
+                static Camera*         _main;
+                float                  _fovInDegrees;
+                float                  _zNear;
+                float                  _zFar;
+                glm::mat4              _projectionMatrix = glm::identity<glm::mat4>();
+                std::vector<glm::vec4> _viewFrustumCorners = std::vector<glm::vec4>(8);
 
                 Rendering::RenderablePrimitive* _skyboxCube;
-            
+
                 struct UniformBufferData
                 {
                     glm::mat4 ViewProjection = glm::identity<glm::mat4>();
@@ -34,18 +36,21 @@ namespace GameEngine
                 UniformBufferData* _uniformBufferData;
                 UniformBuffer*     _cameraUniformBuffer;
 
+                void UpdateViewFrustumCorners();
                 void UpdateProjectionMatrix();
                 void OnShaderUse(Rendering::Shader* shader) override;
-                void Bind()  override;
+                void Bind() override;
 
             protected:
                 void OnUpdateEnd() override;
 
             public:
                 Camera(float fovInDegrees, float zNear, float zFar, Rendering::Shader* frameBufferShader, Rendering::Material* skyboxMaterial);
-                float     GetFOVInDegrees() const;
-                void      SetFOVInDegrees(float value);
-                glm::mat4 GetViewMatrix() const;
+                float                   GetFOVInDegrees() const;
+                void                    SetFOVInDegrees(float value);
+                glm::mat4               GetViewMatrix() const;
+                std::vector<glm::vec4>& GetViewFrustumCorners();
+                static Camera*          GetMain();
         };
     }
 }

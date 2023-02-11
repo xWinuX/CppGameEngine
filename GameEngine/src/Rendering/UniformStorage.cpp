@@ -50,7 +50,7 @@ void UniformStorage::Apply()
     APPLY_UNIFORM(Mat4F)
 
     int slot = 0;
-    APPLY_SAMPLER_UNIFORM(Texture)
+    APPLY_SAMPLER_UNIFORM(Texture2D)
     APPLY_SAMPLER_UNIFORM(CubeMap)
 }
 
@@ -91,7 +91,7 @@ void UniformStorage::CopyTo(UniformStorage* uniformStorage) const
     COPY_UNIFORM(int, 1I)
     COPY_UNIFORM(float, 1F)
     COPY_UNIFORM(std::vector<float>*, 1FV)
-    COPY_UNIFORM(Texture*, Texture)
+    COPY_UNIFORM(Texture2D*, Texture2D)
     COPY_UNIFORM(CubeMap*, CubeMap)
 }
 

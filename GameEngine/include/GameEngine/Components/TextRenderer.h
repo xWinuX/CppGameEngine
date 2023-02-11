@@ -27,7 +27,7 @@ namespace GameEngine
                 TextRenderer(Rendering::Font* font, Rendering::Material* material);
 
                 Rendering::Material* GetMaterial() override;
-                Rendering::Texture*  GetTexture() override;
+                Rendering::Texture2D*  GetTexture() override;
                 size_t               GetQuadSize() override;
                 size_t               GetCopySize() override;
                 void                 CopyQuadData(unsigned char* destination) override;

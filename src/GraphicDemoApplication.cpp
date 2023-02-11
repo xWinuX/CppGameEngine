@@ -21,7 +21,7 @@
 #include "GameEngine/Rendering/Model.h"
 #include "GameEngine/Rendering/Shader.h"
 #include "GameEngine/Rendering/SpriteSet.h"
-#include "GameEngine/Rendering/Texture.h"
+#include "GameEngine/Rendering/Texture2D.h"
 #include "GameEngine/Rendering/SpriteAtlas.h"
 #include "GameEngine/Utils/Math.h"
 #include "GameEngine/Audio/AudioManager.h"
@@ -45,35 +45,35 @@ using namespace GameEngine::Physics;
 
 void GraphicDemoApplication::LoadTextures()
 {
-    ADD_TEXTURE(No, new Texture("res/textures/NoTexture.png"));
-    ADD_TEXTURE(Black, new Texture("res/textures/Black.png"));
-    ADD_TEXTURE(White, new Texture("res/textures/White.png"));
-    ADD_TEXTURE(Grass, new Texture("res/textures/Grass.png"));
-    ADD_TEXTURE(Dirt, new Texture("res/textures/Dirt.png"));
-    ADD_TEXTURE(Sand, new Texture("res/textures/Sand.png"));
-    Texture::ImportSettings importSettings;
-    importSettings.FilterMode = Texture::Nearest;
-    ADD_TEXTURE(NormalMapDefault, new Texture("res/textures/NormalMapDefault.png", importSettings));
-    ADD_TEXTURE(TheDude, new Texture("res/textures/TheDude.png"));
-    ADD_TEXTURE(Crate, new Texture("res/textures/Crate.jpg"));
-    ADD_TEXTURE(CrateNormalMap, new Texture("res/textures/CrateNormalMap.png"));
+    ADD_TEXTURE_2D(No, new Texture2D("res/textures/NoTexture.png"));
+    ADD_TEXTURE_2D(Black, new Texture2D("res/textures/Black.png"));
+    ADD_TEXTURE_2D(White, new Texture2D("res/textures/White.png"));
+    ADD_TEXTURE_2D(Grass, new Texture2D("res/textures/Grass.png"));
+    ADD_TEXTURE_2D(Dirt, new Texture2D("res/textures/Dirt.png"));
+    ADD_TEXTURE_2D(Sand, new Texture2D("res/textures/Sand.png"));
+    TextureParams importSettings;
+    importSettings.FilterMode = TextureFilterMode::Nearest;
+    ADD_TEXTURE_2D(NormalMapDefault, new Texture2D("res/textures/NormalMapDefault.png", importSettings));
+    ADD_TEXTURE_2D(TheDude, new Texture2D("res/textures/TheDude.png"));
+    ADD_TEXTURE_2D(Crate, new Texture2D("res/textures/Crate.jpg"));
+    ADD_TEXTURE_2D(CrateNormalMap, new Texture2D("res/textures/CrateNormalMap.png"));
 
     ADD_CUBEMAP(SkyBox, new CubeMap("res/textures/Skybox/Skybox", ".png"));
 }
 
 void GraphicDemoApplication::LoadSprites()
 {
-    Texture::ImportSettings pixelArtTextureImportSettings;
+    TextureParams pixelArtTextureImportSettings;
     pixelArtTextureImportSettings.AnisotropyLevels = 0;
     pixelArtTextureImportSettings.MipMapLevels     = 0;
-    pixelArtTextureImportSettings.FilterMode       = Texture::FilterMode::Nearest;
+    pixelArtTextureImportSettings.FilterMode       = TextureFilterMode::Nearest;
 
-    Texture* theDudeSpriteTexture            = new Texture("res/sprites/TheDudeSprite.png", pixelArtTextureImportSettings);
-    Texture* drLSpriteTexture                = new Texture("res/sprites/DrLSprite.png", pixelArtTextureImportSettings);
-    Texture* gamerDudeSpriteTexture          = new Texture("res/sprites/GamerDudeSprite.png", pixelArtTextureImportSettings);
-    Texture* testSpriteTexture               = new Texture("res/sprites/TestSprite.png", pixelArtTextureImportSettings);
-    Texture* gamerDudeWalkRightSpriteTexture = new Texture("res/sprites/GamerDudeWalkRight.png", pixelArtTextureImportSettings);
-    Texture* gamerDudeWalkLeftSpriteTexture  = new Texture("res/sprites/GamerDudeWalkLeft.png", pixelArtTextureImportSettings);
+    Texture2D* theDudeSpriteTexture            = new Texture2D("res/sprites/TheDudeSprite.png", pixelArtTextureImportSettings);
+    Texture2D* drLSpriteTexture                = new Texture2D("res/sprites/DrLSprite.png", pixelArtTextureImportSettings);
+    Texture2D* gamerDudeSpriteTexture          = new Texture2D("res/sprites/GamerDudeSprite.png", pixelArtTextureImportSettings);
+    Texture2D* testSpriteTexture               = new Texture2D("res/sprites/TestSprite.png", pixelArtTextureImportSettings);
+    Texture2D* gamerDudeWalkRightSpriteTexture = new Texture2D("res/sprites/GamerDudeWalkRight.png", pixelArtTextureImportSettings);
+    Texture2D* gamerDudeWalkLeftSpriteTexture  = new Texture2D("res/sprites/GamerDudeWalkLeft.png", pixelArtTextureImportSettings);
 
     SpriteSet* theDude   = ADD_SPRITE(TheDude, new SpriteSet(theDudeSpriteTexture, 2, glm::vec2(30, 49)));
     SpriteSet* drL       = ADD_SPRITE(DrL, new SpriteSet(drLSpriteTexture));
@@ -126,16 +126,16 @@ void GraphicDemoApplication::LoadShaders() const
     commonUniforms.InitializeUniform<glm::mat4>("u_Transform", glm::identity<glm::mat4>(), false);
 
     UniformStorage litUniforms = UniformStorage();
-    litUniforms.InitializeUniform<Texture*>("u_ShadowMap", GET_TEXTURE(White), false);
+    litUniforms.InitializeUniform<Texture2D*>("u_ShadowMap", GET_TEXTURE_2D(White), false);
     
     litUniforms.InitializeUniform<float>("u_Shininess", 0.0f);
-    litUniforms.InitializeUniform<Texture*>("u_NormalMap", GET_TEXTURE(NormalMapDefault));
+    litUniforms.InitializeUniform<Texture2D*>("u_NormalMap", GET_TEXTURE_2D(NormalMapDefault));
 
     // Ambient Light
     litUniforms.InitializeUniform<CubeMap*>("u_SkyboxCubeMap", GET_CUBEMAP(SkyBox));
 
     UniformStorage spriteUniforms = UniformStorage();
-    spriteUniforms.InitializeUniform<Texture*>("u_Texture", GET_TEXTURE(White), false);
+    spriteUniforms.InitializeUniform<Texture2D*>("u_Texture", GET_TEXTURE_2D(White), false);
     #pragma endregion
 
     // Lit
@@ -144,14 +144,14 @@ void GraphicDemoApplication::LoadShaders() const
     litShader->GetUniformStorage()->CopyFrom(&litUniforms);
 
     litShader->InitializeUniform<glm::vec4>("u_ColorTint", glm::vec4(1.0f));
-    litShader->InitializeUniform<Texture*>("u_Texture", GET_TEXTURE(White));
+    litShader->InitializeUniform<Texture2D*>("u_Texture", GET_TEXTURE_2D(White));
 
     // Island
     Shader* islandShader = ADD_SHADER(Island, new Shader("res/shaders/Island/Island.vert", "res/shaders/Island/Island.frag"));
     islandShader->UniformStorageFromShader(litShader);
-    islandShader->InitializeUniform<Texture*>("u_TextureRed", GET_TEXTURE(Dirt));
-    islandShader->InitializeUniform<Texture*>("u_TextureGreen", GET_TEXTURE(Grass));
-    islandShader->InitializeUniform<Texture*>("u_TextureBlue", GET_TEXTURE(Sand));
+    islandShader->InitializeUniform<Texture2D*>("u_TextureRed", GET_TEXTURE_2D(Dirt));
+    islandShader->InitializeUniform<Texture2D*>("u_TextureGreen", GET_TEXTURE_2D(Grass));
+    islandShader->InitializeUniform<Texture2D*>("u_TextureBlue", GET_TEXTURE_2D(Sand));
     islandShader->InitializeUniform<float>("u_TilingFactor", 0.1f);
         
     // Water
@@ -176,7 +176,7 @@ void GraphicDemoApplication::LoadShaders() const
     // Vertex Color
     Shader* vertexColorShader = ADD_SHADER(VertexColor, new Shader("res/shaders/VertexColor/VertexColor.vert", "res/shaders/VertexColor/VertexColor.frag"));
     vertexColorShader->GetUniformStorage()->CopyFrom(&commonUniforms);
-    vertexColorShader->InitializeUniform<Texture*>("u_Texture", GET_TEXTURE(Crate));
+    vertexColorShader->InitializeUniform<Texture2D*>("u_Texture", GET_TEXTURE_2D(Crate));
 
     // Frame Buffer
     Shader* frameBufferShader = ADD_SHADER(FrameBuffer, new Shader("res/shaders/FrameBuffer/FrameBuffer.vert", "res/shaders/FrameBuffer/FrameBuffer.frag"));
@@ -196,7 +196,7 @@ void GraphicDemoApplication::LoadShaders() const
     Shader* shadowMapSpriteShader = ADD_SHADER(ShadowMapSprite, new Shader("res/shaders/ShadowMapSprite/ShadowMapSprite.vert","res/shaders/ShadowMapSprite/ShadowMapSprite.frag"));
     shadowMapSpriteShader->GetUniformStorage()->CopyFrom(&commonUniforms);
     shadowMapSpriteShader->InitializeUniform<glm::mat4>("u_LightSpace", glm::identity<glm::mat4>());
-    shadowMapSpriteShader->InitializeUniform<Texture*>("u_Texture", GET_TEXTURE(Crate));
+    shadowMapSpriteShader->InitializeUniform<Texture2D*>("u_Texture", GET_TEXTURE_2D(Crate));
 
     
     Renderer::SetShadowShader(shadowMapShader); // TODO: remove this and move somewhere else
@@ -207,14 +207,14 @@ void GraphicDemoApplication::LoadMaterials() const
 {
     // Dude
     Material* dudeMaterial = ADD_MATERIAL(Dude, new Material(GET_SHADER(Lit)));
-    dudeMaterial->GetUniformStorage()->SetUniform<Texture*>("u_Texture", GET_TEXTURE(TheDude));
+    dudeMaterial->GetUniformStorage()->SetUniform<Texture2D*>("u_Texture", GET_TEXTURE_2D(TheDude));
     dudeMaterial->GetUniformStorage()->SetUniform<float>("u_Shininess", 1.0);
 
     // Crate
     Material* crateMaterial = ADD_MATERIAL(Crate, new Material(GET_SHADER(Lit)));
 
-    crateMaterial->GetUniformStorage()->SetUniform("u_Texture", GET_TEXTURE(Crate));
-    crateMaterial->GetUniformStorage()->SetUniform("u_NormalMap", GET_TEXTURE(CrateNormalMap));
+    crateMaterial->GetUniformStorage()->SetUniform("u_Texture", GET_TEXTURE_2D(Crate));
+    crateMaterial->GetUniformStorage()->SetUniform("u_NormalMap", GET_TEXTURE_2D(CrateNormalMap));
     crateMaterial->GetUniformStorage()->SetUniform("u_NormalMapIntensity", 1.0f);
 
     // Island

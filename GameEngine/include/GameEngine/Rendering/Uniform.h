@@ -5,7 +5,7 @@
 #include <glm/mat4x4.hpp>
 
 #include "CubeMap.h"
-#include "Texture.h"
+#include "Texture2D.h"
 #include "glm/gtc/type_ptr.hpp"
 
 #define LOCATION_CHECK if (_location < 0) { Debug::Log::Message(std::string(_name) + "'s location not found"); return; }
@@ -90,7 +90,7 @@ namespace GameEngine
                 T* GetValuePtr() { return &_value; }
         };
 
-        SAMPLER_SPECIFICATION(Texture*)
+        SAMPLER_SPECIFICATION(Texture2D*)
         SAMPLER_SPECIFICATION(CubeMap*)
 
         template <>

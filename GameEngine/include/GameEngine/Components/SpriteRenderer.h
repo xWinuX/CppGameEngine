@@ -28,7 +28,7 @@ namespace GameEngine
                 void                 CopyQuadData(unsigned char* destination) override;
                 void                 OnBeforeDraw() override;
                 Rendering::Material* GetMaterial() override;
-                Rendering::Texture*  GetTexture() override;
+                Rendering::Texture2D*  GetTexture() override;
 
                 float GetFrameIndex() const;
                 void  SetFrameIndex(float frameIndex);

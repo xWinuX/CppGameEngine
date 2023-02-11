@@ -21,18 +21,18 @@ namespace GameEngine
 
 
                 std::vector<PackingSprite>  _sprites;
-                std::vector<Texture*>       _pages;
+                std::vector<Texture2D*>     _pages;
                 std::vector<unsigned char*> _buffers;
 
-                Texture::ImportSettings _importSettings;
-                glm::uvec2              _size;
-                glm::uvec2              _currentPosition = glm::zero<glm::uvec2>();
-                glm::vec2               _uvStep;
+                TextureParams _textureParams;
+                glm::uvec2    _size;
+                glm::uvec2    _currentPosition = glm::zero<glm::uvec2>();
+                glm::vec2     _uvStep;
 
                 void SortSpritesByHeight();
 
             public:
-                explicit SpriteAtlas(glm::uvec2 size, Texture::ImportSettings importSettings);
+                explicit SpriteAtlas(glm::uvec2 size, TextureParams textureParams);
                 void     ExportPages() const;
                 void     AddSprite(SpriteSet* spriteSet);
                 void     AddSprite(Sprite* sprite);

@@ -1,5 +1,6 @@
 ﻿#include "GameEngine/Rendering/RenderTarget.h"
 #include "GameEngine/Rendering/RenderablePrimitive.h"
+#include "GameEngine/Rendering/Texture.h"
 #include "GameEngine/Rendering/VertexArrayObject.h"
 
 #include "GameEngine/Rendering/Primitives/ScreenQuad.h"
@@ -10,11 +11,11 @@ RenderTarget::RenderTarget(Shader* shader):
     _shader(shader),
     _screenQuad(Rendering::Primitives::ScreenQuad::GetPrimitive())
 {
-    _renderTextureImportSettings.FilterMode      = Texture::Nearest;
-    _renderTextureImportSettings.WrapMode        = Texture::ClampToEdge;
-    _renderTextureImportSettings.InternalFormat  = GL_RGB32F;
-    _renderTextureImportSettings.Format          = GL_RGB;
-    _renderTextureImportSettings.ChannelDataType = GL_FLOAT;
+    _renderTextureParams.FilterMode      = TextureFilterMode::Nearest;
+    _renderTextureParams.WrapMode        = TextureWrapMode::ClampToEdge;
+    _renderTextureParams.InternalFormat  = GL_RGB32F;
+    _renderTextureParams.Format          = GL_RGB;
+    _renderTextureParams.ChannelDataType = GL_FLOAT;
 
     CreateRenderingSetup(glm::uvec2(0.0f));
 }
@@ -62,7 +63,7 @@ void RenderTarget::CreateRenderingSetup(const glm::uvec2 size)
 {
     _frameBuffer   = new FrameBuffer(size, GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
     _renderBuffer  = new RenderBuffer(size, GL_DEPTH24_STENCIL8);
-    _renderTexture = new Texture(nullptr, size, _renderTextureImportSettings);
+    _renderTexture = new Texture2D(nullptr, size, _renderTextureParams);
 
     _frameBuffer->AttachTexture(_renderTexture, GL_COLOR_ATTACHMENT0);
     _frameBuffer->AttachRenderBuffer(_renderBuffer, GL_DEPTH_STENCIL_ATTACHMENT);

@@ -9,7 +9,7 @@ namespace GameEngine
         class ShadowMap
         {
             private:
-                Texture*     _shadowMap;
+                Texture2D*     _shadowMap;
                 FrameBuffer* _shadowDepthMap;
                 glm::uvec2   _size;
                 glm::vec3    _position;
@@ -18,7 +18,7 @@ namespace GameEngine
             public:
                 explicit ShadowMap(glm::uvec2 size);
                 void     Bind() const;
-                Texture* GetTexture() const;
+                Texture2D* GetTexture() const;
                 void     Unbind() const;
  
                 void SetPosition(glm::vec3 position);

@@ -7,14 +7,14 @@ ShadowMap::ShadowMap(const glm::uvec2 size):
 {
     _shadowDepthMap = new Rendering::FrameBuffer(size);
 
-    Texture::ImportSettings importSettings;
-    importSettings.FilterMode      = Texture::Nearest;
-    importSettings.WrapMode        = Texture::ClampToBorder;
-    importSettings.InternalFormat  = GL_DEPTH_COMPONENT;
-    importSettings.Format          = GL_DEPTH_COMPONENT;
-    importSettings.ChannelDataType = GL_FLOAT;
+    TextureParams textureParams;
+    textureParams.FilterMode      = TextureFilterMode::Nearest;
+    textureParams.WrapMode        = TextureWrapMode::ClampToBorder;
+    textureParams.InternalFormat  = GL_DEPTH_COMPONENT;
+    textureParams.Format          = GL_DEPTH_COMPONENT;
+    textureParams.ChannelDataType = GL_FLOAT;
 
-    _shadowMap = new Rendering::Texture(nullptr, size, importSettings);
+    _shadowMap = new Rendering::Texture2D(nullptr, size, textureParams);
 
     _shadowDepthMap->AttachTexture(_shadowMap, GL_DEPTH_ATTACHMENT);
 
@@ -31,7 +31,7 @@ void ShadowMap::Bind() const
     glClear(GL_DEPTH_BUFFER_BIT);
 }
 
-Texture* ShadowMap::GetTexture() const { return _shadowMap; }
+Texture2D* ShadowMap::GetTexture() const { return _shadowMap; }
 
 void      ShadowMap::Unbind() const { _shadowDepthMap->Unbind(); }
 

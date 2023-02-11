@@ -1,6 +1,6 @@
 ﻿#pragma once
 #include "Renderable.h"
-#include "Texture.h"
+#include "Texture2D.h"
 
 namespace GameEngine
 {
@@ -9,7 +9,7 @@ namespace GameEngine
         class Renderable2D : public Renderable
         {
             public:
-                virtual Texture* GetTexture() { return nullptr; }
+                virtual Texture2D* GetTexture() { return nullptr; }
                 virtual size_t   GetQuadSize() { return 0; }
                 virtual size_t   GetCopySize() { return 0; }
                 virtual void     CopyQuadData(unsigned char* destination) { }

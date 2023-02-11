@@ -14,9 +14,9 @@ std::vector<glm::vec4> DirectionalLight::_colors      = std::vector<glm::vec4>()
 std::vector<float>     DirectionalLight::_intensities = std::vector<float>();
 
 DirectionalLight::DirectionalLight(const glm::vec4 color, const float intensity):
+    _shadowMap(new ShadowMap(glm::uvec2(2048))),
     _color(color),
-    _intensity(intensity),
-    _shadowMap(new ShadowMap(glm::uvec2(2048))) { }
+    _intensity(intensity) { }
 
 void DirectionalLight::SetColor(const glm::vec4 color) { _color = color; }
 void DirectionalLight::SetIntensity(const float intensity) { _intensity = intensity; }
@@ -32,5 +32,6 @@ void DirectionalLight::OnUpdateEnd()
     Light::AddDirectionalLight(_transform->GetForward(), _color, _intensity);
 
     _shadowMap->SetPosition(_transform->GetPosition());
+    Light::SetShadowCaster(_transform->GetForward());
     Renderer::SubmitShadowMap(_shadowMap);
 }

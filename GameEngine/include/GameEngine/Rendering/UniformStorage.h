@@ -85,7 +85,7 @@ namespace GameEngine
                 UNIFORM(int, 1I)
                 UNIFORM(float, 1F)
                 UNIFORM(std::vector<float>*, 1FV)
-                UNIFORM(Texture*, Texture)
+                UNIFORM(Texture2D*, Texture2D)
                 UNIFORM(CubeMap*, CubeMap)
 
                 template <typename T, std::map<int, UniformEntry<T>> UniformStorage::*MapPtr>
@@ -154,7 +154,7 @@ namespace GameEngine
                 void SetUniformInstant(std::string uniformName, T value) { ShowUniformNotSupportedError<T>(); }
         };
 
-        ADD_UNIFORM_SPECIALIZATION(Texture*, Texture)
+        ADD_UNIFORM_SPECIALIZATION(Texture2D*, Texture2D)
         ADD_UNIFORM_SPECIALIZATION(CubeMap*, CubeMap)
         ADD_UNIFORM_SPECIALIZATION(glm::mat4, Mat4F)
         ADD_UNIFORM_SPECIALIZATION(glm::vec4, 4F)

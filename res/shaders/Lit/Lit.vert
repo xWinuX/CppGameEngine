@@ -3,7 +3,8 @@
 #include "../Common/Uniforms.glsl"
 #include "../Common/Functions.vert"
 
-#include "Uniforms.frag"
+#include "LightData.glsl"
+
 #include "IO.vert"
 
 void main()

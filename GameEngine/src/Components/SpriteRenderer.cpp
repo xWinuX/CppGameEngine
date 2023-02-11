@@ -34,7 +34,7 @@ void SpriteRenderer::CopyQuadData(unsigned char* destination)
 void SpriteRenderer::OnBeforeDraw() { _material->GetUniformStorage()->SetUniformInstant<glm::mat4>("u_Transform", _transform->GetTRS()); }
 
 GameEngine::Rendering::Material* SpriteRenderer::GetMaterial() { return _material; }
-GameEngine::Rendering::Texture*  SpriteRenderer::GetTexture() { return _sprite->GetTexture(static_cast<size_t>(floor(_frameIndex))); }
+GameEngine::Rendering::Texture2D*  SpriteRenderer::GetTexture() { return _sprite->GetTexture(static_cast<size_t>(floor(_frameIndex))); }
 
 float SpriteRenderer::GetFrameIndex() const { return _frameIndex; }
 void  SpriteRenderer::SetFrameIndex(const float frameIndex) { _frameIndex = frameIndex; }

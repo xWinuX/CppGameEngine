@@ -1,6 +1,6 @@
 ﻿v_Position = calculateWorldSpacePosition(u_Transform, a_Position);
 
-v_FragLightSpacePosition = u_LightSpaceMatrices[0] * vec4(v_Position.xyz, 1.0);
+v_FragLightSpacePosition = u_LightSpaceMatrix * vec4(v_Position.xyz, 1.0);
 
 gl_Position = calculateNDCPosition(u_ViewProjection, v_Position);
 

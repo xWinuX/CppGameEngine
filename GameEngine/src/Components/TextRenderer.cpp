@@ -66,7 +66,7 @@ void TextRenderer::OnUpdateEnd()
 }
 
 Material* TextRenderer::GetMaterial() { return _material; }
-Texture*  TextRenderer::GetTexture() { return _font->GetTexture(); }
+Texture2D*  TextRenderer::GetTexture() { return _font->GetTexture(); }
 size_t    TextRenderer::GetQuadSize() { return sizeof(Sprite::QuadData); }
 size_t    TextRenderer::GetCopySize() { return _quads.size() * GetQuadSize(); }
 

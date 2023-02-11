@@ -8,8 +8,8 @@
 
 using namespace GameEngine::Rendering;
 
-GameEngine::Rendering::SpriteAtlas::SpriteAtlas(const glm::uvec2 size, const Texture::ImportSettings importSettings):
-    _importSettings(importSettings),
+GameEngine::Rendering::SpriteAtlas::SpriteAtlas(const glm::uvec2 size, const TextureParams textureParams):
+    _textureParams(textureParams),
     _size(size),
     _uvStep(glm::vec2(1.0f / static_cast<float>(size.x), 1.0f / static_cast<float>(size.y))) {}
 
@@ -62,7 +62,7 @@ void SpriteAtlas::Pack()
             if (packingSprite.WasPacked) { continue; }
 
             const Sprite*    sprite        = packingSprite.Sprite;
-            const Texture*   spriteTexture = sprite->GetSourceTexture();
+            const Texture2D*   spriteTexture = sprite->GetSourceTexture();
             const glm::uvec2 frameSize     = sprite->GetSize();
             const glm::vec2  frameUVStep   = glm::vec2(_uvStep.x * static_cast<float>(frameSize.x), _uvStep.y * static_cast<float>(frameSize.y));
 
@@ -110,7 +110,7 @@ void SpriteAtlas::Pack()
     ExportPages();
 
     // Create textures out of the buffers and clear the vector since the texture now manages the buffers memory
-    for (unsigned char* buffer : _buffers) { _pages.push_back(new Texture(buffer, _size, _importSettings)); }
+    for (unsigned char* buffer : _buffers) { _pages.push_back(new Texture2D(buffer, _size, _textureParams)); }
 
     for (const PackingSprite packingSprite : _sprites)
     {

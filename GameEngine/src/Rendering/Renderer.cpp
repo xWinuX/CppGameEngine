@@ -110,11 +110,11 @@ void Renderer::SubmitRenderTarget(RenderTarget* renderTarget)
     _shaderUseCallbacks.push_back(renderTarget);
 }
 
-unsigned int Renderer::Render2DBatches(const std::pair<Material*, std::map<Texture*, std::vector<Renderable2D*>>>& materialPair)
+unsigned int Renderer::Render2DBatches(const std::pair<Material*, std::map<Texture2D*, std::vector<Renderable2D*>>>& materialPair)
 {
     int numDrawCalls = 0;
     _renderable2DVertexArrayObject->Bind();
-    for (const std::pair<Texture* const, std::vector<Renderable2D*>>& texturePair : materialPair.second)
+    for (const std::pair<Texture2D* const, std::vector<Renderable2D*>>& texturePair : materialPair.second)
     {
         unsigned int               renderable2DIndex = 0;
         std::vector<Renderable2D*> renderable2Ds     = texturePair.second;
@@ -142,7 +142,7 @@ unsigned int Renderer::Render2DBatches(const std::pair<Material*, std::map<Textu
 
             // Render the batch
             _renderable2DVertexBuffer->UpdateData(_renderable2DVertexData, numQuads);
-            Shader::GetCurrentActiveShader()->GetUniformStorage()->SetUniformInstant<Texture*>("u_Texture", texturePair.first);
+            Shader::GetCurrentActiveShader()->GetUniformStorage()->SetUniformInstant<Texture2D*>("u_Texture", texturePair.first);
             _renderable2DVertexArrayObject->DrawInstanced(6, static_cast<int>(numQuads));
             numDrawCalls++;
         }
@@ -173,43 +173,31 @@ void Renderer::RenderSubmitted()
 
     // Update Light
     Light::Update();
-
-
+    
     for (RenderTarget* renderTarget : _renderTargets)
     {
+        // Render Shadows
         if (renderTarget->_renderShadows)
         {
             glCullFace(GL_FRONT);
-            for (unsigned int i = 0; i < _shadowMaps.size() && i < Light::MaxShadowCasters; i++)
-            {
-                const ShadowMap* shadowMap = _shadowMaps[i];
-                _shadowShader->Use();
+  
+            const ShadowMap* shadowMap = _shadowMaps[0];
+            shadowMap->Bind();
+            
+            _shadowShader->Use();
+            RENDER_CALL(
+                        _opaqueRenderables,
+                        for (auto p : pair.second) { RenderDefault(p); }
+                       )
 
-                glm::mat4       depthProjectionMatrix = glm::ortho<float>(-10, 10, -10, 10, -1, 100);
-                glm::mat4       depthViewMatrix       = glm::lookAt(lightInvDir, glm::vec3(0, 0, 0), glm::vec3(0, 1, 0));
-                const glm::mat4 lightSpace            = depthProjectionMatrix * depthViewMatrix;
+            _shadowSpriteShader->Use();
+            RENDER_CALL(
+                        _opaqueBatchRenderable2Ds,
+                        for (auto p : pair.second) { Render2DBatches(p); }
+                       )
 
-                _shadowShader->SetUniformInstant<glm::mat4>("u_LightSpace", lightSpace);
-
-                shadowMap->Bind();
-
-                RENDER_CALL(
-                            _opaqueRenderables,
-                            for (auto p : pair.second) { RenderDefault(p); }
-                           )
-
-                _shadowSpriteShader->Use();
-                _shadowShader->SetUniformInstant<glm::mat4>("u_LightSpace", lightSpace);
-
-                RENDER_CALL(
-                            _opaqueBatchRenderable2Ds,
-                            for (auto p : pair.second) { Render2DBatches(p); }
-                           )
-
-                shadowMap->Unbind();
-
-                Light::AddShadowCaster(lightSpace);
-            }
+            shadowMap->Unbind();
+         
             glCullFace(GL_BACK);
         }
 
@@ -225,7 +213,7 @@ void Renderer::RenderSubmitted()
 
         RENDER_CALL(
                     _opaqueBatchRenderable2Ds,
-                    (numDrawCalls += RenderRenderables<std::map<Texture*, std::vector<Renderable2D*>>, &Render2DBatches>(renderTarget, pair.second));
+                    (numDrawCalls += RenderRenderables<std::map<Texture2D*, std::vector<Renderable2D*>>, &Render2DBatches>(renderTarget, pair.second));
                    )
 
 
@@ -240,13 +228,12 @@ void Renderer::RenderSubmitted()
 
         RENDER_CALL(
                     _transparentBatchRenderable2Ds,
-                    (numDrawCalls += RenderRenderables<std::map<Texture*, std::vector<Renderable2D*>>, &Render2DBatches>(renderTarget, pair.second));
+                    (numDrawCalls += RenderRenderables<std::map<Texture2D*, std::vector<Renderable2D*>>, &Render2DBatches>(renderTarget, pair.second));
                    )
         glDisable(GL_BLEND);
 
         glDisable(GL_DEPTH_TEST);
         renderTarget->Unbind();
-        _shadowMaps[0]->GetTexture()->Bind(0);
         renderTarget->Draw();
         glEnable(GL_DEPTH_TEST);
     }

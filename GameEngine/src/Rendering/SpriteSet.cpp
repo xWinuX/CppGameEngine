@@ -6,9 +6,9 @@
 
 using namespace GameEngine::Rendering;
 
-SpriteSet::SpriteSet(Texture* texture, const Sprite::AdditionalInfo additionalInfo) { _sprites.push_back(new Sprite(texture, additionalInfo)); }
+SpriteSet::SpriteSet(Texture2D* texture, const Sprite::AdditionalInfo additionalInfo) { _sprites.push_back(new Sprite(texture, additionalInfo)); }
 
-SpriteSet::SpriteSet(Texture* texture, const unsigned int numFrames, const glm::uvec2 frameSize, const Sprite::AdditionalInfo additionalInfo)
+SpriteSet::SpriteSet(Texture2D* texture, const unsigned int numFrames, const glm::uvec2 frameSize, const Sprite::AdditionalInfo additionalInfo)
 {
     const float uStep = 1.0f / static_cast<float>(numFrames);
     for (unsigned int i = 0; i < numFrames; i++)
@@ -20,7 +20,7 @@ SpriteSet::SpriteSet(Texture* texture, const unsigned int numFrames, const glm::
     }
 }
 
-SpriteSet::SpriteSet(Texture* texture, const msdf_atlas::FontGeometry& fontGeometry, const Sprite::AdditionalInfo additionalInfo)
+SpriteSet::SpriteSet(Texture2D* texture, const msdf_atlas::FontGeometry& fontGeometry, const Sprite::AdditionalInfo additionalInfo)
 {
     const glm::vec2 texelSize = glm::vec2(1.0f / static_cast<float>(texture->GetSize().x), 1.0f / static_cast<float>(texture->GetSize().y));
 
@@ -51,6 +51,6 @@ SpriteSet::~SpriteSet() { for (const Sprite* sprite : _sprites) { delete sprite;
 
 Sprite*        SpriteSet::GetSprite(const size_t frameIndex) const { return _sprites[frameIndex]; }
 size_t         SpriteSet::GetNumFrames() { return _sprites.size(); }
-Texture*       SpriteSet::GetTexture(const size_t frameIndex) { return _sprites[frameIndex]->GetTexture(); }
+Texture2D*       SpriteSet::GetTexture(const size_t frameIndex) { return _sprites[frameIndex]->GetTexture(); }
 unsigned char* SpriteSet::GetQuadDataWithTransform(const size_t frameIndex, const glm::mat4 transform) { return _sprites[frameIndex]->GetQuadDataWithTransform(0, transform); }
 unsigned char* SpriteSet::GetQuadData(const size_t frameIndex) { return _sprites[frameIndex]->GetQuadData(0); }

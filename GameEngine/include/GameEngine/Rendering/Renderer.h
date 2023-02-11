@@ -20,7 +20,7 @@ namespace GameEngine
         {
             private:
                 typedef std::map<Layer, std::map<Material*, std::vector<Renderable*>>>                       RenderableStructure;
-                typedef std::map<Layer, std::map<Material*, std::map<Texture*, std::vector<Renderable2D*>>>> Renderable2DBatchStructure;
+                typedef std::map<Layer, std::map<Material*, std::map<Texture2D*, std::vector<Renderable2D*>>>> Renderable2DBatchStructure;
 
 
                 static std::vector<ShaderUseCallback*> _shaderUseCallbacks;
@@ -60,7 +60,7 @@ namespace GameEngine
                 static void SubmitRenderable(Renderable* renderable);
                 static void SubmitRenderTarget(RenderTarget* renderTarget);
 
-                static unsigned int Render2DBatches(const std::pair<Material*, std::map<Texture*, std::vector<Renderable2D*>>>& materialPair);
+                static unsigned int Render2DBatches(const std::pair<Material*, std::map<Texture2D*, std::vector<Renderable2D*>>>& materialPair);
                 static unsigned int RenderDefault(const std::pair<Material*, std::vector<Renderable*>>& materialRenderables);
                 static void         RenderSubmitted();
                 static void         DrawFrame();

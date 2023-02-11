@@ -35,11 +35,11 @@ namespace GameEngine
             private:
                 uint8_t _layerMask = 1;
             
-                Texture::ImportSettings _renderTextureImportSettings;
+                TextureParams _renderTextureParams;
 
                 FrameBuffer*  _frameBuffer   = nullptr;
                 RenderBuffer* _renderBuffer  = nullptr;
-                Texture*      _renderTexture = nullptr;
+                Texture2D*      _renderTexture = nullptr;
 
                 Shader*               _shader;
                 Rendering::Primitive* _screenQuad;

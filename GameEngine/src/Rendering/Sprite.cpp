@@ -4,7 +4,7 @@
 
 using namespace GameEngine::Rendering;
 
-Sprite::Sprite(Texture* texture, const AdditionalInfo additionalInfo):
+Sprite::Sprite(Texture2D* texture, const AdditionalInfo additionalInfo):
     _sourceTexture(texture),
     _texture(texture),
     _pixelPosition(glm::uvec2(0, 0)),
@@ -12,7 +12,7 @@ Sprite::Sprite(Texture* texture, const AdditionalInfo additionalInfo):
     _pixelsPerUnit(additionalInfo.PixelsPerUnit),
     _pixelsPerUnitFactor(1.0f / static_cast<float>(additionalInfo.PixelsPerUnit)) { CreateSpriteQuad(glm::vec2(0.0f, 0.0f), glm::vec2(1.0f, 1.0f), additionalInfo.Origin); }
 
-Sprite::Sprite(Texture* texture, const glm::uvec2 pixelPosition, const glm::uvec2 size, const glm::vec2 uvTopLeft, const glm::vec2 uvBottomRight, const AdditionalInfo additionalInfo):
+Sprite::Sprite(Texture2D* texture, const glm::uvec2 pixelPosition, const glm::uvec2 size, const glm::vec2 uvTopLeft, const glm::vec2 uvBottomRight, const AdditionalInfo additionalInfo):
     _sourceTexture(texture),
     _texture(texture),
     _pixelPosition(pixelPosition),
@@ -20,7 +20,7 @@ Sprite::Sprite(Texture* texture, const glm::uvec2 pixelPosition, const glm::uvec
     _pixelsPerUnit(additionalInfo.PixelsPerUnit),
     _pixelsPerUnitFactor(1.0f / static_cast<float>(_pixelsPerUnit)) { CreateSpriteQuad(uvTopLeft, uvBottomRight, additionalInfo.Origin); }
 
-Sprite::Sprite(Texture* texture, const glm::uvec2 pixelPosition, const glm::vec4 posLRTB, const glm::vec2 uvTopLeft, const glm::vec2 uvBottomRight, const AdditionalInfo additionalInfo):
+Sprite::Sprite(Texture2D* texture, const glm::uvec2 pixelPosition, const glm::vec4 posLRTB, const glm::vec2 uvTopLeft, const glm::vec2 uvBottomRight, const AdditionalInfo additionalInfo):
     _sourceTexture(texture),
     _texture(texture),
     _pixelPosition(pixelPosition),
@@ -91,7 +91,7 @@ void Sprite::SetUV(glm::vec2 topLeftUV, glm::vec2 bottomRightUV) const
     _quadData->UV3 = bottomRightUV;
 }
 
-void              Sprite::SetTexture(Texture* texture) { _texture = texture; }
+void              Sprite::SetTexture(Texture2D* texture) { _texture = texture; }
 void              Sprite::SetTrs(const glm::mat4 trs) const { _quadData->Transform = trs; }
 size_t            Sprite::GetNumFrames() { return 1; }
 Sprite::QuadData* Sprite::GetQuadDataPtr() const { return _quadData; }
@@ -104,10 +104,10 @@ unsigned char* Sprite::GetQuadDataWithTransform(const size_t frameIndex, const g
 
 unsigned char* Sprite::GetQuadData(const size_t frameIndex) { return reinterpret_cast<unsigned char*>(_quadData); }
 
-Texture* Sprite::GetTexture(const size_t frameIndex) { return _texture; }
+Texture2D* Sprite::GetTexture(const size_t frameIndex) { return _texture; }
 float    Sprite::GetPixelsPerUnitFactor() const { return _pixelsPerUnitFactor; }
 
 
-Texture*   Sprite::GetSourceTexture() const { return _sourceTexture; }
+Texture2D*   Sprite::GetSourceTexture() const { return _sourceTexture; }
 glm::vec2  Sprite::GetPixelPosition() const { return _pixelPosition; }
 glm::uvec2 Sprite::GetSize() const { return _size; }

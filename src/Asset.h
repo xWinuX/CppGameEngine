@@ -1,7 +1,7 @@
 ﻿#pragma once
 
 #include "GameEngine/AssetDatabase.h"
-#include "GameEngine/Rendering/Texture.h"
+#include "GameEngine/Rendering/Texture2D.h"
 #include "GameEngine/Rendering/SpriteSet.h"
 #include "GameEngine/Rendering/Model.h"
 #include "GameEngine/Rendering/CubeMap.h"
@@ -9,7 +9,7 @@
 
 namespace Asset
 {
-    enum class Texture : size_t
+    enum class Texture2D : size_t
     {
         No,
         Black,
@@ -94,7 +94,7 @@ namespace Asset
     };
 }
 
-#define ADD_TEXTURE(id, asset) GameEngine::AssetDatabase::Add<GameEngine::Rendering::Texture*>(Asset::Texture::id, asset)
+#define ADD_TEXTURE_2D(id, asset) GameEngine::AssetDatabase::Add<GameEngine::Rendering::Texture2D*>(Asset::Texture2D::id, asset)
 #define ADD_CUBEMAP(id, asset) GameEngine::AssetDatabase::Add<GameEngine::Rendering::CubeMap*>(Asset::CubeMap::id, asset)
 #define ADD_SPRITE(id, asset) GameEngine::AssetDatabase::Add<GameEngine::Rendering::SpriteSet*>(Asset::Sprite::id, asset)
 #define ADD_FONT(id, asset) GameEngine::AssetDatabase::Add<GameEngine::Rendering::Font*>(Asset::Font::id, asset)
@@ -104,7 +104,7 @@ namespace Asset
 #define ADD_MATERIAL(id, asset) GameEngine::AssetDatabase::Add<GameEngine::Rendering::Material*>(Asset::Material::##id, asset)
 #define ADD_SPRITE_ATLAS(id, asset) GameEngine::AssetDatabase::Add<GameEngine::Rendering::SpriteAtlas*>(Asset::SpriteAtlas::##id, asset)
 
-#define GET_TEXTURE(id) GameEngine::AssetDatabase::Get<GameEngine::Rendering::Texture*>(Asset::Texture::id)
+#define GET_TEXTURE_2D(id) GameEngine::AssetDatabase::Get<GameEngine::Rendering::Texture2D*>(Asset::Texture2D::id)
 #define GET_CUBEMAP(id) GameEngine::AssetDatabase::Get<GameEngine::Rendering::CubeMap*>(Asset::CubeMap::id)
 #define GET_SPRITE(id) GameEngine::AssetDatabase::Get<GameEngine::Rendering::SpriteSet*>(Asset::Sprite::id)
 #define GET_FONT(id) GameEngine::AssetDatabase::Get<GameEngine::Rendering::Font*>(Asset::Font::id)
