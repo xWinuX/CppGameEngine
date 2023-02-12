@@ -1,11 +1,9 @@
 ﻿#pragma once
 #include <string>
 #include <glad/glad.h>
-#include <glm/vec2.hpp>
-
-#include "glm/vec4.hpp"
-#include "glm/gtc/constants.hpp"
 #include <stb_image.h>
+#include <glm/glm.hpp>
+#include <glm/ext.hpp>
 
 
 namespace GameEngine
@@ -38,7 +36,7 @@ namespace GameEngine
             GLenum            ChannelDataType  = GL_UNSIGNED_BYTE;
             glm::vec4         BorderColor      = glm::vec4(1.0f);
         };
-
+        
         template <GLenum TextureType>
         class Texture
         {
@@ -59,6 +57,12 @@ namespace GameEngine
                 GLuint            GetTextureID() const { return _textureID; }
 
             protected:
+                Texture(const TextureParams importSettings = TextureParams()):
+                    _size(glm::uvec2(0)) { CreateTextureAndSetParams(nullptr, importSettings); }
+
+                Texture(const glm::uvec2 size, const TextureParams importSettings = TextureParams()):
+                    _size(size) { CreateTextureAndSetParams(nullptr, importSettings); }
+
                 explicit Texture(const std::string& filePath, const TextureParams importSettings = TextureParams())
                 {
                     int width, height, bitsPerPixel;
@@ -74,6 +78,12 @@ namespace GameEngine
 
                 Texture(unsigned char* buffer, const glm::uvec2 size, const TextureParams importSettings = TextureParams()):
                     _size(size) { CreateTextureAndSetParams(buffer, importSettings); }
+
+                virtual ~Texture()
+                {
+                    glDeleteTextures(1, &_textureID);
+                    if (_buffer) { stbi_image_free(_buffer); }
+                }
 
                 void CreateTextureAndSetParams(unsigned char* buffer, const TextureParams importSettings)
                 {

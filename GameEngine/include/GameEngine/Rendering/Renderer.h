@@ -8,7 +8,7 @@
 #include "Renderable2D.h"
 #include "RenderTarget.h"
 #include "ShaderUseCallback.h"
-#include "ShadowMap.h"
+#include "CascadedShadowMap.h"
 #include "VertexBuffer.h"
 #include "SpriteSet.h"
 
@@ -30,7 +30,7 @@ namespace GameEngine
                 static Shader* _shadowShader;
                 static Shader* _shadowSpriteShader;
 
-                static std::vector<ShadowMap*> _shadowMaps;
+                static std::vector<CascadedShadowMap*> _shadowMaps;
 
                 // 3D
                 static RenderableStructure _opaqueRenderables;
@@ -54,7 +54,7 @@ namespace GameEngine
                 static void SetShadowShader(Shader* shadowShader);
                 static void SetShadowSpriteShader(Shader* shadowSpriteShader);
 
-                static void SubmitShadowMap(ShadowMap* shadowMap);
+                static void SubmitShadowMap(CascadedShadowMap* shadowMap);
                 static void SubmitShaderUseCallback(ShaderUseCallback* shaderUseCallback);
                 static void SubmitBatchRenderable2D(Renderable2D* renderable2D);
                 static void SubmitRenderable(Renderable* renderable);

@@ -39,6 +39,8 @@ std::string Shader::PreprocessShader(const std::string& shader) { return String:
 
 Shader::Shader(const char* vertexShaderSource, const char* fragmentShaderSource, const char* geometryShaderSource)
 {
+    Debug::Log::Message(std::string(vertexShaderSource)+"------------");
+    
     _programID = glCreateProgram();
 
     // Vertex shader
@@ -54,7 +56,7 @@ Shader::Shader(const char* vertexShaderSource, const char* fragmentShaderSource,
     // Geometry shader
     if (geometryShaderSource != nullptr)
     {
-        const std::string geometryShader   = Stream(geometryShaderSource).GetFileContent();
+        const std::string geometryShader   = PreprocessShader(geometryShaderSource);
         const GLuint      geometryShaderID = CompileShader(geometryShader, GL_GEOMETRY_SHADER);
         glAttachShader(_programID, geometryShaderID);
     }

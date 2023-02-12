@@ -19,7 +19,6 @@ for (auto& uniform##suffix : _uniform##suffix##s) \
     if (uniform##suffix##.second.ResetAfterApply) { uniform##suffix##.second.Uniform.Reset(); } \
 } \
 
-
 #define COPY_UNIFORM(type,suffix) \
 for (auto uniform##suffix : _uniform##suffix##s) \
 { \
@@ -51,6 +50,7 @@ void UniformStorage::Apply()
 
     int slot = 0;
     APPLY_SAMPLER_UNIFORM(Texture2D)
+    APPLY_SAMPLER_UNIFORM(Texture2DArray)
     APPLY_SAMPLER_UNIFORM(CubeMap)
 }
 
@@ -92,6 +92,7 @@ void UniformStorage::CopyTo(UniformStorage* uniformStorage) const
     COPY_UNIFORM(float, 1F)
     COPY_UNIFORM(std::vector<float>*, 1FV)
     COPY_UNIFORM(Texture2D*, Texture2D)
+    COPY_UNIFORM(Texture2DArray*, Texture2DArray)
     COPY_UNIFORM(CubeMap*, CubeMap)
 }
 

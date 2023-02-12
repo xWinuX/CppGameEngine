@@ -8,6 +8,7 @@
 #include <glm/mat4x4.hpp>
 
 #include "CubeMap.h"
+#include "Texture2DArray.h"
 
 #define UNIFORM(type, suffix) std::map<int,  UniformEntry<##type##>> _uniform##suffix##s;
 
@@ -86,6 +87,7 @@ namespace GameEngine
                 UNIFORM(float, 1F)
                 UNIFORM(std::vector<float>*, 1FV)
                 UNIFORM(Texture2D*, Texture2D)
+                UNIFORM(Texture2DArray*, Texture2DArray)
                 UNIFORM(CubeMap*, CubeMap)
 
                 template <typename T, std::map<int, UniformEntry<T>> UniformStorage::*MapPtr>
@@ -155,6 +157,7 @@ namespace GameEngine
         };
 
         ADD_UNIFORM_SPECIALIZATION(Texture2D*, Texture2D)
+        ADD_UNIFORM_SPECIALIZATION(Texture2DArray*, Texture2DArray)
         ADD_UNIFORM_SPECIALIZATION(CubeMap*, CubeMap)
         ADD_UNIFORM_SPECIALIZATION(glm::mat4, Mat4F)
         ADD_UNIFORM_SPECIALIZATION(glm::vec4, 4F)

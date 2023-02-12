@@ -17,8 +17,8 @@ Camera* Camera::_main = nullptr;
 Camera::Camera(const float fovInDegrees, const float zNear, const float zFar, Shader* frameBufferShader, Material* skyboxMaterial):
     RenderTarget(frameBufferShader),
     _fovInDegrees(fovInDegrees),
-    _zNear(zNear),
-    _zFar(zFar),
+    _nearPlane(zNear),
+    _farPlane(zFar),
     _skyboxCube(new Rendering::RenderablePrimitive(Primitives::SkyboxCube::GetPrimitive(), skyboxMaterial))
 {
     if (_main == nullptr) { _main = this; }
@@ -38,14 +38,13 @@ Camera::Camera(const float fovInDegrees, const float zNear, const float zFar, Sh
 void Camera::OnUpdateEnd()
 {
     UpdateViewFrustumCorners();
-    Renderer::SubmitRenderable(_skyboxCube);
+    //Renderer::SubmitRenderable(_skyboxCube);
     Renderer::SubmitRenderTarget(this);
 }
 
-void Camera::UpdateViewFrustumCorners()
+void Camera::CreateViewFrustumCorners(const glm::mat4 projectionMatrix, std::vector<glm::vec4>& vector) const
 {
-    _viewFrustumCorners.clear();
-    const glm::mat4 inverseViewProjection = glm::inverse(_projectionMatrix * GetViewMatrix());
+    const glm::mat4 inverseViewProjection = glm::inverse(projectionMatrix * GetViewMatrix());
 
     for (unsigned int x = 0; x < 2; ++x)
     {
@@ -59,21 +58,42 @@ void Camera::UpdateViewFrustumCorners()
                                                       2.0f * static_cast<float>(y) - 1.0f,
                                                       2.0f * static_cast<float>(z) - 1.0f,
                                                       1.0f);
-                _viewFrustumCorners.push_back(pt / pt.w);
+                vector.push_back(pt / pt.w);
             }
         }
     }
 }
 
+void Camera::UpdateViewFrustumCorners()
+{
+    _viewFrustumCorners.clear();
+    CreateViewFrustumCorners(_projectionMatrix, _viewFrustumCorners);
+}
+
+glm::mat4 Camera::CreatePerspectiveProjection(const float nearPlan, const float farPlane) const
+{
+    return glm::perspective(glm::radians(_fovInDegrees), static_cast<float>(_projectionSize.x) / static_cast<float>(_projectionSize.y), nearPlan, farPlane);
+}
+
 void Camera::UpdateProjectionMatrix()
 {
-    const glm::vec2 windowSize = Window::GetCurrentWindow()->GetSize();
-    _projectionMatrix          = glm::perspective(glm::radians(_fovInDegrees), windowSize.x / windowSize.y, _zNear, _zFar);
+    _projectionSize   = Window::GetCurrentWindow()->GetSize();
+    _projectionMatrix = CreatePerspectiveProjection(_nearPlane, _farPlane);
 }
 
 glm::mat4 Camera::GetViewMatrix() const { return glm::inverse(GetTransform()->GetTRS()); }
 
 std::vector<glm::vec4>& Camera::GetViewFrustumCorners() { return _viewFrustumCorners; }
+
+std::vector<glm::vec4> Camera::CreateViewFrustumCorners(const float nearPlane, const float farPlane) const
+{
+    std::vector<glm::vec4> corners    = std::vector<glm::vec4>(8);
+    const glm::mat4        projection = CreatePerspectiveProjection(nearPlane, farPlane);
+
+    CreateViewFrustumCorners(projection, corners);
+
+    return corners;
+}
 
 Camera* Camera::GetMain() { return _main; }
 
@@ -85,11 +105,9 @@ void Camera::Bind()
     _uniformBufferData->ViewProjection = _projectionMatrix * viewMatrix;
     _uniformBufferData->Projection     = _projectionMatrix;
     _uniformBufferData->ViewPosition   = _transform->GetPosition();
+    //_uniformBufferData->FarPlane       = _farPlane;
 
     // Remove position from view matrix
-    viewMatrix[3][0]         = 0;
-    viewMatrix[3][1]         = 0;
-    viewMatrix[3][2]         = 0;
     _uniformBufferData->View = viewMatrix;
 
     _cameraUniformBuffer->UpdateData(reinterpret_cast<unsigned char*>(_uniformBufferData), 1);
@@ -105,3 +123,7 @@ void Camera::SetFOVInDegrees(const float value)
     _fovInDegrees = value;
     UpdateProjectionMatrix();
 }
+
+float Camera::GetNearPlan() const { return _nearPlane; }
+
+float Camera::GetFarPlan() const { return _farPlane; }

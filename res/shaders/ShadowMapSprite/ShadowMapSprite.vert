@@ -14,7 +14,7 @@ void main()
 {
     int vertexIndex = gl_VertexID % 4;
     
-    gl_Position = u_LightSpaceMatrix * a_Transform * vec4(vec3(a_PositionsAndUVs[vertexIndex].xy, 0.0), 1.0);
+    gl_Position = u_LightSpaceMatrices[0] * a_Transform * vec4(vec3(a_PositionsAndUVs[vertexIndex].xy, 0.0), 1.0);
 
     v_TexCoords = a_PositionsAndUVs[vertexIndex].zw;
 }

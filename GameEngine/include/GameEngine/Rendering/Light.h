@@ -25,12 +25,14 @@ namespace GameEngine
                 {
                     MaxPointLights       = 16,
                     MaxDirectionalLights = 3,
+                    MaxShadowCascades    = 16,
                 };
 
                 // Note that no vec3 where used to fit the std140 padding rule without creating padding struct members
                 struct UniformBufferData
                 {
-                    glm::vec4 AmbientLightColor = glm::vec4(1.0);
+                    glm::vec4 AmbientLightColor    = glm::vec4(1.0f);
+                    glm::vec4 ShadowLightDirection = glm::vec4(0.0f);
 
                     glm::vec4 PointLightPositions[MaxPointLights]{{0, 0, 0, 0}};
                     glm::vec4 PointLightColors[MaxPointLights]{{1, 1, 1, 1}};
@@ -41,11 +43,13 @@ namespace GameEngine
                     glm::vec4 DirectionalLightColors[MaxDirectionalLights]{{1, 1, 1, 1}};
                     glm::vec4 DirectionalLightIntensities[MaxDirectionalLights]{{1, 1, 1, 1}};
 
-                    glm::mat4 LightSpaceMatrix = glm::identity<glm::mat4>();
+                    glm::vec4 FrustumPlaneDistances[MaxShadowCascades]{glm::vec4(0.0f)};
+                    glm::mat4 LightSpaceMatrices[MaxShadowCascades]{glm::identity<glm::mat4>()};
 
                     float AmbientIntensity     = 0.5f;
                     int   NumPointLights       = 0;
                     int   NumDirectionalLights = 0;
+                    int   NumShadowCascades    = 0;
                 };
 
                 static UniformBufferData* _lightData;
@@ -53,8 +57,9 @@ namespace GameEngine
                 static void Initialize();
 
             private:
-                static UniformBuffer* _lightUniformBuffer;
-                static void           Update();
+                static UniformBuffer*         _lightUniformBuffer;
+                static std::vector<glm::vec4> _frustumCorners;
+                static void                   Update();
         };
     }
 }

@@ -25,6 +25,12 @@ void FrameBuffer::AttachTexture(const Texture2D* texture, const GLenum attachmen
     glFramebufferTexture2D(GL_FRAMEBUFFER, attachment, GL_TEXTURE_2D, texture->GetTextureID(), 0);
 }
 
+void FrameBuffer::AttachTexture(const Texture2DArray* texture, const GLenum attachment)
+{
+    glFramebufferTexture(GL_FRAMEBUFFER, attachment, texture->GetTextureID(), 0);
+
+}
+
 void FrameBuffer::AttachRenderBuffer(const RenderBuffer* renderBuffer, const GLenum attachment)
 {
     renderBuffer->Bind();

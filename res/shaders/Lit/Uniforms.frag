@@ -9,4 +9,4 @@ uniform float u_Shininess;
 
 #include "LightData.glsl"
 
-uniform sampler2D u_ShadowMap;
+uniform sampler2DArray u_ShadowMap;

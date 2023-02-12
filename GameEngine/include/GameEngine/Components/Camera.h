@@ -18,15 +18,17 @@ namespace GameEngine
             private:
                 static Camera*         _main;
                 float                  _fovInDegrees;
-                float                  _zNear;
-                float                  _zFar;
-                glm::mat4              _projectionMatrix = glm::identity<glm::mat4>();
+                float                  _nearPlane;
+                float                  _farPlane;
+                glm::uvec2             _projectionSize;
+                glm::mat4              _projectionMatrix   = glm::identity<glm::mat4>();
                 std::vector<glm::vec4> _viewFrustumCorners = std::vector<glm::vec4>(8);
 
                 Rendering::RenderablePrimitive* _skyboxCube;
 
                 struct UniformBufferData
                 {
+                   //float     FarPlane       = 200; 
                     glm::mat4 ViewProjection = glm::identity<glm::mat4>();
                     glm::mat4 Projection     = glm::identity<glm::mat4>();
                     glm::mat4 View           = glm::identity<glm::mat4>();
@@ -48,7 +50,12 @@ namespace GameEngine
                 Camera(float fovInDegrees, float zNear, float zFar, Rendering::Shader* frameBufferShader, Rendering::Material* skyboxMaterial);
                 float                   GetFOVInDegrees() const;
                 void                    SetFOVInDegrees(float value);
+                float                   GetNearPlan() const;
+                float                   GetFarPlan() const;
                 glm::mat4               GetViewMatrix() const;
+                glm::mat4               CreatePerspectiveProjection(const float nearPlan, const float farPlane) const;
+                std::vector<glm::vec4>  CreateViewFrustumCorners(float nearPlane, float farPlane) const;
+                void                    CreateViewFrustumCorners(glm::mat4 projectionMatrix, std::vector<glm::vec4>& vector) const;
                 std::vector<glm::vec4>& GetViewFrustumCorners();
                 static Camera*          GetMain();
         };

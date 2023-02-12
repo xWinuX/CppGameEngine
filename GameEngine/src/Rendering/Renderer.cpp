@@ -8,7 +8,7 @@
 #include "GameEngine/Rendering/IndexBuffer.h"
 #include "GameEngine/Rendering/Light.h"
 #include "GameEngine/Rendering/Material.h"
-#include "GameEngine/Rendering/ShadowMap.h"
+#include "GameEngine/Rendering/CascadedShadowMap.h"
 #include "GameEngine/Rendering/Sprite.h"
 #include "GameEngine/Rendering/VertexArrayObject.h"
 #include "GameEngine/Rendering/VertexBuffer.h"
@@ -24,7 +24,7 @@ for (auto pair : (renderStructure)) \
 using namespace GameEngine::Rendering;
 using namespace GameEngine::Components;
 
-std::vector<ShadowMap*>         Renderer::_shadowMaps         = std::vector<ShadowMap*>();
+std::vector<CascadedShadowMap*>         Renderer::_shadowMaps         = std::vector<CascadedShadowMap*>();
 std::vector<ShaderUseCallback*> Renderer::_shaderUseCallbacks = std::vector<ShaderUseCallback*>();
 std::vector<RenderTarget*>      Renderer::_renderTargets      = std::vector<RenderTarget*>();
 
@@ -49,7 +49,8 @@ void Renderer::Initialize()
     glDepthRange(0.0, 1.0);
     glLineWidth(2);
     glEnable(GL_CULL_FACE);
-
+    glEnable(GL_TEXTURE_CUBE_MAP_SEAMLESS);
+    
     unsigned short* indices = new unsigned short[6]{2, 1, 0, 1, 2, 3};
 
     _renderable2DIndexBuffer = new IndexBuffer(reinterpret_cast<unsigned char*>(indices), sizeof(unsigned short), 6);
@@ -82,7 +83,7 @@ void Renderer::Initialize()
 void Renderer::SetShadowShader(Shader* shadowShader) { _shadowShader = shadowShader; }
 void Renderer::SetShadowSpriteShader(Shader* shadowSpriteShader) { _shadowSpriteShader = shadowSpriteShader; }
 
-void Renderer::SubmitShadowMap(ShadowMap* shadowMap) { _shadowMaps.push_back(shadowMap); }
+void Renderer::SubmitShadowMap(CascadedShadowMap* shadowMap) { _shadowMaps.push_back(shadowMap); }
 
 void Renderer::SubmitShaderUseCallback(ShaderUseCallback* shaderUseCallback) { _shaderUseCallbacks.push_back(shaderUseCallback); }
 
@@ -181,7 +182,7 @@ void Renderer::RenderSubmitted()
         {
             glCullFace(GL_FRONT);
   
-            const ShadowMap* shadowMap = _shadowMaps[0];
+            const CascadedShadowMap* shadowMap = _shadowMaps[0];
             shadowMap->Bind();
             
             _shadowShader->Use();
@@ -190,7 +191,7 @@ void Renderer::RenderSubmitted()
                         for (auto p : pair.second) { RenderDefault(p); }
                        )
 
-            _shadowSpriteShader->Use();
+            //_shadowSpriteShader->Use();
             RENDER_CALL(
                         _opaqueBatchRenderable2Ds,
                         for (auto p : pair.second) { Render2DBatches(p); }

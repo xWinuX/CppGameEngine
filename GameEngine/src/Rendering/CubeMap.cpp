@@ -27,16 +27,19 @@ const std::vector<std::string> CubeMap::SuffixOrder = {
  * back = _B
  * \param extension File extension
  */
-CubeMap::CubeMap(const std::string& filePathWithoutExtension, const std::string& extension)
+CubeMap::CubeMap(const std::string& filePathWithoutExtension, const std::string& extension):
+    Texture(TextureParams
+        {
+        TextureFilterMode::Linear,
+            TextureWrapMode::ClampToEdge,
+            0,
+            0,
+            GL_RGB,
+            GL_RGB,
+            GL_UNSIGNED_BYTE,
+            glm::vec4(1.0),
+    })
 {
-    glGenTextures(1, &_textureID);
-    glBindTexture(GL_TEXTURE_CUBE_MAP, _textureID);
-    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
-    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-
     for (unsigned int i = 0; i < SuffixOrder.size(); i++)
     {
         int width, height, numChannels;
@@ -47,21 +50,3 @@ CubeMap::CubeMap(const std::string& filePathWithoutExtension, const std::string&
         stbi_image_free(data);
     }
 }
-
-CubeMap::~CubeMap()
-{
-    glDeleteTextures(1, &_textureID);
-}
-
-void CubeMap::Bind(const unsigned slot) const
-{
-    glActiveTexture(GL_TEXTURE0 + slot);
-    glBindTexture(GL_TEXTURE_CUBE_MAP, _textureID);
-}
-
-void CubeMap::Unbind()
-{
-    glBindTexture(GL_TEXTURE_CUBE_MAP, 0);
-}
-
-GLuint CubeMap::GetTextureID() const { return _textureID; }

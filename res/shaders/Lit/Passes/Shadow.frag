@@ -1,1 +1,2 @@
-﻿fragColor += 1.0-ShadowCalculation(v_FragLightSpacePosition, u_ShadowMap);
+﻿vec3 normal = normalize(v_TBN * vec3(0.5, 0.5, 1.0));
+fragColor *= 1.0-shadowCalculation(v_Position, u_View, u_FrustumPlaneDistances, u_LightSpaceMatrices, vec3(u_ShadowLightDirection), 200, normal, u_NumShadowCascades, u_ShadowMap);

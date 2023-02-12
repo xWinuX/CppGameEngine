@@ -6,6 +6,7 @@
 
 #include "CubeMap.h"
 #include "Texture2D.h"
+#include "Texture2DArray.h"
 #include "glm/gtc/type_ptr.hpp"
 
 #define LOCATION_CHECK if (_location < 0) { Debug::Log::Message(std::string(_name) + "'s location not found"); return; }
@@ -91,6 +92,7 @@ namespace GameEngine
         };
 
         SAMPLER_SPECIFICATION(Texture2D*)
+        SAMPLER_SPECIFICATION(Texture2DArray*)
         SAMPLER_SPECIFICATION(CubeMap*)
 
         template <>

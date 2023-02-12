@@ -4,8 +4,8 @@
 class GraphicDemoApplication final : public GameEngine::Application
 {
     private:
-        void LoadTextures();
-        void LoadSprites();
+        void LoadTextures() const;
+        void LoadSprites() const;
         void LoadFonts() const;
         void LoadSounds() const;
         void LoadModels() const;

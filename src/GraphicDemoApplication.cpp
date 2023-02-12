@@ -43,7 +43,7 @@ using namespace GameEngine::Rendering;
 using namespace GameEngine::Components;
 using namespace GameEngine::Physics;
 
-void GraphicDemoApplication::LoadTextures()
+void GraphicDemoApplication::LoadTextures() const
 {
     ADD_TEXTURE_2D(No, new Texture2D("res/textures/NoTexture.png"));
     ADD_TEXTURE_2D(Black, new Texture2D("res/textures/Black.png"));
@@ -61,7 +61,7 @@ void GraphicDemoApplication::LoadTextures()
     ADD_CUBEMAP(SkyBox, new CubeMap("res/textures/Skybox/Skybox", ".png"));
 }
 
-void GraphicDemoApplication::LoadSprites()
+void GraphicDemoApplication::LoadSprites() const
 {
     TextureParams pixelArtTextureImportSettings;
     pixelArtTextureImportSettings.AnisotropyLevels = 0;
@@ -126,7 +126,7 @@ void GraphicDemoApplication::LoadShaders() const
     commonUniforms.InitializeUniform<glm::mat4>("u_Transform", glm::identity<glm::mat4>(), false);
 
     UniformStorage litUniforms = UniformStorage();
-    litUniforms.InitializeUniform<Texture2D*>("u_ShadowMap", GET_TEXTURE_2D(White), false);
+    litUniforms.InitializeUniform<Texture2DArray*>("u_ShadowMap", nullptr, false);
     
     litUniforms.InitializeUniform<float>("u_Shininess", 0.0f);
     litUniforms.InitializeUniform<Texture2D*>("u_NormalMap", GET_TEXTURE_2D(NormalMapDefault));
@@ -188,7 +188,7 @@ void GraphicDemoApplication::LoadShaders() const
     skyboxShader->InitializeUniform<CubeMap*>("u_CubeMap", GET_CUBEMAP(SkyBox));
 
     // Shadow Map
-    Shader* shadowMapShader = ADD_SHADER(ShadowMap, new Shader("res/shaders/ShadowMap/Shadowmap.vert","res/shaders/ShadowMap/Shadowmap.frag"));
+    Shader* shadowMapShader = ADD_SHADER(ShadowMap, new Shader("res/shaders/ShadowMap/Shadowmap.vert","res/shaders/ShadowMap/Shadowmap.frag", "res/shaders/ShadowMap/Shadowmap.geom"));
     shadowMapShader->GetUniformStorage()->CopyFrom(&commonUniforms);
     shadowMapShader->InitializeUniform<glm::mat4>("u_LightSpace", glm::identity<glm::mat4>());
 
@@ -285,7 +285,7 @@ void GraphicDemoApplication::Initialize(Scene& scene)
 
     // Camera
     GameObject* cameraObject = new GameObject();
-    cameraObject->AddComponent(new Camera(60, 0.01f, 500.0f, GET_SHADER(FrameBuffer), GET_MATERIAL(Skybox)));
+    cameraObject->AddComponent(new Camera(60, 0.01f, 200.0f, GET_SHADER(FrameBuffer), GET_MATERIAL(Skybox)));
     cameraObject->AddComponent(new POVCameraController());
     cameraObject->AddComponent(new AudioListener());
     scene.AddGameObject(cameraObject);

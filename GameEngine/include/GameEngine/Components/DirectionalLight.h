@@ -3,7 +3,7 @@
 
 #include "GameEngine/Components/Component.h"
 #include "GameEngine/Rendering/FrameBuffer.h"
-#include "GameEngine/Rendering/ShadowMap.h"
+#include "GameEngine/Rendering/CascadedShadowMap.h"
 #include "glm/vec3.hpp"
 #include "glm/vec4.hpp"
 #include "glm/gtc/constants.hpp"
@@ -19,7 +19,7 @@ namespace GameEngine
                 static std::vector<glm::vec4> _colors;
                 static std::vector<float>     _intensities;
 
-                Rendering::ShadowMap* _shadowMap;
+                Rendering::CascadedShadowMap* _shadowMap;
             
                 glm::vec3 _eulerAngles = glm::zero<glm::vec3>();
                 glm::vec4 _color;

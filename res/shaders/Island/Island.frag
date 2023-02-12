@@ -19,15 +19,16 @@ void main()
 {
     fragColor = vec4(0.0);
 
-#include "../Lit/Passes/AmbientLight.frag"
-#include "../Lit/Passes/Shadow.frag"
-#include "../Lit/Passes/DirectionalLight.frag"
-#include "../Lit/Passes/PointLight.frag"
+    #include "../Lit/Passes/DirectionalLight.frag"
+    #include "../Lit/Passes/PointLight.frag"
+    #include "../Lit/Passes/Shadow.frag"
+    #include "../Lit/Passes/AmbientLight.frag"
+
     vec4 textureColor = vec4(0.0);
     vec4 normalizedColor = normalize(v_Color);
     textureColor += texture(u_TextureRed, v_Position.xz*u_TilingFactor) * v_Color.r;
     textureColor += texture(u_TextureGreen, v_Position.xz*u_TilingFactor) * v_Color.g;
     textureColor += texture(u_TextureBlue, v_Position.xz*u_TilingFactor) * v_Color.b;
     fragColor *= textureColor;
-#include "../Lit/Passes/ColorTint.frag"
+    #include "../Lit/Passes/ColorTint.frag"
 }
