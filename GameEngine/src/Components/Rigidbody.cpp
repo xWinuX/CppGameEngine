@@ -34,7 +34,6 @@ void Rigidbody::OnPhysicsUpdateEnd(const float interpolationFactor)
     const glm::quat quaternion = glm::quat(rotation.w, rotation.x, rotation.y, rotation.z);
 
     // Don't set rotation if rotation is locked anyway
-    Debug::Log::Message(std::to_string(_physicsRigidBody->getAngularLockAxisFactor().length()));
     if (_physicsRigidBody->getAngularLockAxisFactor().length() > 0.0f) { _transform->SetRotation(quaternion); }
     
     _transform->SetPosition(glm::vec3(position.x, position.y, position.z));

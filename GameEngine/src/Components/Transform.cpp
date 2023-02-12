@@ -23,15 +23,6 @@ glm::vec3 Transform::GetRight() const { return mat4_cast(GetRotation()) * Right;
 glm::vec3 Transform::GetUp() const { return mat4_cast(GetRotation()) * Up; }
 glm::vec3 Transform::GetForward() const { return mat4_cast(GetRotation()) * Forward; }
 
-/**
- * \brief
- * Returns the TransformationRotationScale matrix of the transform
- * \n \n
- * IMPORTANT: The TRS is only calculated at the end of the update cycle for performance reasons,
- * if you need the TRS immediately after a transformation call CalculateTRS() before GetTRS()
- * 
- * \return Matrix4x4 TRS
- */
 glm::mat4 Transform::GetTRS() const { return _trs; }
 
 reactphysics3d::Transform& Transform::GetPhysicsTransform() { return _physicsTransform; }
@@ -50,7 +41,6 @@ void Transform::SetRotation(const glm::quat quaternion) { SetLocalRotation(GetPa
 void Transform::SetLocalRotation(const glm::quat quaternion)
 {
     _localRotation = quaternion;
-    //_physicsTransform.setOrientation(reactphysics3d::Quaternion(_localRotation.x, _localRotation.y, _localRotation.z, _localRotation.w));
     CalculateTRS();
 }
 

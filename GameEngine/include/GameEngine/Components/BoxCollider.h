@@ -12,7 +12,11 @@ namespace GameEngine
         {
             private:
                 reactphysics3d::BoxShape* _boxShape;
+                glm::vec3 _halfExtends;
 
+            protected:
+                void OnUpdateEnd() override;
+            
             public:
                 explicit BoxCollider(glm::vec3 halfExtends);
                 ~BoxCollider() override;

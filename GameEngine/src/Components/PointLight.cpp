@@ -23,6 +23,5 @@ void PointLight::SetIntensity(const float intensity) { _intensity = intensity; }
 
 void PointLight::OnUpdateEnd()
 {
-    Debug::Log::Message("Add point light");
     Light::AddPointLight(_transform->GetPosition(), _color, _intensity, _range);
 }

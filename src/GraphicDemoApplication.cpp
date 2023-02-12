@@ -81,7 +81,7 @@ void GraphicDemoApplication::LoadSprites() const
     SpriteSet* test      = ADD_SPRITE(Test, new SpriteSet(testSpriteTexture, 12, glm::uvec2(32, 32)));
 
     Sprite::AdditionalInfo additionalInfo;
-    additionalInfo.PixelsPerUnit  = 90;
+    additionalInfo.PixelsPerUnit  = 100;
     additionalInfo.Origin         = glm::vec2(0.5f, 0.5f);
     SpriteSet* gamerDudeWalkRight = ADD_SPRITE(GamerDudeWalkRight, new SpriteSet(gamerDudeWalkRightSpriteTexture, 6, glm::uvec2(119, 190), additionalInfo));
     SpriteSet* gamerDudeWalkLeft  = ADD_SPRITE(GamerDudeWalkLeft, new SpriteSet(gamerDudeWalkLeftSpriteTexture, 6, glm::uvec2(119, 190), additionalInfo));
@@ -127,7 +127,7 @@ void GraphicDemoApplication::LoadShaders() const
 
     UniformStorage litUniforms = UniformStorage();
     litUniforms.InitializeUniform<Texture2DArray*>("u_ShadowMap", nullptr, false);
-    
+
     litUniforms.InitializeUniform<float>("u_Shininess", 0.0f);
     litUniforms.InitializeUniform<Texture2D*>("u_NormalMap", GET_TEXTURE_2D(NormalMapDefault));
 
@@ -153,7 +153,7 @@ void GraphicDemoApplication::LoadShaders() const
     islandShader->InitializeUniform<Texture2D*>("u_TextureGreen", GET_TEXTURE_2D(Grass));
     islandShader->InitializeUniform<Texture2D*>("u_TextureBlue", GET_TEXTURE_2D(Sand));
     islandShader->InitializeUniform<float>("u_TilingFactor", 0.1f);
-        
+
     // Water
     Shader* waterShader = ADD_SHADER(Water, new Shader("res/shaders/Water/Water.vert", "res/shaders/Water/Water.frag"));
     waterShader->UniformStorageFromShader(litShader);
@@ -188,16 +188,19 @@ void GraphicDemoApplication::LoadShaders() const
     skyboxShader->InitializeUniform<CubeMap*>("u_CubeMap", GET_CUBEMAP(SkyBox));
 
     // Shadow Map
-    Shader* shadowMapShader = ADD_SHADER(ShadowMap, new Shader("res/shaders/ShadowMap/Shadowmap.vert","res/shaders/ShadowMap/Shadowmap.frag", "res/shaders/ShadowMap/Shadowmap.geom"));
+    Shader* shadowMapShader = ADD_SHADER(ShadowMap,
+                                         new Shader("res/shaders/ShadowMap/Shadowmap.vert","res/shaders/ShadowMap/Shadowmap.frag", "res/shaders/ShadowMap/Shadowmap.geom"));
     shadowMapShader->GetUniformStorage()->CopyFrom(&commonUniforms);
 
     // Shadow Map
-    Shader* shadowMapSpriteShader = ADD_SHADER(ShadowMapSprite, new Shader("res/shaders/ShadowMapSprite/ShadowMapSprite.vert","res/shaders/ShadowMapSprite/ShadowMapSprite.frag", "res/shaders/ShadowMapSprite/ShadowMapSprite.geom"));
+    Shader* shadowMapSpriteShader = ADD_SHADER(ShadowMapSprite,
+                                               new Shader("res/shaders/ShadowMapSprite/ShadowMapSprite.vert","res/shaders/ShadowMapSprite/ShadowMapSprite.frag",
+                                                   "res/shaders/ShadowMapSprite/ShadowMapSprite.geom"));
     shadowMapSpriteShader->GetUniformStorage()->CopyFrom(&commonUniforms);
     shadowMapSpriteShader->InitializeUniform<Texture2D*>("u_Texture", GET_TEXTURE_2D(Crate));
 
-    
-    Renderer::SetShadowShader(shadowMapShader); // TODO: remove this and move somewhere else
+
+    Renderer::SetShadowShader(shadowMapShader);             // TODO: remove this and move somewhere else
     Renderer::SetShadowSpriteShader(shadowMapSpriteShader); // TODO: remove this and move somewhere else
 }
 
@@ -217,7 +220,7 @@ void GraphicDemoApplication::LoadMaterials() const
 
     // Island
     Material* islandMaterial = ADD_MATERIAL(Island, new Material(GET_SHADER(Island)));
-    
+
     // Physics Debug
     Material* physicsMaterial = ADD_MATERIAL(PhysicsDebug, new Material(GET_SHADER(PhysicsDebug)));
     physicsMaterial->SetCullFace(Material::None);
@@ -339,37 +342,28 @@ void GraphicDemoApplication::Initialize(Scene& scene)
     scene.AddGameObject(theMissingObject);
 
     // Crate
-    GameObject* crateObject = new GameObject();
-    crateObject->GetTransform()->SetLocalPosition(glm::vec3(5.0f, 10.0f, 0.0f));
-    crateObject->AddComponent(new MeshRenderer(GET_MODEL(Cube)->GetMesh(0), GET_MATERIAL(Crate)));
-    crateObject->AddComponent(new SpriteRenderer(GET_SPRITE(TheDude), GET_MATERIAL(SpriteLit)));
-    crateObject->AddComponent(new BoxCollider(glm::vec3(0.5f)));
-    crateObject->AddComponent(new Rigidbody());
-    scene.AddGameObject(crateObject);
-
-    // Child crate
-    GameObject* childCrateObject = new GameObject();
-    childCrateObject->GetTransform()->SetLocalPosition(glm::vec3(5.0f, 0.0f, 0.0f));
-    childCrateObject->AddComponent(new MeshRenderer(GET_MODEL(Cube)->GetMesh(0), GET_MATERIAL(Crate)));
-    childCrateObject->SetParent(crateObject);
-
-    // Child of child Crate
-    GameObject* childOfChildCrateObject = new GameObject();
-    childOfChildCrateObject->GetTransform()->SetLocalPosition(glm::vec3(2.0f, 0.0f, 0.0f));
-    childOfChildCrateObject->AddComponent(new MeshRenderer(GET_MODEL(Cube)->GetMesh(0), GET_MATERIAL(Crate)));
-    childOfChildCrateObject->SetParent(childCrateObject);
+    for (unsigned int i = 0; i < 20; i++)
+    {
+        const glm::vec2 randomPosition = glm::diskRand(10.0f);
+        GameObject* crateObject = new GameObject();
+        crateObject->GetTransform()->SetPosition(glm::vec3(randomPosition.x, 20.0f, randomPosition.y));
+        crateObject->AddComponent(new MeshRenderer(GET_MODEL(Cube)->GetMesh(0), GET_MATERIAL(Crate)));
+        crateObject->AddComponent(new SpriteRenderer(GET_SPRITE(TheDude), GET_MATERIAL(SpriteLit)));
+        crateObject->AddComponent(new BoxCollider(glm::vec3(0.5f)));
+        crateObject->AddComponent(new Rigidbody());
+        scene.AddGameObject(crateObject);
+    }
 
     // Floor
-    GameObject*                        floorObject    = new GameObject();
-    GameEngine::Components::Transform* floorTransform = floorObject->GetTransform();
-    floorObject->AddComponent(new MeshRenderer(GET_MODEL(Island)->GetMesh(0), GET_MATERIAL(Island)));
-    floorObject->AddComponent(new MeshCollider(GET_MODEL(Island)->GetMesh(0)));
-    floorObject->AddComponent(new Rigidbody(reactphysics3d::BodyType::STATIC));
-    scene.AddGameObject(floorObject);
+    GameObject* islandObject = new GameObject();
+    islandObject->AddComponent(new MeshRenderer(GET_MODEL(Island)->GetMesh(0), GET_MATERIAL(Island)));
+    islandObject->AddComponent(new MeshCollider(GET_MODEL(Island)->GetMesh(0)));
+    islandObject->AddComponent(new Rigidbody(reactphysics3d::BodyType::STATIC));
+    scene.AddGameObject(islandObject);
 
     // Water
     GameObject* waterObject = new GameObject();
-    waterObject->GetTransform()->SetLocalPosition(glm::vec3(0.0f, 0.0f, 0.0f));
+    waterObject->GetTransform()->SetLocalPosition(glm::vec3(0.0f, 1.0f, 0.0f));
     waterObject->AddComponent(new MeshRenderer(GET_MODEL(WaterPlane)->GetMesh(0), GET_MATERIAL(Water)));
     scene.AddGameObject(waterObject);
 

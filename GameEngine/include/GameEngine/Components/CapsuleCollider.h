@@ -11,6 +11,12 @@ namespace GameEngine
         {
             private:
                 reactphysics3d::CapsuleShape* _pCapsuleShape;
+                float                         _height;
+                float                         _radius;
+
+            protected:
+                void OnLateUpdate() override;
+
             public:
                 explicit CapsuleCollider(float radius = 1.0f, float height = 2.0f);
                 ~CapsuleCollider() override;
