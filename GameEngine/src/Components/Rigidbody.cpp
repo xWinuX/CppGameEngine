@@ -32,8 +32,11 @@ void Rigidbody::OnPhysicsUpdateEnd(const float interpolationFactor)
     const reactphysics3d::Quaternion rotation = interpolatedTransform.getOrientation();
 
     const glm::quat quaternion = glm::quat(rotation.w, rotation.x, rotation.y, rotation.z);
+
+    // Don't set rotation if rotation is locked anyway
+    Debug::Log::Message(std::to_string(_physicsRigidBody->getAngularLockAxisFactor().length()));
+    if (_physicsRigidBody->getAngularLockAxisFactor().length() > 0.0f) { _transform->SetRotation(quaternion); }
     
-    _transform->SetRotation(quaternion);
     _transform->SetPosition(glm::vec3(position.x, position.y, position.z));
 
     _previousTransform = currentTransform;
@@ -48,7 +51,8 @@ void Rigidbody::OnOtherComponentAdded(Component* component)
     }
 }
 
-void      Rigidbody::ResetForce() const { _physicsRigidBody->setLinearVelocity(reactphysics3d::Vector3(0, 0, 0)); }
+void Rigidbody::ResetForce() const { _physicsRigidBody->setLinearVelocity(reactphysics3d::Vector3(0, 0, 0)); }
+
 glm::vec3 Rigidbody::GetVelocity() const
 {
     const reactphysics3d::Vector3 velocity = _physicsRigidBody->getLinearVelocity();

@@ -7,8 +7,6 @@
     u_DirectionalLightColors[i],
     u_DirectionalLightIntensities[i],
     u_Shininess,
-    u_NormalMap,
-    v_TexCoords,
-    v_TBN
+    normal
     );
 }

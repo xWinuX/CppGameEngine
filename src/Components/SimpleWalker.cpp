@@ -54,7 +54,7 @@ void SimpleWalker::OnUpdate()
             const glm::vec3 walkDir = glm::vec3(_randomDirection.x, 0, _randomDirection.y);
             const glm::quat lookDir = glm::quatLookAt(walkDir, _transform->GetUp());
             _characterController->Move((glm::vec2(_randomDirection.x, _randomDirection.y) * _moveSpeed));
-            //_transform->SetRotation(glm::slerp(_transform->GetRotation(), lookDir, 0.125f / _scale));
+            _transform->SetRotation(glm::slerp(_transform->GetRotation(), lookDir, 0.125f / _scale));
             _moveTimer -= GameEngine::Time::GetDeltaTime();
         }
         else

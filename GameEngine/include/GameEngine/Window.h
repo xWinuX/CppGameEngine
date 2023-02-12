@@ -20,16 +20,14 @@ namespace GameEngine
 
             void CreateContext();
 
-            void SetFullscreen(bool fullscreen) const; 
-            
+            void SetFullscreen(bool fullscreen);
+
             void SetSize(glm::ivec2 newSize);
 
             void AddFramebufferSizeCallback(const std::function<void(Window*)>& callbackFunction);
 
             bool ShouldClose() const;
-
-            WindowResizeCallbackFunction ResizeCallback(Window* window);
-
+        
             glm::uvec2                                 GetSize() const;
             std::vector<std::function<void(Window*)>>& GetResizeCallbacks();
             static Window*                             GetCurrentWindow();
@@ -39,6 +37,8 @@ namespace GameEngine
             static Window*                            _currentWindow;
             GLFWwindow*                               _glWindow = nullptr;
             glm::uvec2                                _size     = glm::uvec2(500);
+            glm::uvec2                                _positionBeforeFullscreen;
+            glm::uvec2                                _sizeBeforeFullscreen;
             std::vector<std::function<void(Window*)>> _resizeCallbacks;
     };
 }

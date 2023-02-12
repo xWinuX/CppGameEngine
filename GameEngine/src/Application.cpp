@@ -32,7 +32,8 @@ Application::Application()
     
     // Initialize Systems
     Renderer::Initialize();
-    Audio::AudioManager::Initialize();
+    PhysicsManager::Initialize();
+    AudioManager::Initialize();
     DebugGUIManager::Initialize();
 }
 

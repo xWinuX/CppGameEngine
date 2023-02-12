@@ -93,7 +93,6 @@ namespace GameEngine
                 template <typename T, std::map<int, UniformEntry<T>> UniformStorage::*MapPtr>
                 void InitializeUniform(std::string uniformName, T defaultVar, const bool includeInApplyQueue = true, const bool resetAfterApply = false)
                 {
-                    Debug::Log::Message("Initializing uniform " + uniformName);
                     int location = 0;
 
                     if (_isTemplate)

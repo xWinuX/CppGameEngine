@@ -15,9 +15,11 @@ void main()
     if (textureColor.a < 0.5) { discard; }
 
     fragColor = vec4(0.0);
-#include "../Lit/Passes/AmbientLight.frag"
-#include "../Lit/Passes/DirectionalLight.frag"
-#include "../Lit/Passes/PointLight.frag"
+    #include "../Lit/Passes/Normals.frag"
+    #include "../Lit/Passes/DirectionalLight.frag"
+    #include "../Lit/Passes/PointLight.frag"
+    #include "../Lit/Passes/Shadow.frag"
+    #include "../Lit/Passes/AmbientLight.frag"
     fragColor *= textureColor;
     fragColor *= v_Color;
 }

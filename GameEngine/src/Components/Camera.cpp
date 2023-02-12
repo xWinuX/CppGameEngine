@@ -38,7 +38,7 @@ Camera::Camera(const float fovInDegrees, const float zNear, const float zFar, Sh
 void Camera::OnUpdateEnd()
 {
     UpdateViewFrustumCorners();
-    //Renderer::SubmitRenderable(_skyboxCube);
+    Renderer::SubmitRenderable(_skyboxCube);
     Renderer::SubmitRenderTarget(this);
 }
 
@@ -104,8 +104,8 @@ void Camera::Bind()
     glm::mat4 viewMatrix               = GetViewMatrix();
     _uniformBufferData->ViewProjection = _projectionMatrix * viewMatrix;
     _uniformBufferData->Projection     = _projectionMatrix;
-    _uniformBufferData->ViewPosition   = _transform->GetPosition();
-    //_uniformBufferData->FarPlane       = _farPlane;
+    _uniformBufferData->ViewPosition   = glm::vec4(_transform->GetPosition(), 1.0);
+    _uniformBufferData->FarPlane       = _farPlane;
 
     // Remove position from view matrix
     _uniformBufferData->View = viewMatrix;

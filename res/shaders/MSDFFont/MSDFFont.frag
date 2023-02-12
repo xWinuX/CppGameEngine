@@ -3,11 +3,9 @@
 #include "../Common/Functions.frag"
 
 #include "../Sprite/Uniforms.frag"
-//uniform vec2 u_UnitRange = vec2(2.0); // MSDF Pixel Range / Atlas Size
 
 #include "../Common/IO.frag"
 #include "../Sprite/IO.frag"
-
 
 float median(float r, float g, float b) {
     return max(min(r, g), min(max(r, g), b));

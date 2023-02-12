@@ -11,7 +11,7 @@ class GraphicDemoApplication final : public GameEngine::Application
         void LoadModels() const;
         void LoadShaders() const;
         void LoadMaterials() const;
-        void LoadAssets();
+        void LoadAssets() const;
     public:
         void Initialize(GameEngine::Scene& scene) override;
 };

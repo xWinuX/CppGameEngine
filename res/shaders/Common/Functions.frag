@@ -1,29 +1,16 @@
 ﻿vec4 calculatePointLightColor(
-    vec3 fragPosition,
-    vec3 viewPosition,
-    vec3 lightPosition,
-    vec4 color,
-    float range,
-    float intensity,
-    float shininess,
-    sampler2D normalMap,
-    vec2 uvs,
-    mat3 tbn
+vec3 fragPosition,
+vec3 viewPosition,
+vec3 lightPosition,
+vec4 color,
+float range,
+float intensity,
+float shininess,
+vec3 normal
 )
 {
     vec4 diffuseSum = vec4(0);
-
-    float frontFacingSign = gl_FrontFacing ? 1 : -1;
-
-    tbn[2][0] *= frontFacingSign;
-    tbn[2][1] *= frontFacingSign;
-    tbn[2][2] *= frontFacingSign;
-
-    // Normal
-    vec3 normal = vec3(texture(normalMap, uvs));
-    normal = normal * 2.0 - 1.0;
-    normal = normalize(tbn * normal);
-
+    
     // Diffuse
     float distance = length(lightPosition - fragPosition);
     vec3 lightDirection = normalize(lightPosition - fragPosition);
@@ -33,7 +20,7 @@
 
     // Specular
     float lambertian = max(dot(lightDirection, normal), 0.0);
-    
+
     vec3 viewVector = normalize(viewPosition-fragPosition);
     vec3 halfwayVector = normalize(lightDirection + viewVector);
     float specular = pow(max(dot(normal, halfwayVector), 0.0), 1 + (shininess*1000));
@@ -43,29 +30,17 @@
 }
 
 vec4 calculateDirectionalLightColor(
-    vec3 fragPosition,
-    vec3 viewPosition,
-    vec3 lightDirection,
-    vec4 color,
-    float intensity,
-    float shininess,
-    sampler2D normalMap,
-    vec2 uvs,
-    mat3 tbn
+vec3 fragPosition,
+vec3 viewPosition,
+vec3 lightDirection,
+vec4 color,
+float intensity,
+float shininess,
+vec3 normal
 )
 {
     vec4 diffuseSum = vec4(0);
-
-    float frontFacingSign = gl_FrontFacing ? 1 : -1;
-    tbn[2][0] *= frontFacingSign;
-    tbn[2][1] *= frontFacingSign;
-    tbn[2][2] *= frontFacingSign;
-
-    // Normal
-    vec3 normal = vec3(texture(normalMap, uvs));
-    normal = normal * 2.0 - 1.0;
-    normal = normalize(tbn * normal);
-
+    
     // Diffuse
     float diffuse = max(dot(normal, lightDirection), 0.0);
     diffuseSum += color * intensity * diffuse;
@@ -83,15 +58,15 @@ vec4 calculateDirectionalLightColor(
 
 
 float shadowCalculation(
-    vec3 fragPosition, 
-    mat4 viewMatrix,
-    float frustumPlaneDistances[16],
-    mat4 lightMatrices[16], 
-    vec3 lightDir, 
-    float farPlane,
-    vec3 normal, 
-    int cascadeCount, 
-    sampler2DArray shadowMap
+vec3 fragPosition,
+mat4 viewMatrix,
+float frustumPlaneDistances[16],
+mat4 lightMatrices[16],
+vec3 lightDir,
+float farPlane,
+vec3 normal,
+int cascadeCount,
+sampler2DArray shadowMap
 )
 {
     vec4 fragPosViewSpace = viewMatrix * vec4(fragPosition, 1.0);
@@ -100,7 +75,7 @@ float shadowCalculation(
     int layer = -1;
     for (int i = 0; i < cascadeCount; ++i)
     {
-        if (depthValue < frustumPlaneDistances[i]) //TODO: Replace with var
+        if (depthValue < frustumPlaneDistances[i])//TODO: Replace with var
         {
             layer = i;
             break;
@@ -122,10 +97,10 @@ float shadowCalculation(
     {
         return 0.0;
     }
-    
- 
+
+
     // calculate bias (based on depth map resolution and slope)
-    /*
+
     float bias = max(0.05 * (1.0 - dot(normal, lightDir)), 0.005);
     if (layer == cascadeCount)
     {
@@ -133,31 +108,26 @@ float shadowCalculation(
     }
     else
     {
-      //  bias *= 1 / (frustumPlaneDistances[layer] * 0.5f);
-            bias *= 1 / frustumPlaneDistances[i] * 0.5f;
-    }*/
-    /*
-     // PCF
-     float shadow = 0.0;
-     
-     vec2 texelSize = 1.0 / vec2(textureSize(shadowMap, 0));
-     for(int x = -1; x <= 1; ++x)
-     {
-         for(int y = -1; y <= 1; ++y)
-         {
-             vec2 uv = (projCoords.xy + vec2(x, y)) * texelSize;
-             float pcfDepth = texture(shadowMap, vec3(uv.xy, layer)).r;
-             shadow += (currentDepth - bias) > pcfDepth ? 1.0 : 0.0;
-         }
-     }
-     shadow /= 9.0;
- 
-     // keep the shadow at 0.0 when outside the far_plane region of the light's frustum.
-     if(projCoords.z > 1.0)
-     {
-         shadow = 0.0;
-     }*/
+        bias *= 1 / (frustumPlaneDistances[layer] * 0.5f);
+    }
 
-    float clostestDepth = texture(shadowMap, vec3(projCoords.xy, layer)).r;
-    return currentDepth - 0.0001 > clostestDepth ? 1.0 : 0.0;
+    // PCF
+   
+    float shadow = 0.0;
+    vec2 texelSize = 1.0 / vec2(textureSize(shadowMap, 0));
+    for (int x = -1; x <= 1; ++x)
+    {
+        for (int y = -1; y <= 1; ++y)
+        {
+            float pcfDepth = texture(
+            shadowMap,
+            vec3(projCoords.xy + vec2(x, y) * texelSize,
+            layer)
+            ).r;
+            shadow += (currentDepth - bias) > pcfDepth ? 1.0 : 0.0;
+        }
+    }
+    shadow /= 9.0;
+    
+    return shadow;
 }

@@ -27,6 +27,7 @@ namespace GameEngine
                 static GameEngine::Physics::PhysicsDebugRenderer* _debugRenderer;
                 static GameEngine::Rendering::Material*           _debugMaterial;
 
+                static void Initialize();
                 static void Update(const GameEngine::Scene* scene);
 
             public:

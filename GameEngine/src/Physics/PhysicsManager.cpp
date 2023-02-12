@@ -10,7 +10,7 @@ using namespace GameEngine::Rendering;
 using namespace GameEngine::Components;
 
 reactphysics3d::PhysicsCommon PhysicsManager::_physicsCommon;
-reactphysics3d::PhysicsWorld* PhysicsManager::_physicsWorld  = PhysicsManager::_physicsCommon.createPhysicsWorld();
+reactphysics3d::PhysicsWorld* PhysicsManager::_physicsWorld  = nullptr;
 Material*                     PhysicsManager::_debugMaterial = nullptr;
 PhysicsDebugRenderer*         PhysicsManager::_debugRenderer = nullptr;
 
@@ -18,9 +18,17 @@ float PhysicsManager::_physicsTimeStep      = 1.0f / 60.0f;
 float PhysicsManager::_frameAccumulator     = 0.0f;
 bool  PhysicsManager::_renderDebugWireFrame = false;
 
+void PhysicsManager::Initialize()
+{
+    reactphysics3d::PhysicsWorld::WorldSettings worldSettings;
+    worldSettings.defaultBounciness = 0;
+    
+    _physicsWorld = PhysicsManager::_physicsCommon.createPhysicsWorld(worldSettings);
+}
+
 void PhysicsManager::Update(const Scene* scene)
 {
-    _frameAccumulator +=  Time::GetDeltaTime();
+    _frameAccumulator += Time::GetDeltaTime();
 
     // This executes the physics as many time as needed to catch up to real time again
     while (_frameAccumulator >= _physicsTimeStep)
@@ -30,9 +38,9 @@ void PhysicsManager::Update(const Scene* scene)
         _frameAccumulator -= _physicsTimeStep;
     }
 
-    const float interpolationFactor = _frameAccumulator/_physicsTimeStep;
+    const float interpolationFactor = _frameAccumulator / _physicsTimeStep;
     scene->OnPhysicsUpdateEnd(interpolationFactor);
-    
+
     if (_renderDebugWireFrame)
     {
         if (_debugRenderer == nullptr)

@@ -134,5 +134,5 @@ void Light::SetShadowCaster(const glm::vec3 lightDirection)
         _lightData->NumShadowCascades++;
     }
 
-    _lightData->ShadowLightDirection = glm::vec4(lightDirection, 1.0);
+    _lightData->ShadowLightDirection = glm::vec4(normalize(lightDirection), 1.0);
 }

@@ -28,11 +28,12 @@ namespace GameEngine
 
                 struct UniformBufferData
                 {
-                   //float     FarPlane       = 200; 
                     glm::mat4 ViewProjection = glm::identity<glm::mat4>();
                     glm::mat4 Projection     = glm::identity<glm::mat4>();
                     glm::mat4 View           = glm::identity<glm::mat4>();
-                    glm::vec3 ViewPosition   = glm::zero<glm::vec3>();
+                    glm::vec4 ViewPosition   = glm::zero<glm::vec4>();
+                    float     FarPlane       = 50; 
+                    
                 };
 
                 UniformBufferData* _uniformBufferData;

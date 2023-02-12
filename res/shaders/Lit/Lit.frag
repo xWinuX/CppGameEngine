@@ -10,6 +10,8 @@
 
 void main()
 {
+    fragColor = vec4(0.0);
+    #include "Passes/Normals.frag"
     #include "Passes/DirectionalLight.frag"
     #include "Passes/PointLight.frag"
     #include "Passes/Shadow.frag"

@@ -190,12 +190,10 @@ void GraphicDemoApplication::LoadShaders() const
     // Shadow Map
     Shader* shadowMapShader = ADD_SHADER(ShadowMap, new Shader("res/shaders/ShadowMap/Shadowmap.vert","res/shaders/ShadowMap/Shadowmap.frag", "res/shaders/ShadowMap/Shadowmap.geom"));
     shadowMapShader->GetUniformStorage()->CopyFrom(&commonUniforms);
-    shadowMapShader->InitializeUniform<glm::mat4>("u_LightSpace", glm::identity<glm::mat4>());
 
     // Shadow Map
-    Shader* shadowMapSpriteShader = ADD_SHADER(ShadowMapSprite, new Shader("res/shaders/ShadowMapSprite/ShadowMapSprite.vert","res/shaders/ShadowMapSprite/ShadowMapSprite.frag"));
+    Shader* shadowMapSpriteShader = ADD_SHADER(ShadowMapSprite, new Shader("res/shaders/ShadowMapSprite/ShadowMapSprite.vert","res/shaders/ShadowMapSprite/ShadowMapSprite.frag", "res/shaders/ShadowMapSprite/ShadowMapSprite.geom"));
     shadowMapSpriteShader->GetUniformStorage()->CopyFrom(&commonUniforms);
-    shadowMapSpriteShader->InitializeUniform<glm::mat4>("u_LightSpace", glm::identity<glm::mat4>());
     shadowMapSpriteShader->InitializeUniform<Texture2D*>("u_Texture", GET_TEXTURE_2D(Crate));
 
     
@@ -237,6 +235,7 @@ void GraphicDemoApplication::LoadMaterials() const
     // MSDF Font
     Material* msdfFontMaterial = ADD_MATERIAL(MSDFFont, new Material(GET_SHADER(MSDFFont)));
     msdfFontMaterial->SetCullFace(Material::CullFace::None);
+    msdfFontMaterial->SetTransparent(true);
 
     // Vertex Color
     ADD_MATERIAL(VertexColor, new Material(GET_SHADER(VertexColor)));
@@ -247,7 +246,7 @@ void GraphicDemoApplication::LoadMaterials() const
     skyboxMaterial->SetDepthFunc(Material::DepthFunc::LEqual);
 }
 
-void GraphicDemoApplication::LoadAssets()
+void GraphicDemoApplication::LoadAssets() const
 {
     LoadFonts();
     LoadSounds();
@@ -262,6 +261,7 @@ void GraphicDemoApplication::Initialize(Scene& scene)
 {
     LoadAssets();
 
+    // Game Manager
     GameObject* gameManagerObject = new GameObject();
     gameManagerObject->AddComponent(new GameManager());
     scene.AddGameObject(gameManagerObject);
@@ -285,7 +285,7 @@ void GraphicDemoApplication::Initialize(Scene& scene)
 
     // Camera
     GameObject* cameraObject = new GameObject();
-    cameraObject->AddComponent(new Camera(60, 0.01f, 200.0f, GET_SHADER(FrameBuffer), GET_MATERIAL(Skybox)));
+    cameraObject->AddComponent(new Camera(60, 0.1f, 500.0f, GET_SHADER(FrameBuffer), GET_MATERIAL(Skybox)));
     cameraObject->AddComponent(new POVCameraController());
     cameraObject->AddComponent(new AudioListener());
     scene.AddGameObject(cameraObject);
@@ -307,7 +307,7 @@ void GraphicDemoApplication::Initialize(Scene& scene)
     // Red light
     GameObject* redLightObject    = new GameObject();
     Transform*  redLightTransform = redLightObject->GetTransform();
-    redLightTransform->SetLocalPosition(glm::vec3(2.0f, 1.0f, 0.0f));
+    redLightTransform->SetLocalPosition(glm::vec3(2.0f, 7.0f, 0.0f));
     redLightTransform->SetLocalScale(glm::vec3(0.1f));
     redLightObject->AddComponent(new MeshRenderer(GET_MODEL(Sphere)->GetMesh(0), GET_MATERIAL(Dude)));
     redLightObject->AddComponent(new PointLight(glm::vec4(1.0f, 0.0f, 0.0f, 1.0f), 15.0f, 0.5f));
@@ -316,7 +316,7 @@ void GraphicDemoApplication::Initialize(Scene& scene)
     // Rainbow light
     GameObject* rainbowLightObject    = new GameObject();
     Transform*  rainbowLightTransform = rainbowLightObject->GetTransform();
-    rainbowLightTransform->SetPosition(glm::vec3(-2.0f, 1.0f, 0.0f));
+    rainbowLightTransform->SetPosition(glm::vec3(-2.0f, 7.0f, 0.0f));
     rainbowLightTransform->SetLocalScale(glm::vec3(0.1f));
     rainbowLightObject->AddComponent(new MeshRenderer(GET_MODEL(Sphere)->GetMesh(0), GET_MATERIAL(Dude)));
     rainbowLightObject->AddComponent(new PointLight(glm::vec4(1.0f, 1.0f, 1.0f, 1.0f), 15.0f, 0.5f));
@@ -325,7 +325,7 @@ void GraphicDemoApplication::Initialize(Scene& scene)
 
     // Suzanne
     GameObject* suzanneObject = new GameObject();
-    suzanneObject->GetTransform()->SetLocalPosition(glm::vec3(0.0f, 2.0f, 0.0f));
+    suzanneObject->GetTransform()->SetLocalPosition(glm::vec3(0.0f, 7.0f, 0.0f));
     suzanneObject->AddComponent(new MeshRenderer(GET_MODEL(Suzanne)->GetMesh(0), GET_MATERIAL(Dude)));
     suzanneObject->AddComponent(new TextRenderer(GET_FONT(Roboto), GET_MATERIAL(MSDFFont)));
     scene.AddGameObject(suzanneObject);

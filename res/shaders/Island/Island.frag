@@ -17,11 +17,12 @@ in vec4 v_Color;
 
 void main()
 {
+    
     fragColor = vec4(0.0);
-
+    #include "../Lit/Passes/Normals.frag"
     #include "../Lit/Passes/DirectionalLight.frag"
-    #include "../Lit/Passes/PointLight.frag"
     #include "../Lit/Passes/Shadow.frag"
+    #include "../Lit/Passes/PointLight.frag"
     #include "../Lit/Passes/AmbientLight.frag"
 
     vec4 textureColor = vec4(0.0);

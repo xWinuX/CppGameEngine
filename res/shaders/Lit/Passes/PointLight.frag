@@ -8,8 +8,6 @@
     u_PointLightRanges[i], 
     u_PointLightIntensities[i],
     u_Shininess,
-    u_NormalMap, 
-    v_TexCoords, 
-    v_TBN
+    normal
     );
 }

@@ -12,10 +12,11 @@ void main()
 {
     fragColor = vec4(0.0);
 
-#include "../Lit/Passes/AmbientLight.frag"
-#include "../Lit/Passes/PointLight.frag" 
-#include "../Lit/Passes/Texture.frag" 
-#include "../Lit/Passes/ColorTint.frag" 
-    
+    #include "../Lit/Passes/Normals.frag"
+    #include "../Lit/Passes/DirectionalLight.frag"
+    #include "../Lit/Passes/PointLight.frag"
+    #include "../Lit/Passes/Shadow.frag"
+    #include "../Lit/Passes/AmbientLight.frag"
+
     fragColor = vec4(0.0, v_WaveHeight, 1.0, 1.0) * vec4(fragColor.rgb, 0.7);
 }

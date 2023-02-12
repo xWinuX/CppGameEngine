@@ -191,7 +191,7 @@ void Renderer::RenderSubmitted()
                         for (auto p : pair.second) { RenderDefault(p); }
                        )
 
-            //_shadowSpriteShader->Use();
+            _shadowSpriteShader->Use();
             RENDER_CALL(
                         _opaqueBatchRenderable2Ds,
                         for (auto p : pair.second) { Render2DBatches(p); }
