@@ -62,7 +62,7 @@ void SpriteAtlas::Pack()
             if (packingSprite.WasPacked) { continue; }
 
             const Sprite*    sprite        = packingSprite.Sprite;
-            const Texture2D*   spriteTexture = sprite->GetSourceTexture();
+            const Texture2D* spriteTexture = sprite->GetSourceTexture();
             const glm::uvec2 frameSize     = sprite->GetSize();
             const glm::vec2  frameUVStep   = glm::vec2(_uvStep.x * static_cast<float>(frameSize.x), _uvStep.y * static_cast<float>(frameSize.y));
 
@@ -115,6 +115,6 @@ void SpriteAtlas::Pack()
         Sprite* sprite = packingSprite.Sprite;
         sprite->SetTexture(_pages[packingSprite.PageIndex]);
     }
-    
+
     _buffers.clear();
 }
