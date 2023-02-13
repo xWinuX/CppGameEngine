@@ -22,7 +22,7 @@ void GameManager::OnUpdate()
 
     if (DebugGUIManager::IsHidden()) { Cursor::Lock(); }
     else { Cursor::Unlock(); }
-
+    
     // Draw Material UI
     if (ImGui::CollapsingHeader("Material Properties"))
     {
