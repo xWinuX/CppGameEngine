@@ -10,6 +10,8 @@
 #include "Texture2DArray.h"
 #include "glm/gtc/type_ptr.hpp"
 
+#include "../../../src/Asset.h"
+
 #define LOCATION_CHECK if (_location < 0) { return; }
 
 #define SAMPLER_SPECIFICATION(type) \
@@ -17,11 +19,13 @@ template <> \
 class Uniform<type> \
 { \
     private: \
-        const std::string _name; \
-        const GLint       _location = -1; \
-        const type    _defaultValue; \
-        const type    _value; \
-        int               _previousSlot = 0; \
+        const std::string   _name; \
+        const GLint         _location = -1; \
+        const type          _defaultValue; \
+        const type          _value; \
+        int                 _previousSlot = 0; \
+\
+        std::string GetNameWithID(const std::string& identifier) const { return _name + "##" + identifier; } \
 \
     public: \
         Uniform(): \
@@ -45,7 +49,10 @@ class Uniform<type> \
 \
         void Set(const type value) { _value = value; } \
 \
-        void        Reset() { _value = _defaultValue; } \
+        void Reset() { _value = _defaultValue; } \
+\
+        void Draw(const std::string& identifier) { Debug::Log::Message("This should never appear"); } \
+\
         std::string GetName() const { return _name; } \
         type    GetDefaultValue() const { return const_cast<type>(_defaultValue); } \
 };
@@ -96,10 +103,76 @@ namespace GameEngine
         template <typename T>
         size_t Uniform<T>::_id = 0;
 
-        SAMPLER_SPECIFICATION(Texture2D*)
+        template <>
+        class Uniform<Texture2D*>
+        {
+            private:
+                const std::string _name;
+                const GLint       _location = -1;
+                const Texture2D*  _defaultValue;
+                const Texture2D*  _value;
+                const char*       _selectedTextureName = nullptr;
+                int               _previousSlot        = 0;
+
+                std::string GetNameWithID(const std::string& identifier) const { return _name + "##" + identifier; }
+
+            public:
+                Uniform():
+                    _defaultValue(), _value() { }
+
+                Uniform(const std::string uniformName, const GLint location, const Texture2D* defaultValue):
+                    _name(uniformName), _location(location), _defaultValue(defaultValue), _value(defaultValue)
+                {
+                    if (defaultValue != nullptr) { _selectedTextureName = defaultValue->GetName().c_str(); }
+                }
+
+                void Apply(int slot = -1)
+                {
+                    LOCATION_CHECK
+                    if (slot == -1) { slot = _previousSlot; }
+                    _value->Bind(slot);
+                    glUniform1i(_location, slot);
+                    _previousSlot = slot;
+                }
+
+                void Set(const Texture2D* value)
+                {
+                    _value = value;
+                    if (_value != nullptr) { _selectedTextureName = _value->GetName().c_str(); }
+                }
+
+                void Reset() { Set(_defaultValue); }
+
+                void Draw(const std::string& identifier)
+                {
+                    LOCATION_CHECK
+                    if (_value != nullptr)
+                    {
+                        ImGui::Image(reinterpret_cast<void*>(_value->GetTextureID()), {50, 50}, {0, 1}, {1, 0});
+                        ImGui::SameLine();
+                    }
+                    const std::map<Asset::Texture2D, Texture2D*> textures = AssetDatabase::GetAll<Asset::Texture2D, Texture2D*>();
+                    if (ImGui::BeginCombo(GetNameWithID(identifier).c_str(), _selectedTextureName))
+                    {
+                        for (const std::pair<const Asset::Texture2D, Texture2D*> value : textures)
+                        {
+                            ImGui::Image(reinterpret_cast<void*>(value.second->GetTextureID()), {30, 30}, {0, 1}, {1, 0});
+                            ImGui::SameLine();
+
+                            const std::string& textureString = value.second->GetName();
+                            const bool         isSelected    = _selectedTextureName == textureString.c_str();
+                            if (ImGui::Selectable(textureString.c_str(), isSelected)) { Set(value.second); }
+                            if (isSelected) { ImGui::SetItemDefaultFocus(); }
+                        }
+                        ImGui::EndCombo();
+                    }
+                }
+
+                std::string GetName() const { return _name; }
+                Texture2D*  GetDefaultValue() const { return const_cast<Texture2D*>(_defaultValue); }
+        };
 
         SAMPLER_SPECIFICATION(Texture2DArray*)
-
         SAMPLER_SPECIFICATION(CubeMap*)
 
         template <>

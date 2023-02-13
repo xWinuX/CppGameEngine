@@ -23,7 +23,17 @@ void Texture2D::CreateTexture(const TextureParams textureParams)
 }
 
 Texture2D::Texture2D(const std::string& filePath, const TextureParams textureParams):
-    Texture(filePath, textureParams) { CreateTexture(textureParams); }
+    Texture(filePath, textureParams)
+{
+    // Extract name from path
+    const size_t slashIndex  = filePath.find_last_of('/');
+    const size_t periodIndex = filePath.find_last_of('.');
+    _name                    = filePath.substr(slashIndex + 1, periodIndex - slashIndex - 1);
+
+    CreateTexture(textureParams);
+}
 
 Texture2D::Texture2D(unsigned char* buffer, const glm::uvec2 size, const TextureParams textureParams):
     Texture(buffer, size, textureParams) { CreateTexture(textureParams); }
+
+const std::string& Texture2D::GetName() const { return _name; }

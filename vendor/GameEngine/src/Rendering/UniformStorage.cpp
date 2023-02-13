@@ -46,6 +46,7 @@ void UniformStorage::DrawProperties(const std::string& fieldIdentifier)
     DRAW_UNIFORM(1F)
     DRAW_UNIFORM(1FV)
     DRAW_UNIFORM(Mat4F)
+    DRAW_UNIFORM(Texture2D)
 }
 
 void UniformStorage::Apply()

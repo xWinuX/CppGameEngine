@@ -9,6 +9,11 @@
 using namespace GameEngine;
 using namespace GameEngine::Rendering;
 
+std::map<std::string, Texture2D*> textureMap   = std::map<std::string, Texture2D*>();
+std::vector<std::string>          textureNames = std::vector<std::string>(10);
+
+const char* currentSelectedTexture;
+
 void GameManager::OnUpdate()
 {
     if (GameEngine::Input::GetKeyPressed(GLFW_KEY_ESCAPE)) { DebugGUIManager::ToggleHidden(); }
@@ -22,8 +27,7 @@ void GameManager::OnUpdate()
 
     if (DebugGUIManager::IsHidden()) { Cursor::Lock(); }
     else { Cursor::Unlock(); }
-    
-    // Draw Material UI
+
     if (ImGui::CollapsingHeader("Material Properties"))
     {
         ImGui::Indent();
