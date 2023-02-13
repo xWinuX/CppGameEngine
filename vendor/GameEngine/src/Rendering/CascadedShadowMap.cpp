@@ -22,23 +22,20 @@ CascadedShadowMap::CascadedShadowMap(const glm::uvec2 size):
 
     glDrawBuffer(GL_NONE);
     glReadBuffer(GL_NONE);
-
-
+    
     _shadowDepthMap->Unbind();
 }
 
 void CascadedShadowMap::Bind() const
 {
-    glViewport(0, 0, _size.x, _size.y);
+    glViewport(0, 0, static_cast<GLsizei>(_size.x), static_cast<GLsizei>(_size.y));
     _shadowDepthMap->Bind();
     glClear(GL_DEPTH_BUFFER_BIT);
 }
 
 Texture2DArray* CascadedShadowMap::GetTexture() const { return _shadowMap; }
 
-void      CascadedShadowMap::Unbind() const { _shadowDepthMap->Unbind(); }
+void CascadedShadowMap::Unbind() const { _shadowDepthMap->Unbind(); }
 
-void      CascadedShadowMap::SetPosition(const glm::vec3 position) { _position = position; }
 void      CascadedShadowMap::SetProjection(const glm::mat4 projection) { _projection = projection; }
-glm::vec3 CascadedShadowMap::GetPosition() const { return _position; }
 glm::mat4 CascadedShadowMap::GetProjection() const { return _projection; }

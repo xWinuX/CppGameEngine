@@ -7,15 +7,16 @@ using namespace GameEngine::Components;
 using namespace GameEngine::Rendering;
 
 Light::UniformBufferData* Light::_lightData          = new Light::UniformBufferData();
+CascadedShadowMap*        Light::_shadowMap          = nullptr;
 UniformBuffer*            Light::_lightUniformBuffer = nullptr;
 std::vector<glm::vec4>    Light::_frustumCorners     = std::vector<glm::vec4>(8);
 
 void Light::Initialize()
 {
+    _shadowMap          = new CascadedShadowMap(glm::uvec2(4096));
     _lightUniformBuffer = new UniformBuffer(reinterpret_cast<unsigned char*>(_lightData), sizeof(Light::UniformBufferData), 1, GL_DYNAMIC_DRAW);
     _lightUniformBuffer->Bind(2);
 }
-
 
 void Light::Update()
 {
@@ -24,7 +25,11 @@ void Light::Update()
     _lightData->NumDirectionalLights = 0;
     _lightData->NumPointLights       = 0;
     _lightData->NumShadowCascades    = 0;
+
+    _shadowMap->GetTexture()->Bind(15);
+    Renderer::SetCascadedShadowMap(_shadowMap);
 }
+
 
 void Light::AddPointLight(const glm::vec3 position, const glm::vec4 color, const float intensity, const float ranges)
 {
@@ -45,47 +50,50 @@ void Light::AddPointLight(const glm::vec3 position, const glm::vec4 color, const
 
 void Light::AddDirectionalLight(const glm::vec3 direction, const glm::vec4 color, const float intensity)
 {
-    const int num = _lightData->NumDirectionalLights;
-    if (num >= MaxDirectionalLights)
+    const int numDirectionalLights = _lightData->NumDirectionalLights;
+    if (numDirectionalLights >= MaxDirectionalLights)
     {
         Debug::Log::Message("Too many directional lights!");
         return;
     }
 
-    _lightData->DirectionalLightDirections[num]    = glm::vec4(direction, 0.0);
-    _lightData->DirectionalLightColors[num]        = color;
-    _lightData->DirectionalLightIntensities[num].x = intensity;
+    _lightData->DirectionalLightDirections[numDirectionalLights]    = glm::vec4(direction, 0.0);
+    _lightData->DirectionalLightColors[numDirectionalLights]        = color;
+    _lightData->DirectionalLightIntensities[numDirectionalLights].x = intensity;
 
     _lightData->NumDirectionalLights++;
 }
 
-void Light::SetShadowCaster(const glm::vec3 lightDirection)
+
+void Light::SetDirectionalShadowCaster(const glm::vec3 lightDirection, const std::array<float, 4> cascadeFactors, const float zMultiply)
 {
     Camera* camera = Camera::GetMain();
 
     float nearPlane = camera->GetNearPlan();
     float farPlane  = camera->GetFarPlan();
 
-    std::vector<float> cascades = std::vector<float>({ farPlane / 50.0f, farPlane / 25.0f, farPlane / 10.0f, farPlane / 2.0f });
-    
-    for (unsigned int i = 0; i < cascades.size()+1; i++)
+    for (unsigned int i = 0; i < cascadeFactors.size() + 1; i++)
     {
         _frustumCorners.clear();
-        
+
+        // Create projection for each cascade
         glm::mat4 projection;
-        if (i == 0)
+        if (i == 0) // If it is the first loop create are from near plane to first cascade
         {
-            projection = camera->CreatePerspectiveProjection(nearPlane, cascades[i]);
-            _lightData->FrustumPlaneDistances[_lightData->NumShadowCascades].x = cascades[i];
+            float cascade                                                      = farPlane * cascadeFactors[i];
+            projection                                                         = camera->CreatePerspectiveProjection(nearPlane, cascade);
+            _lightData->FrustumPlaneDistances[_lightData->NumShadowCascades].x = cascade;
         }
-        else if (i < cascades.size())
+        else if (i < cascadeFactors.size()) // If it's not the first loop create cascade from last cascade to current cascade
         {
-            projection = camera->CreatePerspectiveProjection(cascades[i-1], cascades[i]);
-            _lightData->FrustumPlaneDistances[_lightData->NumShadowCascades].x = cascades[i];
+            float cascade                                                      = farPlane * cascadeFactors[i];
+            projection                                                         = camera->CreatePerspectiveProjection(farPlane * cascadeFactors[i - 1], cascade);
+            _lightData->FrustumPlaneDistances[_lightData->NumShadowCascades].x = cascade;
         }
-        else
+        else // If it is outside of the cascade factor array create the cascade from the last entry of the array to the farplane
         {
-            projection = camera->CreatePerspectiveProjection(cascades[i-1], farPlane);
+            float cascade                                                      = farPlane * cascadeFactors[i - 1];
+            projection                                                         = camera->CreatePerspectiveProjection(cascade, farPlane);
             _lightData->FrustumPlaneDistances[_lightData->NumShadowCascades].x = farPlane;
         }
 
@@ -102,6 +110,7 @@ void Light::SetShadowCaster(const glm::vec3 lightDirection)
         constexpr float floatMin = std::numeric_limits<float>::lowest();
         constexpr float floatMax = std::numeric_limits<float>::max();
 
+        // Initialize with opposites
         glm::vec3 min = glm::vec3(floatMax);
         glm::vec3 max = glm::vec3(floatMin);
 
@@ -118,8 +127,8 @@ void Light::SetShadowCaster(const glm::vec3 lightDirection)
             max.z = std::max(max.z, cornerInLightViewSpace.z);
         }
 
-        // Scale up z so object behind the frustum can still cast shadows into the frustum
-        constexpr float zMult = 10.0f;
+        // Scale up z so objects behind the frustum can still cast shadows into the frustum
+        float zMult = std::max(zMultiply, std::numeric_limits<float>::min());
 
         if (min.z < 0) { min.z *= zMult; }
         else { min.z /= zMult; }
@@ -128,7 +137,6 @@ void Light::SetShadowCaster(const glm::vec3 lightDirection)
         else { max.z *= zMult; }
 
         const glm::mat4 lightProjection = glm::ortho(min.x, max.x, min.y, max.y, min.z, max.z);
-
 
         _lightData->LightSpaceMatrices[_lightData->NumShadowCascades] = lightProjection * lightView;
         _lightData->NumShadowCascades++;

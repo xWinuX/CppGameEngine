@@ -20,8 +20,11 @@ for (auto& uniform##suffix : _uniform##suffix##s) \
 #define APPLY_SAMPLER_UNIFORM(suffix) \
 for (auto& uniform##suffix : _uniform##suffix##s) \
 { \
-    uniform##suffix##.second.Uniform.Apply(slot); \
-    slot++; \
+    if (uniform##suffix##.second.ApplyInQueue) \
+    { \
+        uniform##suffix##.second.Uniform.Apply(slot); \
+        slot++; \
+    } \
     if (uniform##suffix##.second.ResetAfterApply) { uniform##suffix##.second.Uniform.Reset(); } \
 }
 #define COPY_UNIFORM(type,suffix) \

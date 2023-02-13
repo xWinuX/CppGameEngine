@@ -129,6 +129,9 @@ namespace GameEngine
                 void Apply(int slot = -1)
                 {
                     LOCATION_CHECK
+
+                    if (_value == nullptr) { return; }
+                    
                     if (slot == -1) { slot = _previousSlot; }
                     _value->Bind(slot);
                     glUniform1i(_location, slot);

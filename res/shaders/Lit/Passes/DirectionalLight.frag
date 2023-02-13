@@ -1,12 +1,16 @@
-﻿for (int i = 0; i < u_NumDirectionalLights; i++)
+﻿// Directional Lights
+for (int i = 0; i < u_NumDirectionalLights; i++)
 {
     fragColor += calculateDirectionalLightColor(
-    v_Position,
-    u_ViewPosition,
-    vec3(u_DirectionalLightDirections[i]),
-    u_DirectionalLightColors[i],
-    u_DirectionalLightIntensities[i],
-    u_Shininess,
-    normal
+        albedo,
+        v_Position,
+        viewDirection,
+        vec3(u_DirectionalLightDirections[i]),
+        u_DirectionalLightColors[i],
+        u_DirectionalLightIntensities[i],
+        u_Smoothness,
+        u_Metallicness,
+        normal
     );
 }
+

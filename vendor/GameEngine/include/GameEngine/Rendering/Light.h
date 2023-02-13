@@ -1,4 +1,5 @@
 ﻿#pragma once
+#include "CascadedShadowMap.h"
 #include "GameEngine/Rendering/ShaderUseCallback.h"
 #include "GameEngine/Rendering/UniformBuffer.h"
 
@@ -18,7 +19,16 @@ namespace GameEngine
             public:
                 static void AddPointLight(const glm::vec3 position, const glm::vec4 color, const float intensity, const float ranges);
                 static void AddDirectionalLight(const glm::vec3 direction, const glm::vec4 color, const float intensity);
-                static void SetShadowCaster(const glm::vec3 lightDirection);
+
+                /**
+                 * \brief Sets the directions and the cascade dividers for the cascaded shadow map
+                 *  IMPORTANT: Even though the shader allows for 16 cascades it's currently hardcoded to 4.
+                 *  This is because the geometry shader can't have dynamic invocation and I haven't had time to implement dynamic Shader switching
+                 * \param lightDirection Direction of the light
+                 * \param cascadeFactors Factors [0-1] of the cascades (The far plane will get multiplied by the numbers inside the array)
+                 * \param zMultiply How much to extend the Z axis so objects behind the camera can cast shadows, default is 10
+                 */
+                static void SetDirectionalShadowCaster(const glm::vec3 lightDirection, const std::array<float, 4> cascadeFactors, const float zMultiply = 10.0f);
 
             protected:
                 enum
@@ -57,9 +67,10 @@ namespace GameEngine
                 static void Initialize();
 
             private:
-                static UniformBuffer*         _lightUniformBuffer;
-                static std::vector<glm::vec4> _frustumCorners;
-                static void                   Update();
+                static UniformBuffer*                _lightUniformBuffer;
+                static std::vector<glm::vec4>        _frustumCorners;
+                static Rendering::CascadedShadowMap* _shadowMap;
+                static void                          Update();
         };
     }
 }

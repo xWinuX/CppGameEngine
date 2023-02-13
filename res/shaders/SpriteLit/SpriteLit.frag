@@ -11,15 +11,16 @@ in mat3 v_TBN;
 
 void main()
 {
-    vec4 textureColor = texture2D(u_Texture, v_TexCoords);
-    if (textureColor.a < 0.5) { discard; }
+    vec4 albedo = texture2D(u_Texture, v_TexCoords);
+    if (albedo.a < 0.5) { discard; }
 
     fragColor = vec4(0.0);
-    #include "../Lit/Passes/Normals.frag"
+    #include "../Lit/Passes/PreCalcs.frag"
+    albedo *= v_Color;
     #include "../Lit/Passes/DirectionalLight.frag"
-    #include "../Lit/Passes/PointLight.frag"
     #include "../Lit/Passes/Shadow.frag"
     #include "../Lit/Passes/AmbientLight.frag"
-    fragColor *= textureColor;
-    fragColor *= v_Color;
+    #include "../Lit/Passes/PointLight.frag"
+    #include "../Lit/Passes/SkyboxReflection.frag"
+
 }

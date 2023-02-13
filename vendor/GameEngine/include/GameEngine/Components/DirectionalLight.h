@@ -15,21 +15,19 @@ namespace GameEngine
         class DirectionalLight : public Component
         {
             private:
-                static std::vector<glm::vec3> _directions;
-                static std::vector<glm::vec4> _colors;
-                static std::vector<float>     _intensities;
+                bool _isShadowCaster;
 
-                Rendering::CascadedShadowMap* _shadowMap;
-            
-                glm::vec3 _eulerAngles = glm::zero<glm::vec3>();
-                glm::vec4 _color;
-                float     _intensity;
+                glm::vec3            _eulerAngles = glm::zero<glm::vec3>();
+                glm::vec4            _color;
+                std::array<float, 4> _cascadeFactors = {0.02f, 0.04f, 0.1f, 0.5f};
+                float                _intensity;
 
             protected:
+                void OnUpdate() override;
                 void OnUpdateEnd() override;
 
             public:
-                explicit DirectionalLight(const glm::vec4 color = glm::vec4(1.0), const float intensity = 1.0f);
+                explicit DirectionalLight(const bool isShadowCaster = false, const glm::vec4 color = glm::vec4(1.0), const float intensity = 1.0f);
 
                 void SetColor(glm::vec4 color);
                 void SetIntensity(float intensity);

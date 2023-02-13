@@ -41,7 +41,6 @@ namespace Asset
     enum class Sound : size_t
     {
         Hey,
-        Dirty,
     };
 
     enum class Model : size_t

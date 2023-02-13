@@ -30,7 +30,7 @@ namespace GameEngine
                 static Shader* _shadowShader;
                 static Shader* _shadowSpriteShader;
 
-                static std::vector<CascadedShadowMap*> _shadowMaps;
+                static CascadedShadowMap* _cascadedShadowMap;
 
                 // 3D
                 static RenderableStructure _opaqueRenderables;
@@ -40,10 +40,10 @@ namespace GameEngine
                 static const size_t Renderable2DBatchMaxQuads;
                 static const size_t Renderable2DBatchMaxSize;
 
-                static unsigned char*     _renderable2DVertexData;
-                static VertexArrayObject* _renderable2DVertexArrayObject;
-                static VertexBuffer*      _renderable2DVertexBuffer;
-                static IndexBuffer*       _renderable2DIndexBuffer;
+                static unsigned char*     _renderable2DBatchVertexData;
+                static VertexArrayObject* _renderable2DBatchVertexArrayObject;
+                static VertexBuffer*      _renderable2DBatchVertexBuffer;
+                static IndexBuffer*       _renderable2DBatchIndexBuffer;
 
                 static Renderable2DBatchStructure _opaqueBatchRenderable2Ds;
                 static Renderable2DBatchStructure _transparentBatchRenderable2Ds;
@@ -53,6 +53,7 @@ namespace GameEngine
 
                 static void SetShadowShader(Shader* shadowShader);
                 static void SetShadowSpriteShader(Shader* shadowSpriteShader);
+                static void SetCascadedShadowMap(CascadedShadowMap* cascadedShadowMap);
 
                 static void SubmitShadowMap(CascadedShadowMap* shadowMap);
                 static void SubmitShaderUseCallback(ShaderUseCallback* shaderUseCallback);
@@ -81,9 +82,7 @@ namespace GameEngine
                         const Material::CullFace   cullFace   = material->GetCullFace();
                         const Material::RenderMode renderMode = material->GetRenderMode();
                         const Material::DepthFunc  depthFunc  = material->GetDepthFunc();
-
-                        material->GetUniformStorage()->SetUniform("u_ShadowMap", _shadowMaps[0]->GetTexture());
-
+                        
                         // Check if new shader should be activated
                         Shader* newShader = material->GetShader();
                         if (shader == nullptr || shader != newShader)
@@ -91,6 +90,9 @@ namespace GameEngine
                             shader = newShader;
                             shader->Use();
 
+                            _cascadedShadowMap->GetTexture()->Bind(15);
+
+                            
                             for (ShaderUseCallback* shaderUseCallback : _shaderUseCallbacks) { shaderUseCallback->OnShaderUse(shader); }
                         }
 

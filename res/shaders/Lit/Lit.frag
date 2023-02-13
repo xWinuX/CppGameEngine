@@ -11,11 +11,12 @@
 void main()
 {
     fragColor = vec4(0.0);
-    #include "Passes/Normals.frag"
+
+    #include "Passes/PreCalcs.frag"
+    #include "Passes/Albedo.frag"
     #include "Passes/DirectionalLight.frag"
-    #include "Passes/PointLight.frag"
     #include "Passes/Shadow.frag"
     #include "Passes/AmbientLight.frag"
-    #include "Passes/Texture.frag"
-    #include "Passes/ColorTint.frag"
+    #include "Passes/PointLight.frag"
+    #include "Passes/SkyboxReflection.frag"
 }

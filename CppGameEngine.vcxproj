@@ -82,6 +82,7 @@
     <ClCompile Include="src\Components\GameManager.cpp" />
     <ClCompile Include="src\Components\POVCharacterController.cpp" />
     <ClCompile Include="src\Components\RainbowLight.cpp" />
+    <ClCompile Include="src\Components\Rotator.cpp" />
     <ClCompile Include="src\Components\SimpleWalker.cpp" />
     <ClCompile Include="src\GraphicDemoApplication.cpp" />
     <ClCompile Include="src\Prefabs\GamerDudePrefab.cpp" />
@@ -165,6 +166,7 @@
     <ClInclude Include="src\Components\GameManager.h" />
     <ClInclude Include="src\Components\POVCharacterController.h" />
     <ClInclude Include="src\Components\RainbowLight.h" />
+    <ClInclude Include="src\Components\Rotator.h" />
     <ClInclude Include="src\Components\SimpleWalker.h" />
     <ClInclude Include="src\GraphicDemoApplication.h" />
     <ClInclude Include="src\Prefabs\GamerDudePrefab.h" />

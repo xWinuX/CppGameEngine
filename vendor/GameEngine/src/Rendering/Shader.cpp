@@ -69,7 +69,7 @@ Shader::Shader(const char* vertexShaderSource, const char* fragmentShaderSource,
     {
         char infoLog[512];
         glGetProgramInfoLog(_programID, 512, nullptr, infoLog);
-        Debug::Log::Error(" Exception: Program linking failed.\\n" + std::string(infoLog));
+        Debug::Log::Error("Exception: Program linking failed.\\n" + std::string(infoLog));
     }
 
     // Free allocated memory for shaders

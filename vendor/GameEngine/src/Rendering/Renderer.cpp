@@ -24,19 +24,19 @@ for (auto pair : (renderStructure)) \
 using namespace GameEngine::Rendering;
 using namespace GameEngine::Components;
 
-std::vector<CascadedShadowMap*>         Renderer::_shadowMaps         = std::vector<CascadedShadowMap*>();
+CascadedShadowMap*              Renderer::_cascadedShadowMap  = nullptr;
 std::vector<ShaderUseCallback*> Renderer::_shaderUseCallbacks = std::vector<ShaderUseCallback*>();
 std::vector<RenderTarget*>      Renderer::_renderTargets      = std::vector<RenderTarget*>();
 
-const size_t   Renderer::Renderable2DBatchMaxQuads = 10000;
-const size_t   Renderer::Renderable2DBatchMaxSize  = Renderable2DBatchMaxQuads * sizeof(Sprite::QuadData);
-unsigned char* Renderer::_renderable2DVertexData   = new unsigned char[Renderable2DBatchMaxSize];
+const size_t   Renderer::Renderable2DBatchMaxQuads    = 10000;
+const size_t   Renderer::Renderable2DBatchMaxSize     = Renderable2DBatchMaxQuads * sizeof(Sprite::QuadData);
+unsigned char* Renderer::_renderable2DBatchVertexData = new unsigned char[Renderable2DBatchMaxSize];
 
-Shader*            Renderer::_shadowShader                  = nullptr;
-Shader*            Renderer::_shadowSpriteShader            = nullptr;
-IndexBuffer*       Renderer::_renderable2DIndexBuffer       = nullptr;
-VertexBuffer*      Renderer::_renderable2DVertexBuffer      = nullptr;
-VertexArrayObject* Renderer::_renderable2DVertexArrayObject = nullptr;
+Shader*            Renderer::_shadowShader                       = nullptr;
+Shader*            Renderer::_shadowSpriteShader                 = nullptr;
+IndexBuffer*       Renderer::_renderable2DBatchIndexBuffer       = nullptr;
+VertexBuffer*      Renderer::_renderable2DBatchVertexBuffer      = nullptr;
+VertexArrayObject* Renderer::_renderable2DBatchVertexArrayObject = nullptr;
 
 Renderer::RenderableStructure Renderer::_opaqueRenderables      = Renderer::RenderableStructure();
 Renderer::RenderableStructure Renderer::_transparentRenderables = Renderer::RenderableStructure();
@@ -50,40 +50,42 @@ void Renderer::Initialize()
     glLineWidth(2);
     glEnable(GL_CULL_FACE);
     glEnable(GL_TEXTURE_CUBE_MAP_SEAMLESS);
-    
+
     unsigned short* indices = new unsigned short[6]{2, 1, 0, 1, 2, 3};
 
-    _renderable2DIndexBuffer = new IndexBuffer(reinterpret_cast<unsigned char*>(indices), sizeof(unsigned short), 6);
+    _renderable2DBatchIndexBuffer  = new IndexBuffer(reinterpret_cast<unsigned char*>(indices), sizeof(unsigned short), 6);
+    _renderable2DBatchVertexBuffer = new VertexBuffer(nullptr, sizeof(Sprite::QuadData), Renderable2DBatchMaxQuads, GL_DYNAMIC_DRAW);
 
-    _renderable2DVertexBuffer      = new VertexBuffer(nullptr, sizeof(Sprite::QuadData), Renderable2DBatchMaxQuads, GL_DYNAMIC_DRAW);
-    _renderable2DVertexArrayObject = new VertexArrayObject(_renderable2DVertexBuffer, _renderable2DIndexBuffer, new VertexBufferLayout(new VertexBufferAttribute[12]
-                                                           {
-                                                               // Transform
-                                                               VertexBufferAttribute(4, GL_FLOAT, GL_FALSE, sizeof(Sprite::QuadData), nullptr, 1),
-                                                               VertexBufferAttribute(4, GL_FLOAT, GL_FALSE, sizeof(Sprite::QuadData), (GLvoid*)(4 * sizeof(float)), 1),
-                                                               VertexBufferAttribute(4, GL_FLOAT, GL_FALSE, sizeof(Sprite::QuadData), (GLvoid*)(8 * sizeof(float)), 1),
-                                                               VertexBufferAttribute(4, GL_FLOAT, GL_FALSE, sizeof(Sprite::QuadData), (GLvoid*)(12 * sizeof(float)), 1),
+    VertexBufferLayout* vertexBufferLayout = new VertexBufferLayout(new VertexBufferAttribute[12]
+                                                                    {
+                                                                        // Transform
+                                                                        VertexBufferAttribute(4, GL_FLOAT, GL_FALSE, sizeof(Sprite::QuadData), nullptr, 1),
+                                                                        VertexBufferAttribute(4, GL_FLOAT, GL_FALSE, sizeof(Sprite::QuadData), (GLvoid*)(4 * sizeof(float)), 1),
+                                                                        VertexBufferAttribute(4, GL_FLOAT, GL_FALSE, sizeof(Sprite::QuadData), (GLvoid*)(8 * sizeof(float)), 1),
+                                                                        VertexBufferAttribute(4, GL_FLOAT, GL_FALSE, sizeof(Sprite::QuadData), (GLvoid*)(12 * sizeof(float)), 1),
 
-                                                               // Position and Uv's
-                                                               VertexBufferAttribute(4, GL_FLOAT, GL_FALSE, sizeof(Sprite::QuadData), (GLvoid*)(16 * sizeof(float)), 1),
-                                                               VertexBufferAttribute(4, GL_FLOAT, GL_FALSE, sizeof(Sprite::QuadData), (GLvoid*)(20 * sizeof(float)), 1),
-                                                               VertexBufferAttribute(4, GL_FLOAT, GL_FALSE, sizeof(Sprite::QuadData), (GLvoid*)(24 * sizeof(float)), 1),
-                                                               VertexBufferAttribute(4, GL_FLOAT, GL_FALSE, sizeof(Sprite::QuadData), (GLvoid*)(28 * sizeof(float)), 1),
+                                                                        // Position and Uv's
+                                                                        VertexBufferAttribute(4, GL_FLOAT, GL_FALSE, sizeof(Sprite::QuadData), (GLvoid*)(16 * sizeof(float)), 1),
+                                                                        VertexBufferAttribute(4, GL_FLOAT, GL_FALSE, sizeof(Sprite::QuadData), (GLvoid*)(20 * sizeof(float)), 1),
+                                                                        VertexBufferAttribute(4, GL_FLOAT, GL_FALSE, sizeof(Sprite::QuadData), (GLvoid*)(24 * sizeof(float)), 1),
+                                                                        VertexBufferAttribute(4, GL_FLOAT, GL_FALSE, sizeof(Sprite::QuadData), (GLvoid*)(28 * sizeof(float)), 1),
 
-                                                               // Color
-                                                               VertexBufferAttribute(4, GL_FLOAT, GL_FALSE, sizeof(Sprite::QuadData), (GLvoid*)(32 * sizeof(float)), 1),
-                                                               VertexBufferAttribute(4, GL_FLOAT, GL_FALSE, sizeof(Sprite::QuadData), (GLvoid*)(36 * sizeof(float)), 1),
-                                                               VertexBufferAttribute(4, GL_FLOAT, GL_FALSE, sizeof(Sprite::QuadData), (GLvoid*)(40 * sizeof(float)), 1),
-                                                               VertexBufferAttribute(4, GL_FLOAT, GL_FALSE, sizeof(Sprite::QuadData), (GLvoid*)(44 * sizeof(float)), 1),
-                                                           }, 12));
+                                                                        // Color
+                                                                        VertexBufferAttribute(4, GL_FLOAT, GL_FALSE, sizeof(Sprite::QuadData), (GLvoid*)(32 * sizeof(float)), 1),
+                                                                        VertexBufferAttribute(4, GL_FLOAT, GL_FALSE, sizeof(Sprite::QuadData), (GLvoid*)(36 * sizeof(float)), 1),
+                                                                        VertexBufferAttribute(4, GL_FLOAT, GL_FALSE, sizeof(Sprite::QuadData), (GLvoid*)(40 * sizeof(float)), 1),
+                                                                        VertexBufferAttribute(4, GL_FLOAT, GL_FALSE, sizeof(Sprite::QuadData), (GLvoid*)(44 * sizeof(float)), 1),
+                                                                    }, 12);
+
+    _renderable2DBatchVertexArrayObject = new VertexArrayObject(_renderable2DBatchVertexBuffer, _renderable2DBatchIndexBuffer, vertexBufferLayout);
 
     Light::Initialize();
 }
 
 void Renderer::SetShadowShader(Shader* shadowShader) { _shadowShader = shadowShader; }
 void Renderer::SetShadowSpriteShader(Shader* shadowSpriteShader) { _shadowSpriteShader = shadowSpriteShader; }
+void Renderer::SetCascadedShadowMap(CascadedShadowMap* cascadedShadowMap) { _cascadedShadowMap = cascadedShadowMap; }
 
-void Renderer::SubmitShadowMap(CascadedShadowMap* shadowMap) { _shadowMaps.push_back(shadowMap); }
 
 void Renderer::SubmitShaderUseCallback(ShaderUseCallback* shaderUseCallback) { _shaderUseCallbacks.push_back(shaderUseCallback); }
 
@@ -114,7 +116,7 @@ void Renderer::SubmitRenderTarget(RenderTarget* renderTarget)
 unsigned int Renderer::Render2DBatches(const std::pair<Material*, std::map<Texture2D*, std::vector<Renderable2D*>>>& materialPair)
 {
     int numDrawCalls = 0;
-    _renderable2DVertexArrayObject->Bind();
+    _renderable2DBatchVertexArrayObject->Bind();
     for (const std::pair<Texture2D* const, std::vector<Renderable2D*>>& texturePair : materialPair.second)
     {
         unsigned int               renderable2DIndex = 0;
@@ -134,7 +136,7 @@ unsigned int Renderer::Render2DBatches(const std::pair<Material*, std::map<Textu
 
                 if (offset + copySize > Renderable2DBatchMaxSize) { break; }
 
-                renderable2D->CopyQuadData(_renderable2DVertexData + offset);
+                renderable2D->CopyQuadData(_renderable2DBatchVertexData + offset);
                 offset += copySize;
                 numQuads += copySize / renderable2D->GetQuadSize();
 
@@ -142,13 +144,13 @@ unsigned int Renderer::Render2DBatches(const std::pair<Material*, std::map<Textu
             }
 
             // Render the batch
-            _renderable2DVertexBuffer->UpdateData(_renderable2DVertexData, numQuads);
+            _renderable2DBatchVertexBuffer->UpdateData(_renderable2DBatchVertexData, numQuads);
             Shader::GetCurrentActiveShader()->GetUniformStorage()->SetUniformInstant<Texture2D*>("u_Texture", texturePair.first);
-            _renderable2DVertexArrayObject->DrawInstanced(6, static_cast<int>(numQuads));
+            _renderable2DBatchVertexArrayObject->DrawInstanced(6, static_cast<int>(numQuads));
             numDrawCalls++;
         }
     }
-    _renderable2DVertexArrayObject->Unbind();
+    _renderable2DBatchVertexArrayObject->Unbind();
     return numDrawCalls;
 }
 
@@ -174,17 +176,16 @@ void Renderer::RenderSubmitted()
 
     // Update Light
     Light::Update();
-    
+
     for (RenderTarget* renderTarget : _renderTargets)
     {
         // Render Shadows
-        if (renderTarget->_renderShadows)
+        if (renderTarget->_renderShadows && _cascadedShadowMap != nullptr)
         {
             glCullFace(GL_FRONT);
-  
-            const CascadedShadowMap* shadowMap = _shadowMaps[0];
-            shadowMap->Bind();
             
+            _cascadedShadowMap->Bind();
+
             _shadowShader->Use();
             RENDER_CALL(
                         _opaqueRenderables,
@@ -197,8 +198,8 @@ void Renderer::RenderSubmitted()
                         for (auto p : pair.second) { Render2DBatches(p); }
                        )
 
-            shadowMap->Unbind();
-         
+            _cascadedShadowMap->Unbind();
+
             glCullFace(GL_BACK);
         }
 
@@ -233,6 +234,7 @@ void Renderer::RenderSubmitted()
                    )
         glDisable(GL_BLEND);
 
+        // Render render target
         glDisable(GL_DEPTH_TEST);
         renderTarget->Unbind();
         renderTarget->Draw();
@@ -241,7 +243,6 @@ void Renderer::RenderSubmitted()
 
 
     // Cleanup
-    _shadowMaps.clear();
     _renderTargets.clear();
     _opaqueRenderables.clear();
     _opaqueBatchRenderable2Ds.clear();

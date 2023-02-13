@@ -7,6 +7,7 @@
 #include "Components/GameManager.h"
 #include "Components/POVCharacterController.h"
 #include "Components/RainbowLight.h"
+#include "Components/Rotator.h"
 #include "GameEngine/Components/BoxCollider.h"
 #include "GameEngine/Components/Camera.h"
 #include "GameEngine/Components/MeshRenderer.h"
@@ -86,7 +87,6 @@ void GraphicDemoApplication::LoadSprites() const
     SpriteSet* gamerDudeWalkRight = ADD_SPRITE(GamerDudeWalkRight, new SpriteSet(gamerDudeWalkRightSpriteTexture, 6, glm::uvec2(119, 190), additionalInfo));
     SpriteSet* gamerDudeWalkLeft  = ADD_SPRITE(GamerDudeWalkLeft, new SpriteSet(gamerDudeWalkLeftSpriteTexture, 6, glm::uvec2(119, 190), additionalInfo));
 
-
     SpriteAtlas* spriteAtlas = ADD_SPRITE_ATLAS(Default, new SpriteAtlas(glm::ivec2(1024), pixelArtTextureImportSettings));
 
     spriteAtlas->AddSprite(theDude);
@@ -103,7 +103,6 @@ void GraphicDemoApplication::LoadFonts() const { ADD_FONT(Roboto, new Font("res/
 
 void GraphicDemoApplication::LoadSounds() const
 {
-    ADD_SOUND(Dirty, new Sound("res/audio/Test.mp3", true));
     ADD_SOUND(Hey, new Sound("res/audio/Hey.ogg", true));
 }
 
@@ -126,9 +125,9 @@ void GraphicDemoApplication::LoadShaders() const
     commonUniforms.InitializeUniform<glm::mat4>("u_Transform", glm::identity<glm::mat4>(), false);
 
     UniformStorage litUniforms = UniformStorage();
-    litUniforms.InitializeUniform<Texture2DArray*>("u_ShadowMap", nullptr, false);
-
-    litUniforms.InitializeUniform<float>("u_Shininess", 0.0f);
+    litUniforms.InitializeUniform<float>("u_SkyboxReflectionIntensity", 0.0f);
+    litUniforms.InitializeUniform<float>("u_Smoothness", 0.0f);
+    litUniforms.InitializeUniform<float>("u_Metallicness", 0.0f);
     litUniforms.InitializeUniform<Texture2D*>("u_NormalMap", GET_TEXTURE_2D(NormalMapDefault));
 
     // Ambient Light
@@ -217,7 +216,7 @@ void GraphicDemoApplication::LoadMaterials() const
     // Dude
     Material* dudeMaterial = ADD_MATERIAL(Dude, new Material("Dude", GET_SHADER(Lit)));
     dudeMaterial->GetUniformStorage()->SetUniform<Texture2D*>("u_Texture", GET_TEXTURE_2D(TheDude));
-    dudeMaterial->GetUniformStorage()->SetUniform<float>("u_Shininess", 1.0);
+    dudeMaterial->GetUniformStorage()->SetUniform<float>("u_Smoothness", 1.0);
 
     // Crate
     Material* crateMaterial = ADD_MATERIAL(Crate, new Material("Crate", GET_SHADER(Lit)));
@@ -295,7 +294,7 @@ void GraphicDemoApplication::Initialize(Scene& scene)
     // Directional Light
     GameObject* directionalLight = new GameObject();
     directionalLight->GetTransform()->SetRotation(glm::quat(glm::vec3(-0.3f, 0.3f, 0.3f)));
-    directionalLight->AddComponent(new DirectionalLight(glm::vec4(1.0f), 0.6f));
+    directionalLight->AddComponent(new DirectionalLight(true, glm::vec4(1.0f), 0.6f));
     scene.AddGameObject(directionalLight);
 
     // Camera
@@ -343,6 +342,7 @@ void GraphicDemoApplication::Initialize(Scene& scene)
     suzanneObject->GetTransform()->SetLocalPosition(glm::vec3(0.0f, 7.0f, 0.0f));
     suzanneObject->AddComponent(new MeshRenderer(GET_MODEL(Suzanne)->GetMesh(0), GET_MATERIAL(Dude)));
     suzanneObject->AddComponent(new TextRenderer(GET_FONT(Roboto), GET_MATERIAL(MSDFFont)));
+    suzanneObject->AddComponent(new Rotator());
     scene.AddGameObject(suzanneObject);
 
     // The Missing
