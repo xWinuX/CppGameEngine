@@ -107,8 +107,6 @@ void SpriteAtlas::Pack()
         }
     }
 
-    ExportPages();
-
     // Create textures out of the buffers and clear the vector since the texture now manages the buffers memory
     for (unsigned char* buffer : _buffers) { _pages.push_back(new Texture2D(buffer, _size, _textureParams)); }
 

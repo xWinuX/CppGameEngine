@@ -54,11 +54,7 @@ Font::Font(const std::string& ttsFilePath)
                 _characterToSpriteFrameIndexMap[glyphGeometry.getCodepoint()] = CharacterInfo{_sprite->GetSprite(spriteFrameIndex), glyphGeometry};
                 spriteFrameIndex++;
             }
-
-            // std::cout << "scale: " << fontGeometry.getGeometryScale() << std::endl;
-
-            stbi_write_png("FontAtlas.png", atlasStorage.width, atlasStorage.height, 3, atlasStorage.pixels, width * 3);
-
+            
             // Cleanup
             msdfgen::destroyFont(font);
         }
