@@ -101,7 +101,7 @@ float shadowCalculation(
     if (currentDepth  > 1.0) { return 0.0; }
     
     // Calculate bias based on normal
-    float bias = max(0.05 * (1.0 - dot(normal, lightDir)), 0.005);
+    float bias = max(0.03 * (1.0 - dot(normal, lightDir)), 0.005);
     if (layer == cascadeCount){ bias *= 1 / (farPlane * 0.5f); }
     else { bias *= 1 / (frustumPlaneDistances[layer] * 0.5f); }
 
