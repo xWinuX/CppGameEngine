@@ -30,9 +30,9 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup>
-    <IncludePath>$(IncludePath);$(SolutionDir)\vendor\GLAD\include;$(SolutionDir)\vendor\GLFW\include;$(SolutionDir)\vendor\glm\include;$(SolutionDir)\vendor\reactphysics3d\include;$(SolutionDir)\vendor\stb_image\include;$(SolutionDir)\vendor\tinygltf\include;$(SolutionDir)vendor\msdf-atlas-gen\include;$(SolutionDir)vendor\freetype\include;$(SolutionDir)vendor\msdfgen\include;$(SolutionDir)vendor\skia\include;$(SolutionDir)vendor\imgui\include;$(SolutionDir)vendor\fmod\api\core\inc;$(SolutionDir)vendor\fmod\api\studio\inc;$(SolutionDir)GameEngine\include</IncludePath>
+    <IncludePath>$(IncludePath);$(SolutionDir)\vendor\GLAD\include;$(SolutionDir)\vendor\GLFW\include;$(SolutionDir)\vendor\glm\include;$(SolutionDir)\vendor\reactphysics3d\include;$(SolutionDir)\vendor\stb_image\include;$(SolutionDir)\vendor\tinygltf\include;$(SolutionDir)vendor\msdf-atlas-gen\include;$(SolutionDir)vendor\freetype\include;$(SolutionDir)vendor\msdfgen\include;$(SolutionDir)vendor\skia\include;$(SolutionDir)vendor\imgui\include;$(SolutionDir)vendor\fmod\api\core\inc;$(SolutionDir)vendor\fmod\api\studio\inc;$(SolutionDir)vendor\GameEngine\include</IncludePath>
     <OutDir>$(SolutionDir)\build\$(Platform)\$(Configuration)\</OutDir>
-    <SourcePath>$(SolutionDir)\vendor\tinygltf\src;$(SolutionDir)\vendor\stb_image\src;$(SolutionDir)\vendor\GLAD\src;$(SolutionDir)\vendor\imgui\src;$(SourcePath);$(SolutionDir)GameEngine\src</SourcePath>
+    <SourcePath>$(SolutionDir)\vendor\tinygltf\src;$(SolutionDir)\vendor\stb_image\src;$(SolutionDir)\vendor\GLAD\src;$(SolutionDir)\vendor\imgui\src;$(SourcePath);$(SolutionDir)vendor\GameEngine\src</SourcePath>
   </PropertyGroup>
   <ItemDefinitionGroup>
     <PostBuildEvent>
@@ -77,141 +77,6 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="GameEngine\src\Application.cpp" />
-    <ClCompile Include="GameEngine\src\Audio\AudioManager.cpp" />
-    <ClCompile Include="GameEngine\src\Audio\Sound.cpp" />
-    <ClCompile Include="GameEngine\src\Components\AudioListener.cpp" />
-    <ClCompile Include="GameEngine\src\Components\AudioSource.cpp" />
-    <ClCompile Include="GameEngine\src\Components\BoxCollider.cpp" />
-    <ClCompile Include="GameEngine\src\Components\Camera.cpp" />
-    <ClCompile Include="GameEngine\src\Components\CapsuleCollider.cpp" />
-    <ClCompile Include="GameEngine\src\Components\CharacterController.cpp" />
-    <ClCompile Include="GameEngine\src\Components\Component.cpp" />
-    <ClCompile Include="GameEngine\src\Components\DirectionalLight.cpp" />
-    <ClCompile Include="GameEngine\src\Components\MeshCollider.cpp" />
-    <ClCompile Include="GameEngine\src\Components\MeshRenderer.cpp" />
-    <ClCompile Include="GameEngine\src\Components\PointLight.cpp" />
-    <ClCompile Include="GameEngine\src\Components\Rigidbody.cpp" />
-    <ClCompile Include="GameEngine\src\Components\SpriteRenderer.cpp" />
-    <ClCompile Include="GameEngine\src\Components\TextRenderer.cpp" />
-    <ClCompile Include="GameEngine\src\Components\Transform.cpp" />
-    <ClCompile Include="GameEngine\src\Cursor.cpp" />
-    <ClCompile Include="GameEngine\src\Debug\DebugGUIManager.cpp" />
-    <ClCompile Include="GameEngine\src\Debug\Log.cpp" />
-    <ClCompile Include="GameEngine\src\GameObject.cpp" />
-    <ClCompile Include="GameEngine\src\Input.cpp" />
-    <ClCompile Include="GameEngine\src\IO\Importer\GLTF.cpp" />
-    <ClCompile Include="GameEngine\src\IO\Importer\OBJ.cpp" />
-    <ClCompile Include="GameEngine\src\IO\Stream.cpp" />
-    <ClCompile Include="GameEngine\src\Physics\PhysicsManager.cpp" />
-    <ClCompile Include="GameEngine\src\Physics\PhysicsDebugRenderer.cpp" />
-    <ClCompile Include="GameEngine\src\Prefab.cpp" />
-    <ClCompile Include="GameEngine\src\Rendering\CubeMap.cpp" />
-    <ClCompile Include="GameEngine\src\Rendering\Font.cpp" />
-    <ClCompile Include="GameEngine\src\Rendering\FrameBuffer.cpp" />
-    <ClCompile Include="GameEngine\src\Rendering\Light.cpp" />
-    <ClCompile Include="GameEngine\src\Rendering\Material.cpp" />
-    <ClCompile Include="GameEngine\src\Rendering\Mesh.cpp" />
-    <ClCompile Include="GameEngine\src\Rendering\Model.cpp" />
-    <ClCompile Include="GameEngine\src\Rendering\Primitive.cpp" />
-    <ClCompile Include="GameEngine\src\Rendering\Primitives\Cube.cpp" />
-    <ClCompile Include="GameEngine\src\Rendering\Primitives\ScreenQuad.cpp" />
-    <ClCompile Include="GameEngine\src\Rendering\Primitives\SkyboxCube.cpp" />
-    <ClCompile Include="GameEngine\src\Rendering\Renderable.cpp" />
-    <ClCompile Include="GameEngine\src\Rendering\RenderablePrimitive.cpp" />
-    <ClCompile Include="GameEngine\src\Rendering\RenderBuffer.cpp" />
-    <ClCompile Include="GameEngine\src\Rendering\Renderer.cpp" />
-    <ClCompile Include="GameEngine\src\Rendering\RenderTarget.cpp" />
-    <ClCompile Include="GameEngine\src\Rendering\Shader.cpp" />
-    <ClCompile Include="GameEngine\src\Rendering\CascadedShadowMap.cpp" />
-    <ClCompile Include="GameEngine\src\Rendering\Sprite.cpp" />
-    <ClCompile Include="GameEngine\src\Rendering\SpriteAtlas.cpp" />
-    <ClCompile Include="GameEngine\src\Rendering\SpriteSet.cpp" />
-    <ClCompile Include="GameEngine\src\Rendering\Texture2D.cpp" />
-    <ClCompile Include="GameEngine\src\Rendering\Texture2DArray.cpp">
-      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
-      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
-      <Optimization>Disabled</Optimization>
-      <SupportJustMyCode>true</SupportJustMyCode>
-      <AssemblerOutput>NoListing</AssemblerOutput>
-      <AssemblerListingLocation>x64\Debug\</AssemblerListingLocation>
-      <UndefineAllPreprocessorDefinitions>false</UndefineAllPreprocessorDefinitions>
-      <BrowseInformation>false</BrowseInformation>
-      <BrowseInformationFile>x64\Debug\</BrowseInformationFile>
-      <CompileAs>Default</CompileAs>
-      <ConformanceMode>Default</ConformanceMode>
-      <DiagnosticsFormat>Column</DiagnosticsFormat>
-      <DisableLanguageExtensions>false</DisableLanguageExtensions>
-      <ErrorReporting>Prompt</ErrorReporting>
-      <ExpandAttributedSource>false</ExpandAttributedSource>
-      <ExceptionHandling>Sync</ExceptionHandling>
-      <EnableASAN>false</EnableASAN>
-      <EnableFuzzer>false</EnableFuzzer>
-      <EnableFiberSafeOptimizations>false</EnableFiberSafeOptimizations>
-      <EnableEnhancedInstructionSet>NotSet</EnableEnhancedInstructionSet>
-      <FloatingPointModel>Precise</FloatingPointModel>
-      <ForceConformanceInForLoopScope>true</ForceConformanceInForLoopScope>
-      <GenerateModuleDependencies>false</GenerateModuleDependencies>
-      <GenerateSourceDependencies>false</GenerateSourceDependencies>
-      <GenerateXMLDocumentationFiles>false</GenerateXMLDocumentationFiles>
-      <InlineFunctionExpansion>Default</InlineFunctionExpansion>
-      <IntrinsicFunctions>false</IntrinsicFunctions>
-      <IgnoreStandardIncludePath>false</IgnoreStandardIncludePath>
-      <LanguageStandard>Default</LanguageStandard>
-      <LanguageStandard_C>Default</LanguageStandard_C>
-      <MinimalRebuild>false</MinimalRebuild>
-      <ModuleDependenciesFile>x64\Debug\</ModuleDependenciesFile>
-      <ModuleOutputFile>x64\Debug\</ModuleOutputFile>
-      <OmitDefaultLibName>false</OmitDefaultLibName>
-      <FavorSizeOrSpeed>Neither</FavorSizeOrSpeed>
-      <WholeProgramOptimization>false</WholeProgramOptimization>
-      <ObjectFileName>x64\Debug\</ObjectFileName>
-      <CallingConvention>Cdecl</CallingConvention>
-      <ProgramDataBaseFileName>x64\Debug\vc143.pdb</ProgramDataBaseFileName>
-      <PrecompiledHeader>NotUsing</PrecompiledHeader>
-      <PrecompiledHeaderFile>stdafx.h</PrecompiledHeaderFile>
-      <PrecompiledHeaderOutputFile>x64\Debug\CppGameEngine.pch</PrecompiledHeaderOutputFile>
-      <PreprocessToFile>false</PreprocessToFile>
-      <PreprocessKeepComments>false</PreprocessKeepComments>
-      <PreprocessSuppressLineNumbers>false</PreprocessSuppressLineNumbers>
-      <RemoveUnreferencedCodeData>true</RemoveUnreferencedCodeData>
-      <ScanSourceForModuleDependencies>false</ScanSourceForModuleDependencies>
-      <ShowIncludes>false</ShowIncludes>
-      <SourceDependenciesFile>x64\Debug\</SourceDependenciesFile>
-      <SuppressStartupBanner>true</SuppressStartupBanner>
-      <BufferSecurityCheck>true</BufferSecurityCheck>
-      <SmallerTypeCheck>false</SmallerTypeCheck>
-      <SpectreMitigation>false</SpectreMitigation>
-      <StructMemberAlignment>Default</StructMemberAlignment>
-      <TrackerLogDirectory>x64\Debug\CppGameEngine.tlog\</TrackerLogDirectory>
-      <TranslateIncludes>false</TranslateIncludes>
-      <MinimalRebuildFromTracking>true</MinimalRebuildFromTracking>
-      <TreatWarningAsError>false</TreatWarningAsError>
-      <TreatWChar_tAsBuiltInType>true</TreatWChar_tAsBuiltInType>
-      <UseFullPaths>true</UseFullPaths>
-      <WarningLevel>Level1</WarningLevel>
-      <XMLDocumentationFileName>x64\Debug\</XMLDocumentationFileName>
-      <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
-      <IntelJCCErratum>false</IntelJCCErratum>
-      <TreatAngleIncludeAsExternal>false</TreatAngleIncludeAsExternal>
-      <ExternalWarningLevel>InheritWarningLevel</ExternalWarningLevel>
-      <TreatExternalTemplatesAsInternal>true</TreatExternalTemplatesAsInternal>
-      <DisableAnalyzeExternal>false</DisableAnalyzeExternal>
-      <PreprocessorDefinitions>_DEBUG</PreprocessorDefinitions>
-      <AdditionalOptions>/MTd</AdditionalOptions>
-      <LinkCompiled>true</LinkCompiled>
-      <AdditionalIncludeDirectories>;C:\Users\edwin\vcpkg\installed\x64-windows\include</AdditionalIncludeDirectories>
-    </ClCompile>
-    <ClCompile Include="GameEngine\src\Rendering\UniformBuffer.cpp" />
-    <ClCompile Include="GameEngine\src\Rendering\UniformStorage.cpp" />
-    <ClCompile Include="GameEngine\src\Rendering\VertexArrayObject.cpp" />
-    <ClCompile Include="GameEngine\src\Rendering\VertexBufferAttribute.cpp" />
-    <ClCompile Include="GameEngine\src\Rendering\VertexBufferLayout.cpp" />
-    <ClCompile Include="GameEngine\src\Scene.cpp" />
-    <ClCompile Include="GameEngine\src\Time.cpp" />
-    <ClCompile Include="GameEngine\src\Utils\Math.cpp" />
-    <ClCompile Include="GameEngine\src\Utils\String.cpp" />
-    <ClCompile Include="GameEngine\src\Window.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="src\Components\POVCameraController.cpp" />
     <ClCompile Include="src\Components\GameManager.cpp" />
@@ -220,6 +85,69 @@
     <ClCompile Include="src\Components\SimpleWalker.cpp" />
     <ClCompile Include="src\GraphicDemoApplication.cpp" />
     <ClCompile Include="src\Prefabs\GamerDudePrefab.cpp" />
+    <ClCompile Include="vendor\GameEngine\src\Application.cpp" />
+    <ClCompile Include="vendor\GameEngine\src\Audio\AudioManager.cpp" />
+    <ClCompile Include="vendor\GameEngine\src\Audio\Sound.cpp" />
+    <ClCompile Include="vendor\GameEngine\src\Components\AudioListener.cpp" />
+    <ClCompile Include="vendor\GameEngine\src\Components\AudioSource.cpp" />
+    <ClCompile Include="vendor\GameEngine\src\Components\BoxCollider.cpp" />
+    <ClCompile Include="vendor\GameEngine\src\Components\Camera.cpp" />
+    <ClCompile Include="vendor\GameEngine\src\Components\CapsuleCollider.cpp" />
+    <ClCompile Include="vendor\GameEngine\src\Components\CharacterController.cpp" />
+    <ClCompile Include="vendor\GameEngine\src\Components\Component.cpp" />
+    <ClCompile Include="vendor\GameEngine\src\Components\DirectionalLight.cpp" />
+    <ClCompile Include="vendor\GameEngine\src\Components\MeshCollider.cpp" />
+    <ClCompile Include="vendor\GameEngine\src\Components\MeshRenderer.cpp" />
+    <ClCompile Include="vendor\GameEngine\src\Components\PointLight.cpp" />
+    <ClCompile Include="vendor\GameEngine\src\Components\Rigidbody.cpp" />
+    <ClCompile Include="vendor\GameEngine\src\Components\SphereCollider.cpp" />
+    <ClCompile Include="vendor\GameEngine\src\Components\SpriteRenderer.cpp" />
+    <ClCompile Include="vendor\GameEngine\src\Components\TextRenderer.cpp" />
+    <ClCompile Include="vendor\GameEngine\src\Components\Transform.cpp" />
+    <ClCompile Include="vendor\GameEngine\src\Cursor.cpp" />
+    <ClCompile Include="vendor\GameEngine\src\Debug\DebugGUIManager.cpp" />
+    <ClCompile Include="vendor\GameEngine\src\Debug\Log.cpp" />
+    <ClCompile Include="vendor\GameEngine\src\GameObject.cpp" />
+    <ClCompile Include="vendor\GameEngine\src\Input.cpp" />
+    <ClCompile Include="vendor\GameEngine\src\IO\Importer\GLTF.cpp" />
+    <ClCompile Include="vendor\GameEngine\src\IO\Importer\OBJ.cpp" />
+    <ClCompile Include="vendor\GameEngine\src\IO\Stream.cpp" />
+    <ClCompile Include="vendor\GameEngine\src\Physics\PhysicsDebugRenderer.cpp" />
+    <ClCompile Include="vendor\GameEngine\src\Physics\PhysicsManager.cpp" />
+    <ClCompile Include="vendor\GameEngine\src\Prefab.cpp" />
+    <ClCompile Include="vendor\GameEngine\src\Rendering\CascadedShadowMap.cpp" />
+    <ClCompile Include="vendor\GameEngine\src\Rendering\CubeMap.cpp" />
+    <ClCompile Include="vendor\GameEngine\src\Rendering\Font.cpp" />
+    <ClCompile Include="vendor\GameEngine\src\Rendering\FrameBuffer.cpp" />
+    <ClCompile Include="vendor\GameEngine\src\Rendering\Light.cpp" />
+    <ClCompile Include="vendor\GameEngine\src\Rendering\Material.cpp" />
+    <ClCompile Include="vendor\GameEngine\src\Rendering\Mesh.cpp" />
+    <ClCompile Include="vendor\GameEngine\src\Rendering\Model.cpp" />
+    <ClCompile Include="vendor\GameEngine\src\Rendering\Primitive.cpp" />
+    <ClCompile Include="vendor\GameEngine\src\Rendering\Primitives\Cube.cpp" />
+    <ClCompile Include="vendor\GameEngine\src\Rendering\Primitives\ScreenQuad.cpp" />
+    <ClCompile Include="vendor\GameEngine\src\Rendering\Primitives\SkyboxCube.cpp" />
+    <ClCompile Include="vendor\GameEngine\src\Rendering\Renderable.cpp" />
+    <ClCompile Include="vendor\GameEngine\src\Rendering\RenderablePrimitive.cpp" />
+    <ClCompile Include="vendor\GameEngine\src\Rendering\RenderBuffer.cpp" />
+    <ClCompile Include="vendor\GameEngine\src\Rendering\Renderer.cpp" />
+    <ClCompile Include="vendor\GameEngine\src\Rendering\RenderTarget.cpp" />
+    <ClCompile Include="vendor\GameEngine\src\Rendering\Shader.cpp" />
+    <ClCompile Include="vendor\GameEngine\src\Rendering\Sprite.cpp" />
+    <ClCompile Include="vendor\GameEngine\src\Rendering\SpriteAtlas.cpp" />
+    <ClCompile Include="vendor\GameEngine\src\Rendering\SpriteSet.cpp" />
+    <ClCompile Include="vendor\GameEngine\src\Rendering\Texture2D.cpp" />
+    <ClCompile Include="vendor\GameEngine\src\Rendering\Texture2DArray.cpp" />
+    <ClCompile Include="vendor\GameEngine\src\Rendering\UniformBuffer.cpp" />
+    <ClCompile Include="vendor\GameEngine\src\Rendering\UniformStorage.cpp" />
+    <ClCompile Include="vendor\GameEngine\src\Rendering\VertexArrayObject.cpp" />
+    <ClCompile Include="vendor\GameEngine\src\Rendering\VertexBufferAttribute.cpp" />
+    <ClCompile Include="vendor\GameEngine\src\Rendering\VertexBufferLayout.cpp" />
+    <ClCompile Include="vendor\GameEngine\src\Scene.cpp" />
+    <ClCompile Include="vendor\GameEngine\src\Time.cpp" />
+    <ClCompile Include="vendor\GameEngine\src\Utils\Math.cpp" />
+    <ClCompile Include="vendor\GameEngine\src\Utils\String.cpp" />
+    <ClCompile Include="vendor\GameEngine\src\Window.cpp" />
     <ClCompile Include="vendor\GLAD\src\glad.c" />
     <ClCompile Include="vendor\glm\include\glm\detail\glm.cpp" />
     <ClCompile Include="vendor\imgui\src\imgui.cpp" />
@@ -232,79 +160,6 @@
     <ClCompile Include="vendor\tinygltf\src\tiny_gltf.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="GameEngine\include\GameEngine\Application.h" />
-    <ClInclude Include="GameEngine\include\GameEngine\AssetDatabase.h" />
-    <ClInclude Include="GameEngine\include\GameEngine\Audio\AudioManager.h" />
-    <ClInclude Include="GameEngine\include\GameEngine\Audio\Sound.h" />
-    <ClInclude Include="GameEngine\include\GameEngine\Components\AudioListener.h" />
-    <ClInclude Include="GameEngine\include\GameEngine\Components\AudioSource.h" />
-    <ClInclude Include="GameEngine\include\GameEngine\Components\BoxCollider.h" />
-    <ClInclude Include="GameEngine\include\GameEngine\Components\Camera.h" />
-    <ClInclude Include="GameEngine\include\GameEngine\Components\CapsuleCollider.h" />
-    <ClInclude Include="GameEngine\include\GameEngine\Components\CharacterController.h" />
-    <ClInclude Include="GameEngine\include\GameEngine\Components\Collider.h" />
-    <ClInclude Include="GameEngine\include\GameEngine\Components\Component.h" />
-    <ClInclude Include="GameEngine\include\GameEngine\Components\DirectionalLight.h" />
-    <ClInclude Include="GameEngine\include\GameEngine\Components\MeshCollider.h" />
-    <ClInclude Include="GameEngine\include\GameEngine\Components\MeshRenderer.h" />
-    <ClInclude Include="GameEngine\include\GameEngine\Components\PointLight.h" />
-    <ClInclude Include="GameEngine\include\GameEngine\Components\Rigidbody.h" />
-    <ClInclude Include="GameEngine\include\GameEngine\Components\SpriteRenderer.h" />
-    <ClInclude Include="GameEngine\include\GameEngine\Components\TextRenderer.h" />
-    <ClInclude Include="GameEngine\include\GameEngine\Components\Transform.h" />
-    <ClInclude Include="GameEngine\include\GameEngine\Cursor.h" />
-    <ClInclude Include="GameEngine\include\GameEngine\Debug\DebugGUIManager.h" />
-    <ClInclude Include="GameEngine\include\GameEngine\Debug\Log.h" />
-    <ClInclude Include="GameEngine\include\GameEngine\GameObject.h" />
-    <ClInclude Include="GameEngine\include\GameEngine\Input.h" />
-    <ClInclude Include="GameEngine\include\GameEngine\IO\Importer\GLTF.h" />
-    <ClInclude Include="GameEngine\include\GameEngine\IO\Importer\OBJ.h" />
-    <ClInclude Include="GameEngine\include\GameEngine\IO\Stream.h" />
-    <ClInclude Include="GameEngine\include\GameEngine\Layer.h" />
-    <ClInclude Include="GameEngine\include\GameEngine\Physics\PhysicsDebugRenderer.h" />
-    <ClInclude Include="GameEngine\include\GameEngine\Physics\PhysicsManager.h" />
-    <ClInclude Include="GameEngine\include\GameEngine\Prefab.h" />
-    <ClInclude Include="GameEngine\include\GameEngine\Rendering\Buffer.h" />
-    <ClInclude Include="GameEngine\include\GameEngine\Rendering\CubeMap.h" />
-    <ClInclude Include="GameEngine\include\GameEngine\Rendering\Font.h" />
-    <ClInclude Include="GameEngine\include\GameEngine\Rendering\FrameBuffer.h" />
-    <ClInclude Include="GameEngine\include\GameEngine\Rendering\IndexBuffer.h" />
-    <ClInclude Include="GameEngine\include\GameEngine\Rendering\Light.h" />
-    <ClInclude Include="GameEngine\include\GameEngine\Rendering\Material.h" />
-    <ClInclude Include="GameEngine\include\GameEngine\Rendering\Mesh.h" />
-    <ClInclude Include="GameEngine\include\GameEngine\Rendering\Model.h" />
-    <ClInclude Include="GameEngine\include\GameEngine\Rendering\Primitive.h" />
-    <ClInclude Include="GameEngine\include\GameEngine\Rendering\Primitives\Cube.h" />
-    <ClInclude Include="GameEngine\include\GameEngine\Rendering\Primitives\ScreenQuad.h" />
-    <ClInclude Include="GameEngine\include\GameEngine\Rendering\Primitives\SkyboxCube.h" />
-    <ClInclude Include="GameEngine\include\GameEngine\Rendering\Renderable.h" />
-    <ClInclude Include="GameEngine\include\GameEngine\Rendering\Renderable2D.h" />
-    <ClInclude Include="GameEngine\include\GameEngine\Rendering\RenderablePrimitive.h" />
-    <ClInclude Include="GameEngine\include\GameEngine\Rendering\RenderableSprite.h" />
-    <ClInclude Include="GameEngine\include\GameEngine\Rendering\RenderBuffer.h" />
-    <ClInclude Include="GameEngine\include\GameEngine\Rendering\Renderer.h" />
-    <ClInclude Include="GameEngine\include\GameEngine\Rendering\RenderTarget.h" />
-    <ClInclude Include="GameEngine\include\GameEngine\Rendering\Shader.h" />
-    <ClInclude Include="GameEngine\include\GameEngine\Rendering\ShaderUseCallback.h" />
-    <ClInclude Include="GameEngine\include\GameEngine\Rendering\CascadedShadowMap.h" />
-    <ClInclude Include="GameEngine\include\GameEngine\Rendering\Sprite.h" />
-    <ClInclude Include="GameEngine\include\GameEngine\Rendering\SpriteAtlas.h" />
-    <ClInclude Include="GameEngine\include\GameEngine\Rendering\SpriteSet.h" />
-    <ClInclude Include="GameEngine\include\GameEngine\Rendering\Texture.h" />
-    <ClInclude Include="GameEngine\include\GameEngine\Rendering\Texture2D.h" />
-    <ClInclude Include="GameEngine\include\GameEngine\Rendering\Texture2DArray.h" />
-    <ClInclude Include="GameEngine\include\GameEngine\Rendering\Uniform.h" />
-    <ClInclude Include="GameEngine\include\GameEngine\Rendering\UniformBuffer.h" />
-    <ClInclude Include="GameEngine\include\GameEngine\Rendering\UniformStorage.h" />
-    <ClInclude Include="GameEngine\include\GameEngine\Rendering\VertexArrayObject.h" />
-    <ClInclude Include="GameEngine\include\GameEngine\Rendering\VertexBuffer.h" />
-    <ClInclude Include="GameEngine\include\GameEngine\Rendering\VertexBufferAttribute.h" />
-    <ClInclude Include="GameEngine\include\GameEngine\Rendering\VertexBufferLayout.h" />
-    <ClInclude Include="GameEngine\include\GameEngine\Scene.h" />
-    <ClInclude Include="GameEngine\include\GameEngine\Time.h" />
-    <ClInclude Include="GameEngine\include\GameEngine\Utils\Math.h" />
-    <ClInclude Include="GameEngine\include\GameEngine\Utils\String.h" />
-    <ClInclude Include="GameEngine\include\GameEngine\Window.h" />
     <ClInclude Include="src\Asset.h" />
     <ClInclude Include="src\Components\POVCameraController.h" />
     <ClInclude Include="src\Components\GameManager.h" />
@@ -329,6 +184,80 @@
     <ClInclude Include="vendor\fmod\plugins\resonance_audio\inc\RoomProperties.h" />
     <ClInclude Include="vendor\freetype\include\freetype\config\ftconfig.h" />
     <ClInclude Include="vendor\freetype\include\freetype\config\ftoption.h" />
+    <ClInclude Include="vendor\GameEngine\include\GameEngine\Application.h" />
+    <ClInclude Include="vendor\GameEngine\include\GameEngine\AssetDatabase.h" />
+    <ClInclude Include="vendor\GameEngine\include\GameEngine\Audio\AudioManager.h" />
+    <ClInclude Include="vendor\GameEngine\include\GameEngine\Audio\Sound.h" />
+    <ClInclude Include="vendor\GameEngine\include\GameEngine\Components\AudioListener.h" />
+    <ClInclude Include="vendor\GameEngine\include\GameEngine\Components\AudioSource.h" />
+    <ClInclude Include="vendor\GameEngine\include\GameEngine\Components\BoxCollider.h" />
+    <ClInclude Include="vendor\GameEngine\include\GameEngine\Components\Camera.h" />
+    <ClInclude Include="vendor\GameEngine\include\GameEngine\Components\CapsuleCollider.h" />
+    <ClInclude Include="vendor\GameEngine\include\GameEngine\Components\CharacterController.h" />
+    <ClInclude Include="vendor\GameEngine\include\GameEngine\Components\Collider.h" />
+    <ClInclude Include="vendor\GameEngine\include\GameEngine\Components\Component.h" />
+    <ClInclude Include="vendor\GameEngine\include\GameEngine\Components\DirectionalLight.h" />
+    <ClInclude Include="vendor\GameEngine\include\GameEngine\Components\MeshCollider.h" />
+    <ClInclude Include="vendor\GameEngine\include\GameEngine\Components\MeshRenderer.h" />
+    <ClInclude Include="vendor\GameEngine\include\GameEngine\Components\PointLight.h" />
+    <ClInclude Include="vendor\GameEngine\include\GameEngine\Components\Rigidbody.h" />
+    <ClInclude Include="vendor\GameEngine\include\GameEngine\Components\SpriteRenderer.h" />
+    <ClInclude Include="vendor\GameEngine\include\GameEngine\Components\TextRenderer.h" />
+    <ClInclude Include="vendor\GameEngine\include\GameEngine\Components\Transform.h" />
+    <ClInclude Include="vendor\GameEngine\include\GameEngine\Cursor.h" />
+    <ClInclude Include="vendor\GameEngine\include\GameEngine\Debug\DebugGUIManager.h" />
+    <ClInclude Include="vendor\GameEngine\include\GameEngine\Debug\Log.h" />
+    <ClInclude Include="vendor\GameEngine\include\GameEngine\GameObject.h" />
+    <ClInclude Include="vendor\GameEngine\include\GameEngine\Input.h" />
+    <ClInclude Include="vendor\GameEngine\include\GameEngine\IO\Importer\GLTF.h" />
+    <ClInclude Include="vendor\GameEngine\include\GameEngine\IO\Importer\OBJ.h" />
+    <ClInclude Include="vendor\GameEngine\include\GameEngine\IO\Stream.h" />
+    <ClInclude Include="vendor\GameEngine\include\GameEngine\Layer.h" />
+    <ClInclude Include="vendor\GameEngine\include\GameEngine\Physics\PhysicsDebugRenderer.h" />
+    <ClInclude Include="vendor\GameEngine\include\GameEngine\Physics\PhysicsManager.h" />
+    <ClInclude Include="vendor\GameEngine\include\GameEngine\Prefab.h" />
+    <ClInclude Include="vendor\GameEngine\include\GameEngine\Rendering\Buffer.h" />
+    <ClInclude Include="vendor\GameEngine\include\GameEngine\Rendering\CascadedShadowMap.h" />
+    <ClInclude Include="vendor\GameEngine\include\GameEngine\Rendering\CubeMap.h" />
+    <ClInclude Include="vendor\GameEngine\include\GameEngine\Rendering\Font.h" />
+    <ClInclude Include="vendor\GameEngine\include\GameEngine\Rendering\FrameBuffer.h" />
+    <ClInclude Include="vendor\GameEngine\include\GameEngine\Rendering\IndexBuffer.h" />
+    <ClInclude Include="vendor\GameEngine\include\GameEngine\Rendering\Light.h" />
+    <ClInclude Include="vendor\GameEngine\include\GameEngine\Rendering\Material.h" />
+    <ClInclude Include="vendor\GameEngine\include\GameEngine\Rendering\Mesh.h" />
+    <ClInclude Include="vendor\GameEngine\include\GameEngine\Rendering\Model.h" />
+    <ClInclude Include="vendor\GameEngine\include\GameEngine\Rendering\Primitive.h" />
+    <ClInclude Include="vendor\GameEngine\include\GameEngine\Rendering\Primitives\Cube.h" />
+    <ClInclude Include="vendor\GameEngine\include\GameEngine\Rendering\Primitives\ScreenQuad.h" />
+    <ClInclude Include="vendor\GameEngine\include\GameEngine\Rendering\Primitives\SkyboxCube.h" />
+    <ClInclude Include="vendor\GameEngine\include\GameEngine\Rendering\Renderable.h" />
+    <ClInclude Include="vendor\GameEngine\include\GameEngine\Rendering\Renderable2D.h" />
+    <ClInclude Include="vendor\GameEngine\include\GameEngine\Rendering\RenderablePrimitive.h" />
+    <ClInclude Include="vendor\GameEngine\include\GameEngine\Rendering\RenderableSprite.h" />
+    <ClInclude Include="vendor\GameEngine\include\GameEngine\Rendering\RenderBuffer.h" />
+    <ClInclude Include="vendor\GameEngine\include\GameEngine\Rendering\Renderer.h" />
+    <ClInclude Include="vendor\GameEngine\include\GameEngine\Rendering\RenderTarget.h" />
+    <ClInclude Include="vendor\GameEngine\include\GameEngine\Rendering\Shader.h" />
+    <ClInclude Include="vendor\GameEngine\include\GameEngine\Rendering\ShaderUseCallback.h" />
+    <ClInclude Include="vendor\GameEngine\include\GameEngine\Rendering\Sprite.h" />
+    <ClInclude Include="vendor\GameEngine\include\GameEngine\Rendering\SpriteAtlas.h" />
+    <ClInclude Include="vendor\GameEngine\include\GameEngine\Rendering\SpriteSet.h" />
+    <ClInclude Include="vendor\GameEngine\include\GameEngine\Rendering\Texture.h" />
+    <ClInclude Include="vendor\GameEngine\include\GameEngine\Rendering\Texture2D.h" />
+    <ClInclude Include="vendor\GameEngine\include\GameEngine\Rendering\Texture2DArray.h" />
+    <ClInclude Include="vendor\GameEngine\include\GameEngine\Rendering\Uniform.h" />
+    <ClInclude Include="vendor\GameEngine\include\GameEngine\Rendering\UniformBuffer.h" />
+    <ClInclude Include="vendor\GameEngine\include\GameEngine\Rendering\UniformStorage.h" />
+    <ClInclude Include="vendor\GameEngine\include\GameEngine\Rendering\VertexArrayObject.h" />
+    <ClInclude Include="vendor\GameEngine\include\GameEngine\Rendering\VertexBuffer.h" />
+    <ClInclude Include="vendor\GameEngine\include\GameEngine\Rendering\VertexBufferAttribute.h" />
+    <ClInclude Include="vendor\GameEngine\include\GameEngine\Rendering\VertexBufferLayout.h" />
+    <ClInclude Include="vendor\GameEngine\include\GameEngine\Scene.h" />
+    <ClInclude Include="vendor\GameEngine\include\GameEngine\Time.h" />
+    <ClInclude Include="vendor\GameEngine\include\GameEngine\Utils\Math.h" />
+    <ClInclude Include="vendor\GameEngine\include\GameEngine\Utils\String.h" />
+    <ClInclude Include="vendor\GameEngine\include\GameEngine\Window.h" />
+    <ClInclude Include="vendor\GameEngine\src\Components\SphereCollider.h" />
     <ClInclude Include="vendor\GLAD\include\glad\glad.h" />
     <ClInclude Include="vendor\GLAD\include\KHR\khrplatform.h" />
     <ClInclude Include="vendor\GLFW\include\GLFW\glfw3.h" />
@@ -942,8 +871,6 @@
   <ItemGroup>
     <Content Include="dependencies\x64\Debug\fmodL.dll" />
     <Content Include="dependencies\x64\Release\fmod.dll" />
-    <Content Include="res\audio\Test.mp3" />
-    <Content Include="res\fonts\DePixelKlein.ttf" />
     <Content Include="res\fonts\Roboto-Regular.ttf" />
     <Content Include="res\models\cube.glb" />
     <Content Include="res\models\Cube.gltf" />

@@ -13,5 +13,5 @@ void main()
 {
     #include "../Sprite/Main.vert"
 
-    v_TBN = calculateTBN(a_Transform, vec3(0.0, 0.0, 1.0), vec4(1.0, 0.0, 0.0, 1.0));
+    v_TBN = calculateTBN(a_Transform, vec3(1.0, 0.0, 0.0), vec4(1.0, 0.0, 0.0, 1.0));
 }

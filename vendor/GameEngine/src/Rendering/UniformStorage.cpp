@@ -11,14 +11,19 @@ for (auto& uniform##suffix : _uniform##suffix##s) \
     if (uniform##suffix##.second.ResetAfterApply) { uniform##suffix##.second.Uniform.Reset(); } \
 }
 
+#define DRAW_UNIFORM(suffix) \
+for (auto& uniform##suffix : _uniform##suffix##s) \
+{ \
+    if (uniform##suffix##.second.ApplyInQueue) { uniform##suffix##.second.Uniform.Draw(fieldIdentifier); } \
+}
+
 #define APPLY_SAMPLER_UNIFORM(suffix) \
 for (auto& uniform##suffix : _uniform##suffix##s) \
 { \
     uniform##suffix##.second.Uniform.Apply(slot); \
     slot++; \
     if (uniform##suffix##.second.ResetAfterApply) { uniform##suffix##.second.Uniform.Reset(); } \
-} \
-
+}
 #define COPY_UNIFORM(type,suffix) \
 for (auto uniform##suffix : _uniform##suffix##s) \
 { \
@@ -31,6 +36,18 @@ UniformStorage::UniformStorage():
 UniformStorage::UniformStorage(const GLuint programID):
     _programID(programID) {}
 
+void UniformStorage::DrawProperties(const std::string& fieldIdentifier)
+{
+    DRAW_UNIFORM(1I)
+    DRAW_UNIFORM(4F)
+    DRAW_UNIFORM(4FV)
+    DRAW_UNIFORM(3F)
+    DRAW_UNIFORM(3FV)
+    DRAW_UNIFORM(1F)
+    DRAW_UNIFORM(1FV)
+    DRAW_UNIFORM(Mat4F)
+}
+
 void UniformStorage::Apply()
 {
     if (_isTemplate)
@@ -38,7 +55,7 @@ void UniformStorage::Apply()
         Debug::Log::Error("Can't apply template uniform buffer!");
         return;
     }
-    
+
     APPLY_UNIFORM(1I)
     APPLY_UNIFORM(4F)
     APPLY_UNIFORM(4FV)
@@ -62,7 +79,7 @@ int UniformStorage::GetUniformLocation(const std::string& uniformName)
         Debug::Log::Error("Can't get location of template uniform buffer");
         return -1;
     }
-    
+
     if (_uniformNameLocationMap.find(uniformName) == _uniformNameLocationMap.end())
     {
         Debug::Log::Message(std::string(uniformName) + "not found");
@@ -96,7 +113,4 @@ void UniformStorage::CopyTo(UniformStorage* uniformStorage) const
     COPY_UNIFORM(CubeMap*, CubeMap)
 }
 
-void UniformStorage::CopyFrom(const UniformStorage* uniformStorage)
-{
-    uniformStorage->CopyTo(this);
-}
+void UniformStorage::CopyFrom(const UniformStorage* uniformStorage) { uniformStorage->CopyTo(this); }

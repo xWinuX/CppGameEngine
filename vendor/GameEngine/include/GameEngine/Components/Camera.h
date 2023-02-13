@@ -48,7 +48,7 @@ namespace GameEngine
                 void OnUpdateEnd() override;
 
             public:
-                Camera(float fovInDegrees, float zNear, float zFar, Rendering::Shader* frameBufferShader, Rendering::Material* skyboxMaterial);
+                Camera(float fovInDegrees, float zNear, float zFar, Rendering::Material* frameBufferMaterial, Rendering::Material* skyboxMaterial);
                 float                   GetFOVInDegrees() const;
                 void                    SetFOVInDegrees(float value);
                 float                   GetNearPlan() const;

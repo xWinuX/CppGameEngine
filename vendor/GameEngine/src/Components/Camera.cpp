@@ -14,8 +14,8 @@ using namespace GameEngine;
 
 Camera* Camera::_main = nullptr;
 
-Camera::Camera(const float fovInDegrees, const float zNear, const float zFar, Shader* frameBufferShader, Material* skyboxMaterial):
-    RenderTarget(frameBufferShader),
+Camera::Camera(const float fovInDegrees, const float zNear, const float zFar, Material* frameBufferMaterial, Material* skyboxMaterial):
+    RenderTarget(frameBufferMaterial),
     _fovInDegrees(fovInDegrees),
     _nearPlane(zNear),
     _farPlane(zFar),

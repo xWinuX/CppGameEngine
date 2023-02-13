@@ -122,6 +122,7 @@ namespace GameEngine
                 explicit UniformStorage();
                 explicit UniformStorage(const GLuint programID);
 
+                void DrawProperties(const std::string& fieldIdentifier);
                 void Apply();
 
                 int GetUniformLocation(const std::string& uniformName);

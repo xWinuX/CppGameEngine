@@ -1,5 +1,6 @@
 ﻿#pragma once
 #include "FrameBuffer.h"
+#include "Material.h"
 #include "Primitive.h"
 #include "RenderBuffer.h"
 #include "ShaderUseCallback.h"
@@ -16,7 +17,7 @@ namespace GameEngine
             friend Renderer;
 
             public:
-                explicit RenderTarget(Shader* shader);
+                explicit RenderTarget(Material* shader);
                 virtual  ~RenderTarget();
 
                 bool GetRenderShadows() const;
@@ -41,7 +42,7 @@ namespace GameEngine
                 RenderBuffer* _renderBuffer  = nullptr;
                 Texture2D*      _renderTexture = nullptr;
 
-                Shader*               _shader;
+                Material*               _material;
                 Rendering::Primitive* _screenQuad;
 
                 bool _renderShadows = true;

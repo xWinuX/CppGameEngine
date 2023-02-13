@@ -81,6 +81,7 @@ namespace Asset
         MSDFFont,
         VertexColor,
         Skybox,
+        FrameBuffer
     };
 
     enum class CubeMap : size_t

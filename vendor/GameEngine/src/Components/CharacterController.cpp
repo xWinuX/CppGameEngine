@@ -29,7 +29,7 @@ void CharacterController::OnPhysicsUpdate()
 
 void CharacterController::Move(const glm::vec2 direction)
 {
-    _moveDirection = direction * Time::GetDeltaTime();
+    _moveDirection = direction * Time::GetPhysicsDeltaTime();
 }
 
 void CharacterController::Move(const glm::vec2 direction, const Transform* transform)

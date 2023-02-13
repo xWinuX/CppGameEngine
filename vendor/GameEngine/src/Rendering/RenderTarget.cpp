@@ -7,8 +7,8 @@
 
 using namespace GameEngine::Rendering;
 
-RenderTarget::RenderTarget(Shader* shader):
-    _shader(shader),
+RenderTarget::RenderTarget(Material* shader):
+    _material(shader),
     _screenQuad(Rendering::Primitives::ScreenQuad::GetPrimitive())
 {
     _renderTextureParams.FilterMode      = TextureFilterMode::Nearest;
@@ -38,21 +38,12 @@ void RenderTarget::Bind()
     _frameBuffer->Clear();
 }
 
-void RenderTarget::Unbind() const
-{
-    _frameBuffer->Unbind();
-    _shader->Use();
-    _shader->GetUniformStorage()->Apply();
-    _renderTexture->Bind(0);
-    _screenQuad->GetVertexArrayObject()->Bind();
-    _screenQuad->GetVertexArrayObject()->Draw();
-    _screenQuad->GetVertexArrayObject()->Unbind();
-}
+void RenderTarget::Unbind() const { _frameBuffer->Unbind(); }
 
 void RenderTarget::Draw()
 {
-    _shader->Use();
-    _shader->GetUniformStorage()->Apply();
+    _material->GetShader()->Use();
+    _material->GetUniformStorage()->Apply();
     _renderTexture->Bind(0);
     _screenQuad->GetVertexArrayObject()->Bind();
     _screenQuad->GetVertexArrayObject()->Draw();

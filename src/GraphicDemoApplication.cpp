@@ -157,6 +157,11 @@ void GraphicDemoApplication::LoadShaders() const
     // Water
     Shader* waterShader = ADD_SHADER(Water, new Shader("res/shaders/Water/Water.vert", "res/shaders/Water/Water.frag"));
     waterShader->UniformStorageFromShader(litShader);
+    
+    waterShader->InitializeUniform<glm::vec3>("u_WaveOrigin", glm::zero<glm::vec3>());
+    waterShader->InitializeUniform<float>("u_WaveSpeed", 1.0f);
+    waterShader->InitializeUniform<float>("u_WaveAmplitude", 0.1f);
+    waterShader->InitializeUniform<float>("u_WaveFrequency", 0.3f);
 
     // Sprite Lit
     Shader* spriteLitShader = ADD_SHADER(SpriteLit, new Shader("res/shaders/SpriteLit/SpriteLit.vert", "res/shaders/SpriteLit/SpriteLit.frag"));
@@ -181,11 +186,14 @@ void GraphicDemoApplication::LoadShaders() const
     // Frame Buffer
     Shader* frameBufferShader = ADD_SHADER(FrameBuffer, new Shader("res/shaders/FrameBuffer/FrameBuffer.vert", "res/shaders/FrameBuffer/FrameBuffer.frag"));
     frameBufferShader->GetUniformStorage()->CopyFrom(&commonUniforms);
+    frameBufferShader->InitializeUniform<int>("u_BloomBlurSize", 3);
+    frameBufferShader->InitializeUniform<float>("u_BloomBlurOffset", 2);
 
     // Skybox
     Shader* skyboxShader = ADD_SHADER(Skybox, new Shader("res/shaders/Skybox/Skybox.vert", "res/shaders/Skybox/Skybox.frag"));
     skyboxShader->GetUniformStorage()->CopyFrom(&commonUniforms);
     skyboxShader->InitializeUniform<CubeMap*>("u_CubeMap", GET_CUBEMAP(SkyBox));
+    skyboxShader->InitializeUniform<float>("u_Exposure", 1.2f);
 
     // Shadow Map
     Shader* shadowMapShader = ADD_SHADER(ShadowMap,
@@ -207,44 +215,48 @@ void GraphicDemoApplication::LoadShaders() const
 void GraphicDemoApplication::LoadMaterials() const
 {
     // Dude
-    Material* dudeMaterial = ADD_MATERIAL(Dude, new Material(GET_SHADER(Lit)));
+    Material* dudeMaterial = ADD_MATERIAL(Dude, new Material("Dude", GET_SHADER(Lit)));
     dudeMaterial->GetUniformStorage()->SetUniform<Texture2D*>("u_Texture", GET_TEXTURE_2D(TheDude));
     dudeMaterial->GetUniformStorage()->SetUniform<float>("u_Shininess", 1.0);
 
     // Crate
-    Material* crateMaterial = ADD_MATERIAL(Crate, new Material(GET_SHADER(Lit)));
+    Material* crateMaterial = ADD_MATERIAL(Crate, new Material("Crate", GET_SHADER(Lit)));
 
     crateMaterial->GetUniformStorage()->SetUniform("u_Texture", GET_TEXTURE_2D(Crate));
     crateMaterial->GetUniformStorage()->SetUniform("u_NormalMap", GET_TEXTURE_2D(CrateNormalMap));
     crateMaterial->GetUniformStorage()->SetUniform("u_NormalMapIntensity", 1.0f);
 
     // Island
-    Material* islandMaterial = ADD_MATERIAL(Island, new Material(GET_SHADER(Island)));
+    Material* islandMaterial = ADD_MATERIAL(Island, new Material("Island", GET_SHADER(Island)));
 
     // Physics Debug
-    Material* physicsMaterial = ADD_MATERIAL(PhysicsDebug, new Material(GET_SHADER(PhysicsDebug)));
+    Material* physicsMaterial = ADD_MATERIAL(PhysicsDebug, new Material("PhysicsDebug", GET_SHADER(PhysicsDebug)));
     physicsMaterial->SetCullFace(Material::None);
     physicsMaterial->SetRenderMode(Material::Wireframe);
 
     // Sprite Lit
-    Material* spriteLitMaterial = ADD_MATERIAL(SpriteLit, new Material(GET_SHADER(SpriteLit)));
+    Material* spriteLitMaterial = ADD_MATERIAL(SpriteLit, new Material("Sprite Lit", GET_SHADER(SpriteLit)));
     spriteLitMaterial->SetCullFace(Material::CullFace::None);
 
     // Water
-    Material* waterMaterial = ADD_MATERIAL(Water, new Material(GET_SHADER(Water)));
+    Material* waterMaterial = ADD_MATERIAL(Water, new Material("Water", GET_SHADER(Water)));
     waterMaterial->SetCullFace(Material::None);
     waterMaterial->SetTransparent(true);
 
     // MSDF Font
-    Material* msdfFontMaterial = ADD_MATERIAL(MSDFFont, new Material(GET_SHADER(MSDFFont)));
+    Material* msdfFontMaterial = ADD_MATERIAL(MSDFFont, new Material("MSDF Font", GET_SHADER(MSDFFont)));
     msdfFontMaterial->SetCullFace(Material::CullFace::None);
     msdfFontMaterial->SetTransparent(true);
 
     // Vertex Color
-    ADD_MATERIAL(VertexColor, new Material(GET_SHADER(VertexColor)));
+    ADD_MATERIAL(VertexColor, new Material("Vertex Colors", GET_SHADER(VertexColor)));
 
+    // Frame Buffer
+    ADD_MATERIAL(FrameBuffer, new Material("Frame Buffer", GET_SHADER(FrameBuffer)));
+    
     // Skybox
-    Material* skyboxMaterial = ADD_MATERIAL(Skybox, new Material(GET_SHADER(Skybox)));
+    Material* skyboxMaterial = ADD_MATERIAL(Skybox, new Material("Skybox", GET_SHADER(Skybox)));
+    
     skyboxMaterial->SetCullFace(Material::Front);
     skyboxMaterial->SetDepthFunc(Material::DepthFunc::LEqual);
 }
@@ -288,7 +300,7 @@ void GraphicDemoApplication::Initialize(Scene& scene)
 
     // Camera
     GameObject* cameraObject = new GameObject();
-    cameraObject->AddComponent(new Camera(60, 0.1f, 500.0f, GET_SHADER(FrameBuffer), GET_MATERIAL(Skybox)));
+    cameraObject->AddComponent(new Camera(60, 0.1f, 500.0f, GET_MATERIAL(FrameBuffer), GET_MATERIAL(Skybox)));
     cameraObject->AddComponent(new POVCameraController());
     cameraObject->AddComponent(new AudioListener());
     scene.AddGameObject(cameraObject);

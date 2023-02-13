@@ -101,7 +101,7 @@ sampler2DArray shadowMap
 
     // calculate bias (based on depth map resolution and slope)
 
-    float bias = max(0.01 * (1.0 - dot(normal, lightDir)), 0.005);
+    float bias = max(0.02 * (1.0 - dot(normal, lightDir)), 0.005);
     if (layer == cascadeCount)
     {
         bias *= 1 / (farPlane * 0.5f);

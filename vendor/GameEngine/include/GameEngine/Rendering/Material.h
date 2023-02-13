@@ -25,27 +25,29 @@ namespace GameEngine
 
                 enum DepthFunc
                 {
-                    Equal = GL_EQUAL,
+                    Equal  = GL_EQUAL,
                     LEqual = GL_LEQUAL,
-                    Less  = GL_LESS,
+                    Less   = GL_LESS,
                 };
 
-                explicit Material(Shader* shader);
+                explicit Material(std::string name, Shader* shader);
                 ~Material();
                 Shader*         GetShader() const;
                 UniformStorage* GetUniformStorage() const;
 
                 RenderMode GetRenderMode() const;
                 CullFace   GetCullFace() const;
-                DepthFunc GetDepthFunc() const;
+                DepthFunc  GetDepthFunc() const;
                 bool       GetTransparent() const;
 
                 void SetRenderMode(RenderMode renderMode);
                 void SetCullFace(CullFace cullFace);
                 void SetDepthFunc(DepthFunc depthFunc);
                 void SetTransparent(bool transparent);
+                void DrawProperties() const;
 
             private:
+                std::string     _name;
                 Shader*         _shader;
                 UniformStorage* _uniformStorage;
                 CullFace        _cullFace    = CullFace::Back;

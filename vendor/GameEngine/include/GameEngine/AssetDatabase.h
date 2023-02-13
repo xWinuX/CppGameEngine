@@ -18,6 +18,12 @@ namespace GameEngine
                 return nullptr;
             }
 
+            template<typename TKey, typename T>
+            static std::map<TKey, T>& GetAll()
+            {
+                return _assetMap<TKey, T>;
+            }
+
             template <typename T, typename TKey>
             static T Add(TKey id, T asset)
             {

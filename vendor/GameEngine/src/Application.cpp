@@ -35,6 +35,9 @@ Application::Application()
     PhysicsManager::Initialize();
     AudioManager::Initialize();
     DebugGUIManager::Initialize();
+
+    // Activate to show true FPS
+    //glfwSwapInterval(0);
 }
 
 void Application::Run()
@@ -58,13 +61,10 @@ void Application::Run()
         // Execute Update calls on each game object in the current scene
         scene.OnUpdate();
         
-        // Audio Update
         AudioManager::Update();
         
-        // Render
         Renderer::RenderSubmitted();
         
-        // Render dear imgui into screen
         DebugGUIManager::Draw();
         
         Renderer::DrawFrame();
