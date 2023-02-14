@@ -6,13 +6,13 @@
 
 class GameManager : public GameEngine::Components::Component
 {
+    public:
+        GameManager();
+        void OnUpdate() override;
+
     private:
         bool                  _fullscreen            = false;
         CratePrefab           _cratePrefab           = CratePrefab();
         GamerDudePrefab       _cubeManPrefab         = GamerDudePrefab();
         RigidbodySpherePrefab _rigidbodySpherePrefab = RigidbodySpherePrefab();
-
-    public:
-        GameManager();
-        void OnUpdate() override;
 };

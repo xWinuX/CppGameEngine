@@ -3,10 +3,9 @@
 
 class RigidbodySpherePrefab : public GameEngine::Prefab
 {
-    protected:
-        void PrepareGameObject(GameEngine::GameObject* gameObject) override;
-
     public:
         RigidbodySpherePrefab();
-        
+
+    protected:
+        void PrepareGameObject(GameEngine::GameObject* gameObject) override;
 };

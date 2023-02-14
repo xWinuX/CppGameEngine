@@ -3,6 +3,9 @@
 
 class GraphicDemoApplication final : public GameEngine::Application
 {
+    public:
+        void Initialize(GameEngine::Scene& scene) override;
+
     private:
         void LoadTextures() const;
         void LoadSprites() const;
@@ -12,6 +15,4 @@ class GraphicDemoApplication final : public GameEngine::Application
         void LoadShaders() const;
         void LoadMaterials() const;
         void LoadAssets() const;
-    public:
-        void Initialize(GameEngine::Scene& scene) override;
 };

@@ -8,6 +8,13 @@
 
 class SimpleWalker final : public GameEngine::Components::Component
 {
+    public:
+        SimpleWalker();
+        void OnStart() override;
+        void RandomizeMoveTimers();
+        void RandomizeSoundTimer();
+        void OnUpdate() override;
+
     private:
         GameEngine::Components::AudioSource*         _audioSource         = nullptr;
         GameEngine::Components::SpriteRenderer*      _spriteRenderer      = nullptr;
@@ -26,11 +33,4 @@ class SimpleWalker final : public GameEngine::Components::Component
         float _scale          = 1;
 
         glm::vec2 _randomDirection = glm::circularRand(1);
-
-    public:
-        SimpleWalker();
-        void OnStart() override;
-        void RandomizeMoveTimers();
-        void RandomizeSoundTimer();
-        void OnUpdate() override;
 };

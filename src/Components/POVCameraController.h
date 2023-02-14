@@ -7,17 +7,17 @@
 
 class POVCameraController : public GameEngine::Components::Component
 {
-    private:
-        GameEngine::Components::Transform* _followTransform = nullptr;
-        glm::vec2 _currentAngle = glm::zero<glm::vec2>();
-        glm::vec2 _previousMousePosition = glm::zero<glm::vec2>();
-        float _mouseSpeed = 0.005f;
+    public:
+        POVCameraController();
+        void SetFollowTransform(GameEngine::Components::Transform* followTransform);
 
     protected:
         void OnLateUpdate() override;
         void OnGuiDraw() override;
 
-    public:
-        POVCameraController();
-        void SetFollowTransform(GameEngine::Components::Transform* followTransform);
+    private:
+        GameEngine::Components::Transform* _followTransform       = nullptr;
+        glm::vec2                          _currentAngle          = glm::zero<glm::vec2>();
+        glm::vec2                          _previousMousePosition = glm::zero<glm::vec2>();
+        float                              _mouseSpeed            = 0.005f;
 };
