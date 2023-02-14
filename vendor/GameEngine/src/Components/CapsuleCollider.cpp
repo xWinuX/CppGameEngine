@@ -21,6 +21,7 @@ void CapsuleCollider::OnLateUpdate()
 
 CapsuleCollider::~CapsuleCollider()
 {
+    // Doesn't work for some reason (should have used physx...)
     //PhysicsManager::GetPhysicsCommon()->destroyCapsuleShape(_capsuleShape);
 }
 

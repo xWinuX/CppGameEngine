@@ -87,6 +87,7 @@
     <ClCompile Include="src\GraphicDemoApplication.cpp" />
     <ClCompile Include="src\Prefabs\CratePrefab.cpp" />
     <ClCompile Include="src\Prefabs\GamerDudePrefab.cpp" />
+    <ClCompile Include="src\Prefabs\RigidbodySpherePrefab.cpp" />
     <ClCompile Include="vendor\GameEngine\src\Application.cpp" />
     <ClCompile Include="vendor\GameEngine\src\Audio\AudioManager.cpp" />
     <ClCompile Include="vendor\GameEngine\src\Audio\Sound.cpp" />
@@ -173,6 +174,7 @@
     <ClInclude Include="src\GraphicDemoApplication.h" />
     <ClInclude Include="src\Prefabs\CratePrefab.h" />
     <ClInclude Include="src\Prefabs\GamerDudePrefab.h" />
+    <ClInclude Include="src\Prefabs\RigidbodySpherePrefab.h" />
     <ClInclude Include="vendor\fmod\api\core\inc\fmod.h" />
     <ClInclude Include="vendor\fmod\api\core\inc\fmod.hpp" />
     <ClInclude Include="vendor\fmod\api\core\inc\fmod_codec.h" />
@@ -206,6 +208,7 @@
     <ClInclude Include="vendor\GameEngine\include\GameEngine\Components\MeshRenderer.h" />
     <ClInclude Include="vendor\GameEngine\include\GameEngine\Components\PointLight.h" />
     <ClInclude Include="vendor\GameEngine\include\GameEngine\Components\Rigidbody.h" />
+    <ClInclude Include="vendor\GameEngine\include\GameEngine\Components\SphereCollider.h" />
     <ClInclude Include="vendor\GameEngine\include\GameEngine\Components\SpriteRenderer.h" />
     <ClInclude Include="vendor\GameEngine\include\GameEngine\Components\TextRenderer.h" />
     <ClInclude Include="vendor\GameEngine\include\GameEngine\Components\Transform.h" />
@@ -263,7 +266,6 @@
     <ClInclude Include="vendor\GameEngine\include\GameEngine\Utils\Math.h" />
     <ClInclude Include="vendor\GameEngine\include\GameEngine\Utils\String.h" />
     <ClInclude Include="vendor\GameEngine\include\GameEngine\Window.h" />
-    <ClInclude Include="vendor\GameEngine\src\Components\SphereCollider.h" />
     <ClInclude Include="vendor\GLAD\include\glad\glad.h" />
     <ClInclude Include="vendor\GLAD\include\KHR\khrplatform.h" />
     <ClInclude Include="vendor\GLFW\include\GLFW\glfw3.h" />
@@ -880,13 +882,10 @@
     <Content Include="res\fonts\Roboto-Regular.ttf" />
     <Content Include="res\models\cube.glb" />
     <Content Include="res\models\Cube.gltf" />
-    <Content Include="res\models\HighPolyPlane.gltf" />
     <Content Include="res\models\Sphere.gltf" />
     <Content Include="res\models\Suzanne.gltf" />
-    <Content Include="res\models\Suzanne.mtl" />
     <Content Include="res\models\Suzanne.obj" />
     <Content Include="res\models\TheMissing.gltf" />
-    <Content Include="res\models\TheMissingAnim.gltf" />
     <Content Include="res\shaders\Common\Functions.frag" />
     <Content Include="res\shaders\Common\Functions.vert" />
     <Content Include="res\shaders\Common\IO.frag" />

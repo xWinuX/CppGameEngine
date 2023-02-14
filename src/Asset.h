@@ -26,10 +26,6 @@ namespace Asset
     enum class Sprite : size_t
     {
         TheDude,
-        DrL,
-        GamerDude,
-        Test,
-        Plant,
         GamerDudeWalkRight,
         GamerDudeWalkLeft,
     };
@@ -53,7 +49,6 @@ namespace Asset
         Sphere,
         WaterPlane,
         Island,
-        IslandCollider,
     };
 
     enum class Shader : size_t

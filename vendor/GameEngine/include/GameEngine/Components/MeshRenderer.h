@@ -13,7 +13,7 @@ namespace GameEngine
             private:
                 bool _visible = true;
 
-                Rendering::Mesh*                             _mesh;
+                Rendering::Mesh*                             _mesh = nullptr;
                 std::vector<Rendering::RenderablePrimitive*> _renderablePrimitives;
 
                 explicit MeshRenderer(Rendering::Mesh* mesh);
@@ -30,6 +30,8 @@ namespace GameEngine
 
                 bool GetVisible() const;
                 void SetVisible(const bool value);
+            
+                void SetMaterial(Rendering::Material* material, size_t index = 0) const;
         };
     }
 }

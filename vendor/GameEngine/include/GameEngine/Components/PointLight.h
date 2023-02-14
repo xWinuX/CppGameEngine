@@ -23,6 +23,7 @@ namespace GameEngine
 
             protected:
                 void OnUpdateEnd() override;
+                void OnGuiDraw() override;
 
             public:
                 explicit PointLight(const glm::vec4 color = glm::vec4(1.0), const float range = 1.0f, const float intensity = 1.0f);

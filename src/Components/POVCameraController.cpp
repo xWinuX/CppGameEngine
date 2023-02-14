@@ -1,9 +1,12 @@
 ﻿#include "POVCameraController.h"
 
+#include "imgui.h"
 #include "GameEngine/Input.h"
 #include "GameEngine/GUIManager.h"
+#include "GameEngine/Debug/Log.h"
 #include "GameEngine/Utils/Math.h"
 #include "glm/gtc/quaternion.hpp"
+#include "glm/gtx/string_cast.hpp"
 
 using namespace GameEngine;
 
@@ -16,6 +19,9 @@ void POVCameraController::OnLateUpdate()
     const glm::vec2 mouseDelta = Input::GetMouseDelta() * _mouseSpeed;
     _currentAngle.x += mouseDelta.x;
     _currentAngle.y += mouseDelta.y;
+
+    // Limit vertical rotation
+    _currentAngle.y = glm::radians(glm::clamp(glm::degrees(_currentAngle.y), -89.0f, 89.0f));
 
     // Direction : Spherical coordinates to Cartesian coordinates conversion
     const float     cosAngleY = cos(_currentAngle.y);
@@ -46,6 +52,8 @@ void POVCameraController::OnLateUpdate()
 
     _previousMousePosition = mousePosition;
 }
+
+void POVCameraController::OnGuiDraw() { ImGui::SliderFloat(GetImGuiIDString("Mouse Speed").c_str(), &_mouseSpeed, 0.01f, 1.0f); }
 
 POVCameraController::POVCameraController():
     Component("POV Camera Controller") {}

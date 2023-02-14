@@ -106,7 +106,7 @@ void GameObject::OnUpdateEnd() const { DO_FUNCTION(OnUpdateEnd()) }
 
 void GameObject::OnDrawGui() const
 {
-    if (ImGui::CollapsingHeader(GetImGuiIDString(_name).c_str()))
+    if (ImGui::CollapsingHeader(GetImGuiIDString("OBJ: " + _name).c_str()))
     {
         ImGui::Indent();
         for (Components::Component* component : _components)
@@ -119,7 +119,14 @@ void GameObject::OnDrawGui() const
         ImGui::Spacing();
         ImGui::Spacing();
 
+        ImGui::Indent();
         for (const GameObject* child : _children) { child->OnDrawGui(); }
+
         ImGui::Unindent();
+        ImGui::Unindent();
+        
+        ImGui::Spacing();
+        ImGui::Spacing();
+        ImGui::Spacing();
     }
 }

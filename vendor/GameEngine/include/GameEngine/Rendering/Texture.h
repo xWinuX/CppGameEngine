@@ -14,6 +14,7 @@ namespace GameEngine
         {
             Linear  = GL_LINEAR,
             Nearest = GL_NEAREST,
+            LinearMipMap = GL_LINEAR_MIPMAP_LINEAR,
         };
 
         enum TextureWrapMode

@@ -8,7 +8,7 @@
 
 using namespace GameEngine::Rendering;
 
-void Texture2D::CreateTexture(const TextureParams textureParams)
+void Texture2D::CreateTexture(const TextureParams textureParams) const
 {
     glTexImage2D(
                  GL_TEXTURE_2D,
@@ -20,6 +20,9 @@ void Texture2D::CreateTexture(const TextureParams textureParams)
                  textureParams.Format,
                  textureParams.ChannelDataType,
                  _buffer);
+
+    // Generate mip maps if needed
+    if (textureParams.MipMapLevels > 0 && (textureParams.FilterMode == TextureFilterMode::LinearMipMap)) { glGenerateMipmap(GL_TEXTURE_2D); }
 }
 
 Texture2D::Texture2D(const std::string& filePath, const TextureParams textureParams):

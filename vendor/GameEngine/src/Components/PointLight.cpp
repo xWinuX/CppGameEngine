@@ -23,3 +23,10 @@ void PointLight::SetRange(const float range) { _range = range; }
 void PointLight::SetIntensity(const float intensity) { _intensity = intensity; }
 
 void PointLight::OnUpdateEnd() { Light::AddPointLight(_transform->GetPosition(), _color, _intensity, _range); }
+
+void PointLight::OnGuiDraw()
+{
+    ImGui::InputFloat(GetImGuiIDString("Intensity").c_str(), &_intensity);
+    ImGui::InputFloat(GetImGuiIDString("Range").c_str(), &_range);
+    ImGui::ColorPicker4(GetImGuiIDString("Color").c_str(), glm::value_ptr(_color));
+}

@@ -1,7 +1,6 @@
 ﻿#include "GraphicDemoApplication.h"
 
 #include "Asset.h"
-#include "../vendor/GameEngine/src/Components/SphereCollider.h"
 #include "GameEngine/Components/DirectionalLight.h"
 
 #include "Components/POVCameraController.h"
@@ -56,15 +55,16 @@ void GraphicDemoApplication::LoadTextures() const
     ADD_TEXTURE_2D(No, new Texture2D("res/textures/NoTexture.png"));
     ADD_TEXTURE_2D(Black, new Texture2D("res/textures/Black.png"));
     ADD_TEXTURE_2D(White, new Texture2D("res/textures/White.png"));
-    ADD_TEXTURE_2D(Grass, new Texture2D("res/textures/Grass.png"));
-    ADD_TEXTURE_2D(Dirt, new Texture2D("res/textures/Dirt.png"));
-    ADD_TEXTURE_2D(Sand, new Texture2D("res/textures/Sand.png"));
-
     ADD_TEXTURE_2D(TheDude, new Texture2D("res/textures/TheDude.png"));
     ADD_TEXTURE_2D(Crate, new Texture2D("res/textures/Crate.jpg"));
-
-
     ADD_TEXTURE_2D(CrateNormalMap, new Texture2D("res/textures/CrateNormalMap.png"));
+
+    TextureParams mipMapLinear;
+    mipMapLinear.FilterMode = TextureFilterMode::LinearMipMap;
+
+    ADD_TEXTURE_2D(Grass, new Texture2D("res/textures/Grass.png", mipMapLinear));
+    ADD_TEXTURE_2D(Dirt, new Texture2D("res/textures/Dirt.png", mipMapLinear));
+    ADD_TEXTURE_2D(Sand, new Texture2D("res/textures/Sand.png",mipMapLinear));
 
     ADD_CUBEMAP(SkyBox, new CubeMap("res/textures/Skybox/Skybox", ".png"));
 }
@@ -77,18 +77,10 @@ void GraphicDemoApplication::LoadSprites() const
     pixelArtTextureImportSettings.FilterMode       = TextureFilterMode::Nearest;
 
     Texture2D* theDudeSpriteTexture            = new Texture2D("res/sprites/TheDudeSprite.png", pixelArtTextureImportSettings);
-    Texture2D* drLSpriteTexture                = new Texture2D("res/sprites/DrLSprite.png", pixelArtTextureImportSettings);
-    Texture2D* gamerDudeSpriteTexture          = new Texture2D("res/sprites/GamerDudeSprite.png", pixelArtTextureImportSettings);
-    Texture2D* testSpriteTexture               = new Texture2D("res/sprites/TestSprite.png", pixelArtTextureImportSettings);
     Texture2D* gamerDudeWalkRightSpriteTexture = new Texture2D("res/sprites/GamerDudeWalkRight.png", pixelArtTextureImportSettings);
     Texture2D* gamerDudeWalkLeftSpriteTexture  = new Texture2D("res/sprites/GamerDudeWalkLeft.png", pixelArtTextureImportSettings);
-    Texture2D* plantSpriteTexture = new Texture2D("res/sprites/Plant.png");
 
-    SpriteSet* theDude   = ADD_SPRITE(TheDude, new SpriteSet(theDudeSpriteTexture, 2, glm::vec2(30, 49)));
-    SpriteSet* drL       = ADD_SPRITE(DrL, new SpriteSet(drLSpriteTexture));
-    SpriteSet* gamerDude = ADD_SPRITE(GamerDude, new SpriteSet(gamerDudeSpriteTexture));
-    SpriteSet* test      = ADD_SPRITE(Test, new SpriteSet(testSpriteTexture, 12, glm::uvec2(32, 32)));
-    SpriteSet* plantSprite = ADD_SPRITE(Plant, new SpriteSet(plantSpriteTexture));
+    SpriteSet* theDude = ADD_SPRITE(TheDude, new SpriteSet(theDudeSpriteTexture, 2, glm::vec2(30, 49)));
 
     Sprite::AdditionalInfo additionalInfo;
     additionalInfo.PixelsPerUnit  = 100;
@@ -99,13 +91,8 @@ void GraphicDemoApplication::LoadSprites() const
     SpriteAtlas* spriteAtlas = ADD_SPRITE_ATLAS(Default, new SpriteAtlas(glm::ivec2(1024), pixelArtTextureImportSettings));
 
     spriteAtlas->AddSprite(theDude);
-    spriteAtlas->AddSprite(drL);
-    spriteAtlas->AddSprite(gamerDude);
-    spriteAtlas->AddSprite(test);
     spriteAtlas->AddSprite(gamerDudeWalkRight);
     spriteAtlas->AddSprite(gamerDudeWalkLeft);
-    spriteAtlas->AddSprite(plantSprite);
-
     spriteAtlas->Pack();
 }
 
@@ -125,7 +112,6 @@ void GraphicDemoApplication::LoadModels() const
     ADD_MODEL(Sphere, new Model("res/models/Sphere.gltf"));
     ADD_MODEL(WaterPlane, new Model("res/models/WaterPlane.gltf"));
     ADD_MODEL(Island, new Model("res/models/Island.gltf", true));
-    ADD_MODEL(IslandCollider, new Model("res/models/IslandCollider.gltf", true));
 }
 
 void GraphicDemoApplication::LoadShaders() const
@@ -211,8 +197,8 @@ void GraphicDemoApplication::LoadShaders() const
     shadowMapSpriteShader->InitializeUniform<Texture2D*>("u_Texture", GET_TEXTURE_2D(Crate));
 
 
-    Renderer::SetShadowShader(shadowMapShader);             // TODO: remove this and move somewhere else
-    Renderer::SetShadowSpriteShader(shadowMapSpriteShader); // TODO: remove this and move somewhere else
+    Renderer::SetShadowShader(shadowMapShader);
+    Renderer::SetShadowSpriteShader(shadowMapSpriteShader);
 }
 
 void GraphicDemoApplication::LoadMaterials() const
@@ -240,7 +226,7 @@ void GraphicDemoApplication::LoadMaterials() const
 
     // Island
     ADD_MATERIAL(Island, new Material("Island", GET_SHADER(Island)));
-    
+
     // Physics Debug
     Material* physicsMaterial = ADD_MATERIAL(PhysicsDebug, new Material("PhysicsDebug", GET_SHADER(PhysicsDebug)));
     physicsMaterial->SetCullFace(Material::None);
@@ -307,11 +293,6 @@ void GraphicDemoApplication::Initialize(Scene& scene)
     playerObject->AddComponent(new POVCharacterController());
     playerObject->AddComponent(new MeshRenderer(GET_MODEL(Cube)->GetMesh(0), GET_MATERIAL(Crate)));
 
-    // Directional Light
-    GameObject* directionalLight = new GameObject("Directional Light");
-    directionalLight->GetTransform()->SetRotation(glm::quat(glm::vec3(-1.0f, 0.0f, 0.0f)));
-    directionalLight->AddComponent(new DirectionalLight(true, glm::vec4(1.0f), 0.6f));
-
     // Camera
     GameObject* cameraObject = new GameObject("Camera");
     cameraObject->AddComponent(new Camera(60, 0.1f, 500.0f, GET_MATERIAL(FrameBuffer), GET_MATERIAL(Skybox)));
@@ -320,73 +301,6 @@ void GraphicDemoApplication::Initialize(Scene& scene)
 
     playerObject->GetComponent<POVCharacterController>()->SetCameraTransform(cameraObject->GetComponent<Transform>());
     cameraObject->GetComponent<POVCameraController>()->SetFollowTransform(playerObject->GetTransform());
-
-    // Gamer Dude Spawner
-    GamerDudePrefab gamerDudePrefab = GamerDudePrefab();
-    for (unsigned int i = 0; i < 20; i++)
-    {
-        const GameObject* gameObject     = gamerDudePrefab.Instantiate();
-        const glm::vec2   randomPosition = glm::diskRand(100.0f);
-        gameObject->GetTransform()->SetPosition(glm::vec3(randomPosition.x, 100.0f, randomPosition.y));
-        gameObject->GetTransform()->SetLocalScale(glm::linearRand(0.05f, 4.0f) * glm::vec3(1.0));
-    }
-
-    // Red light
-    for (unsigned int i = 0; i < 4; i++)
-    {
-        GameObject* pointLight    = new GameObject("Point Light");
-        Transform*  redLightTransform = pointLight->GetTransform();
-        redLightTransform->SetLocalPosition(glm::vec3(2.0f, 7.0f, 0.0f));
-        redLightTransform->SetLocalScale(glm::vec3(0.1f));
-        pointLight->AddComponent(new MeshRenderer(GET_MODEL(Sphere)->GetMesh(0), GET_MATERIAL(Porcelain)));
-        pointLight->AddComponent(new PointLight(glm::linearRand(glm::vec4(0.0), glm::vec4(1.0)), 15.0f, 0.5f));
-    }
-    
-    // Rainbow light
-    GameObject* rainbowLightObject    = new GameObject("Rainbow Light");
-    Transform*  rainbowLightTransform = rainbowLightObject->GetTransform();
-    rainbowLightTransform->SetPosition(glm::vec3(-2.0f, 7.0f, 0.0f));
-    rainbowLightTransform->SetLocalScale(glm::vec3(0.1f));
-    rainbowLightObject->AddComponent(new MeshRenderer(GET_MODEL(Sphere)->GetMesh(0), GET_MATERIAL(Dude)));
-    rainbowLightObject->AddComponent(new PointLight(glm::vec4(1.0f, 1.0f, 1.0f, 1.0f), 15.0f, 1.0f));
-    rainbowLightObject->AddComponent(new RainbowLight());
-
-    std::list<float> list;
-
-    // Suzanne
-    GameObject* suzanneObject = new GameObject("Suzanne");
-    suzanneObject->GetTransform()->SetLocalPosition(glm::vec3(0.0f, 0.0, -10.0f));
-    suzanneObject->GetTransform()->SetLocalScale(glm::vec3(3.0f, 3.0f, 3.0f));
-    suzanneObject->AddComponent(new MeshRenderer(GET_MODEL(Suzanne)->GetMesh(0), GET_MATERIAL(Porcelain)));
-    suzanneObject->AddComponent(new Rotator());
-
-    // Porcelain Sphere
-    GameObject* porcelainSphere = new GameObject("Porcelain Sphere");
-    porcelainSphere->AddComponent(new MeshRenderer(GET_MODEL(Sphere)->GetMesh(0), GET_MATERIAL(Porcelain)));
-    porcelainSphere->AddComponent(new SphereCollider(0.5f));
-    porcelainSphere->AddComponent(new Rigidbody());
-
-    // Mirror Sphere
-    GameObject* mirrorSphere = new GameObject("Porcelain Sphere");
-    mirrorSphere->AddComponent(new MeshRenderer(GET_MODEL(Sphere)->GetMesh(0), GET_MATERIAL(Mirror)));
-    mirrorSphere->AddComponent(new SphereCollider(0.5f));
-    mirrorSphere->AddComponent(new Rigidbody());
-
-    // The Missing
-    GameObject* theMissingObject = new GameObject("The Missing");
-    theMissingObject->GetTransform()->SetLocalScale(glm::vec3(5));
-    theMissingObject->AddComponent(new MeshRenderer(GET_MODEL(TheMissing)->GetMesh(0), {GET_MATERIAL(Porcelain), GET_MATERIAL(Mirror)}, 2));
-    theMissingObject->AddComponent(new MeshRenderer(GET_MODEL(TheMissing)->GetMesh(1), GET_MATERIAL(Porcelain)));
-    theMissingObject->AddComponent(new MeshRenderer(GET_MODEL(TheMissing)->GetMesh(2), GET_MATERIAL(Mirror)));
-    
-    // Crate
-    CratePrefab cratePrefab = CratePrefab();
-    for (unsigned int i = 0; i < 20; i++)
-    {
-        const glm::vec2   randomPosition = glm::diskRand(10.0f);
-        const GameObject* crateObject    = cratePrefab.Instantiate();
-        crateObject->GetTransform()->SetPosition(glm::vec3(randomPosition.x, 20.0f, randomPosition.y));
-    }
 
     // Island
     GameObject* islandObject = new GameObject("Island");
@@ -400,6 +314,68 @@ void GraphicDemoApplication::Initialize(Scene& scene)
     GameObject* waterObject = new GameObject("Water");
     waterObject->GetTransform()->SetLocalPosition(glm::vec3(0.0f, -9.0f, 0.0f));
     waterObject->AddComponent(new MeshRenderer(GET_MODEL(WaterPlane)->GetMesh(0), GET_MATERIAL(Water)));
+
+    // Directional Light
+    GameObject* directionalLight = new GameObject("Directional Light");
+    directionalLight->GetTransform()->SetRotation(glm::quat(glm::vec3(-1.0f, 0.0f, 0.0f)));
+    directionalLight->AddComponent(new DirectionalLight(true, glm::vec4(1.0f), 0.6f));
+
+    // Point Light
+    for (unsigned int i = 0; i < 6; i++)
+    {
+        GameObject*     pointLight          = new GameObject("Point Light");
+        Transform*      pointLightTransform = pointLight->GetTransform();
+        const glm::vec2 randomPosition      = glm::diskRand(50.0f);
+        pointLightTransform->SetLocalPosition(glm::vec3(randomPosition.x, 0.0f, randomPosition.y));
+        pointLightTransform->SetLocalScale(glm::vec3(0.1f));
+        pointLight->AddComponent(new MeshRenderer(GET_MODEL(Sphere)->GetMesh(0), GET_MATERIAL(Porcelain)));
+        pointLight->AddComponent(new PointLight(glm::vec4(abs(glm::sphericalRand(1.0f)), 0.5f), glm::linearRand(5.0f, 30.0f), glm::linearRand(0.5f, 2.0f)));
+    }
+
+    // Rainbow light
+    GameObject* rainbowLightObject    = new GameObject("Rainbow Light");
+    Transform*  rainbowLightTransform = rainbowLightObject->GetTransform();
+    rainbowLightTransform->SetPosition(glm::vec3(-2.0f, 0.0f, 0.0f));
+    rainbowLightTransform->SetLocalScale(glm::vec3(0.1f));
+    rainbowLightObject->AddComponent(new MeshRenderer(GET_MODEL(Sphere)->GetMesh(0), GET_MATERIAL(Porcelain)));
+    rainbowLightObject->AddComponent(new PointLight(glm::vec4(1.0f, 1.0f, 1.0f, 1.0f), 15.0f, 1.0f));
+    rainbowLightObject->AddComponent(new RainbowLight());
+
+    // Suzanne
+    GameObject* suzanneObject = new GameObject("Suzanne");
+    suzanneObject->GetTransform()->SetLocalPosition(glm::vec3(6.0f, 0.0, -15.0f));
+    suzanneObject->GetTransform()->SetLocalScale(glm::vec3(5.0f));
+    suzanneObject->AddComponent(new MeshRenderer(GET_MODEL(Suzanne)->GetMesh(0), GET_MATERIAL(Porcelain)));
+    suzanneObject->AddComponent(new Rotator());
+
+    // The Missing
+    GameObject* theMissingObject = new GameObject("The Missing");
+    theMissingObject->GetTransform()->SetLocalScale(glm::vec3(35));
+    theMissingObject->GetTransform()->SetLocalRotation(glm::quat(glm::vec3(0.2f, 0.3f, 1.0f)));
+    theMissingObject->GetTransform()->SetLocalPosition(glm::vec3(0.0f, -40.0f, -130.0f));
+    theMissingObject->AddComponent(new MeshRenderer(GET_MODEL(TheMissing)->GetMesh(0), {GET_MATERIAL(Porcelain), GET_MATERIAL(Dude)}, 2));
+    theMissingObject->AddComponent(new MeshRenderer(GET_MODEL(TheMissing)->GetMesh(1), GET_MATERIAL(Porcelain)));
+    theMissingObject->AddComponent(new MeshRenderer(GET_MODEL(TheMissing)->GetMesh(2), GET_MATERIAL(Mirror)));
+
+    // Gamer Dude Spawner
+    GamerDudePrefab gamerDudePrefab = GamerDudePrefab();
+    for (unsigned int i = 0; i < 20; i++)
+    {
+        const GameObject* gameObject     = gamerDudePrefab.Instantiate();
+        const glm::vec2   randomPosition = glm::diskRand(100.0f);
+        gameObject->GetTransform()->SetPosition(glm::vec3(randomPosition.x, 100.0f, randomPosition.y));
+        gameObject->GetTransform()->SetLocalScale(glm::linearRand(0.2f, 4.0f) * glm::vec3(1.0));
+    }
+
+    // Crate
+    CratePrefab cratePrefab = CratePrefab();
+    for (unsigned int i = 0; i < 20; i++)
+    {
+        const glm::vec2   randomPosition = glm::diskRand(10.0f);
+        const GameObject* crateObject    = cratePrefab.Instantiate();
+        crateObject->GetTransform()->SetPosition(glm::vec3(randomPosition.x, 20.0f, randomPosition.y));
+    }
+
 
     // Setup physics debug
     PhysicsManager::SetDebugRendererMaterial(GET_MATERIAL(PhysicsDebug));

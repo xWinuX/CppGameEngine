@@ -26,6 +26,7 @@ BoxCollider::BoxCollider(const glm::vec3 halfExtends):
 
 BoxCollider::~BoxCollider()
 {
+    // Doesn't work for some reason (should have used physx...)
     //Physics::GetPhysicsCommon()->destroyBoxShape(_pBoxShape);
 }
 

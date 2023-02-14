@@ -16,10 +16,12 @@ namespace GameEngine
             private:
                 reactphysics3d::RigidBody* _physicsRigidBody;
                 reactphysics3d::Transform _previousTransform;
+                float _mass = 1.0;
             protected:
                 void OnStart() override;
                 void OnPhysicsUpdateEnd(float interpolationFactor) override;
                 void OnOtherComponentAdded(Component* component) override;
+                void OnGuiDraw() override;
 
             public:
                 explicit Rigidbody(reactphysics3d::BodyType bodyType = reactphysics3d::BodyType::DYNAMIC);

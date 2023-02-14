@@ -23,7 +23,7 @@ Camera::Camera(const float fovInDegrees, const float zNear, const float zFar, Ma
     _skyboxCube(new Rendering::RenderablePrimitive(Primitives::SkyboxCube::GetPrimitive(), skyboxMaterial))
 {
     if (_main == nullptr) { _main = this; }
-    
+
     UpdateProjectionMatrix();
     ResizeFrameBuffer(Window::GetCurrentWindow()->GetSize());
     Window::GetCurrentWindow()->AddFramebufferSizeCallback([this](const Window* window)
@@ -42,6 +42,15 @@ void Camera::OnUpdateEnd()
     _skyboxCube->SetTransform(_transform);
     Renderer::SubmitRenderable(_skyboxCube);
     Renderer::SubmitRenderTarget(this);
+}
+
+void Camera::OnGuiDraw()
+{
+    if (
+        ImGui::SliderFloat(GetImGuiIDString("FOV").c_str(), &_fovInDegrees, 1.0f, 180.0f) ||
+        ImGui::InputFloat(GetImGuiIDString("Near Plane").c_str(), &_nearPlane) ||
+        ImGui::InputFloat(GetImGuiIDString("Far Plane").c_str(), &_farPlane)
+    ) { UpdateProjectionMatrix(); }
 }
 
 void Camera::CreateViewFrustumCorners(const glm::mat4 projectionMatrix, std::vector<glm::vec4>& vector) const

@@ -1,4 +1,4 @@
-﻿#include "SphereCollider.h"
+﻿#include "GameEngine/Components/SphereCollider.h"
 
 #include "GameEngine/Physics/PhysicsManager.h"
 
@@ -13,6 +13,7 @@ SphereCollider::SphereCollider(const float radius):
 
 SphereCollider::~SphereCollider()
 {
+    // Doesn't work for some reason (should have used physx...)
     //Physics::PhysicsManager::GetPhysicsCommon()->destroySphereShape(_sphereShape);
 }
 

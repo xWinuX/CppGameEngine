@@ -13,7 +13,7 @@ namespace GameEngine
         {
             private:
                 std::string _name;
-                void CreateTexture(const TextureParams textureParams);
+                void CreateTexture(const TextureParams textureParams) const;
 
             public:
                 explicit Texture2D(const std::string& filePath, const TextureParams textureParams = TextureParams());

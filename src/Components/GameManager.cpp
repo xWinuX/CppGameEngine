@@ -6,6 +6,7 @@
 #include "GameEngine/Physics/PhysicsManager.h"
 #include "../Asset.h"
 #include "../Prefabs/CratePrefab.h"
+#include "GameEngine/Components/MeshRenderer.h"
 
 using namespace GameEngine;
 using namespace GameEngine::Rendering;
@@ -34,13 +35,37 @@ void GameManager::OnUpdate()
 
     if (ImGui::Button(GetImGuiIDString("Close Application").c_str())) { Window::GetCurrentWindow()->Close(); }
 
+    ImGui::Spacing();
+    ImGui::Spacing();
+    ImGui::Spacing();
+
     if (ImGui::Button(GetImGuiIDString("Create Cube").c_str())) { _cratePrefab.Instantiate(glm::uvec3(0.0f, 10.0f, 0.0f)); }
-    
-    if (ImGui::Button(GetImGuiIDString("Create Cube Man").c_str()))
+    ImGui::SameLine();
+
+    if (ImGui::Button(GetImGuiIDString("Create Gamer Dude").c_str()))
     {
         const GameObject* gameObject = _cubeManPrefab.Instantiate(glm::uvec3(0.0f, 10.0f, 0.0f));
-        gameObject->GetTransform()->SetLocalScale(glm::linearRand(0.05f, 4.0f) * glm::vec3(1.0));
+        gameObject->GetTransform()->SetLocalScale(glm::linearRand(0.2f, 4.0f) * glm::vec3(1.0));
     }
+    ImGui::SameLine();
+
+    if (ImGui::Button(GetImGuiIDString("Create Porcelain Sphere").c_str()))
+    {
+        GameObject* gameObject = _rigidbodySpherePrefab.Instantiate();
+        gameObject->GetComponent<Components::MeshRenderer>()->SetMaterial(GET_MATERIAL(Porcelain));
+    }
+    ImGui::SameLine();
+
+
+    if (ImGui::Button(GetImGuiIDString("Create Mirror Sphere").c_str()))
+    {
+        GameObject* gameObject = _rigidbodySpherePrefab.Instantiate();
+        gameObject->GetComponent<Components::MeshRenderer>()->SetMaterial(GET_MATERIAL(Mirror));
+    }
+
+    ImGui::Spacing();
+    ImGui::Spacing();
+    ImGui::Spacing();
 
     if (ImGui::CollapsingHeader("Material Properties"))
     {
@@ -49,4 +74,8 @@ void GameManager::OnUpdate()
         for (const std::pair<const Asset::Material, Material*> material : materials) { material.second->DrawProperties(); }
         ImGui::Unindent();
     }
+
+    ImGui::Spacing();
+    ImGui::Spacing();
+    ImGui::Spacing();
 }

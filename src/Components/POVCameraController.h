@@ -15,6 +15,7 @@ class POVCameraController : public GameEngine::Components::Component
 
     protected:
         void OnLateUpdate() override;
+        void OnGuiDraw() override;
 
     public:
         POVCameraController();

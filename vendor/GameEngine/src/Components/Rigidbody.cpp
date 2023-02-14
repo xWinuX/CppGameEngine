@@ -40,6 +40,8 @@ void Rigidbody::OnPhysicsUpdateEnd(const float interpolationFactor)
     _transform->SetPosition(glm::vec3(position.x, position.y, position.z));
 
     _previousTransform = currentTransform;
+    
+    _physicsRigidBody->setMass(_mass);
 }
 
 void Rigidbody::OnOtherComponentAdded(Component* component)
@@ -50,6 +52,8 @@ void Rigidbody::OnOtherComponentAdded(Component* component)
         _physicsRigidBody->addCollider(capsuleCollider->GetCollisionShape(), reactphysics3d::Transform());
     }
 }
+
+void Rigidbody::OnGuiDraw() { ImGui::InputFloat(GetImGuiIDString("Mass").c_str(), &_mass); }
 
 void Rigidbody::ResetForce() const { _physicsRigidBody->setLinearVelocity(reactphysics3d::Vector3(0, 0, 0)); }
 

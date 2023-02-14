@@ -14,7 +14,7 @@ using namespace GameEngine::Components;
 
 
 GamerDudePrefab::GamerDudePrefab():
-    Prefab("Game Dude") {}
+    Prefab("Gamer Dude") {}
 
 void GamerDudePrefab::PrepareGameObject(GameObject* gameObject)
 {

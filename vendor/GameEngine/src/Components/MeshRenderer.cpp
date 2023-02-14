@@ -40,3 +40,8 @@ void MeshRenderer::OnUpdateEnd()
 
 bool MeshRenderer::GetVisible() const { return _visible; }
 void MeshRenderer::SetVisible(const bool value) { _visible = value; }
+
+void MeshRenderer::SetMaterial(Rendering::Material* material, const size_t index) const
+{
+    if (index < _renderablePrimitives.size()) { _renderablePrimitives[index]->SetMaterial(material); }
+}

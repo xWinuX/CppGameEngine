@@ -47,6 +47,7 @@ namespace GameEngine
 
             protected:
                 void OnUpdateEnd() override;
+                void OnGuiDraw() override;
 
             public:
                 Camera(float fovInDegrees, float zNear, float zFar, Rendering::Material* frameBufferMaterial, Rendering::Material* skyboxMaterial);
