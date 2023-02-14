@@ -82,11 +82,13 @@ void GraphicDemoApplication::LoadSprites() const
     Texture2D* testSpriteTexture               = new Texture2D("res/sprites/TestSprite.png", pixelArtTextureImportSettings);
     Texture2D* gamerDudeWalkRightSpriteTexture = new Texture2D("res/sprites/GamerDudeWalkRight.png", pixelArtTextureImportSettings);
     Texture2D* gamerDudeWalkLeftSpriteTexture  = new Texture2D("res/sprites/GamerDudeWalkLeft.png", pixelArtTextureImportSettings);
+    Texture2D* plantSpriteTexture = new Texture2D("res/sprites/Plant.png");
 
     SpriteSet* theDude   = ADD_SPRITE(TheDude, new SpriteSet(theDudeSpriteTexture, 2, glm::vec2(30, 49)));
     SpriteSet* drL       = ADD_SPRITE(DrL, new SpriteSet(drLSpriteTexture));
     SpriteSet* gamerDude = ADD_SPRITE(GamerDude, new SpriteSet(gamerDudeSpriteTexture));
     SpriteSet* test      = ADD_SPRITE(Test, new SpriteSet(testSpriteTexture, 12, glm::uvec2(32, 32)));
+    SpriteSet* plantSprite = ADD_SPRITE(Plant, new SpriteSet(plantSpriteTexture));
 
     Sprite::AdditionalInfo additionalInfo;
     additionalInfo.PixelsPerUnit  = 100;
@@ -102,6 +104,7 @@ void GraphicDemoApplication::LoadSprites() const
     spriteAtlas->AddSprite(test);
     spriteAtlas->AddSprite(gamerDudeWalkRight);
     spriteAtlas->AddSprite(gamerDudeWalkLeft);
+    spriteAtlas->AddSprite(plantSprite);
 
     spriteAtlas->Pack();
 }
@@ -133,8 +136,6 @@ void GraphicDemoApplication::LoadShaders() const
     commonUniforms.InitializeUniform<glm::mat4>("u_Transform", glm::identity<glm::mat4>(), false);
 
     UniformStorage litUniforms = UniformStorage();
-    litUniforms.InitializeUniform<float>("u_SkyboxReflectionIntensity", 0.0f);
-    litUniforms.InitializeUniform<float>("u_ShadowBias", 0.002f);
     litUniforms.InitializeUniform<float>("u_Smoothness", 0.0f);
     litUniforms.InitializeUniform<float>("u_Metallicness", 0.0f);
     litUniforms.InitializeUniform<Texture2D*>("u_NormalMap", GET_TEXTURE_2D(NormalMapDefault));
@@ -239,7 +240,7 @@ void GraphicDemoApplication::LoadMaterials() const
 
     // Island
     ADD_MATERIAL(Island, new Material("Island", GET_SHADER(Island)));
-
+    
     // Physics Debug
     Material* physicsMaterial = ADD_MATERIAL(PhysicsDebug, new Material("PhysicsDebug", GET_SHADER(PhysicsDebug)));
     physicsMaterial->SetCullFace(Material::None);
@@ -331,13 +332,16 @@ void GraphicDemoApplication::Initialize(Scene& scene)
     }
 
     // Red light
-    GameObject* redLightObject    = new GameObject("Red Light");
-    Transform*  redLightTransform = redLightObject->GetTransform();
-    redLightTransform->SetLocalPosition(glm::vec3(2.0f, 7.0f, 0.0f));
-    redLightTransform->SetLocalScale(glm::vec3(0.1f));
-    redLightObject->AddComponent(new MeshRenderer(GET_MODEL(Sphere)->GetMesh(0), GET_MATERIAL(Dude)));
-    redLightObject->AddComponent(new PointLight(glm::vec4(1.0f, 0.0f, 0.0f, 1.0f), 15.0f, 0.5f));
-
+    for (unsigned int i = 0; i < 4; i++)
+    {
+        GameObject* pointLight    = new GameObject("Point Light");
+        Transform*  redLightTransform = pointLight->GetTransform();
+        redLightTransform->SetLocalPosition(glm::vec3(2.0f, 7.0f, 0.0f));
+        redLightTransform->SetLocalScale(glm::vec3(0.1f));
+        pointLight->AddComponent(new MeshRenderer(GET_MODEL(Sphere)->GetMesh(0), GET_MATERIAL(Porcelain)));
+        pointLight->AddComponent(new PointLight(glm::linearRand(glm::vec4(0.0), glm::vec4(1.0)), 15.0f, 0.5f));
+    }
+    
     // Rainbow light
     GameObject* rainbowLightObject    = new GameObject("Rainbow Light");
     Transform*  rainbowLightTransform = rainbowLightObject->GetTransform();
@@ -371,10 +375,10 @@ void GraphicDemoApplication::Initialize(Scene& scene)
     // The Missing
     GameObject* theMissingObject = new GameObject("The Missing");
     theMissingObject->GetTransform()->SetLocalScale(glm::vec3(5));
-    theMissingObject->AddComponent(new MeshRenderer(GET_MODEL(TheMissing)->GetMesh(0), {GET_MATERIAL(Dude), GET_MATERIAL(Crate)}, 2));
-    theMissingObject->AddComponent(new MeshRenderer(GET_MODEL(TheMissing)->GetMesh(1), GET_MATERIAL(Dude)));
-    theMissingObject->AddComponent(new MeshRenderer(GET_MODEL(TheMissing)->GetMesh(2), GET_MATERIAL(Dude)));
-
+    theMissingObject->AddComponent(new MeshRenderer(GET_MODEL(TheMissing)->GetMesh(0), {GET_MATERIAL(Porcelain), GET_MATERIAL(Mirror)}, 2));
+    theMissingObject->AddComponent(new MeshRenderer(GET_MODEL(TheMissing)->GetMesh(1), GET_MATERIAL(Porcelain)));
+    theMissingObject->AddComponent(new MeshRenderer(GET_MODEL(TheMissing)->GetMesh(2), GET_MATERIAL(Mirror)));
+    
     // Crate
     CratePrefab cratePrefab = CratePrefab();
     for (unsigned int i = 0; i < 20; i++)

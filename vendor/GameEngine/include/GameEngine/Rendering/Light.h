@@ -41,7 +41,6 @@ namespace GameEngine
                 // Note that no vec3 where used to fit the std140 padding rule without creating padding struct members
                 struct UniformBufferData
                 {
-                    glm::vec4 AmbientLightColor    = glm::vec4(1.0f);
                     glm::vec4 ShadowLightDirection = glm::vec4(0.0f);
 
                     glm::vec4 PointLightPositions[MaxPointLights]{{0, 0, 0, 0}};
@@ -57,6 +56,7 @@ namespace GameEngine
                     glm::mat4 LightSpaceMatrices[MaxShadowCascades]{glm::identity<glm::mat4>()};
 
                     float AmbientIntensity     = 0.5f;
+                    float ShadowBias           = 0.002f;
                     int   NumPointLights       = 0;
                     int   NumDirectionalLights = 0;
                     int   NumShadowCascades    = 0;

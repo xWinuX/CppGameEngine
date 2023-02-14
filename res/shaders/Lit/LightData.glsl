@@ -4,7 +4,6 @@
 
 layout(std140, binding = 2) uniform Lights 
 {
-    vec4 u_AmbientLightColor;
     vec4 u_ShadowLightDirection;
 
     vec4 u_PointLightPositions[MAX_POINT_LIGHTS];
@@ -20,6 +19,8 @@ layout(std140, binding = 2) uniform Lights
     mat4 u_LightSpaceMatrices[MAX_SHADOW_CASCADES];
 
     float u_AmbientLightIntensity;
+    float u_ShadowBias;
+
     int u_NumPointLights;
     int u_NumDirectionalLights;
     int u_NumShadowCascades;

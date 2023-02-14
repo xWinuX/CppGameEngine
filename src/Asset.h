@@ -29,6 +29,7 @@ namespace Asset
         DrL,
         GamerDude,
         Test,
+        Plant,
         GamerDudeWalkRight,
         GamerDudeWalkLeft,
     };

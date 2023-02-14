@@ -37,7 +37,7 @@ Application::Application()
     GUIManager::Initialize();
 
     // Activate to show true FPS
-    glfwSwapInterval(0);
+    //glfwSwapInterval(0);
 }
 
 void Application::Run()
