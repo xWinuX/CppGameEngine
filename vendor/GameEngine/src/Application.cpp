@@ -37,24 +37,23 @@ Application::Application()
     GUIManager::Initialize();
 
     // Activate to show true FPS
-    //glfwSwapInterval(0);
+    glfwSwapInterval(0);
 }
 
 void Application::Run()
 {
     Scene scene = Scene();
 
+    scene.Bind();
     Initialize(scene);
-
-    scene.InitializeScene();
-
+    
     while (!_window.ShouldClose())
     {
         GUIManager::BeginNewFrame();
         
         Time::Update();
         Input::Update();
-        
+
         // Executes als OnPhysicsUpdates on game objects if a physics time step happens, also updates the physics world
         PhysicsManager::Update(&scene);
         
@@ -64,11 +63,11 @@ void Application::Run()
         AudioManager::Update();
         
         Renderer::RenderSubmitted();
-        
+
         GUIManager::Draw();
-        
+
         Renderer::DrawFrame();
-        
+
         std::cout << "FPS: " << std::to_string(1 / Time::GetDeltaTime()) << std::endl;
     }
 

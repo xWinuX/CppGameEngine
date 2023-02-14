@@ -25,6 +25,7 @@ namespace GameEngine
             protected:
                 void OnUpdate() override;
                 void OnUpdateEnd() override;
+                void OnGuiDraw() override;
 
             public:
                 explicit DirectionalLight(const bool isShadowCaster = false, const glm::vec4 color = glm::vec4(1.0), const float intensity = 1.0f);

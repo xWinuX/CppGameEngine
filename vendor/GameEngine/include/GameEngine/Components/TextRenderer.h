@@ -14,9 +14,10 @@ namespace GameEngine
             private:
                 Rendering::Font*                         _font;
                 Rendering::Material*                     _material;
-                std::string                              _text        = "abcdefghij\nklmnopqrstuvxy";
-                std::vector<Rendering::Sprite::QuadData> _quads       = std::vector<Rendering::Sprite::QuadData>(32);
-                bool                                     _needsUpdate = false;
+                std::string                              _text         = "abcdefghij\nklmnopqrstuvxy";
+                std::vector<Rendering::Sprite::QuadData> _quads        = std::vector<Rendering::Sprite::QuadData>(32);
+                bool                                     _needsUpdate  = false;
+                bool                                     _alwaysUpdate = false;
                 void                                     UpdateQuads();
 
             protected:
@@ -26,12 +27,13 @@ namespace GameEngine
             public:
                 TextRenderer(Rendering::Font* font, Rendering::Material* material);
 
-                Rendering::Material* GetMaterial() override;
-                Rendering::Texture2D*  GetTexture() override;
-                size_t               GetQuadSize() override;
-                size_t               GetCopySize() override;
-                void                 CopyQuadData(unsigned char* destination) override;
-                void                 SetText(const std::string& text);
+                Rendering::Material*  GetMaterial() override;
+                Rendering::Texture2D* GetTexture() override;
+                size_t                GetQuadSize() override;
+                size_t                GetCopySize() override;
+                void                  CopyQuadData(unsigned char* destination) override;
+                void                  SetText(const std::string& text);
+                void                  SetAlwaysUpdate(const bool alwaysUpdate);
         };
     }
 }

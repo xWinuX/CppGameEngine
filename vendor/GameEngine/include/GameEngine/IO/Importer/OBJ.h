@@ -24,7 +24,7 @@ namespace GameEngine
                 
                     static const std::vector<Rendering::VertexBufferAttribute> VertexBufferAttributes;
 
-                    static void AddMesh(std::vector<VertexPositionUVNormal>& vertexBuffer, std::vector<unsigned int>& indexBuffer, std::vector<Rendering::Mesh*>& meshes);
+                    static void AddMesh(const std::string& name, std::vector<VertexPositionUVNormal>& vertexBuffer, std::vector<unsigned int>& indexBuffer, std::vector<Rendering::Mesh*>& meshes);
 
                 public:
                     static std::vector<GameEngine::Rendering::Mesh*> ImportModel(const std::string& filePath);

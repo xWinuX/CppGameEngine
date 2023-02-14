@@ -23,7 +23,7 @@ Camera::Camera(const float fovInDegrees, const float zNear, const float zFar, Ma
     _skyboxCube(new Rendering::RenderablePrimitive(Primitives::SkyboxCube::GetPrimitive(), skyboxMaterial))
 {
     if (_main == nullptr) { _main = this; }
-
+    
     UpdateProjectionMatrix();
     ResizeFrameBuffer(Window::GetCurrentWindow()->GetSize());
     Window::GetCurrentWindow()->AddFramebufferSizeCallback([this](const Window* window)
@@ -39,6 +39,7 @@ Camera::Camera(const float fovInDegrees, const float zNear, const float zFar, Ma
 void Camera::OnUpdateEnd()
 {
     UpdateViewFrustumCorners();
+    _skyboxCube->SetTransform(_transform);
     Renderer::SubmitRenderable(_skyboxCube);
     Renderer::SubmitRenderTarget(this);
 }
@@ -78,8 +79,9 @@ glm::mat4 Camera::CreatePerspectiveProjection(const float nearPlan, const float 
 
 void Camera::UpdateProjectionMatrix()
 {
-    _projectionSize   = Window::GetCurrentWindow()->GetSize();
-    _projectionMatrix = CreatePerspectiveProjection(_nearPlane, _farPlane);
+    _projectionSize     = Window::GetCurrentWindow()->GetSize();
+    _uiProjectionMatrix = glm::ortho(0.0f, static_cast<float>(_projectionSize.x), 0.0f, static_cast<float>(_projectionSize.y), -1.0f, _farPlane);
+    _projectionMatrix   = CreatePerspectiveProjection(_nearPlane, _farPlane);
 }
 
 glm::mat4 Camera::GetViewMatrix() const { return glm::inverse(GetTransform()->GetTRS()); }
@@ -102,9 +104,10 @@ void Camera::OnShaderUse(Rendering::Shader* shader) { shader->GetUniformStorage(
 
 void Camera::Bind()
 {
-    glm::mat4 viewMatrix               = GetViewMatrix();
+    const glm::mat4 viewMatrix         = GetViewMatrix();
     _uniformBufferData->ViewProjection = _projectionMatrix * viewMatrix;
     _uniformBufferData->Projection     = _projectionMatrix;
+    _uniformBufferData->UIProjection   = _uiProjectionMatrix;
     _uniformBufferData->ViewPosition   = glm::vec4(_transform->GetPosition(), 1.0);
     _uniformBufferData->FarPlane       = _farPlane;
 

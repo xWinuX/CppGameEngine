@@ -7,6 +7,7 @@
 #include "GameEngine/Components/CapsuleCollider.h"
 #include "GameEngine/Components/CharacterController.h"
 #include "GameEngine/Components/Rigidbody.h"
+#include "GameEngine/Components/TextRenderer.h"
 
 using namespace GameEngine;
 using namespace GameEngine::Components;
@@ -23,4 +24,12 @@ void GamerDudePrefab::PrepareGameObject(GameObject* gameObject)
     gameObject->AddComponent(new Rigidbody());
     gameObject->AddComponent(new CharacterController());
     gameObject->AddComponent(new SimpleWalker());
+
+    GameObject* textChild = new GameObject("Text");
+    textChild->GetTransform()->SetLocalPosition(glm::vec3(-0.5f, 1.0f, 0.0f));
+    textChild->AddComponent(new TextRenderer(GET_FONT(Roboto), GET_MATERIAL(MSDFFont)));
+    TextRenderer* textRenderer = textChild->GetComponent<TextRenderer>();
+    textRenderer->SetText("Hey!");
+    textRenderer->SetAlwaysUpdate(true);
+    textChild->SetParent(gameObject);
 }

@@ -22,7 +22,7 @@
 
     // Specular
     vec3 halfwayVector = normalize(lightDirection + viewDirection);
-    float specular = pow(max(dot(normal, halfwayVector), 0.0), 1 + (smoothness*1000));
+    float specular = smoothness == 0 ? 0 : pow(max(dot(normal, halfwayVector), 0.0), (smoothness*1000));
     
     // Calculate how much the albedo contributes to the color of the specular highlight based on the metallicness level
     vec4 specularColor = lightColor * mix(vec4(1.0), albedo, metallicness);
@@ -52,7 +52,7 @@ vec4 calculateDirectionalLightColor(
 
     // Specular
     vec3 halfwayVector = normalize(lightDirection + viewDirection);
-    float specular = pow(max(dot(normal, halfwayVector), 0.0), 1 + (smoothness*1000));
+    float specular = smoothness == 0 ? 0 : pow(max(dot(normal, halfwayVector), 0.0), (smoothness*1000));
 
     // Calculate how much the albedo contributes to the color of the specular highlight based on the metallicness level
     vec4 specularColor = lightColor * mix(vec4(1.0), albedo, metallicness);
@@ -62,7 +62,6 @@ vec4 calculateDirectionalLightColor(
     return (albedo * diffuseSum) + specularSum;
 }
 
-
 float shadowCalculation(
     vec3 fragPosition,
     mat4 viewMatrix,
@@ -70,6 +69,7 @@ float shadowCalculation(
     mat4 lightMatrices[16],
     vec3 lightDir,
     float farPlane,
+    float shadowBias,
     vec3 normal,
     int cascadeCount,
     sampler2DArray shadowMap
@@ -101,7 +101,7 @@ float shadowCalculation(
     if (currentDepth  > 1.0) { return 0.0; }
     
     // Calculate bias based on normal
-    float bias = max(0.03 * (1.0 - dot(normal, lightDir)), 0.005);
+    float bias = max(shadowBias * (1.0 - dot(normal, lightDir)), 0);
     if (layer == cascadeCount){ bias *= 1 / (farPlane * 0.5f); }
     else { bias *= 1 / (frustumPlaneDistances[layer] * 0.5f); }
 

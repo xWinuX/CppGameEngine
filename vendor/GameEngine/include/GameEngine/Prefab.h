@@ -15,5 +15,6 @@ namespace GameEngine
         public:
             explicit    Prefab(const std::string& name);
             GameObject* Instantiate();
+            GameObject* Instantiate(glm::vec3 position);
     };
 }

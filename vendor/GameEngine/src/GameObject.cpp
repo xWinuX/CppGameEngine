@@ -3,6 +3,7 @@
 #include <iostream>
 
 #include "imgui.h"
+#include "GameEngine/Scene.h"
 #include "GameEngine/Debug/Log.h"
 
 using namespace GameEngine::Debug;
@@ -12,14 +13,18 @@ using namespace GameEngine;
 #define DO_FUNCTION(func) \
 for (GameEngine::Components::Component* component : _components) \
 { \
-    if (!component->GetEnabled()) { continue; } \
+    if (!component->GetEnabled() || !component->GetInitialized()) { continue; } \
     component->func; \
 } \
 for (const GameObject* child : _children) { child->func; }
 
 GameObject::GameObject(const std::string& name):
     _name(name),
-    _transform(new GameEngine::Components::Transform()) { AddComponent(_transform); }
+    _transform(new GameEngine::Components::Transform())
+{
+    AddComponent(_transform);
+    Scene::GetCurrentScene()->AddGameObject(this);
+}
 
 GameObject::~GameObject()
 {
@@ -53,6 +58,8 @@ void GameObject::AddComponent(GameEngine::Components::Component* addedComponent)
         if (component == addedComponent) { component->OnComponentAdded(); }
         else { component->OnOtherComponentAdded(addedComponent); }
     }
+
+    _uninitializedComponents.push_back(addedComponent);
 }
 
 void GameObject::AddChild(GameObject* child) { _children.push_back(child); }
@@ -72,9 +79,24 @@ void GameObject::SetParent(GameObject* newParent)
 }
 
 GameObject* GameObject::GetParent() const { return _parent; }
-void        GameObject::SetLayer(Layer layer) { _layer = layer; }
+void        GameObject::SetLayer(const Layer layer) { _layer = layer; }
 
-void GameObject::OnStart() const { DO_FUNCTION(OnStart()) }
+void GameObject::OnStart()
+{
+    if (!_uninitializedComponents.empty())
+    {
+        for (GameEngine::Components::Component* component : _uninitializedComponents)
+        {
+            if (!component->GetEnabled()) { continue; }
+            component->OnStart();
+            component->SetInitialized(true);
+        }
+        _uninitializedComponents.clear();
+    }
+    
+    for (GameObject* child : _children) { child->OnStart(); }
+}
+
 void GameObject::OnUpdateBegin() const { DO_FUNCTION(OnUpdateBegin()) }
 void GameObject::OnPhysicsUpdate() const { DO_FUNCTION(OnPhysicsUpdate()) }
 void GameObject::OnPhysicsUpdateEnd(const float interpolationFactor) const { DO_FUNCTION(OnPhysicsUpdateEnd(interpolationFactor)) }
@@ -96,7 +118,7 @@ void GameObject::OnDrawGui() const
         ImGui::Spacing();
         ImGui::Spacing();
         ImGui::Spacing();
-        
+
         for (const GameObject* child : _children) { child->OnDrawGui(); }
         ImGui::Unindent();
     }

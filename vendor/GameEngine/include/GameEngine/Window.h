@@ -26,6 +26,8 @@ namespace GameEngine
 
             void AddFramebufferSizeCallback(const std::function<void(Window*)>& callbackFunction);
 
+            void Close() const;
+        
             bool ShouldClose() const;
         
             glm::uvec2                                 GetSize() const;

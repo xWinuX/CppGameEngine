@@ -19,6 +19,7 @@ void SimpleWalker::OnStart()
     _characterController = _gameObject->GetComponent<GameEngine::Components::CharacterController>();
     _audioSource         = _gameObject->GetComponent<GameEngine::Components::AudioSource>();
     _spriteRenderer      = _gameObject->GetComponent<GameEngine::Components::SpriteRenderer>();
+    _textRenderer        = _gameObject->GetComponentInChildren<GameEngine::Components::TextRenderer>();
 
     _walkLeftSprite  = GET_SPRITE(GamerDudeWalkLeft);
     _walkRightSprite = GET_SPRITE(GamerDudeWalkRight);
@@ -71,7 +72,12 @@ void SimpleWalker::OnUpdate()
     if (_soundTimer > 0) { _soundTimer -= GameEngine::Time::GetDeltaTime(); }
     else
     {
+        _textRenderer->SetEnabled(true);
+        _textTimer = _scale;
         _audioSource->PlayPitch(1 / _transform->GetLocalScale().x);
         RandomizeSoundTimer();
     }
+
+    if (_textTimer > 0) { _textTimer -= Time::GetDeltaTime(); }
+    else { _textRenderer->SetEnabled(false); }
 }

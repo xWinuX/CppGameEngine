@@ -5,6 +5,7 @@
 #include "GameEngine/GUIManager.h"
 #include "GameEngine/Physics/PhysicsManager.h"
 #include "../Asset.h"
+#include "../Prefabs/CratePrefab.h"
 
 using namespace GameEngine;
 using namespace GameEngine::Rendering;
@@ -30,6 +31,16 @@ void GameManager::OnUpdate()
 
     if (GUIManager::IsHidden()) { Cursor::Lock(); }
     else { Cursor::Unlock(); }
+
+    if (ImGui::Button(GetImGuiIDString("Close Application").c_str())) { Window::GetCurrentWindow()->Close(); }
+
+    if (ImGui::Button(GetImGuiIDString("Create Cube").c_str())) { _cratePrefab.Instantiate(glm::uvec3(0.0f, 10.0f, 0.0f)); }
+    
+    if (ImGui::Button(GetImGuiIDString("Create Cube Man").c_str()))
+    {
+        const GameObject* gameObject = _cubeManPrefab.Instantiate(glm::uvec3(0.0f, 10.0f, 0.0f));
+        gameObject->GetTransform()->SetLocalScale(glm::linearRand(0.05f, 4.0f) * glm::vec3(1.0));
+    }
 
     if (ImGui::CollapsingHeader("Material Properties"))
     {

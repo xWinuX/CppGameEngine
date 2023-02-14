@@ -22,6 +22,7 @@ namespace GameEngine
                 float                  _farPlane;
                 glm::uvec2             _projectionSize;
                 glm::mat4              _projectionMatrix   = glm::identity<glm::mat4>();
+                glm::mat4              _uiProjectionMatrix = glm::identity<glm::mat4>();
                 std::vector<glm::vec4> _viewFrustumCorners = std::vector<glm::vec4>(8);
 
                 Rendering::RenderablePrimitive* _skyboxCube;
@@ -30,10 +31,10 @@ namespace GameEngine
                 {
                     glm::mat4 ViewProjection = glm::identity<glm::mat4>();
                     glm::mat4 Projection     = glm::identity<glm::mat4>();
+                    glm::mat4 UIProjection   = glm::identity<glm::mat4>();
                     glm::mat4 View           = glm::identity<glm::mat4>();
                     glm::vec4 ViewPosition   = glm::zero<glm::vec4>();
-                    float     FarPlane       = 50; 
-                    
+                    float     FarPlane       = 50;
                 };
 
                 UniformBufferData* _uniformBufferData;

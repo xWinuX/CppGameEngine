@@ -24,8 +24,8 @@ void main()
     v_WaveHeight = (sin((u_Time + (dist*u_WaveFrequency))*u_WaveSpeed) * u_WaveAmplitude) + rand(vec2(a_Position.x, a_Position.z)) * 0.1;
     vertexPosition += vec3(0.0, v_WaveHeight, 0.0);
     
-    v_Position = calculateWorldSpacePosition(u_Transform, vertexPosition);
-    gl_Position = calculateNDCPosition(u_ViewProjection, v_Position);
+    v_FragWorldPosition = calculateWorldSpacePosition(u_Transform, vertexPosition);
+    gl_Position = calculateNDCPosition(u_ViewProjection, v_FragWorldPosition);
     v_TBN = calculateTBN(u_Transform, a_Normals, a_Tangents);
     v_TexCoords = a_TextureCoords;
 }

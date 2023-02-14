@@ -37,10 +37,11 @@ void TextRenderer::UpdateQuads()
         if (!characterInfo->GlyphGeometry.isWhitespace())
         {
             const Sprite* sprite = characterInfo->Sprite;
-
+            
             Sprite::QuadData* quadData = sprite->GetQuadDataPtr();
             quadData->Transform[3][0]  = trs[3][0] + cursor.x;
             quadData->Transform[3][1]  = trs[3][1] + cursor.y;
+            quadData->Transform[3][2]  = trs[3][2];
 
             _quads.emplace_back(*sprite->GetQuadDataPtr());
             offset += GetQuadSize();
@@ -60,16 +61,20 @@ void TextRenderer::OnStart() { UpdateQuads(); }
 void TextRenderer::OnUpdateEnd()
 {
     // Update quads needed
-    if (_needsUpdate) { UpdateQuads(); }
+    if (_needsUpdate || _alwaysUpdate)
+    {
+        UpdateQuads();
+        _needsUpdate = false;
+    }
 
     SetLayer(_gameObject->GetLayer());
     Renderer::SubmitBatchRenderable2D(this);
 }
 
-Material* TextRenderer::GetMaterial() { return _material; }
-Texture2D*  TextRenderer::GetTexture() { return _font->GetTexture(); }
-size_t    TextRenderer::GetQuadSize() { return sizeof(Sprite::QuadData); }
-size_t    TextRenderer::GetCopySize() { return _quads.size() * GetQuadSize(); }
+Material*  TextRenderer::GetMaterial() { return _material; }
+Texture2D* TextRenderer::GetTexture() { return _font->GetTexture(); }
+size_t     TextRenderer::GetQuadSize() { return sizeof(Sprite::QuadData); }
+size_t     TextRenderer::GetCopySize() { return _quads.size() * GetQuadSize(); }
 
 void TextRenderer::CopyQuadData(unsigned char* destination) { memcpy(destination, _quads.data(), _quads.size() * GetQuadSize()); }
 
@@ -78,3 +83,5 @@ void TextRenderer::SetText(const std::string& text)
     _text        = text;
     _needsUpdate = true;
 }
+
+void TextRenderer::SetAlwaysUpdate(const bool alwaysUpdate) { _alwaysUpdate = alwaysUpdate; }

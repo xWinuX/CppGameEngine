@@ -83,6 +83,7 @@ void Window::SetSize(const glm::ivec2 newSize)
 }
 
 void Window::AddFramebufferSizeCallback(const std::function<void(Window*)>& callbackFunction) { _resizeCallbacks.push_back(callbackFunction); }
+void Window::Close() const { glfwSetWindowShouldClose(_glWindow, true); }
 
 bool Window::ShouldClose() const { return glfwWindowShouldClose(_glWindow); }
 

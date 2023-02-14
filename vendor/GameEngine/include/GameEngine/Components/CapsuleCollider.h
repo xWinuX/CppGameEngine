@@ -10,7 +10,7 @@ namespace GameEngine
         class CapsuleCollider final : public Collider
         {
             private:
-                reactphysics3d::CapsuleShape* _pCapsuleShape;
+                reactphysics3d::CapsuleShape* _capsuleShape;
                 float                         _height;
                 float                         _radius;
 

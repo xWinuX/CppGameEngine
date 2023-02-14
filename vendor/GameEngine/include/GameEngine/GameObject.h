@@ -77,16 +77,18 @@ namespace GameEngine
 
         private:
             std::string                                     _name;
-            GameObject*                                     _parent   = nullptr;
-            Layer                                           _layer    = Layer::L_1;
-            std::list<GameEngine::GameObject*>              _children = std::list<GameEngine::GameObject*>();
+            bool                                            _isInitialized           = false;
+            GameObject*                                     _parent                  = nullptr;
+            Layer                                           _layer                   = Layer::L_1;
+            std::list<Components::Component*>               _uninitializedComponents = std::list<Components::Component*>();
+            std::list<GameEngine::GameObject*>              _children                = std::list<GameEngine::GameObject*>();
             std::vector<GameEngine::Components::Component*> _components;
             GameEngine::Components::Transform*              _transform;
 
             void AddChild(GameObject* child);
             void RemoveChild(GameObject* child);
 
-            void OnStart() const;
+            void OnStart();
             void OnUpdateBegin() const;
             void OnUpdate() const;
             void OnLateUpdate() const;

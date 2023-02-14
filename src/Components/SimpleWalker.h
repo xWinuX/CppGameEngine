@@ -3,6 +3,7 @@
 #include "GameEngine/Components/CharacterController.h"
 #include "GameEngine/Components/Component.h"
 #include "GameEngine/Components/SpriteRenderer.h"
+#include "GameEngine/Components/TextRenderer.h"
 #include "glm/gtc/random.hpp"
 
 class SimpleWalker final : public GameEngine::Components::Component
@@ -11,6 +12,7 @@ class SimpleWalker final : public GameEngine::Components::Component
         GameEngine::Components::AudioSource*         _audioSource         = nullptr;
         GameEngine::Components::SpriteRenderer*      _spriteRenderer      = nullptr;
         GameEngine::Components::CharacterController* _characterController = nullptr;
+        GameEngine::Components::TextRenderer*        _textRenderer        = nullptr;
         GameEngine::Rendering::SpriteSet*            _walkRightSprite     = nullptr;
         GameEngine::Rendering::SpriteSet*            _walkLeftSprite      = nullptr;
 
@@ -18,6 +20,7 @@ class SimpleWalker final : public GameEngine::Components::Component
         float _canMoveTimer   = 1;
         float _animationSpeed = 0;
         float _moveTimer      = 2;
+        float _textTimer      = 0;
         float _moveSpeed      = 1000;
         bool  _canMove        = false;
         float _scale          = 1;

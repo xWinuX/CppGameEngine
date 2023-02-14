@@ -41,6 +41,7 @@ namespace Asset
     enum class Sound : size_t
     {
         Hey,
+        BackgroundMusic,
     };
 
     enum class Model : size_t
@@ -72,6 +73,8 @@ namespace Asset
     enum class Material : size_t
     {
         Dude,
+        Porcelain,
+        Mirror,
         Crate,
         Island,
         PhysicsDebug,

@@ -2,11 +2,11 @@
 #include "../Common/Uniforms.glsl"
 #include "../Common/Functions.frag"
 
+uniform sampler2D u_Texture;
 #include "Uniforms.frag"
 
 #include "IO.frag"
 #include "../Common/IO.frag"
-
 
 void main()
 {

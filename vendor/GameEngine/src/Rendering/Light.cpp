@@ -26,7 +26,6 @@ void Light::Update()
     _lightData->NumPointLights       = 0;
     _lightData->NumShadowCascades    = 0;
 
-    _shadowMap->GetTexture()->Bind(15);
     Renderer::SetCascadedShadowMap(_shadowMap);
 }
 

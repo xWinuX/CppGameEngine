@@ -15,6 +15,9 @@ namespace GameEngine
         {
             friend GameEngine::GameObject;
 
+            private:
+                bool _initialized = false;
+                void SetInitialized(const bool initialized);
             protected:
                 const std::string       _name = "NO NAME";
                 GameEngine::GameObject* _gameObject;
@@ -48,6 +51,7 @@ namespace GameEngine
                 std::string GetImGuiName() const;
                 void        SetEnabled(const bool enabled);
                 bool        GetEnabled() const;
+                bool        GetInitialized() const;
 
                 Transform* GetTransform() const;
         };

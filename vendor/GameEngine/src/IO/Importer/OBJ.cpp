@@ -20,7 +20,7 @@ const std::vector<VertexBufferAttribute> OBJ::VertexBufferAttributes = {
     VertexBufferAttribute(3, GL_FLOAT, GL_FALSE, sizeof(VertexPositionUVNormal), reinterpret_cast<GLvoid*>(5 * sizeof(float)))
 };
 
-void OBJ::AddMesh(std::vector<VertexPositionUVNormal>& vertexBuffer, std::vector<unsigned>& indexBuffer, std::vector<Mesh*>& meshes)
+void OBJ::AddMesh(const std::string& name, std::vector<VertexPositionUVNormal>& vertexBuffer, std::vector<unsigned>& indexBuffer, std::vector<Mesh*>& meshes)
 {
     // Create new mesh
     unsigned int* indices = new unsigned int[indexBuffer.size()];
@@ -34,6 +34,7 @@ void OBJ::AddMesh(std::vector<VertexPositionUVNormal>& vertexBuffer, std::vector
     std::copy(VertexBufferAttributes.begin(), VertexBufferAttributes.end(), pVertexAttributes);
 
     meshes.push_back(new Mesh(
+                              name,
                               new VertexBuffer(reinterpret_cast<unsigned char*>(vertices), sizeof(VertexPositionUVNormal), vertexBuffer.size()),
                               new IndexBuffer(reinterpret_cast<unsigned char*>(indices), sizeof(unsigned int), indexBuffer.size()),
                               new VertexBufferLayout(pVertexAttributes, 3))
@@ -59,6 +60,7 @@ std::vector<GameEngine::Rendering::Mesh*> OBJ::ImportModel(const std::string& fi
     unsigned int uvIndexOffset       = 0;
     unsigned int normalIndexOffset   = 0;
     unsigned int colorIndexOffset    = 0;
+    std::string name;
     while (std::getline(stream.GetCStream(), line))
     {
         if (line.length() == 0) { continue; }
@@ -66,13 +68,14 @@ std::vector<GameEngine::Rendering::Mesh*> OBJ::ImportModel(const std::string& fi
         switch (line[0])
         {
             case 'o': // New object
+                name = line;
                 if (!vertexBuffer.empty())
                 {
                     positionIndexOffset += positionList.size();
                     uvIndexOffset += uvList.size();
                     normalIndexOffset += normalList.size();
                     colorIndexOffset += colorList.size();
-                    AddMesh(vertexBuffer, indexBuffer, meshes);
+                    AddMesh(name, vertexBuffer, indexBuffer, meshes);
 
                     vertexBuffer.clear();
                     indexBuffer.clear();
@@ -144,7 +147,7 @@ std::vector<GameEngine::Rendering::Mesh*> OBJ::ImportModel(const std::string& fi
     stream.Close();
 
     // Add last mesh
-    AddMesh(vertexBuffer, indexBuffer, meshes);
+    AddMesh(name, vertexBuffer, indexBuffer, meshes);
 
     vertexBuffer.clear();
     indexBuffer.clear();

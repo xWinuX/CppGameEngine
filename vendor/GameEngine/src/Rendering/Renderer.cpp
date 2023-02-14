@@ -20,7 +20,6 @@ for (auto pair : (renderStructure)) \
     ##call## \
 }
 
-
 using namespace GameEngine::Rendering;
 using namespace GameEngine::Components;
 
@@ -145,7 +144,7 @@ unsigned int Renderer::Render2DBatches(const std::pair<Material*, std::map<Textu
 
             // Render the batch
             _renderable2DBatchVertexBuffer->UpdateData(_renderable2DBatchVertexData, numQuads);
-            Shader::GetCurrentActiveShader()->GetUniformStorage()->SetUniformInstant<Texture2D*>("u_Texture", texturePair.first);
+            texturePair.first->Bind(StaticTextureBinding::SpriteBatchAtlasPage);
             _renderable2DBatchVertexArrayObject->DrawInstanced(6, static_cast<int>(numQuads));
             numDrawCalls++;
         }
@@ -168,7 +167,6 @@ unsigned int Renderer::RenderDefault(const std::pair<Material*, std::vector<Rend
     return numDrawCalls;
 }
 
-glm::vec3 lightInvDir = glm::vec3(0, 5, 20);
 
 void Renderer::RenderSubmitted()
 {
@@ -182,25 +180,30 @@ void Renderer::RenderSubmitted()
         // Render Shadows
         if (renderTarget->_renderShadows && _cascadedShadowMap != nullptr)
         {
-            glCullFace(GL_FRONT);
-            
             _cascadedShadowMap->Bind();
-
+            
+            _shadowSpriteShader->Use();
+            glDisable(GL_CULL_FACE);
+            RENDER_CALL(
+                        _opaqueBatchRenderable2Ds,
+                        for (auto p : pair.second) { Render2DBatches(p); }
+                       )
+            
             _shadowShader->Use();
+            glEnable(GL_CULL_FACE);
+
+            glCullFace(GL_FRONT);
             RENDER_CALL(
                         _opaqueRenderables,
                         for (auto p : pair.second) { RenderDefault(p); }
                        )
 
-            _shadowSpriteShader->Use();
-            RENDER_CALL(
-                        _opaqueBatchRenderable2Ds,
-                        for (auto p : pair.second) { Render2DBatches(p); }
-                       )
 
             _cascadedShadowMap->Unbind();
-
+            
             glCullFace(GL_BACK);
+
+            _cascadedShadowMap->GetTexture()->Bind(StaticTextureBinding::ShadowMap);
         }
 
         renderTarget->Bind();

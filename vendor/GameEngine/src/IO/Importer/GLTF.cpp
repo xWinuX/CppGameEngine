@@ -51,9 +51,13 @@ std::vector<GameEngine::Rendering::Mesh*> GLTF::ImportModel(const std::string& f
         return meshes;
     }
 
-    for (const tinygltf::Mesh& tinyGLTFMesh : model.meshes)
+    for (tinygltf::Node node : model.nodes)
     {
-        Mesh*                         mesh = new Mesh();
+        glm::vec3 translation = glm::zero<glm::vec3>();
+        if (node.translation.size() >= 3) { translation = glm::vec3(node.translation[0], node.translation[1], node.translation[2]); }
+        
+        Mesh*                         mesh         = new Mesh(node.name, translation);
+        tinygltf::Mesh                tinyGLTFMesh = model.meshes[node.mesh];
         reactphysics3d::TriangleMesh* triangleMesh;
         if (createCollider) { triangleMesh = Physics::PhysicsManager::GetPhysicsCommon()->createTriangleMesh(); }
         for (const tinygltf::Primitive& primitive : tinyGLTFMesh.primitives)
@@ -145,7 +149,9 @@ std::vector<GameEngine::Rendering::Mesh*> GLTF::ImportModel(const std::string& f
 
             if (createCollider)
             {
-                reactphysics3d::TriangleVertexArray::IndexDataType indexType = indexSize == 2 ? reactphysics3d::TriangleVertexArray::IndexDataType::INDEX_SHORT_TYPE : reactphysics3d::TriangleVertexArray::IndexDataType::INDEX_INTEGER_TYPE;
+                reactphysics3d::TriangleVertexArray::IndexDataType indexType = indexSize == 2
+                                                                                   ? reactphysics3d::TriangleVertexArray::IndexDataType::INDEX_SHORT_TYPE
+                                                                                   : reactphysics3d::TriangleVertexArray::IndexDataType::INDEX_INTEGER_TYPE;
                 Debug::Log::Message("num vertices = " + std::to_string(numVertices));
                 Debug::Log::Message("num triangles = " + std::to_string(static_cast<reactphysics3d::uint32>(indicesAccessor.count) / 3));
 
@@ -157,7 +163,7 @@ std::vector<GameEngine::Rendering::Mesh*> GLTF::ImportModel(const std::string& f
                                                                                                                    vertexSize,
                                                                                                                    indicesAccessor.count / 3,
                                                                                                                    indices,
-                                                                                                                   static_cast<reactphysics3d::uint32>(indexSize)*3,
+                                                                                                                   static_cast<reactphysics3d::uint32>(indexSize) * 3,
                                                                                                                    reactphysics3d::TriangleVertexArray::VertexDataType::VERTEX_FLOAT_TYPE,
                                                                                                                    reactphysics3d::TriangleVertexArray::NormalDataType::NORMAL_FLOAT_TYPE,
                                                                                                                    indexType

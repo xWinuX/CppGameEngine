@@ -8,20 +8,20 @@ using namespace GameEngine::Physics;
 
 CapsuleCollider::CapsuleCollider(const float radius, const float height):
     Collider("Capsule Collider"),
-    _pCapsuleShape(PhysicsManager::GetPhysicsCommon()->createCapsuleShape(radius, height)),
+    _capsuleShape(PhysicsManager::GetPhysicsCommon()->createCapsuleShape(radius, height)),
     _height(height),
     _radius(radius) {}
 
 void CapsuleCollider::OnLateUpdate()
 {
     const glm::vec3 scale = _transform->GetLocalScale();
-    _pCapsuleShape->setHeight(_height * scale.y);
-    _pCapsuleShape->setRadius(_radius * (scale.x + scale.z) / 2);
+    _capsuleShape->setHeight(_height * scale.y);
+    _capsuleShape->setRadius(_radius * (scale.x + scale.z) / 2);
 }
 
 CapsuleCollider::~CapsuleCollider()
 {
-    //Physics::GetPhysicsCommon()->destroyCapsuleShape(_pCapsuleShape);
+    //PhysicsManager::GetPhysicsCommon()->destroyCapsuleShape(_capsuleShape);
 }
 
-reactphysics3d::CollisionShape* CapsuleCollider::GetCollisionShape() { return _pCapsuleShape; }
+reactphysics3d::CollisionShape* CapsuleCollider::GetCollisionShape() { return _capsuleShape; }

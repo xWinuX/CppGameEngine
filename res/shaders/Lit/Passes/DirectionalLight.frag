@@ -3,7 +3,7 @@ for (int i = 0; i < u_NumDirectionalLights; i++)
 {
     fragColor += calculateDirectionalLightColor(
         albedo,
-        v_Position,
+        v_FragWorldPosition,
         viewDirection,
         vec3(u_DirectionalLightDirections[i]),
         u_DirectionalLightColors[i],

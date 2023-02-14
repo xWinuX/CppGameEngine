@@ -25,9 +25,10 @@ namespace GameEngine
 
                 enum DepthFunc
                 {
-                    Equal  = GL_EQUAL,
-                    LEqual = GL_LEQUAL,
-                    Less   = GL_LESS,
+                    Equal   = GL_EQUAL,
+                    LEqual  = GL_LEQUAL,
+                    Less    = GL_LESS,
+                    NoCheck = GL_ALWAYS,
                 };
 
                 explicit Material(std::string name, Shader* shader);

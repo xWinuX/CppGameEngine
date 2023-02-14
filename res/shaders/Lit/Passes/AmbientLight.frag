@@ -1,1 +1,1 @@
-﻿fragColor += vec4(texture(u_SkyboxCubeMap, vec3(0.0)).rgb, 1.0) * u_AmbientLightIntensity;
+﻿fragColor += albedo * vec4(texture(u_SkyboxCubeMap, vec3(0.0)).rgb, 1.0) * u_AmbientLightIntensity;

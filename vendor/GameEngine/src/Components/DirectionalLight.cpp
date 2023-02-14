@@ -18,15 +18,12 @@ DirectionalLight::DirectionalLight(const bool isShadowCaster, const glm::vec4 co
 void DirectionalLight::SetColor(const glm::vec4 color) { _color = color; }
 void DirectionalLight::SetIntensity(const float intensity) { _intensity = intensity; }
 
-void DirectionalLight::OnUpdate()
-{
-    ImGui::ColorPicker4("Directional Light Color", glm::value_ptr(_color));
-    ImGui::SliderFloat("Directional Light Intensity", &_intensity, 0.0f, 10.0f);
-    ImGui::SliderFloat3("Directional Light Rotation", glm::value_ptr(_eulerAngles), 0.0f, 6.0f);
-
-
-    _transform->SetRotation(glm::quat(_eulerAngles));
-    Light::AddDirectionalLight(_transform->GetForward(), _color, _intensity);
-}
+void DirectionalLight::OnUpdate() { Light::AddDirectionalLight(_transform->GetForward(), _color, _intensity); }
 
 void DirectionalLight::OnUpdateEnd() { if (_isShadowCaster) { Light::SetDirectionalShadowCaster(_transform->GetForward(), _cascadeFactors); } }
+
+void DirectionalLight::OnGuiDraw()
+{
+    ImGui::InputFloat(GetImGuiIDString("Intensity").c_str(), &_intensity);
+    ImGui::ColorPicker4(GetImGuiIDString("Color").c_str(), glm::value_ptr(_color));
+}

@@ -1,6 +1,7 @@
 ﻿#include "../Common/Version.glsl"
 
-uniform sampler2D u_Texture;
+#include "../Sprite/Uniforms.frag"
+
 in vec2 v_TexCoords;
 
 void main() 

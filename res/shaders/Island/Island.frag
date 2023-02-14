@@ -23,9 +23,9 @@ void main()
     
     vec4 albedo = vec4(0.0);
     vec4 normalizedColor = normalize(v_Color);
-    albedo += texture(u_TextureRed, v_Position.xz*u_TilingFactor) * v_Color.r;
-    albedo += texture(u_TextureGreen, v_Position.xz*u_TilingFactor) * v_Color.g;
-    albedo += texture(u_TextureBlue, v_Position.xz*u_TilingFactor) * v_Color.b;
+    albedo += texture(u_TextureRed, v_FragWorldPosition.xz*u_TilingFactor) * v_Color.r;
+    albedo += texture(u_TextureGreen, v_FragWorldPosition.xz*u_TilingFactor) * v_Color.g;
+    albedo += texture(u_TextureBlue, v_FragWorldPosition.xz*u_TilingFactor) * v_Color.b;
     albedo *= u_ColorTint;
     
     #include "../Lit/Passes/DirectionalLight.frag"

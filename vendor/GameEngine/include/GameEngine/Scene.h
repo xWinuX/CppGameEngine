@@ -1,23 +1,26 @@
 ﻿#pragma once
 
-#include <vector>
-
 #include "GameObject.h"
 
 namespace GameEngine
 {
     class Scene
     {
+        friend class GameObject;
+
         private:
-            GameObject* _sceneRoot = new GameObject("Scene Hierarchy");
+            GameObject*   _sceneRoot = nullptr;
+            std::list<GameObject*> _uninitializedGameObjects = std::list<GameObject*>();
+            static Scene* _currentScene;
+            static Scene* GetCurrentScene();
+            void          AddGameObject(GameObject* gameObject);
 
         public:
-            Scene() = default;
+            Scene();
             virtual      ~Scene();
-            virtual void InitializeScene() const;
-            virtual void OnUpdate() const;
+            void         Bind();
+            virtual void OnUpdate();
             virtual void OnPhysicsUpdate() const;
             virtual void OnPhysicsUpdateEnd(float interpolationFactor) const;
-            void         AddGameObject(GameObject* gameObject) const;
     };
 }

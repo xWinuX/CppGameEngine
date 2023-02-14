@@ -22,6 +22,11 @@ namespace GameEngine
                 typedef std::map<Layer, std::map<Material*, std::vector<Renderable*>>>                       RenderableStructure;
                 typedef std::map<Layer, std::map<Material*, std::map<Texture2D*, std::vector<Renderable2D*>>>> Renderable2DBatchStructure;
 
+                enum StaticTextureBinding
+                {
+                    SpriteBatchAtlasPage = 14,
+                    ShadowMap = 15,
+                };
 
                 static std::vector<ShaderUseCallback*> _shaderUseCallbacks;
                 static std::vector<RenderTarget*>      _renderTargets;

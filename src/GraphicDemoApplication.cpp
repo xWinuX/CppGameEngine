@@ -1,6 +1,7 @@
 ﻿#include "GraphicDemoApplication.h"
 
 #include "Asset.h"
+#include "../vendor/GameEngine/src/Components/SphereCollider.h"
 #include "GameEngine/Components/DirectionalLight.h"
 
 #include "Components/POVCameraController.h"
@@ -28,12 +29,14 @@
 #include "GameEngine/Audio/AudioManager.h"
 #include "GameEngine/Audio/Sound.h"
 #include "GameEngine/Components/AudioListener.h"
+#include "GameEngine/Components/AudioSource.h"
 #include "GameEngine/Components/CapsuleCollider.h"
 #include "GameEngine/Components/MeshCollider.h"
 #include "GameEngine/Components/SpriteRenderer.h"
 #include "GameEngine/Rendering/Renderer.h"
 #include "glm/gtc/random.hpp"
 #include "glm/gtx/string_cast.hpp"
+#include "Prefabs/CratePrefab.h"
 #include "Prefabs/GamerDudePrefab.h"
 
 using namespace GameEngine;
@@ -46,17 +49,21 @@ using namespace GameEngine::Physics;
 
 void GraphicDemoApplication::LoadTextures() const
 {
+    TextureParams nearestNeighbour;
+    nearestNeighbour.FilterMode = TextureFilterMode::Nearest;
+    ADD_TEXTURE_2D(NormalMapDefault, new Texture2D("res/textures/NormalMapDefault.png", nearestNeighbour));
+
     ADD_TEXTURE_2D(No, new Texture2D("res/textures/NoTexture.png"));
     ADD_TEXTURE_2D(Black, new Texture2D("res/textures/Black.png"));
     ADD_TEXTURE_2D(White, new Texture2D("res/textures/White.png"));
     ADD_TEXTURE_2D(Grass, new Texture2D("res/textures/Grass.png"));
     ADD_TEXTURE_2D(Dirt, new Texture2D("res/textures/Dirt.png"));
     ADD_TEXTURE_2D(Sand, new Texture2D("res/textures/Sand.png"));
-    TextureParams importSettings;
-    importSettings.FilterMode = TextureFilterMode::Nearest;
-    ADD_TEXTURE_2D(NormalMapDefault, new Texture2D("res/textures/NormalMapDefault.png", importSettings));
+
     ADD_TEXTURE_2D(TheDude, new Texture2D("res/textures/TheDude.png"));
     ADD_TEXTURE_2D(Crate, new Texture2D("res/textures/Crate.jpg"));
+
+
     ADD_TEXTURE_2D(CrateNormalMap, new Texture2D("res/textures/CrateNormalMap.png"));
 
     ADD_CUBEMAP(SkyBox, new CubeMap("res/textures/Skybox/Skybox", ".png"));
@@ -104,6 +111,7 @@ void GraphicDemoApplication::LoadFonts() const { ADD_FONT(Roboto, new Font("res/
 void GraphicDemoApplication::LoadSounds() const
 {
     ADD_SOUND(Hey, new Sound("res/audio/Hey.ogg", true));
+    ADD_SOUND(BackgroundMusic, new Sound("res/audio/BackgroundMusic.mp3", false));
 }
 
 void GraphicDemoApplication::LoadModels() const
@@ -126,15 +134,12 @@ void GraphicDemoApplication::LoadShaders() const
 
     UniformStorage litUniforms = UniformStorage();
     litUniforms.InitializeUniform<float>("u_SkyboxReflectionIntensity", 0.0f);
+    litUniforms.InitializeUniform<float>("u_ShadowBias", 0.002f);
     litUniforms.InitializeUniform<float>("u_Smoothness", 0.0f);
     litUniforms.InitializeUniform<float>("u_Metallicness", 0.0f);
     litUniforms.InitializeUniform<Texture2D*>("u_NormalMap", GET_TEXTURE_2D(NormalMapDefault));
-
-    // Ambient Light
     litUniforms.InitializeUniform<CubeMap*>("u_SkyboxCubeMap", GET_CUBEMAP(SkyBox));
 
-    UniformStorage spriteUniforms = UniformStorage();
-    spriteUniforms.InitializeUniform<Texture2D*>("u_Texture", GET_TEXTURE_2D(White), false);
     #pragma endregion
 
     // Lit
@@ -156,16 +161,15 @@ void GraphicDemoApplication::LoadShaders() const
     // Water
     Shader* waterShader = ADD_SHADER(Water, new Shader("res/shaders/Water/Water.vert", "res/shaders/Water/Water.frag"));
     waterShader->UniformStorageFromShader(litShader);
-    
+
     waterShader->InitializeUniform<glm::vec3>("u_WaveOrigin", glm::zero<glm::vec3>());
-    waterShader->InitializeUniform<float>("u_WaveSpeed", 1.0f);
-    waterShader->InitializeUniform<float>("u_WaveAmplitude", 0.1f);
+    waterShader->InitializeUniform<float>("u_WaveSpeed", 2.0f);
+    waterShader->InitializeUniform<float>("u_WaveAmplitude", 0.2f);
     waterShader->InitializeUniform<float>("u_WaveFrequency", 0.3f);
 
     // Sprite Lit
     Shader* spriteLitShader = ADD_SHADER(SpriteLit, new Shader("res/shaders/SpriteLit/SpriteLit.vert", "res/shaders/SpriteLit/SpriteLit.frag"));
     spriteLitShader->GetUniformStorage()->CopyFrom(&commonUniforms);
-    spriteLitShader->GetUniformStorage()->CopyFrom(&spriteUniforms);
     spriteLitShader->GetUniformStorage()->CopyFrom(&litUniforms);
 
     // Physics Debug
@@ -175,7 +179,6 @@ void GraphicDemoApplication::LoadShaders() const
     // MSDF Font
     Shader* msdfFontShader = ADD_SHADER(MSDFFont, new Shader("res/shaders/MSDFFont/MSDFFont.vert", "res/shaders/MSDFFont/MSDFFont.frag"));
     msdfFontShader->GetUniformStorage()->CopyFrom(&commonUniforms);
-    msdfFontShader->GetUniformStorage()->CopyFrom(&spriteUniforms);
 
     // Vertex Color
     Shader* vertexColorShader = ADD_SHADER(VertexColor, new Shader("res/shaders/VertexColor/VertexColor.vert", "res/shaders/VertexColor/VertexColor.frag"));
@@ -225,8 +228,17 @@ void GraphicDemoApplication::LoadMaterials() const
     crateMaterial->GetUniformStorage()->SetUniform("u_NormalMap", GET_TEXTURE_2D(CrateNormalMap));
     crateMaterial->GetUniformStorage()->SetUniform("u_NormalMapIntensity", 1.0f);
 
+    // Porcelain 
+    Material* porcelainMaterial = ADD_MATERIAL(Porcelain, new Material("Porcelain", GET_SHADER(Lit)));
+    porcelainMaterial->GetUniformStorage()->SetUniform<float>("u_Smoothness", 1.0f);
+
+    // Porcelain 
+    Material* mirrorMaterial = ADD_MATERIAL(Mirror, new Material("Mirror", GET_SHADER(Lit)));
+    mirrorMaterial->GetUniformStorage()->SetUniform<float>("u_Smoothness", 1.0);
+    mirrorMaterial->GetUniformStorage()->SetUniform<float>("u_Metallicness", 1.0);
+
     // Island
-    Material* islandMaterial = ADD_MATERIAL(Island, new Material("Island", GET_SHADER(Island)));
+    ADD_MATERIAL(Island, new Material("Island", GET_SHADER(Island)));
 
     // Physics Debug
     Material* physicsMaterial = ADD_MATERIAL(PhysicsDebug, new Material("PhysicsDebug", GET_SHADER(PhysicsDebug)));
@@ -239,6 +251,8 @@ void GraphicDemoApplication::LoadMaterials() const
 
     // Water
     Material* waterMaterial = ADD_MATERIAL(Water, new Material("Water", GET_SHADER(Water)));
+    waterMaterial->GetUniformStorage()->SetUniform<float>("u_Smoothness", 1.0);
+    waterMaterial->GetUniformStorage()->SetUniform<float>("u_Metallicness", 1.0);
     waterMaterial->SetCullFace(Material::None);
     waterMaterial->SetTransparent(true);
 
@@ -252,10 +266,10 @@ void GraphicDemoApplication::LoadMaterials() const
 
     // Frame Buffer
     ADD_MATERIAL(FrameBuffer, new Material("Frame Buffer", GET_SHADER(FrameBuffer)));
-    
+
     // Skybox
     Material* skyboxMaterial = ADD_MATERIAL(Skybox, new Material("Skybox", GET_SHADER(Skybox)));
-    
+
     skyboxMaterial->SetCullFace(Material::Front);
     skyboxMaterial->SetDepthFunc(Material::DepthFunc::LEqual);
 }
@@ -278,7 +292,9 @@ void GraphicDemoApplication::Initialize(Scene& scene)
     // Game Manager
     GameObject* gameManagerObject = new GameObject("Game Manager");
     gameManagerObject->AddComponent(new GameManager());
-    scene.AddGameObject(gameManagerObject);
+    gameManagerObject->AddComponent(new AudioSource(GET_SOUND(BackgroundMusic), true, true));
+    gameManagerObject->AddComponent(new TextRenderer(GET_FONT(Roboto), GET_MATERIAL(MSDFFont)));
+    gameManagerObject->GetComponent<AudioSource>()->SetVolume(0.05f);
 
     // Player
     GameObject* playerObject = new GameObject("Player");
@@ -289,20 +305,17 @@ void GraphicDemoApplication::Initialize(Scene& scene)
     playerObject->AddComponent(new CharacterController());
     playerObject->AddComponent(new POVCharacterController());
     playerObject->AddComponent(new MeshRenderer(GET_MODEL(Cube)->GetMesh(0), GET_MATERIAL(Crate)));
-    scene.AddGameObject(playerObject);
 
     // Directional Light
     GameObject* directionalLight = new GameObject("Directional Light");
-    directionalLight->GetTransform()->SetRotation(glm::quat(glm::vec3(-0.3f, 0.3f, 0.3f)));
+    directionalLight->GetTransform()->SetRotation(glm::quat(glm::vec3(-1.0f, 0.0f, 0.0f)));
     directionalLight->AddComponent(new DirectionalLight(true, glm::vec4(1.0f), 0.6f));
-    scene.AddGameObject(directionalLight);
 
     // Camera
     GameObject* cameraObject = new GameObject("Camera");
     cameraObject->AddComponent(new Camera(60, 0.1f, 500.0f, GET_MATERIAL(FrameBuffer), GET_MATERIAL(Skybox)));
     cameraObject->AddComponent(new POVCameraController());
     cameraObject->AddComponent(new AudioListener());
-    scene.AddGameObject(cameraObject);
 
     playerObject->GetComponent<POVCharacterController>()->SetCameraTransform(cameraObject->GetComponent<Transform>());
     cameraObject->GetComponent<POVCameraController>()->SetFollowTransform(playerObject->GetTransform());
@@ -311,11 +324,10 @@ void GraphicDemoApplication::Initialize(Scene& scene)
     GamerDudePrefab gamerDudePrefab = GamerDudePrefab();
     for (unsigned int i = 0; i < 20; i++)
     {
-        GameObject*     gameObject     = gamerDudePrefab.Instantiate();
-        const glm::vec2 randomPosition = glm::diskRand(100.0f);
+        const GameObject* gameObject     = gamerDudePrefab.Instantiate();
+        const glm::vec2   randomPosition = glm::diskRand(100.0f);
         gameObject->GetTransform()->SetPosition(glm::vec3(randomPosition.x, 100.0f, randomPosition.y));
         gameObject->GetTransform()->SetLocalScale(glm::linearRand(0.05f, 4.0f) * glm::vec3(1.0));
-        scene.AddGameObject(gameObject);
     }
 
     // Red light
@@ -325,7 +337,6 @@ void GraphicDemoApplication::Initialize(Scene& scene)
     redLightTransform->SetLocalScale(glm::vec3(0.1f));
     redLightObject->AddComponent(new MeshRenderer(GET_MODEL(Sphere)->GetMesh(0), GET_MATERIAL(Dude)));
     redLightObject->AddComponent(new PointLight(glm::vec4(1.0f, 0.0f, 0.0f, 1.0f), 15.0f, 0.5f));
-    scene.AddGameObject(redLightObject);
 
     // Rainbow light
     GameObject* rainbowLightObject    = new GameObject("Rainbow Light");
@@ -333,17 +344,29 @@ void GraphicDemoApplication::Initialize(Scene& scene)
     rainbowLightTransform->SetPosition(glm::vec3(-2.0f, 7.0f, 0.0f));
     rainbowLightTransform->SetLocalScale(glm::vec3(0.1f));
     rainbowLightObject->AddComponent(new MeshRenderer(GET_MODEL(Sphere)->GetMesh(0), GET_MATERIAL(Dude)));
-    rainbowLightObject->AddComponent(new PointLight(glm::vec4(1.0f, 1.0f, 1.0f, 1.0f), 15.0f, 0.5f));
+    rainbowLightObject->AddComponent(new PointLight(glm::vec4(1.0f, 1.0f, 1.0f, 1.0f), 15.0f, 1.0f));
     rainbowLightObject->AddComponent(new RainbowLight());
-    scene.AddGameObject(rainbowLightObject);
+
+    std::list<float> list;
 
     // Suzanne
     GameObject* suzanneObject = new GameObject("Suzanne");
-    suzanneObject->GetTransform()->SetLocalPosition(glm::vec3(0.0f, 7.0f, 0.0f));
-    suzanneObject->AddComponent(new MeshRenderer(GET_MODEL(Suzanne)->GetMesh(0), GET_MATERIAL(Dude)));
-    suzanneObject->AddComponent(new TextRenderer(GET_FONT(Roboto), GET_MATERIAL(MSDFFont)));
+    suzanneObject->GetTransform()->SetLocalPosition(glm::vec3(0.0f, 0.0, -10.0f));
+    suzanneObject->GetTransform()->SetLocalScale(glm::vec3(3.0f, 3.0f, 3.0f));
+    suzanneObject->AddComponent(new MeshRenderer(GET_MODEL(Suzanne)->GetMesh(0), GET_MATERIAL(Porcelain)));
     suzanneObject->AddComponent(new Rotator());
-    scene.AddGameObject(suzanneObject);
+
+    // Porcelain Sphere
+    GameObject* porcelainSphere = new GameObject("Porcelain Sphere");
+    porcelainSphere->AddComponent(new MeshRenderer(GET_MODEL(Sphere)->GetMesh(0), GET_MATERIAL(Porcelain)));
+    porcelainSphere->AddComponent(new SphereCollider(0.5f));
+    porcelainSphere->AddComponent(new Rigidbody());
+
+    // Mirror Sphere
+    GameObject* mirrorSphere = new GameObject("Porcelain Sphere");
+    mirrorSphere->AddComponent(new MeshRenderer(GET_MODEL(Sphere)->GetMesh(0), GET_MATERIAL(Mirror)));
+    mirrorSphere->AddComponent(new SphereCollider(0.5f));
+    mirrorSphere->AddComponent(new Rigidbody());
 
     // The Missing
     GameObject* theMissingObject = new GameObject("The Missing");
@@ -351,33 +374,28 @@ void GraphicDemoApplication::Initialize(Scene& scene)
     theMissingObject->AddComponent(new MeshRenderer(GET_MODEL(TheMissing)->GetMesh(0), {GET_MATERIAL(Dude), GET_MATERIAL(Crate)}, 2));
     theMissingObject->AddComponent(new MeshRenderer(GET_MODEL(TheMissing)->GetMesh(1), GET_MATERIAL(Dude)));
     theMissingObject->AddComponent(new MeshRenderer(GET_MODEL(TheMissing)->GetMesh(2), GET_MATERIAL(Dude)));
-    scene.AddGameObject(theMissingObject);
 
     // Crate
+    CratePrefab cratePrefab = CratePrefab();
     for (unsigned int i = 0; i < 20; i++)
     {
-        const glm::vec2 randomPosition = glm::diskRand(10.0f);
-        GameObject* crateObject = new GameObject("Crate");
+        const glm::vec2   randomPosition = glm::diskRand(10.0f);
+        const GameObject* crateObject    = cratePrefab.Instantiate();
         crateObject->GetTransform()->SetPosition(glm::vec3(randomPosition.x, 20.0f, randomPosition.y));
-        crateObject->AddComponent(new MeshRenderer(GET_MODEL(Cube)->GetMesh(0), GET_MATERIAL(Crate)));
-        crateObject->AddComponent(new SpriteRenderer(GET_SPRITE(TheDude), GET_MATERIAL(SpriteLit)));
-        crateObject->AddComponent(new BoxCollider(glm::vec3(0.5f)));
-        crateObject->AddComponent(new Rigidbody());
-        scene.AddGameObject(crateObject);
     }
 
     // Island
     GameObject* islandObject = new GameObject("Island");
+    islandObject->GetTransform()->SetLocalPosition(glm::vec3(0.0f, -10.0f, 0.0f));
+
     islandObject->AddComponent(new MeshRenderer(GET_MODEL(Island)->GetMesh(0), GET_MATERIAL(Island)));
     islandObject->AddComponent(new MeshCollider(GET_MODEL(Island)->GetMesh(0)));
     islandObject->AddComponent(new Rigidbody(reactphysics3d::BodyType::STATIC));
-    scene.AddGameObject(islandObject);
 
     // Water
     GameObject* waterObject = new GameObject("Water");
-    waterObject->GetTransform()->SetLocalPosition(glm::vec3(0.0f, 1.0f, 0.0f));
+    waterObject->GetTransform()->SetLocalPosition(glm::vec3(0.0f, -9.0f, 0.0f));
     waterObject->AddComponent(new MeshRenderer(GET_MODEL(WaterPlane)->GetMesh(0), GET_MATERIAL(Water)));
-    scene.AddGameObject(waterObject);
 
     // Setup physics debug
     PhysicsManager::SetDebugRendererMaterial(GET_MATERIAL(PhysicsDebug));
