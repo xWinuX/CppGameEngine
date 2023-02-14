@@ -29,7 +29,6 @@ std::vector<std::string> String::SplitString(const std::string& str, const char 
     return split;
 }
 
-
 // Source (modified): ChatGPT
 std::string String::ReplaceIncludeMacros(const std::string& filePath)
 {
@@ -41,11 +40,12 @@ std::string String::ReplaceIncludeMacros(const std::string& filePath)
 
     char bom[3];
     in.read(bom, 3);
-    if (bom[0] != static_cast<char>(0xEF) || bom[1] != static_cast<char>(0xBB) || bom[2] != static_cast<char>(0xBF)) {
+    if (bom[0] != static_cast<char>(0xEF) || bom[1] != static_cast<char>(0xBB) || bom[2] != static_cast<char>(0xBF))
+    {
         // If the file doesn't contain a BOM, seek back to the beginning of the file
         in.seekg(0);
     }
-    
+
     std::string baseDir = filePath;
     std::replace(baseDir.begin(), baseDir.end(), '\\', '/');
     size_t lastSlash = baseDir.find_last_of('/');
@@ -65,11 +65,8 @@ std::string String::ReplaceIncludeMacros(const std::string& filePath)
 
             result += includedFileContents + "\n";
         }
-        else
-        {
-            result += line + "\n";
-        }
+        else { result += line + "\n"; }
     }
-    
+
     return result;
 }

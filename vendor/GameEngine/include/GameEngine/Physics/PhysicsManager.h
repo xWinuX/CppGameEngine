@@ -18,6 +18,14 @@ namespace GameEngine
         {
             friend Application;
 
+            public:
+                static reactphysics3d::PhysicsWorld*    GetPhysicsWorld();
+                static reactphysics3d::PhysicsCommon*   GetPhysicsCommon();
+                static reactphysics3d::MemoryAllocator& GetMemoryAllocator();
+                static void                             ToggleDebugWireframe();
+                static float                            GetPhysicsTimeStep();
+                static void                             SetDebugRendererMaterial(Rendering::Material* material);
+
             private:
                 static reactphysics3d::PhysicsCommon              _physicsCommon;
                 static reactphysics3d::PhysicsWorld*              _physicsWorld;
@@ -29,14 +37,6 @@ namespace GameEngine
 
                 static void Initialize();
                 static void Update(const GameEngine::Scene* scene);
-
-            public:
-                static reactphysics3d::PhysicsWorld*    GetPhysicsWorld();
-                static reactphysics3d::PhysicsCommon*   GetPhysicsCommon();
-                static reactphysics3d::MemoryAllocator& GetMemoryAllocator();
-                static void                             ToggleDebugWireframe();
-                static float                            GetPhysicsTimeStep();
-                static void                             SetDebugRendererMaterial(Rendering::Material* material);
         };
     }
 }

@@ -25,7 +25,7 @@ void Light::Update()
         ImGui::SliderFloat("Ambient Light Intensity", &_lightData->AmbientIntensity, 0.0f, 2.0f);
         ImGui::SliderFloat("Shadow Bias", &_lightData->ShadowBias, 0.0f, 0.1f);
     }
-    
+
     _lightUniformBuffer->UpdateData(reinterpret_cast<const unsigned char*>(_lightData), 1);
 
     _lightData->NumDirectionalLights = 0;

@@ -27,7 +27,7 @@ namespace GameEngine
                 Sprite* GetSprite(size_t frameIndex) const;
 
                 size_t         GetNumFrames() override;
-                Texture2D*       GetTexture(size_t frameIndex = 0) override;
+                Texture2D*     GetTexture(size_t frameIndex = 0) override;
                 unsigned char* GetQuadDataWithTransform(size_t frameIndex = 0, const glm::mat4 transform = glm::identity<glm::mat4>()) override;
                 unsigned char* GetQuadData(const size_t frameIndex = 0) override;
 

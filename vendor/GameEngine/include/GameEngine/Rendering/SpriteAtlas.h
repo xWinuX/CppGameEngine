@@ -11,6 +11,14 @@ namespace GameEngine
     {
         class SpriteAtlas
         {
+            public:
+                explicit SpriteAtlas(glm::uvec2 size, TextureParams textureParams);
+                void     ExportPages() const;
+                void     AddSprite(SpriteSet* spriteSet);
+                void     AddSprite(Sprite* sprite);
+                void     CreateNewPage();
+                void     Pack();
+
             private:
                 struct PackingSprite
                 {
@@ -30,14 +38,6 @@ namespace GameEngine
                 glm::vec2     _uvStep;
 
                 void SortSpritesByHeight();
-
-            public:
-                explicit SpriteAtlas(glm::uvec2 size, TextureParams textureParams);
-                void     ExportPages() const;
-                void     AddSprite(SpriteSet* spriteSet);
-                void     AddSprite(Sprite* sprite);
-                void     CreateNewPage();
-                void     Pack();
         };
     }
 }

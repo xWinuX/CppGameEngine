@@ -22,7 +22,7 @@ CascadedShadowMap::CascadedShadowMap(const glm::uvec2 size):
 
     glDrawBuffer(GL_NONE);
     glReadBuffer(GL_NONE);
-    
+
     _shadowDepthMap->Unbind();
 }
 

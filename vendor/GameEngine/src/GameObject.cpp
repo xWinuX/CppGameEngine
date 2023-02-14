@@ -93,7 +93,7 @@ void GameObject::OnStart()
         }
         _uninitializedComponents.clear();
     }
-    
+
     for (GameObject* child : _children) { child->OnStart(); }
 }
 
@@ -124,7 +124,7 @@ void GameObject::OnDrawGui() const
 
         ImGui::Unindent();
         ImGui::Unindent();
-        
+
         ImGui::Spacing();
         ImGui::Spacing();
         ImGui::Spacing();

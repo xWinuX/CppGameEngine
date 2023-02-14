@@ -13,5 +13,6 @@ GameEngine::Rendering::Texture2DArray::Texture2DArray(const glm::uvec2 size, con
                  0,
                  textureParams.Format,
                  textureParams.ChannelDataType,
-                 nullptr);
+                 nullptr
+                );
 }

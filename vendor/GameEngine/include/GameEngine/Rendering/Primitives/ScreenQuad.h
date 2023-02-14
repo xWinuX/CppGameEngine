@@ -10,15 +10,15 @@ namespace GameEngine
         {
             class ScreenQuad
             {
+                public:
+                    static Primitive* GetPrimitive();
+
                 private:
                     struct Vertex
                     {
                         glm::vec2 Position;
                         glm::vec2 UV;
                     };
-
-                public:
-                    static Primitive* GetPrimitive();
             };
         }
     }

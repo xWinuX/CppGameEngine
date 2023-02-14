@@ -55,7 +55,7 @@ std::vector<GameEngine::Rendering::Mesh*> GLTF::ImportModel(const std::string& f
     {
         glm::vec3 translation = glm::zero<glm::vec3>();
         if (node.translation.size() >= 3) { translation = glm::vec3(node.translation[0], node.translation[1], node.translation[2]); }
-        
+
         Mesh*                         mesh         = new Mesh(node.name, translation);
         tinygltf::Mesh                tinyGLTFMesh = model.meshes[node.mesh];
         reactphysics3d::TriangleMesh* triangleMesh;

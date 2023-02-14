@@ -12,16 +12,6 @@ namespace GameEngine
     {
         class Shader
         {
-            private:
-                static const Shader* _currentActiveShader;
-            
-                GLuint         _programID     = 0;
-                UniformStorage* _uniformStorage = nullptr;
-
-                static GLuint CompileShader(const std::string& shaderSource, const int type);
-
-                static std::string PreprocessShader(const std::string& shader);
-
             public:
                 Shader(const char* vertexShaderSource, const char* fragmentShaderSource, const char* geometryShaderSource = nullptr);
 
@@ -46,6 +36,16 @@ namespace GameEngine
 
                 UniformStorage* GetUniformStorage() const;
                 UniformStorage* GetUniformStorageCopy() const;
+
+            private:
+                static const Shader* _currentActiveShader;
+
+                GLuint          _programID      = 0;
+                UniformStorage* _uniformStorage = nullptr;
+
+                static GLuint CompileShader(const std::string& shaderSource, const int type);
+
+                static std::string PreprocessShader(const std::string& shader);
         };
     }
 }

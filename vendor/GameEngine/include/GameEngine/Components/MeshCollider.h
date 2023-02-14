@@ -9,14 +9,14 @@ namespace GameEngine
     {
         class MeshCollider : public Collider
         {
-            private:
-                reactphysics3d::ConcaveMeshShape* _concaveMeshShape;
-                Rendering::Mesh*                  _mesh;
-
             public:
                 explicit MeshCollider(Rendering::Mesh* mesh);
                 ~MeshCollider() override;
                 reactphysics3d::CollisionShape* GetCollisionShape() override;
+
+            private:
+                reactphysics3d::ConcaveMeshShape* _concaveMeshShape;
+                Rendering::Mesh*                  _mesh;
         };
     }
 }

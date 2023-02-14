@@ -1,7 +1,6 @@
 ﻿#pragma once
+#include <fmod_studio.hpp>
 #include <string>
-
-#include "fmod_studio.hpp"
 
 namespace GameEngine
 {
@@ -9,15 +8,15 @@ namespace GameEngine
     {
         class Sound
         {
-            private:
-                FMOD::Sound* _fmodSound = nullptr;
-                bool         _is3D;
-
             public:
                 explicit     Sound(const std::string& filePath);
                 explicit     Sound(const std::string& filePath, const bool is3D = false);
                 FMOD::Sound* GetFMODSound() const;
                 bool         Is3D() const;
+
+            private:
+                FMOD::Sound* _fmodSound = nullptr;
+                bool         _is3D;
         };
     }
 }

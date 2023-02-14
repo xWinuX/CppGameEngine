@@ -4,9 +4,6 @@ namespace GameEngine
 {
     class Gui
     {
-        private:
-            static bool _isHidden;
-
         public:
             static void Initialize();
             static void BeginNewFrame();
@@ -14,5 +11,8 @@ namespace GameEngine
             static bool IsHidden();
             static void SetHidden(bool hidden);
             static void ToggleHidden();
+
+        private:
+            static bool _isHidden;
     };
 }

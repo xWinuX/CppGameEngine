@@ -11,6 +11,17 @@ namespace GameEngine
     {
         class PointLight final : public Component
         {
+            public:
+                explicit PointLight(const glm::vec4 color = glm::vec4(1.0), const float range = 1.0f, const float intensity = 1.0f);
+
+                void SetColor(glm::vec4 color);
+                void SetRange(float range);
+                void SetIntensity(float intensity);
+
+            protected:
+                void OnUpdateEnd() override;
+                void OnGuiDraw() override;
+
             private:
                 static std::vector<glm::vec3> _positions;
                 static std::vector<glm::vec4> _colors;
@@ -20,17 +31,6 @@ namespace GameEngine
                 glm::vec4 _color;
                 float     _range;
                 float     _intensity;
-
-            protected:
-                void OnUpdateEnd() override;
-                void OnGuiDraw() override;
-
-            public:
-                explicit PointLight(const glm::vec4 color = glm::vec4(1.0), const float range = 1.0f, const float intensity = 1.0f);
-
-                void SetColor(glm::vec4 color);
-                void SetRange(float range);
-                void SetIntensity(float intensity);
         };
     }
 }

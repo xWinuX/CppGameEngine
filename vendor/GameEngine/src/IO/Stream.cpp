@@ -9,10 +9,7 @@
 using namespace GameEngine::IO;
 
 Stream::Stream(const std::string& filePath):
-    _stream(std::ifstream(filePath))
-{
-    if (!_stream) { Debug::Log::Error("Cannot open " + filePath); }
-}
+    _stream(std::ifstream(filePath)) { if (!_stream) { Debug::Log::Error("Cannot open " + filePath); } }
 
 Stream::~Stream() { Close(); }
 
@@ -24,11 +21,11 @@ std::string Stream::GetFileContent()
     {
         std::string       line;
         std::stringstream ss;
-        
+
         while (getline(_stream, line)) { ss << line << '\n'; }
 
         _stream.clear();
-        
+
         return ss.str();
     }
 

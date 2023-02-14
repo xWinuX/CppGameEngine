@@ -23,7 +23,6 @@ void Rigidbody::OnStart()
     _physicsRigidBody->setTransform(_transform->GetPhysicsTransform());
 }
 
-
 void Rigidbody::OnPhysicsUpdateEnd(const float interpolationFactor)
 {
     const reactphysics3d::Transform currentTransform      = _physicsRigidBody->getTransform();
@@ -40,7 +39,7 @@ void Rigidbody::OnPhysicsUpdateEnd(const float interpolationFactor)
     _transform->SetPosition(glm::vec3(position.x, position.y, position.z));
 
     _previousTransform = currentTransform;
-    
+
     _physicsRigidBody->setMass(_mass);
 }
 

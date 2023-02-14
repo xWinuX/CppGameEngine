@@ -22,7 +22,7 @@ void PhysicsManager::Initialize()
 {
     reactphysics3d::PhysicsWorld::WorldSettings worldSettings;
     worldSettings.defaultBounciness = 0;
-    
+
     _physicsWorld = PhysicsManager::_physicsCommon.createPhysicsWorld(worldSettings);
 }
 

@@ -62,6 +62,71 @@ namespace GameEngine
         {
             friend Shader;
 
+            public:
+                explicit UniformStorage();
+                explicit UniformStorage(const GLuint programID);
+
+                void DrawProperties(const std::string& fieldIdentifier);
+                void Apply();
+
+                int GetUniformLocation(const std::string& uniformName);
+
+                UniformStorage* Copy(const GLuint programID) const;
+                void            CopyTo(UniformStorage* uniformStorage) const;
+                void            CopyFrom(const UniformStorage* uniformStorage);
+
+                template <typename T>
+                static void ShowUniformNotSupportedError() { Debug::Log::Error("Uniform type " + std::string(typeid(T).name()) + " is not supported"); }
+
+                template <typename T>
+                void InitializeUniform(std::string uniformName, T defaultVar, const bool includeInApplyQueue = true, const bool resetAfterApply = false)
+                {
+                    ShowUniformNotSupportedError<T>();
+                }
+
+                template <typename T>
+                Uniform<T>* GetUniformPtr(std::string uniformName)
+                {
+                    ShowUniformNotSupportedError<T>();
+                    return nullptr;
+                }
+
+                /**
+                * \brief Sets uniform and will apply it in the next apply run
+                * \tparam T Type of uniform
+                * \param location Location of uniform
+                * \param value Value to set uniform to
+                */
+                template <typename T>
+                void SetUniform(int location, T value) { ShowUniformNotSupportedError<T>(); }
+
+                /**
+                 * \brief Sets uniform and will apply it in the next apply run
+                 * \tparam T Type of uniform
+                 * \param uniformName Name of uniform
+                 * \param value Value to set uniform to
+                 */
+                template <typename T>
+                void SetUniform(std::string uniformName, T value) { ShowUniformNotSupportedError<T>(); }
+
+                /**
+                 * \brief Sets uniform and applies it instantly
+                 * \tparam T Type of uniform
+                 * \param location Location of uniform
+                 * \param value Value to set uniform to
+                 */
+                template <typename T>
+                void SetUniformInstant(int location, T value) { ShowUniformNotSupportedError<T>(); }
+
+                /**
+                 * \brief Sets uniform and applies it instantly
+                 * \tparam T Type of uniform
+                 * \param uniformName Name of uniform
+                 * \param value Value to set uniform to
+                 */
+                template <typename T>
+                void SetUniformInstant(std::string uniformName, T value) { ShowUniformNotSupportedError<T>(); }
+
             private:
                 template <typename T>
                 struct UniformEntry
@@ -117,43 +182,6 @@ namespace GameEngine
 
                     if (location < 0 && !_isTemplate) { Debug::Log::Error("Something went wrong initializing uniform \"" + std::string(uniformName)); }
                 }
-
-            public:
-                explicit UniformStorage();
-                explicit UniformStorage(const GLuint programID);
-
-                void DrawProperties(const std::string& fieldIdentifier);
-                void Apply();
-
-                int GetUniformLocation(const std::string& uniformName);
-
-                UniformStorage* Copy(const GLuint programID) const;
-                void            CopyTo(UniformStorage* uniformStorage) const;
-                void            CopyFrom(const UniformStorage* uniformStorage);
-
-                template <typename T>
-                static void ShowUniformNotSupportedError() { Debug::Log::Error("Uniform type " + std::string(typeid(T).name()) + " is not supported"); }
-
-                template <typename T>
-                void InitializeUniform(std::string uniformName, T defaultVar, const bool includeInApplyQueue = true, const bool resetAfterApply = false)
-                {
-                    ShowUniformNotSupportedError<T>();
-                }
-
-                template <typename T>
-                Uniform<T>* GetUniformPtr(std::string uniformName) { ShowUniformNotSupportedError<T>(); }
-
-                template <typename T>
-                void SetUniform(int location, T value) { ShowUniformNotSupportedError<T>(); }
-
-                template <typename T>
-                void SetUniform(std::string uniformName, T value) { ShowUniformNotSupportedError<T>(); }
-
-                template <typename T>
-                void SetUniformInstant(int location, T value) { ShowUniformNotSupportedError<T>(); }
-
-                template <typename T>
-                void SetUniformInstant(std::string uniformName, T value) { ShowUniformNotSupportedError<T>(); }
         };
 
         ADD_UNIFORM_SPECIALIZATION(Texture2D*, Texture2D)

@@ -25,11 +25,11 @@ using namespace GameEngine::Audio;
 Application::Application()
 {
     glfwInit();
-    
+
     _window.CreateContext();
 
     if (!gladLoadGLLoader(reinterpret_cast<GLADloadproc>(glfwGetProcAddress))) { Log::Error("Failed to initialize GLAD"); }
-    
+
     // Initialize Systems
     Renderer::Initialize();
     PhysicsManager::Initialize();
@@ -46,22 +46,22 @@ void Application::Run()
 
     scene.Bind();
     Initialize(scene);
-    
+
     while (!_window.ShouldClose())
     {
         Gui::BeginNewFrame();
-        
+
         Time::Update();
         Input::Update();
 
         // Executes als OnPhysicsUpdates on game objects if a physics time step happens, also updates the physics world
         PhysicsManager::Update(&scene);
-        
+
         // Execute Update calls on each game object in the current scene
         scene.OnUpdate();
-        
+
         AudioManager::Update();
-        
+
         Renderer::RenderSubmitted();
 
         Gui::Draw();
@@ -74,7 +74,7 @@ void Application::Run()
     ImGui_ImplOpenGL3_Shutdown();
     ImGui_ImplGlfw_Shutdown();
     ImGui::DestroyContext();
-    
+
     OnEnd();
 
     glfwTerminate();

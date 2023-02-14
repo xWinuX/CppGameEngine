@@ -9,12 +9,6 @@ namespace GameEngine
     {
         class CascadedShadowMap
         {
-            private:
-                Texture2DArray* _shadowMap;
-                FrameBuffer*    _shadowDepthMap;
-                glm::uvec2      _size;
-                glm::mat4       _projection = glm::identity<glm::mat4>();
-
             public:
                 explicit        CascadedShadowMap(glm::uvec2 size);
                 void            Bind() const;
@@ -24,6 +18,12 @@ namespace GameEngine
                 void SetProjection(glm::mat4 projection);
 
                 glm::mat4 GetProjection() const;
+
+            private:
+                Texture2DArray* _shadowMap;
+                FrameBuffer*    _shadowDepthMap;
+                glm::uvec2      _size;
+                glm::mat4       _projection = glm::identity<glm::mat4>();
         };
     }
 }

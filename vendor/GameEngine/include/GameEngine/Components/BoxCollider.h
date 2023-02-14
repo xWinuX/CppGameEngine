@@ -10,17 +10,17 @@ namespace GameEngine
     {
         class BoxCollider : public Collider
         {
-            private:
-                reactphysics3d::BoxShape* _boxShape;
-                glm::vec3 _halfExtends;
-
-            protected:
-                void OnUpdateEnd() override;
-            
             public:
                 explicit BoxCollider(glm::vec3 halfExtends);
                 ~BoxCollider() override;
                 reactphysics3d::CollisionShape* GetCollisionShape() override;
+
+            protected:
+                void OnUpdateEnd() override;
+
+            private:
+                reactphysics3d::BoxShape* _boxShape;
+                glm::vec3                 _halfExtends;
         };
     }
 }

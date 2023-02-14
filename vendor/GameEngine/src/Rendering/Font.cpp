@@ -42,8 +42,8 @@ Font::Font(const std::string& ttsFilePath)
             TextureParams textureParams;
             textureParams.Format         = GL_RGB;
             textureParams.InternalFormat = GL_RGB8;
-            _texture                      = new Texture2D(const_cast<unsigned char*>(atlasStorage.pixels), glm::uvec2(atlasStorage.width, atlasStorage.height), textureParams);
-            _sprite                       = new SpriteSet(_texture, fontGeometry);
+            _texture                     = new Texture2D(const_cast<unsigned char*>(atlasStorage.pixels), glm::uvec2(atlasStorage.width, atlasStorage.height), textureParams);
+            _sprite                      = new SpriteSet(_texture, fontGeometry);
 
             _fontGeometry = fontGeometry;
             _scale        = 1.0f / static_cast<float>(_fontGeometry.getMetrics().ascenderY - _fontGeometry.getMetrics().descenderY);
@@ -54,7 +54,7 @@ Font::Font(const std::string& ttsFilePath)
                 _characterToSpriteFrameIndexMap[glyphGeometry.getCodepoint()] = CharacterInfo{_sprite->GetSprite(spriteFrameIndex), glyphGeometry};
                 spriteFrameIndex++;
             }
-            
+
             // Cleanup
             msdfgen::destroyFont(font);
         }
@@ -63,7 +63,7 @@ Font::Font(const std::string& ttsFilePath)
 }
 
 SpriteSet* Font::GetSprite() const { return _sprite; }
-Texture2D*   Font::GetTexture() const { return _texture; }
+Texture2D* Font::GetTexture() const { return _texture; }
 
 const Font::CharacterInfo* Font::GetCharacterInfo(const msdfgen::unicode_t character)
 {

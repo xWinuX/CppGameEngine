@@ -18,41 +18,6 @@ namespace GameEngine
     {
         class Renderer
         {
-            private:
-                typedef std::map<Layer, std::map<Material*, std::vector<Renderable*>>>                       RenderableStructure;
-                typedef std::map<Layer, std::map<Material*, std::map<Texture2D*, std::vector<Renderable2D*>>>> Renderable2DBatchStructure;
-
-                enum StaticTextureBinding
-                {
-                    SpriteBatchAtlasPage = 14,
-                    ShadowMap = 15,
-                };
-
-                static std::vector<ShaderUseCallback*> _shaderUseCallbacks;
-                static std::vector<RenderTarget*>      _renderTargets;
-
-                // Shadows
-                static Shader* _shadowShader;
-                static Shader* _shadowSpriteShader;
-
-                static CascadedShadowMap* _cascadedShadowMap;
-
-                // 3D
-                static RenderableStructure _opaqueRenderables;
-                static RenderableStructure _transparentRenderables;
-
-                // 2D Batch Vars
-                static const size_t Renderable2DBatchMaxQuads;
-                static const size_t Renderable2DBatchMaxSize;
-
-                static unsigned char*     _renderable2DBatchVertexData;
-                static VertexArrayObject* _renderable2DBatchVertexArrayObject;
-                static VertexBuffer*      _renderable2DBatchVertexBuffer;
-                static IndexBuffer*       _renderable2DBatchIndexBuffer;
-
-                static Renderable2DBatchStructure _opaqueBatchRenderable2Ds;
-                static Renderable2DBatchStructure _transparentBatchRenderable2Ds;
-
             public:
                 static void Initialize();
 
@@ -87,7 +52,7 @@ namespace GameEngine
                         const Material::CullFace   cullFace   = material->GetCullFace();
                         const Material::RenderMode renderMode = material->GetRenderMode();
                         const Material::DepthFunc  depthFunc  = material->GetDepthFunc();
-                        
+
                         // Check if new shader should be activated
                         Shader* newShader = material->GetShader();
                         if (shader == nullptr || shader != newShader)
@@ -97,7 +62,7 @@ namespace GameEngine
 
                             _cascadedShadowMap->GetTexture()->Bind(15);
 
-                            
+
                             for (ShaderUseCallback* shaderUseCallback : _shaderUseCallbacks) { shaderUseCallback->OnShaderUse(shader); }
                         }
 
@@ -142,6 +107,41 @@ namespace GameEngine
 
                     return numDrawCalls;
                 }
+
+            private:
+                typedef std::map<Layer, std::map<Material*, std::vector<Renderable*>>>                         RenderableStructure;
+                typedef std::map<Layer, std::map<Material*, std::map<Texture2D*, std::vector<Renderable2D*>>>> Renderable2DBatchStructure;
+
+                enum StaticTextureBinding
+                {
+                    SpriteBatchAtlasPage = 14,
+                    ShadowMap            = 15,
+                };
+
+                static std::vector<ShaderUseCallback*> _shaderUseCallbacks;
+                static std::vector<RenderTarget*>      _renderTargets;
+
+                // Shadows
+                static Shader* _shadowShader;
+                static Shader* _shadowSpriteShader;
+
+                static CascadedShadowMap* _cascadedShadowMap;
+
+                // 3D
+                static RenderableStructure _opaqueRenderables;
+                static RenderableStructure _transparentRenderables;
+
+                // 2D Batch Vars
+                static const size_t Renderable2DBatchMaxQuads;
+                static const size_t Renderable2DBatchMaxSize;
+
+                static unsigned char*     _renderable2DBatchVertexData;
+                static VertexArrayObject* _renderable2DBatchVertexArrayObject;
+                static VertexBuffer*      _renderable2DBatchVertexBuffer;
+                static IndexBuffer*       _renderable2DBatchIndexBuffer;
+
+                static Renderable2DBatchStructure _opaqueBatchRenderable2Ds;
+                static Renderable2DBatchStructure _transparentBatchRenderable2Ds;
         };
     }
 }

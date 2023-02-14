@@ -15,6 +15,23 @@ namespace GameEngine
     {
         class Camera final : public Component, public Rendering::RenderTarget
         {
+            public:
+                Camera(float fovInDegrees, float zNear, float zFar, Rendering::Material* frameBufferMaterial, Rendering::Material* skyboxMaterial);
+                float                   GetFOVInDegrees() const;
+                void                    SetFOVInDegrees(float value);
+                float                   GetNearPlan() const;
+                float                   GetFarPlan() const;
+                glm::mat4               GetViewMatrix() const;
+                glm::mat4               CreatePerspectiveProjection(const float nearPlan, const float farPlane) const;
+                std::vector<glm::vec4>  CreateViewFrustumCorners(float nearPlane, float farPlane) const;
+                void                    CreateViewFrustumCorners(glm::mat4 projectionMatrix, std::vector<glm::vec4>& vector) const;
+                std::vector<glm::vec4>& GetViewFrustumCorners();
+                static Camera*          GetMain();
+
+            protected:
+                void OnUpdateEnd() override;
+                void OnGuiDraw() override;
+
             private:
                 static Camera*         _main;
                 float                  _fovInDegrees;
@@ -44,23 +61,6 @@ namespace GameEngine
                 void UpdateProjectionMatrix();
                 void OnShaderUse(Rendering::Shader* shader) override;
                 void Bind() override;
-
-            protected:
-                void OnUpdateEnd() override;
-                void OnGuiDraw() override;
-
-            public:
-                Camera(float fovInDegrees, float zNear, float zFar, Rendering::Material* frameBufferMaterial, Rendering::Material* skyboxMaterial);
-                float                   GetFOVInDegrees() const;
-                void                    SetFOVInDegrees(float value);
-                float                   GetNearPlan() const;
-                float                   GetFarPlan() const;
-                glm::mat4               GetViewMatrix() const;
-                glm::mat4               CreatePerspectiveProjection(const float nearPlan, const float farPlane) const;
-                std::vector<glm::vec4>  CreateViewFrustumCorners(float nearPlane, float farPlane) const;
-                void                    CreateViewFrustumCorners(glm::mat4 projectionMatrix, std::vector<glm::vec4>& vector) const;
-                std::vector<glm::vec4>& GetViewFrustumCorners();
-                static Camera*          GetMain();
         };
     }
 }

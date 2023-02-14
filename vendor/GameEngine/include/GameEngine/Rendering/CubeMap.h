@@ -9,11 +9,11 @@ namespace GameEngine
     {
         class CubeMap : public Texture<GL_TEXTURE_CUBE_MAP>
         {
-            private:
-                static const std::vector<std::string> SuffixOrder;
-
             public:
                 explicit CubeMap(const std::string& filePathWithoutExtension, const std::string& extension);
+
+            private:
+                static const std::vector<std::string> SuffixOrder;
         };
     }
 }

@@ -7,14 +7,14 @@ namespace GameEngine
     {
         friend Application;
 
-        private:
-            static float _previousTimeSinceStart;
-            static float _deltaTime;
-            static void  Update();
-
         public:
             static float GetDeltaTime();
             static float GetPhysicsDeltaTime();
             static float GetTimeSinceStart();
+
+        private:
+            static float _previousTimeSinceStart;
+            static float _deltaTime;
+            static void  Update();
     };
 }

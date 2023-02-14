@@ -10,13 +10,14 @@ namespace GameEngine
     {
         class AudioListener final : public Component
         {
+            public:
+                AudioListener();
+                void OnUpdateEnd() override;
+
             private:
                 FMOD_VECTOR _fmodPosition = {0, 0, 0};
                 FMOD_VECTOR _fmodUp       = {0, 1, 0};
                 FMOD_VECTOR _fmodForward  = {0, 0, 1};
-            public:
-                AudioListener();
-                void OnUpdateEnd() override;
         };
     }
 }

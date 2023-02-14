@@ -12,6 +12,9 @@ namespace GameEngine
         {
             class Cube
             {
+                public:
+                    static Rendering::Primitive* GetPrimitive();
+
                 private:
                     struct VertexPositionColorUV
                     {
@@ -19,9 +22,6 @@ namespace GameEngine
                         glm::vec4 Color;
                         glm::vec2 TexCoords;
                     };
-
-                public:
-                    static Rendering::Primitive* GetPrimitive();
             };
         }
     }

@@ -11,19 +11,6 @@ namespace GameEngine
     {
         class TextRenderer final : public Component, public Rendering::Renderable2D
         {
-            private:
-                Rendering::Font*                         _font;
-                Rendering::Material*                     _material;
-                std::string                              _text         = "abcdefghij\nklmnopqrstuvxy";
-                std::vector<Rendering::Sprite::QuadData> _quads        = std::vector<Rendering::Sprite::QuadData>(32);
-                bool                                     _needsUpdate  = false;
-                bool                                     _alwaysUpdate = false;
-                void                                     UpdateQuads();
-
-            protected:
-                void OnStart() override;
-                void OnUpdateEnd() override;
-
             public:
                 TextRenderer(Rendering::Font* font, Rendering::Material* material);
 
@@ -34,6 +21,19 @@ namespace GameEngine
                 void                  CopyQuadData(unsigned char* destination) override;
                 void                  SetText(const std::string& text);
                 void                  SetAlwaysUpdate(const bool alwaysUpdate);
+
+            protected:
+                void OnStart() override;
+                void OnUpdateEnd() override;
+
+            private:
+                Rendering::Font*                         _font;
+                Rendering::Material*                     _material;
+                std::string                              _text         = "abcdefghij\nklmnopqrstuvxy";
+                std::vector<Rendering::Sprite::QuadData> _quads        = std::vector<Rendering::Sprite::QuadData>(32);
+                bool                                     _needsUpdate  = false;
+                bool                                     _alwaysUpdate = false;
+                void                                     UpdateQuads();
         };
     }
 }

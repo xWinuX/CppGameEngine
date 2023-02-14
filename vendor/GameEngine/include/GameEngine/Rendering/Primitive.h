@@ -12,12 +12,6 @@ namespace GameEngine
         // TODO: evaluate if this is even needed, i could just put all this info in the vao class
         class Primitive
         {
-            private:
-                VertexBuffer*       _vertexBuffer;
-                IndexBuffer*        _indexBuffer;
-                VertexBufferLayout* _vertexBufferLayout;
-                VertexArrayObject*  _vertexArrayObject;
-
             public:
                 Primitive(VertexBuffer* vertexBuffer, IndexBuffer* indexBuffer, VertexBufferLayout* vertexBufferLayout);
                 ~Primitive();
@@ -25,6 +19,12 @@ namespace GameEngine
                 VertexBuffer*       GetVertexBuffer() const;
                 IndexBuffer*        GetIndexBuffer() const;
                 VertexBufferLayout* GetVertexBufferLayout() const;
+
+            private:
+                VertexBuffer*       _vertexBuffer;
+                IndexBuffer*        _indexBuffer;
+                VertexBufferLayout* _vertexBufferLayout;
+                VertexArrayObject*  _vertexArrayObject;
         };
     }
 }

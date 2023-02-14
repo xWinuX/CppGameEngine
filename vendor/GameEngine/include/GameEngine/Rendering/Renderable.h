@@ -8,9 +8,6 @@ namespace GameEngine
     {
         class Renderable
         {
-            private:
-                Layer _layer = Layer::L_1;
-
             public:
                 virtual ~Renderable() = default;
 
@@ -20,6 +17,9 @@ namespace GameEngine
 
                 void  SetLayer(const Layer layer);
                 Layer GetLayer() const;
+
+            private:
+                Layer _layer = Layer::L_1;
         };
     }
 }

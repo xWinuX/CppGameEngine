@@ -8,7 +8,7 @@ glm::vec2 Input::_previousMousePosition = glm::zero<glm::vec2>();
 
 void Input::Update()
 {
-    _previousMousePosition =  GetMousePosition();
+    _previousMousePosition = GetMousePosition();
     glfwPollEvents();
 }
 
@@ -39,7 +39,4 @@ glm::vec2 Input::GetMousePosition()
     return {static_cast<float>(xPos), static_cast<float>(yPos)};
 }
 
-glm::vec2 Input::GetMouseDelta()
-{
-    return _previousMousePosition - GetMousePosition();
-}
+glm::vec2 Input::GetMouseDelta() { return _previousMousePosition - GetMousePosition(); }

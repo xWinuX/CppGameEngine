@@ -12,7 +12,14 @@ Sprite::Sprite(Texture2D* texture, const AdditionalInfo additionalInfo):
     _pixelsPerUnit(additionalInfo.PixelsPerUnit),
     _pixelsPerUnitFactor(1.0f / static_cast<float>(additionalInfo.PixelsPerUnit)) { CreateSpriteQuad(glm::vec2(0.0f, 0.0f), glm::vec2(1.0f, 1.0f), additionalInfo.Origin); }
 
-Sprite::Sprite(Texture2D* texture, const glm::uvec2 pixelPosition, const glm::uvec2 size, const glm::vec2 uvTopLeft, const glm::vec2 uvBottomRight, const AdditionalInfo additionalInfo):
+Sprite::Sprite(
+    Texture2D*           texture,
+    const glm::uvec2     pixelPosition,
+    const glm::uvec2     size,
+    const glm::vec2      uvTopLeft,
+    const glm::vec2      uvBottomRight,
+    const AdditionalInfo additionalInfo
+):
     _sourceTexture(texture),
     _texture(texture),
     _pixelPosition(pixelPosition),
@@ -20,7 +27,14 @@ Sprite::Sprite(Texture2D* texture, const glm::uvec2 pixelPosition, const glm::uv
     _pixelsPerUnit(additionalInfo.PixelsPerUnit),
     _pixelsPerUnitFactor(1.0f / static_cast<float>(_pixelsPerUnit)) { CreateSpriteQuad(uvTopLeft, uvBottomRight, additionalInfo.Origin); }
 
-Sprite::Sprite(Texture2D* texture, const glm::uvec2 pixelPosition, const glm::vec4 posLRTB, const glm::vec2 uvTopLeft, const glm::vec2 uvBottomRight, const AdditionalInfo additionalInfo):
+Sprite::Sprite(
+    Texture2D*           texture,
+    const glm::uvec2     pixelPosition,
+    const glm::vec4      posLRTB,
+    const glm::vec2      uvTopLeft,
+    const glm::vec2      uvBottomRight,
+    const AdditionalInfo additionalInfo
+):
     _sourceTexture(texture),
     _texture(texture),
     _pixelPosition(pixelPosition),
@@ -105,9 +119,9 @@ unsigned char* Sprite::GetQuadDataWithTransform(const size_t frameIndex, const g
 unsigned char* Sprite::GetQuadData(const size_t frameIndex) { return reinterpret_cast<unsigned char*>(_quadData); }
 
 Texture2D* Sprite::GetTexture(const size_t frameIndex) { return _texture; }
-float    Sprite::GetPixelsPerUnitFactor() const { return _pixelsPerUnitFactor; }
+float      Sprite::GetPixelsPerUnitFactor() const { return _pixelsPerUnitFactor; }
 
 
-Texture2D*   Sprite::GetSourceTexture() const { return _sourceTexture; }
+Texture2D* Sprite::GetSourceTexture() const { return _sourceTexture; }
 glm::vec2  Sprite::GetPixelPosition() const { return _pixelPosition; }
 glm::uvec2 Sprite::GetSize() const { return _size; }

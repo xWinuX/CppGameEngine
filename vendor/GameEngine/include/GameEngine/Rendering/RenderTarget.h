@@ -22,11 +22,12 @@ namespace GameEngine
 
                 bool GetRenderShadows() const;
                 void SetRenderShadows(bool renderShadows);
-            
+
                 // Layer Mask Source: https://dietertack.medium.com/using-bit-flags-in-c-d39ec6e30f08#:~:text=Bit%20flags%20are%20a%20programming,bit%20to%20represent%20each%20state.
                 void AddActiveLayer(Layer layer);
                 void RemoveActiveLayer(Layer layer);
                 bool HasActiveLayer(Layer layer) const;
+
             protected:
                 void         ResizeFrameBuffer(glm::uvec2 size);
                 virtual void Bind();
@@ -35,14 +36,14 @@ namespace GameEngine
 
             private:
                 uint8_t _layerMask = 1;
-            
+
                 TextureParams _renderTextureParams;
 
                 FrameBuffer*  _frameBuffer   = nullptr;
                 RenderBuffer* _renderBuffer  = nullptr;
-                Texture2D*      _renderTexture = nullptr;
+                Texture2D*    _renderTexture = nullptr;
 
-                Material*               _material;
+                Material*             _material;
                 Rendering::Primitive* _screenQuad;
 
                 bool _renderShadows = true;

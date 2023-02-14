@@ -10,32 +10,9 @@ namespace GameEngine
     {
         class Transform final : public Component
         {
-            private:
-                glm::vec3 _localPosition = glm::vec3(0.0f, 0.0f, 0.0f);
-                glm::quat _localRotation = glm::identity<glm::quat>();
-                glm::vec3 _localScale    = glm::vec3(1.0f, 1.0f, 1.0f);
-                glm::mat4 _trs           = glm::identity<glm::mat4>();
-
-                reactphysics3d::Transform _physicsTransform = reactphysics3d::Transform(
-                                                                                        reactphysics3d::Vector3(_localPosition.x, _localPosition.y, _localPosition.z),
-                                                                                        reactphysics3d::Quaternion(_localRotation.x, _localRotation.y, _localRotation.z,
-                                                                                                                   _localRotation.w)
-                                                                                       );
-
-                glm::mat4 GetParentTRS() const;
-                glm::quat GetParentRotation() const;
-
-                static const glm::vec4 Forward;
-                static const glm::vec4 Up;
-                static const glm::vec4 Right;
-
-            protected:
-                void OnUpdateEnd() override;
-                void OnGuiDraw() override;
-
             public:
                 Transform();
-            
+
                 glm::vec3 GetPosition() const;
                 glm::vec3 GetLocalPosition() const;
                 glm::quat GetRotation() const;
@@ -64,6 +41,29 @@ namespace GameEngine
                 glm::vec3 ToLocalSpace(glm::vec3 vec3) const;
 
                 reactphysics3d::Transform& GetPhysicsTransform();
+
+            protected:
+                void OnUpdateEnd() override;
+                void OnGuiDraw() override;
+
+            private:
+                glm::vec3 _localPosition = glm::vec3(0.0f, 0.0f, 0.0f);
+                glm::quat _localRotation = glm::identity<glm::quat>();
+                glm::vec3 _localScale    = glm::vec3(1.0f, 1.0f, 1.0f);
+                glm::mat4 _trs           = glm::identity<glm::mat4>();
+
+                reactphysics3d::Transform _physicsTransform = reactphysics3d::Transform(
+                                                                                        reactphysics3d::Vector3(_localPosition.x, _localPosition.y, _localPosition.z),
+                                                                                        reactphysics3d::Quaternion(_localRotation.x, _localRotation.y, _localRotation.z,
+                                                                                                                   _localRotation.w)
+                                                                                       );
+
+                glm::mat4 GetParentTRS() const;
+                glm::quat GetParentRotation() const;
+
+                static const glm::vec4 Forward;
+                static const glm::vec4 Up;
+                static const glm::vec4 Right;
         };
     }
 }

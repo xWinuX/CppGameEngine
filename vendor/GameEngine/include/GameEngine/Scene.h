@@ -8,13 +8,6 @@ namespace GameEngine
     {
         friend class GameObject;
 
-        private:
-            GameObject*   _sceneRoot = nullptr;
-            std::list<GameObject*> _uninitializedGameObjects = std::list<GameObject*>();
-            static Scene* _currentScene;
-            static Scene* GetCurrentScene();
-            void          AddGameObject(GameObject* gameObject);
-
         public:
             Scene();
             virtual      ~Scene();
@@ -22,5 +15,12 @@ namespace GameEngine
             virtual void OnUpdate();
             virtual void OnPhysicsUpdate() const;
             virtual void OnPhysicsUpdateEnd(float interpolationFactor) const;
+
+        private:
+            GameObject*            _sceneRoot                = nullptr;
+            std::list<GameObject*> _uninitializedGameObjects = std::list<GameObject*>();
+            static Scene*          _currentScene;
+            static Scene*          GetCurrentScene();
+            void                   AddGameObject(GameObject* gameObject);
     };
 }

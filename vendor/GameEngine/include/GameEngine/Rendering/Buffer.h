@@ -9,13 +9,6 @@ namespace GameEngine
         template <GLenum BufferType>
         class Buffer
         {
-            protected:
-                unsigned char* _buffer;
-                GLuint         _bufferID = 0;
-                size_t         _elementSize;
-                size_t         _numElements;
-                GLenum         _drawType;
-
             public:
                 explicit Buffer(unsigned char* buffer, const size_t elementSize, const size_t numElements, const GLenum drawType = GL_STATIC_DRAW):
                     _buffer(buffer),
@@ -32,7 +25,7 @@ namespace GameEngine
                 ~Buffer()
                 {
                     glDeleteBuffers(1, &_bufferID);
-                    
+
                     delete[] _buffer;
                 }
 
@@ -74,6 +67,13 @@ namespace GameEngine
                     glBindBuffer(BufferType, _bufferID);
                     glBufferSubData(BufferType, startOffsetInBytes, startOffsetInBytes + numBytes, data);
                 }
+
+            protected:
+                unsigned char* _buffer;
+                GLuint         _bufferID = 0;
+                size_t         _elementSize;
+                size_t         _numElements;
+                GLenum         _drawType;
         };
     }
 }

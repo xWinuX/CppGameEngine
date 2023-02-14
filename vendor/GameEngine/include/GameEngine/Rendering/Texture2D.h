@@ -9,16 +9,16 @@ namespace GameEngine
 {
     namespace Rendering
     {
-        class Texture2D : public Texture<GL_TEXTURE_2D>
+        class Texture2D final : public Texture<GL_TEXTURE_2D>
         {
+            public:
+                explicit           Texture2D(const std::string& filePath, const TextureParams textureParams = TextureParams());
+                explicit           Texture2D(unsigned char* buffer, const glm::uvec2 size, const TextureParams textureParams = TextureParams());
+                const std::string& GetName() const;
+
             private:
                 std::string _name;
-                void CreateTexture(const TextureParams textureParams) const;
-
-            public:
-                explicit Texture2D(const std::string& filePath, const TextureParams textureParams = TextureParams());
-                explicit Texture2D(unsigned char* buffer, const glm::uvec2 size, const TextureParams textureParams = TextureParams());
-                const std::string& GetName() const;
+                void        CreateTexture(const TextureParams textureParams) const;
         };
     }
 }

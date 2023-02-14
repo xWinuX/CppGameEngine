@@ -32,7 +32,7 @@ namespace GameEngine
                         previousOffset = offset;
                     }
                 }
-              
+
                 static std::string ReplaceIncludeMacros(const std::string& filePath);
         };
     }

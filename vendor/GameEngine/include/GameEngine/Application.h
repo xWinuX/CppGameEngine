@@ -11,14 +11,14 @@ namespace GameEngine
 {
     class Application
     {
-        protected:
-            GameEngine::Window _window = GameEngine::Window(glm::ivec2(1920, 1080));
-
         public:
             Application();
             virtual void Initialize(GameEngine::Scene& scene) {}
 
-            void Run();
+            void         Run();
             virtual void OnEnd() {}
+
+        protected:
+            GameEngine::Window _window = GameEngine::Window(glm::ivec2(1920, 1080));
     };
 }

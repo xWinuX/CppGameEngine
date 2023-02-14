@@ -10,11 +10,6 @@ namespace GameEngine
     {
         class RenderablePrimitive final : public Renderable
         {
-            private:
-                Primitive*             _primitive;
-                Material*              _material;
-                Components::Transform* _transform = nullptr;
-
             public:
                 explicit  RenderablePrimitive(Primitive* primitive, Material* material = nullptr);
                 void      OnBeforeDraw() override;
@@ -22,6 +17,11 @@ namespace GameEngine
                 Material* GetMaterial() override;
                 void      SetMaterial(Material* material);
                 void      SetTransform(Components::Transform* transform);
+
+            private:
+                Primitive*             _primitive;
+                Material*              _material;
+                Components::Transform* _transform = nullptr;
         };
     }
 }

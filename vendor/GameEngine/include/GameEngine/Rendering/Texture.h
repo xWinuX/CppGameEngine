@@ -12,8 +12,8 @@ namespace GameEngine
     {
         enum TextureFilterMode
         {
-            Linear  = GL_LINEAR,
-            Nearest = GL_NEAREST,
+            Linear       = GL_LINEAR,
+            Nearest      = GL_NEAREST,
             LinearMipMap = GL_LINEAR_MIPMAP_LINEAR,
         };
 
@@ -37,7 +37,7 @@ namespace GameEngine
             GLenum            ChannelDataType  = GL_UNSIGNED_BYTE;
             glm::vec4         BorderColor      = glm::vec4(1.0f);
         };
-        
+
         template <GLenum TextureType>
         class Texture
         {
@@ -58,10 +58,10 @@ namespace GameEngine
                 GLuint            GetTextureID() const { return _textureID; }
 
             protected:
-                Texture(const TextureParams importSettings = TextureParams()):
+                explicit Texture(const TextureParams importSettings = TextureParams()):
                     _size(glm::uvec2(0)) { CreateTextureAndSetParams(nullptr, importSettings); }
 
-                Texture(const glm::uvec2 size, const TextureParams importSettings = TextureParams()):
+                explicit Texture(const glm::uvec2 size, const TextureParams importSettings = TextureParams()):
                     _size(size) { CreateTextureAndSetParams(nullptr, importSettings); }
 
                 explicit Texture(const std::string& filePath, const TextureParams importSettings = TextureParams())

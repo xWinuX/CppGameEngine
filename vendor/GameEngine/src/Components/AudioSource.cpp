@@ -54,9 +54,8 @@ void AudioSource::OnGuiDraw()
 {
     const float previousVolume = _volume;
     ImGui::SliderFloat(GetImGuiIDString("Volume").c_str(), &_volume, 0.0f, 1.0f);
-   
-        FMOD_SINGLE_CHANNEL_CALL(_fmodChannel->setVolume(_volume))
-  
+
+    FMOD_SINGLE_CHANNEL_CALL(_fmodChannel->setVolume(_volume))
 }
 
 void AudioSource::SetVolume(const float volume) { _volume = volume; }

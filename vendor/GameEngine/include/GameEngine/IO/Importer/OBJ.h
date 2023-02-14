@@ -14,6 +14,9 @@ namespace GameEngine
         {
             class OBJ
             {
+                public:
+                    static std::vector<GameEngine::Rendering::Mesh*> ImportModel(const std::string& filePath);
+
                 private:
                     struct VertexPositionUVNormal
                     {
@@ -21,13 +24,15 @@ namespace GameEngine
                         glm::vec2 TexCoords;
                         glm::vec3 Normal;
                     };
-                
+
                     static const std::vector<Rendering::VertexBufferAttribute> VertexBufferAttributes;
 
-                    static void AddMesh(const std::string& name, std::vector<VertexPositionUVNormal>& vertexBuffer, std::vector<unsigned int>& indexBuffer, std::vector<Rendering::Mesh*>& meshes);
-
-                public:
-                    static std::vector<GameEngine::Rendering::Mesh*> ImportModel(const std::string& filePath);
+                    static void AddMesh(
+                        const std::string&                   name,
+                        std::vector<VertexPositionUVNormal>& vertexBuffer,
+                        std::vector<unsigned int>&           indexBuffer,
+                        std::vector<Rendering::Mesh*>&       meshes
+                    );
             };
         }
     }

@@ -30,7 +30,6 @@ void VertexArrayObject::AddVertexBuffer(VertexBuffer* vertexBuffer, VertexBuffer
     _vertexBufferLayouts.push_back(vertexBufferLayout);
 }
 
-
 void VertexArrayObject::SetIndexBuffer(IndexBuffer* indexBuffer)
 {
     _indexBuffer = indexBuffer;

@@ -14,6 +14,18 @@ namespace GameEngine
     {
         class PhysicsDebugRenderer final : public Rendering::Renderable
         {
+            public:
+                static void EnableDebugRenderer(bool enable);
+                PhysicsDebugRenderer();
+                ~PhysicsDebugRenderer() override;
+
+                void Render();
+
+                void                 OnDraw() override;
+                Rendering::Material* GetMaterial() override;
+
+                void SetMaterial(Rendering::Material* material);
+
             private:
                 const size_t _vertexSize  = sizeof(reactphysics3d::DebugRenderer::DebugTriangle) / 3;
                 const size_t _maxVertices = 200000;
@@ -32,18 +44,6 @@ namespace GameEngine
                 unsigned int*  _indices  = new unsigned int[_maxVertices];
 
                 Rendering::Material* _material = nullptr;
-
-            public:
-                static void EnableDebugRenderer(bool enable);
-                PhysicsDebugRenderer();
-                ~PhysicsDebugRenderer() override;
-
-                void Render();
-
-                void                 OnDraw() override;
-                Rendering::Material* GetMaterial() override;
-
-                void SetMaterial(Rendering::Material* material);
         };
     }
 }

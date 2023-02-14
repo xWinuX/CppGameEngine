@@ -29,7 +29,6 @@ void OBJ::AddMesh(const std::string& name, std::vector<VertexPositionUVNormal>& 
     VertexPositionUVNormal* vertices = new VertexPositionUVNormal[vertexBuffer.size()];
     std::copy(vertexBuffer.begin(), vertexBuffer.end(), vertices);
 
-
     VertexBufferAttribute* pVertexAttributes = new VertexBufferAttribute[3];
     std::copy(VertexBufferAttributes.begin(), VertexBufferAttributes.end(), pVertexAttributes);
 

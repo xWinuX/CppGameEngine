@@ -37,7 +37,7 @@ void TextRenderer::UpdateQuads()
         if (!characterInfo->GlyphGeometry.isWhitespace())
         {
             const Sprite* sprite = characterInfo->Sprite;
-            
+
             Sprite::QuadData* quadData = sprite->GetQuadDataPtr();
             quadData->Transform[3][0]  = trs[3][0] + cursor.x;
             quadData->Transform[3][1]  = trs[3][1] + cursor.y;

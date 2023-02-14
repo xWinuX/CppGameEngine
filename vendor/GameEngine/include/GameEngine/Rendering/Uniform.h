@@ -14,6 +14,11 @@
 
 #define LOCATION_CHECK if (_location < 0) { return; }
 
+
+/**
+ * \brief Normal sampler specification without fancy gui
+ * \param type Typpe of Sampler (CubeMap, Texture2D etc...)
+ */
 #define SAMPLER_SPECIFICATION(type) \
 template <> \
 class Uniform<type> \
@@ -64,16 +69,6 @@ namespace GameEngine
         template <typename T>
         class Uniform
         {
-            private:
-                const std::string _name;
-                const GLint       _location = -1;
-                const T           _defaultValue;
-                T                 _value;
-
-                static size_t _id;
-
-                std::string GetNameWithID(const std::string& identifier) const { return _name + "##" + identifier; }
-
             public:
                 Uniform():
                     _defaultValue(),
@@ -98,6 +93,16 @@ namespace GameEngine
                 T GetDefaultValue() { return _defaultValue; }
 
                 T* GetValuePtr() { return &_value; }
+
+            private:
+                const std::string _name;
+                const GLint       _location = -1;
+                const T           _defaultValue;
+                T                 _value;
+
+                static size_t _id;
+
+                std::string GetNameWithID(const std::string& identifier) const { return _name + "##" + identifier; }
         };
 
         template <typename T>
@@ -106,21 +111,11 @@ namespace GameEngine
         template <>
         class Uniform<Texture2D*>
         {
-            private:
-                const std::string _name;
-                const GLint       _location = -1;
-                const Texture2D*  _defaultValue;
-                const Texture2D*  _value;
-                const char*       _selectedTextureName = nullptr;
-                int               _previousSlot        = 0;
-
-                std::string GetNameWithID(const std::string& identifier) const { return _name + "##" + identifier; }
-
             public:
                 Uniform():
                     _defaultValue(), _value() { }
 
-                Uniform(const std::string uniformName, const GLint location, const Texture2D* defaultValue):
+                Uniform(const std::string& uniformName, const GLint location, const Texture2D* defaultValue):
                     _name(uniformName), _location(location), _defaultValue(defaultValue), _value(defaultValue)
                 {
                     if (defaultValue != nullptr) { _selectedTextureName = defaultValue->GetName().c_str(); }
@@ -131,8 +126,9 @@ namespace GameEngine
                     LOCATION_CHECK
 
                     if (_value == nullptr) { return; }
-                    
+
                     if (slot == -1) { slot = _previousSlot; }
+
                     _value->Bind(slot);
                     glUniform1i(_location, slot);
                     _previousSlot = slot;
@@ -146,14 +142,19 @@ namespace GameEngine
 
                 void Reset() { Set(_defaultValue); }
 
+                // Draws the texture select dropdown
                 void Draw(const std::string& identifier)
                 {
                     LOCATION_CHECK
+
+                    // Draw currently selected texture
                     if (_value != nullptr)
                     {
                         ImGui::Image(reinterpret_cast<void*>(_value->GetTextureID()), {50, 50}, {0, 1}, {1, 0});
                         ImGui::SameLine();
                     }
+
+                    // Draw drop down
                     const std::map<Asset::Texture2D, Texture2D*> textures = AssetDatabase::GetAll<Asset::Texture2D, Texture2D*>();
                     if (ImGui::BeginCombo(GetNameWithID(identifier).c_str(), _selectedTextureName))
                     {
@@ -173,9 +174,21 @@ namespace GameEngine
 
                 std::string GetName() const { return _name; }
                 Texture2D*  GetDefaultValue() const { return const_cast<Texture2D*>(_defaultValue); }
+
+            private:
+                const std::string _name;
+                const GLint       _location = -1;
+                const Texture2D*  _defaultValue;
+                const Texture2D*  _value;
+                const char*       _selectedTextureName = nullptr;
+                int               _previousSlot        = 0;
+
+                std::string GetNameWithID(const std::string& identifier) const { return _name + "##" + identifier; }
         };
 
+        // Specifications
         SAMPLER_SPECIFICATION(Texture2DArray*)
+
         SAMPLER_SPECIFICATION(CubeMap*)
 
         template <>
@@ -190,8 +203,7 @@ namespace GameEngine
             LOCATION_CHECK
             ImGui::InputFloat(GetNameWithID(identifier).c_str(), &_value);
         }
-
-
+        
         template <>
         inline void Uniform<std::vector<float>*>::Apply()
         {

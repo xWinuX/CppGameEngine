@@ -15,9 +15,17 @@ namespace GameEngine
         {
             friend GameEngine::GameObject;
 
-            private:
-                bool _initialized = false;
-                void SetInitialized(const bool initialized);
+            public:
+                explicit Component(const std::string& name);
+                virtual  ~Component() = default;
+
+                std::string GetImGuiName() const;
+                void        SetEnabled(const bool enabled);
+                bool        GetEnabled() const;
+                bool        GetInitialized() const;
+
+                Transform* GetTransform() const;
+
             protected:
                 const std::string       _name = "NO NAME";
                 GameEngine::GameObject* _gameObject;
@@ -44,16 +52,9 @@ namespace GameEngine
                 virtual void OnComponentAdded();
                 virtual void OnOtherComponentAdded(Component* component);
 
-            public:
-                explicit Component(const std::string& name);
-                virtual  ~Component() = default;
-
-                std::string GetImGuiName() const;
-                void        SetEnabled(const bool enabled);
-                bool        GetEnabled() const;
-                bool        GetInitialized() const;
-
-                Transform* GetTransform() const;
+            private:
+                bool _initialized = false;
+                void SetInitialized(const bool initialized);
         };
     }
 }

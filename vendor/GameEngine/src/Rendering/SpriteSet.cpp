@@ -39,7 +39,7 @@ SpriteSet::SpriteSet(Texture2D* texture, const msdf_atlas::FontGeometry& fontGeo
         ib *= texelSize.y;
         ir *= texelSize.x;
         it *= texelSize.y;
-        
+
         const glm::vec2 uvTopLeft     = glm::vec2(il, it);
         const glm::vec2 uvBottomRight = glm::vec2(ir, ib);
 
@@ -51,6 +51,6 @@ SpriteSet::~SpriteSet() { for (const Sprite* sprite : _sprites) { delete sprite;
 
 Sprite*        SpriteSet::GetSprite(const size_t frameIndex) const { return _sprites[frameIndex]; }
 size_t         SpriteSet::GetNumFrames() { return _sprites.size(); }
-Texture2D*       SpriteSet::GetTexture(const size_t frameIndex) { return _sprites[frameIndex]->GetTexture(); }
+Texture2D*     SpriteSet::GetTexture(const size_t frameIndex) { return _sprites[frameIndex]->GetTexture(); }
 unsigned char* SpriteSet::GetQuadDataWithTransform(const size_t frameIndex, const glm::mat4 transform) { return _sprites[frameIndex]->GetQuadDataWithTransform(0, transform); }
 unsigned char* SpriteSet::GetQuadData(const size_t frameIndex) { return _sprites[frameIndex]->GetQuadData(0); }

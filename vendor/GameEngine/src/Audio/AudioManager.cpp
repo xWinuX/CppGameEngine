@@ -14,9 +14,6 @@ void AudioManager::Initialize()
     FMOD_CALL(_fmodSystem->init(1024, FMOD_INIT_NORMAL, 0), "Failed to initialize fmod system")
 }
 
-void AudioManager::Update()
-{
-    _fmodSystem->update();
-}
+void AudioManager::Update() { _fmodSystem->update(); }
 
 FMOD::System* AudioManager::GetFMODSystem() { return _fmodSystem; }

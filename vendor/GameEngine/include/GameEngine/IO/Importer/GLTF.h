@@ -14,6 +14,9 @@ namespace GameEngine
         {
             class GLTF
             {
+                public:
+                    static std::vector<GameEngine::Rendering::Mesh*> ImportModel(const std::string& filePath, bool createCollider = false);
+
                 private:
                     struct TinyGLTFTypeLookupEntry
                     {
@@ -41,9 +44,6 @@ namespace GameEngine
                     static const std::vector<std::string>                              GLTFAttributeOrder;
                     static const std::map<int, GLTF::TinyGLTFTypeLookupEntry>          TinyGltfTypeLookup;
                     static const std::map<int, GLTF::TinyGLTFComponentTypeLookupEntry> TinyGltfComponentTypeLookup;
-
-                public:
-                    static std::vector<GameEngine::Rendering::Mesh*> ImportModel(const std::string& filePath, bool createCollider = false);
             };
         }
     }

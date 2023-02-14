@@ -181,14 +181,14 @@ void Renderer::RenderSubmitted()
         if (renderTarget->_renderShadows && _cascadedShadowMap != nullptr)
         {
             _cascadedShadowMap->Bind();
-            
+
             _shadowSpriteShader->Use();
             glDisable(GL_CULL_FACE);
             RENDER_CALL(
                         _opaqueBatchRenderable2Ds,
                         for (auto p : pair.second) { Render2DBatches(p); }
                        )
-            
+
             _shadowShader->Use();
             glEnable(GL_CULL_FACE);
 
@@ -198,9 +198,8 @@ void Renderer::RenderSubmitted()
                         for (auto p : pair.second) { RenderDefault(p); }
                        )
 
-
             _cascadedShadowMap->Unbind();
-            
+
             glCullFace(GL_BACK);
 
             _cascadedShadowMap->GetTexture()->Bind(StaticTextureBinding::ShadowMap);
@@ -243,8 +242,7 @@ void Renderer::RenderSubmitted()
         renderTarget->Draw();
         glEnable(GL_DEPTH_TEST);
     }
-
-
+    
     // Cleanup
     _renderTargets.clear();
     _opaqueRenderables.clear();
