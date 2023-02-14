@@ -48,10 +48,11 @@ Die meisten Material Werte können geändert werden ausser interne Werte wie die
 Alle GameObjects sind ähnlich wie in Unity in einer Scene Hierarchy drin, dort sieht man auch welche Komponenten angehängt sind und kann ihre Werte verändern.
 
 ### Sonstiges
+Ein paar Reiter sind leer weil es keine exposde Werte gibt.
 
 Um die Directional Light Position zu ändern kann der X/Y Rotations Wert des Directional Lights Gameobjects angepasst werden (Wie in Unity)
 
-Bitte den obersten Transform vom in Ruhe lassen das ist der Transform von der Scene Root und sollte eigentlich nicht geändert ausser man will die Physics Engine wütend machen.
+Der Root Transform kann auch angepasst werden, aber es geht ziemlich kaputt...
 
 # Credits
 

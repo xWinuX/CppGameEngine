@@ -2,7 +2,7 @@
 
 #include "GameEngine/Cursor.h"
 #include "GameEngine/Input.h"
-#include "GameEngine/GUIManager.h"
+#include "GameEngine/Gui.h"
 #include "GameEngine/Physics/PhysicsManager.h"
 #include "../Asset.h"
 #include "../Prefabs/CratePrefab.h"
@@ -21,7 +21,7 @@ GameManager::GameManager():
 
 void GameManager::OnUpdate()
 {
-    if (GameEngine::Input::GetKeyPressed(GLFW_KEY_ESCAPE)) { GUIManager::ToggleHidden(); }
+    if (GameEngine::Input::GetKeyPressed(GLFW_KEY_ESCAPE)) { Gui::ToggleHidden(); }
 
     if (GameEngine::Input::GetKeyPressed(GLFW_KEY_P)) { Physics::PhysicsManager::ToggleDebugWireframe(); }
     if (GameEngine::Input::GetKeyPressed(GLFW_KEY_F))
@@ -30,7 +30,7 @@ void GameManager::OnUpdate()
         Window::GetCurrentWindow()->SetFullscreen(_fullscreen);
     }
 
-    if (GUIManager::IsHidden()) { Cursor::Lock(); }
+    if (Gui::IsHidden()) { Cursor::Lock(); }
     else { Cursor::Unlock(); }
 
     if (ImGui::Button(GetImGuiIDString("Close Application").c_str())) { Window::GetCurrentWindow()->Close(); }

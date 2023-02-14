@@ -1,6 +1,6 @@
 ﻿#include "GameEngine/Scene.h"
 
-#include "GameEngine/GUIManager.h"
+#include "GameEngine/Gui.h"
 #include "GameEngine/Debug/Log.h"
 
 using namespace GameEngine;
@@ -19,7 +19,7 @@ void Scene::OnUpdate()
     _sceneRoot->OnLateUpdate();
     _sceneRoot->OnUpdateEnd();
 
-    if (!GUIManager::IsHidden()) { _sceneRoot->OnDrawGui(); }
+    if (!Gui::IsHidden()) { _sceneRoot->OnDrawGui(); }
 }
 
 void Scene::OnPhysicsUpdate() const { _sceneRoot->OnPhysicsUpdate(); }

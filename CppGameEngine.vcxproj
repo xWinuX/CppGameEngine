@@ -110,7 +110,7 @@
     <ClCompile Include="vendor\GameEngine\src\Cursor.cpp" />
     <ClCompile Include="vendor\GameEngine\src\Debug\Log.cpp" />
     <ClCompile Include="vendor\GameEngine\src\GameObject.cpp" />
-    <ClCompile Include="vendor\GameEngine\src\GUIManager.cpp" />
+    <ClCompile Include="vendor\GameEngine\src\Gui.cpp" />
     <ClCompile Include="vendor\GameEngine\src\ID.cpp" />
     <ClCompile Include="vendor\GameEngine\src\Input.cpp" />
     <ClCompile Include="vendor\GameEngine\src\IO\Importer\GLTF.cpp" />
@@ -215,7 +215,7 @@
     <ClInclude Include="vendor\GameEngine\include\GameEngine\Cursor.h" />
     <ClInclude Include="vendor\GameEngine\include\GameEngine\Debug\Log.h" />
     <ClInclude Include="vendor\GameEngine\include\GameEngine\GameObject.h" />
-    <ClInclude Include="vendor\GameEngine\include\GameEngine\GUIManager.h" />
+    <ClInclude Include="vendor\GameEngine\include\GameEngine\Gui.h" />
     <ClInclude Include="vendor\GameEngine\include\GameEngine\ID.h" />
     <ClInclude Include="vendor\GameEngine\include\GameEngine\Input.h" />
     <ClInclude Include="vendor\GameEngine\include\GameEngine\IO\Importer\GLTF.h" />

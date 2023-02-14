@@ -1,7 +1,7 @@
 ﻿#include "GameEngine/Rendering/CubeMap.h"
 
 #include "stb_image.h"
-#include "GameEngine/GUIManager.h"
+#include "GameEngine/Gui.h"
 #include "GameEngine/Debug/Log.h"
 
 using namespace GameEngine::Rendering;

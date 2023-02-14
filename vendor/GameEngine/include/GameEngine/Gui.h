@@ -2,7 +2,7 @@
 
 namespace GameEngine
 {
-    class GUIManager
+    class Gui
     {
         private:
             static bool _isHidden;

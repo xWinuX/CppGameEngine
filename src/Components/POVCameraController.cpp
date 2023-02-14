@@ -2,7 +2,7 @@
 
 #include "imgui.h"
 #include "GameEngine/Input.h"
-#include "GameEngine/GUIManager.h"
+#include "GameEngine/Gui.h"
 #include "GameEngine/Debug/Log.h"
 #include "GameEngine/Utils/Math.h"
 #include "glm/gtc/quaternion.hpp"
@@ -46,7 +46,7 @@ void POVCameraController::OnLateUpdate()
     const glm::quat lookAt = glm::quatLookAt(direction, up);
 
     // Only update rotation if gui isn't visiable
-    if (GUIManager::IsHidden()) { _transform->SetRotation(glm::slerp(_transform->GetRotation(), lookAt, 0.3f)); }
+    if (Gui::IsHidden()) { _transform->SetRotation(glm::slerp(_transform->GetRotation(), lookAt, 0.3f)); }
 
     _transform->SetPosition(glm::mix(_transform->GetPosition(), _followTransform->GetPosition(), 0.5f));
 
