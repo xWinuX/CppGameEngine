@@ -7,6 +7,9 @@ using namespace GameEngine;
 using namespace GameEngine::Components;
 using namespace GameEngine::Utils;
 
+RainbowLight::RainbowLight():
+    Component("Rainbow Light") {}
+
 void RainbowLight::OnStart() { _pointLight = _gameObject->GetComponent<PointLight>(); }
 
 void RainbowLight::OnUpdate()

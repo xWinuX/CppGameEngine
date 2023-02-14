@@ -11,6 +11,7 @@ using namespace GameEngine::Physics;
 using namespace GameEngine::Components;
 
 Rigidbody::Rigidbody(const reactphysics3d::BodyType bodyType):
+    Component("Rigidbody"),
     _physicsRigidBody(PhysicsManager::GetPhysicsWorld()->createRigidBody(reactphysics3d::Transform())) { _physicsRigidBody->setType(bodyType); }
 
 Rigidbody::~Rigidbody() { PhysicsManager::GetPhysicsWorld()->destroyRigidBody(_physicsRigidBody); }
@@ -35,7 +36,7 @@ void Rigidbody::OnPhysicsUpdateEnd(const float interpolationFactor)
 
     // Don't set rotation if rotation is locked anyway
     if (_physicsRigidBody->getAngularLockAxisFactor().length() > 0.0f) { _transform->SetRotation(quaternion); }
-    
+
     _transform->SetPosition(glm::vec3(position.x, position.y, position.z));
 
     _previousTransform = currentTransform;

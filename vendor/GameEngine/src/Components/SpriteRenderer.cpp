@@ -11,6 +11,7 @@ using namespace GameEngine::Rendering;
 using namespace GameEngine::Components;
 
 SpriteRenderer::SpriteRenderer(Rendering::RenderableSprite* sprite, Rendering::Material* material):
+    Component("Sprite Renderer"),
     _sprite(sprite),
     _material(material) {}
 

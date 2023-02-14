@@ -27,10 +27,10 @@ void CharacterController::OnPhysicsUpdate()
     _moveDirection = glm::zero<glm::vec2>();
 }
 
-void CharacterController::Move(const glm::vec2 direction)
-{
-    _moveDirection = direction * Time::GetPhysicsDeltaTime();
-}
+CharacterController::CharacterController():
+    Component("Character Controller") {}
+
+void CharacterController::Move(const glm::vec2 direction) { _moveDirection = direction * Time::GetPhysicsDeltaTime(); }
 
 void CharacterController::Move(const glm::vec2 direction, const Transform* transform)
 {
@@ -38,8 +38,4 @@ void CharacterController::Move(const glm::vec2 direction, const Transform* trans
     Move(glm::vec2(transformedMove.x, transformedMove.z));
 }
 
-void CharacterController::Jump(const float strength)
-{
-    _jumpStrength = strength;
-}
-
+void CharacterController::Jump(const float strength) { _jumpStrength = strength; }

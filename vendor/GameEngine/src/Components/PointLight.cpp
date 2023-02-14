@@ -13,6 +13,7 @@ std::vector<float>     PointLight::_intensities = std::vector<float>();
 std::vector<float>     PointLight::_ranges      = std::vector<float>();
 
 PointLight::PointLight(const glm::vec4 color, const float range, const float intensity):
+    Component("Point Light"),
     _color(color),
     _range(range),
     _intensity(intensity) {}
@@ -21,7 +22,4 @@ void PointLight::SetColor(const glm::vec4 color) { _color = color; }
 void PointLight::SetRange(const float range) { _range = range; }
 void PointLight::SetIntensity(const float intensity) { _intensity = intensity; }
 
-void PointLight::OnUpdateEnd()
-{
-    Light::AddPointLight(_transform->GetPosition(), _color, _intensity, _range);
-}
+void PointLight::OnUpdateEnd() { Light::AddPointLight(_transform->GetPosition(), _color, _intensity, _range); }

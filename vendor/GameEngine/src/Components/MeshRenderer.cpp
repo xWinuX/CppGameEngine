@@ -7,6 +7,7 @@ using namespace GameEngine::Components;
 using namespace GameEngine::Rendering;
 
 MeshRenderer::MeshRenderer(Rendering::Mesh* mesh):
+    Component("Mesh Renderer"),
     _mesh(mesh) { for (Primitive* primitive : mesh->GetPrimitives()) { _renderablePrimitives.push_back(new RenderablePrimitive(primitive)); } }
 
 MeshRenderer::MeshRenderer(Mesh* mesh, Material* material):

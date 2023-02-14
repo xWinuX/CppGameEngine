@@ -23,6 +23,7 @@ AudioSource::AudioSource(Sound* sound):
     AudioSource(sound, false) { }
 
 AudioSource::AudioSource(Audio::Sound* sound, const bool startImmediately):
+    Component("Audio Source"),
     _sound(sound),
     _startImmediately(startImmediately) {}
 
@@ -45,11 +46,7 @@ void AudioSource::Pause() { FMOD_SINGLE_CHANNEL_NULL_CHECK_CALL(_fmodChannel->se
 
 void AudioSource::Continue() { FMOD_SINGLE_CHANNEL_NULL_CHECK_CALL(_fmodChannel->setPaused(false), "Failed to unpause channel") }
 
-void AudioSource::Play()
-{
-    
-    FMOD_SINGLE_CALL(AudioManager::GetFMODSystem()->playSound(_sound->GetFMODSound(), nullptr, false, &_fmodChannel))
-}
+void AudioSource::Play() { FMOD_SINGLE_CALL(AudioManager::GetFMODSystem()->playSound(_sound->GetFMODSound(), nullptr, false, &_fmodChannel)) }
 
 void AudioSource::PlayPitch(const float pitch)
 {

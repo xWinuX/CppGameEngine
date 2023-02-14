@@ -1,13 +1,15 @@
-﻿#include "GameEngine/Debug/DebugGUIManager.h"
+﻿#include "GameEngine/GUIManager.h"
 
 #include "imgui.h"
 #include "imgui_impl_glfw.h"
 #include "imgui_impl_opengl3.h"
 #include "GameEngine/Window.h"
 
-bool DebugGUIManager::_isHidden = false;
+using namespace GameEngine;
 
-void DebugGUIManager::Initialize()
+bool GUIManager::_isHidden = false;
+
+void GUIManager::Initialize()
 {
     IMGUI_CHECKVERSION();
     ImGui::CreateContext();
@@ -20,7 +22,7 @@ void DebugGUIManager::Initialize()
     ImGui::SetNextWindowSize({200, 200});
 }
 
-void DebugGUIManager::BeginNewFrame()
+void GUIManager::BeginNewFrame()
 {
     ImGui_ImplOpenGL3_NewFrame();
     ImGui_ImplGlfw_NewFrame();
@@ -29,7 +31,7 @@ void DebugGUIManager::BeginNewFrame()
     ImGui::Begin("Debug Window");
 }
 
-void DebugGUIManager::Draw()
+void GUIManager::Draw()
 {
     ImGui::End();
     ImGui::Render();
@@ -37,6 +39,6 @@ void DebugGUIManager::Draw()
     if (!_isHidden) { ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData()); }
 }
 
-bool DebugGUIManager::IsHidden() { return _isHidden; }
-void DebugGUIManager::SetHidden(const bool hidden) { _isHidden = hidden; }
-void DebugGUIManager::ToggleHidden() { _isHidden = !_isHidden; }
+bool GUIManager::IsHidden() { return _isHidden; }
+void GUIManager::SetHidden(const bool hidden) { _isHidden = hidden; }
+void GUIManager::ToggleHidden() { _isHidden = !_isHidden; }

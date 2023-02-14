@@ -20,6 +20,7 @@ namespace GameEngine
                 void OnPhysicsUpdate() override;
 
             public:
+                CharacterController();
                 void Move(glm::vec2 direction);
                 void Move(glm::vec2 direction, const Transform* transform);
                 void Jump(float strength);

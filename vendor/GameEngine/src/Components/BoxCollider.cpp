@@ -20,6 +20,7 @@ void BoxCollider::OnUpdateEnd()
 }
 
 BoxCollider::BoxCollider(const glm::vec3 halfExtends):
+    Collider("Box Collider"),
     _boxShape(PhysicsManager::GetPhysicsCommon()->createBoxShape(reactphysics3d::Vector3(halfExtends.x, halfExtends.y, halfExtends.z))),
     _halfExtends(halfExtends) {}
 

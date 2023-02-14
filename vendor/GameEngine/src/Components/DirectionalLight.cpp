@@ -10,6 +10,7 @@ using namespace GameEngine::Components;
 using namespace GameEngine::Rendering;
 
 DirectionalLight::DirectionalLight(const bool isShadowCaster, const glm::vec4 color, const float intensity):
+    Component("Directional Light"),
     _isShadowCaster(isShadowCaster),
     _color(color),
     _intensity(intensity) { }

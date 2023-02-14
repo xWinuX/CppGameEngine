@@ -17,5 +17,6 @@ class POVCameraController : public GameEngine::Components::Component
         void OnLateUpdate() override;
 
     public:
+        POVCameraController();
         void SetFollowTransform(GameEngine::Components::Transform* followTransform);
 };

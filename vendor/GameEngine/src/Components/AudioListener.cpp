@@ -3,11 +3,14 @@
 #include "GameEngine/Audio/AudioManager.h"
 #include "GameEngine/Debug/Log.h"
 
+GameEngine::Components::AudioListener::AudioListener():
+    Component("Audio Listener") {}
+
 void GameEngine::Components::AudioListener::OnUpdateEnd()
 {
     const glm::vec3 position = _transform->GetPosition();
     _fmodPosition            = FMOD_VECTOR{position.x, position.y, position.z};
-    
+
     const glm::vec3 up = _transform->GetUp();
     _fmodUp            = FMOD_VECTOR{up.x, up.y, up.z};
 

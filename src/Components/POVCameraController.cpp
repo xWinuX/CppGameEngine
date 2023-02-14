@@ -1,12 +1,11 @@
 ﻿#include "POVCameraController.h"
 
 #include "GameEngine/Input.h"
-#include "GameEngine/Debug/DebugGUIManager.h"
+#include "GameEngine/GUIManager.h"
 #include "GameEngine/Utils/Math.h"
 #include "glm/gtc/quaternion.hpp"
 
 using namespace GameEngine;
-
 
 
 void POVCameraController::OnLateUpdate()
@@ -40,10 +39,15 @@ void POVCameraController::OnLateUpdate()
     // Camera matrix
     const glm::quat lookAt = glm::quatLookAt(direction, up);
 
-    _transform->SetRotation(glm::slerp(_transform->GetRotation(), lookAt, 0.3f));
+    // Only update rotation if gui isn't visiable
+    if (GUIManager::IsHidden()) { _transform->SetRotation(glm::slerp(_transform->GetRotation(), lookAt, 0.3f)); }
+
     _transform->SetPosition(glm::mix(_transform->GetPosition(), _followTransform->GetPosition(), 0.5f));
 
     _previousMousePosition = mousePosition;
 }
+
+POVCameraController::POVCameraController():
+    Component("POV Camera Controller") {}
 
 void POVCameraController::SetFollowTransform(GameEngine::Components::Transform* followTransform) { _followTransform = followTransform; }

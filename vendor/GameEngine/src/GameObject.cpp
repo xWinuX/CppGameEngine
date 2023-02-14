@@ -2,6 +2,7 @@
 
 #include <iostream>
 
+#include "imgui.h"
 #include "GameEngine/Debug/Log.h"
 
 using namespace GameEngine::Debug;
@@ -16,7 +17,8 @@ for (GameEngine::Components::Component* component : _components) \
 } \
 for (const GameObject* child : _children) { child->func; }
 
-GameObject::GameObject():
+GameObject::GameObject(const std::string& name):
+    _name(name),
     _transform(new GameEngine::Components::Transform()) { AddComponent(_transform); }
 
 GameObject::~GameObject()
@@ -37,8 +39,6 @@ GameObject::~GameObject()
     if (_parent != nullptr) { _parent->RemoveChild(this); }
 }
 
-GameObject::GameObject(const glm::vec3 position) :
-    GameObject() { _transform->SetLocalPosition(position); }
 
 std::vector<GameEngine::Components::Component*>& GameObject::GetComponents() { return _components; }
 
@@ -81,3 +81,23 @@ void GameObject::OnPhysicsUpdateEnd(const float interpolationFactor) const { DO_
 void GameObject::OnUpdate() const { DO_FUNCTION(OnUpdate()) }
 void GameObject::OnLateUpdate() const { DO_FUNCTION(OnLateUpdate()) }
 void GameObject::OnUpdateEnd() const { DO_FUNCTION(OnUpdateEnd()) }
+
+void GameObject::OnDrawGui() const
+{
+    if (ImGui::CollapsingHeader(GetImGuiIDString(_name).c_str()))
+    {
+        ImGui::Indent();
+        for (Components::Component* component : _components)
+        {
+            // Draw Properties
+            if (ImGui::CollapsingHeader(component->GetImGuiName().c_str())) { component->OnGuiDraw(); }
+        }
+
+        ImGui::Spacing();
+        ImGui::Spacing();
+        ImGui::Spacing();
+        
+        for (const GameObject* child : _children) { child->OnDrawGui(); }
+        ImGui::Unindent();
+    }
+}

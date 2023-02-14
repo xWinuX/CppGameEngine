@@ -276,12 +276,12 @@ void GraphicDemoApplication::Initialize(Scene& scene)
     LoadAssets();
 
     // Game Manager
-    GameObject* gameManagerObject = new GameObject();
+    GameObject* gameManagerObject = new GameObject("Game Manager");
     gameManagerObject->AddComponent(new GameManager());
     scene.AddGameObject(gameManagerObject);
 
     // Player
-    GameObject* playerObject = new GameObject();
+    GameObject* playerObject = new GameObject("Player");
     playerObject->GetTransform()->SetLocalPosition(glm::vec3(0.0f, 7.0f, 0.0f));
 
     playerObject->AddComponent(new CapsuleCollider());
@@ -292,13 +292,13 @@ void GraphicDemoApplication::Initialize(Scene& scene)
     scene.AddGameObject(playerObject);
 
     // Directional Light
-    GameObject* directionalLight = new GameObject();
+    GameObject* directionalLight = new GameObject("Directional Light");
     directionalLight->GetTransform()->SetRotation(glm::quat(glm::vec3(-0.3f, 0.3f, 0.3f)));
     directionalLight->AddComponent(new DirectionalLight(true, glm::vec4(1.0f), 0.6f));
     scene.AddGameObject(directionalLight);
 
     // Camera
-    GameObject* cameraObject = new GameObject();
+    GameObject* cameraObject = new GameObject("Camera");
     cameraObject->AddComponent(new Camera(60, 0.1f, 500.0f, GET_MATERIAL(FrameBuffer), GET_MATERIAL(Skybox)));
     cameraObject->AddComponent(new POVCameraController());
     cameraObject->AddComponent(new AudioListener());
@@ -319,7 +319,7 @@ void GraphicDemoApplication::Initialize(Scene& scene)
     }
 
     // Red light
-    GameObject* redLightObject    = new GameObject();
+    GameObject* redLightObject    = new GameObject("Red Light");
     Transform*  redLightTransform = redLightObject->GetTransform();
     redLightTransform->SetLocalPosition(glm::vec3(2.0f, 7.0f, 0.0f));
     redLightTransform->SetLocalScale(glm::vec3(0.1f));
@@ -328,7 +328,7 @@ void GraphicDemoApplication::Initialize(Scene& scene)
     scene.AddGameObject(redLightObject);
 
     // Rainbow light
-    GameObject* rainbowLightObject    = new GameObject();
+    GameObject* rainbowLightObject    = new GameObject("Rainbow Light");
     Transform*  rainbowLightTransform = rainbowLightObject->GetTransform();
     rainbowLightTransform->SetPosition(glm::vec3(-2.0f, 7.0f, 0.0f));
     rainbowLightTransform->SetLocalScale(glm::vec3(0.1f));
@@ -338,7 +338,7 @@ void GraphicDemoApplication::Initialize(Scene& scene)
     scene.AddGameObject(rainbowLightObject);
 
     // Suzanne
-    GameObject* suzanneObject = new GameObject();
+    GameObject* suzanneObject = new GameObject("Suzanne");
     suzanneObject->GetTransform()->SetLocalPosition(glm::vec3(0.0f, 7.0f, 0.0f));
     suzanneObject->AddComponent(new MeshRenderer(GET_MODEL(Suzanne)->GetMesh(0), GET_MATERIAL(Dude)));
     suzanneObject->AddComponent(new TextRenderer(GET_FONT(Roboto), GET_MATERIAL(MSDFFont)));
@@ -346,7 +346,7 @@ void GraphicDemoApplication::Initialize(Scene& scene)
     scene.AddGameObject(suzanneObject);
 
     // The Missing
-    GameObject* theMissingObject = new GameObject();
+    GameObject* theMissingObject = new GameObject("The Missing");
     theMissingObject->GetTransform()->SetLocalScale(glm::vec3(5));
     theMissingObject->AddComponent(new MeshRenderer(GET_MODEL(TheMissing)->GetMesh(0), {GET_MATERIAL(Dude), GET_MATERIAL(Crate)}, 2));
     theMissingObject->AddComponent(new MeshRenderer(GET_MODEL(TheMissing)->GetMesh(1), GET_MATERIAL(Dude)));
@@ -357,7 +357,7 @@ void GraphicDemoApplication::Initialize(Scene& scene)
     for (unsigned int i = 0; i < 20; i++)
     {
         const glm::vec2 randomPosition = glm::diskRand(10.0f);
-        GameObject* crateObject = new GameObject();
+        GameObject* crateObject = new GameObject("Crate");
         crateObject->GetTransform()->SetPosition(glm::vec3(randomPosition.x, 20.0f, randomPosition.y));
         crateObject->AddComponent(new MeshRenderer(GET_MODEL(Cube)->GetMesh(0), GET_MATERIAL(Crate)));
         crateObject->AddComponent(new SpriteRenderer(GET_SPRITE(TheDude), GET_MATERIAL(SpriteLit)));
@@ -366,15 +366,15 @@ void GraphicDemoApplication::Initialize(Scene& scene)
         scene.AddGameObject(crateObject);
     }
 
-    // Floor
-    GameObject* islandObject = new GameObject();
+    // Island
+    GameObject* islandObject = new GameObject("Island");
     islandObject->AddComponent(new MeshRenderer(GET_MODEL(Island)->GetMesh(0), GET_MATERIAL(Island)));
     islandObject->AddComponent(new MeshCollider(GET_MODEL(Island)->GetMesh(0)));
     islandObject->AddComponent(new Rigidbody(reactphysics3d::BodyType::STATIC));
     scene.AddGameObject(islandObject);
 
     // Water
-    GameObject* waterObject = new GameObject();
+    GameObject* waterObject = new GameObject("Water");
     waterObject->GetTransform()->SetLocalPosition(glm::vec3(0.0f, 1.0f, 0.0f));
     waterObject->AddComponent(new MeshRenderer(GET_MODEL(WaterPlane)->GetMesh(0), GET_MATERIAL(Water)));
     scene.AddGameObject(waterObject);

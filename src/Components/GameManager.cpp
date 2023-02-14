@@ -2,7 +2,7 @@
 
 #include "GameEngine/Cursor.h"
 #include "GameEngine/Input.h"
-#include "GameEngine/Debug/DebugGUIManager.h"
+#include "GameEngine/GUIManager.h"
 #include "GameEngine/Physics/PhysicsManager.h"
 #include "../Asset.h"
 
@@ -14,9 +14,12 @@ std::vector<std::string>          textureNames = std::vector<std::string>(10);
 
 const char* currentSelectedTexture;
 
+GameManager::GameManager():
+    Component("Game Manager") {}
+
 void GameManager::OnUpdate()
 {
-    if (GameEngine::Input::GetKeyPressed(GLFW_KEY_ESCAPE)) { DebugGUIManager::ToggleHidden(); }
+    if (GameEngine::Input::GetKeyPressed(GLFW_KEY_ESCAPE)) { GUIManager::ToggleHidden(); }
 
     if (GameEngine::Input::GetKeyPressed(GLFW_KEY_P)) { Physics::PhysicsManager::ToggleDebugWireframe(); }
     if (GameEngine::Input::GetKeyPressed(GLFW_KEY_F))
@@ -25,7 +28,7 @@ void GameManager::OnUpdate()
         Window::GetCurrentWindow()->SetFullscreen(_fullscreen);
     }
 
-    if (DebugGUIManager::IsHidden()) { Cursor::Lock(); }
+    if (GUIManager::IsHidden()) { Cursor::Lock(); }
     else { Cursor::Unlock(); }
 
     if (ImGui::CollapsingHeader("Material Properties"))

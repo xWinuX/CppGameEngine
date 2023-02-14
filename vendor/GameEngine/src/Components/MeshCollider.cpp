@@ -3,16 +3,9 @@
 #include "GameEngine/Physics/PhysicsManager.h"
 
 GameEngine::Components::MeshCollider::MeshCollider(Rendering::Mesh* mesh):
-_concaveMeshShape(Physics::PhysicsManager::GetPhysicsCommon()->createConcaveMeshShape(mesh->GetColliderMesh())), _mesh(mesh) {
-    
-}
+    Collider("Mesh Collider"),
+    _concaveMeshShape(Physics::PhysicsManager::GetPhysicsCommon()->createConcaveMeshShape(mesh->GetColliderMesh())), _mesh(mesh) { }
 
-GameEngine::Components::MeshCollider::~MeshCollider()
-{
-    
-}
+GameEngine::Components::MeshCollider::~MeshCollider() { }
 
-reactphysics3d::CollisionShape* GameEngine::Components::MeshCollider::GetCollisionShape()
-{
-    return _concaveMeshShape;
-}
+reactphysics3d::CollisionShape* GameEngine::Components::MeshCollider::GetCollisionShape() { return _concaveMeshShape; }

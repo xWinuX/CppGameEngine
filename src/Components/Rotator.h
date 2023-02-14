@@ -3,7 +3,12 @@
 
 class Rotator : public GameEngine::Components::Component
 {
-    public:
+    private:
+        float _speed = 10;
+    protected:
         void OnUpdate() override;
+        void OnGuiDraw() override;
+    public:
+        Rotator();
         
 };

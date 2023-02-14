@@ -12,7 +12,7 @@
 #include "GameEngine/Time.h"
 #include "GameEngine/Audio/AudioManager.h"
 
-#include "GameEngine/Debug/DebugGUIManager.h"
+#include "GameEngine/GUIManager.h"
 #include "GameEngine/Physics/PhysicsManager.h"
 #include "GameEngine/Rendering/Renderer.h"
 
@@ -34,7 +34,7 @@ Application::Application()
     Renderer::Initialize();
     PhysicsManager::Initialize();
     AudioManager::Initialize();
-    DebugGUIManager::Initialize();
+    GUIManager::Initialize();
 
     // Activate to show true FPS
     //glfwSwapInterval(0);
@@ -50,7 +50,7 @@ void Application::Run()
 
     while (!_window.ShouldClose())
     {
-        DebugGUIManager::BeginNewFrame();
+        GUIManager::BeginNewFrame();
         
         Time::Update();
         Input::Update();
@@ -65,7 +65,7 @@ void Application::Run()
         
         Renderer::RenderSubmitted();
         
-        DebugGUIManager::Draw();
+        GUIManager::Draw();
         
         Renderer::DrawFrame();
         

@@ -7,6 +7,7 @@ class GameManager : public GameEngine::Components::Component
         bool _showDebugGUI = false;
         bool _fullscreen = false;
     public:
+        GameManager();
         void OnUpdate() override;
         
 };

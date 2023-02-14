@@ -1,4 +1,7 @@
 ﻿#pragma once
+#include <string>
+
+#include "GameEngine/ID.h"
 
 namespace GameEngine
 {
@@ -8,22 +11,24 @@ namespace GameEngine
     {
         class Transform;
 
-        class Component
+        class Component : protected ID
         {
             friend GameEngine::GameObject;
 
             protected:
+                const std::string       _name = "NO NAME";
                 GameEngine::GameObject* _gameObject;
                 Transform*              _transform;
                 bool                    _enabled = true;
-            
+
                 virtual void OnStart();
                 virtual void OnUpdateBegin();
                 virtual void OnUpdate();
                 virtual void OnLateUpdate();
                 virtual void OnUpdateEnd();
                 virtual void OnPhysicsUpdate();
-            
+                virtual void OnGuiDraw();
+
                 /**
                  * \brief
                  * Runs at the end of a physics update cycle
@@ -37,12 +42,12 @@ namespace GameEngine
                 virtual void OnOtherComponentAdded(Component* component);
 
             public:
-                Component();
-                virtual ~Component() = default;
+                explicit Component(const std::string& name);
+                virtual  ~Component() = default;
 
-
-                void SetEnabled(const bool enabled);
-                bool GetEnabled() const;
+                std::string GetImGuiName() const;
+                void        SetEnabled(const bool enabled);
+                bool        GetEnabled() const;
 
                 Transform* GetTransform() const;
         };

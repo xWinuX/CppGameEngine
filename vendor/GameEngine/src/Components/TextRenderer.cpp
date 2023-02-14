@@ -51,6 +51,7 @@ void TextRenderer::UpdateQuads()
 }
 
 TextRenderer::TextRenderer(Rendering::Font* font, Rendering::Material* material):
+    Component("Text Renderer"),
     _font(font),
     _material(material) { }
 

@@ -31,8 +31,11 @@ namespace GameEngine
 
             protected:
                 void OnUpdateEnd() override;
+                void OnGuiDraw() override;
 
             public:
+                Transform();
+            
                 glm::vec3 GetPosition() const;
                 glm::vec3 GetLocalPosition() const;
                 glm::quat GetRotation() const;

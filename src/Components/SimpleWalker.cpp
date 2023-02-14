@@ -11,6 +11,9 @@
 using namespace GameEngine;
 using namespace GameEngine::Rendering;
 
+SimpleWalker::SimpleWalker():
+    Component("Simple Walker") {}
+
 void SimpleWalker::OnStart()
 {
     _characterController = _gameObject->GetComponent<GameEngine::Components::CharacterController>();
@@ -38,7 +41,6 @@ void SimpleWalker::RandomizeSoundTimer() { _soundTimer = glm::linearRand(3.0f * 
 
 void SimpleWalker::OnUpdate()
 {
-
     if (_canMoveTimer > 0 && !_canMove) { _canMoveTimer -= GameEngine::Time::GetDeltaTime(); }
     else
     {

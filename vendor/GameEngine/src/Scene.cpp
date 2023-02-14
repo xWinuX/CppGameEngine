@@ -12,6 +12,7 @@ void Scene::OnUpdate() const
     _sceneRoot->OnUpdate();
     _sceneRoot->OnLateUpdate();
     _sceneRoot->OnUpdateEnd();
+    _sceneRoot->OnDrawGui();
 }
 
 void Scene::OnPhysicsUpdate() const { _sceneRoot->OnPhysicsUpdate(); }

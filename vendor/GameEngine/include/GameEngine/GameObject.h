@@ -3,6 +3,7 @@
 #include <vector>
 #include <glm/vec3.hpp>
 
+#include "ID.h"
 #include "Layer.h"
 #include "Components/Component.h"
 #include "Components/Transform.h"
@@ -12,14 +13,13 @@ namespace GameEngine
 {
     class Scene;
 
-    class GameObject final
+    class GameObject final : ID
     {
         friend Scene;
 
         public:
-            GameObject();
+            explicit GameObject(const std::string& name);
             ~GameObject();
-            explicit GameObject(glm::vec3 position);
 
             GameEngine::Components::Transform*               GetTransform() const { return _transform; }
             std::vector<GameEngine::Components::Component*>& GetComponents();
@@ -76,6 +76,7 @@ namespace GameEngine
             void SetParent(GameObject* newParent);
 
         private:
+            std::string                                     _name;
             GameObject*                                     _parent   = nullptr;
             Layer                                           _layer    = Layer::L_1;
             std::list<GameEngine::GameObject*>              _children = std::list<GameEngine::GameObject*>();
@@ -92,5 +93,6 @@ namespace GameEngine
             void OnUpdateEnd() const;
             void OnPhysicsUpdate() const;
             void OnPhysicsUpdateEnd(float interpolationFactor) const;
+            void OnDrawGui() const;
     };
 }

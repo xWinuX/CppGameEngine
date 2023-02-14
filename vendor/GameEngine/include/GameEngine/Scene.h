@@ -9,7 +9,7 @@ namespace GameEngine
     class Scene
     {
         private:
-            GameObject* _sceneRoot = new GameObject();
+            GameObject* _sceneRoot = new GameObject("Scene Hierarchy");
 
         public:
             Scene() = default;

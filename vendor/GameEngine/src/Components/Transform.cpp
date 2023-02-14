@@ -5,7 +5,10 @@
 #include <glm/gtc/quaternion.hpp>
 #include <glm/gtx/euler_angles.hpp>
 
+#include "imgui.h"
 #include "GameEngine/GameObject.h"
+#include "GameEngine/Utils/Math.h"
+#include "glm/gtc/type_ptr.hpp"
 
 using namespace GameEngine::Components;
 
@@ -46,7 +49,11 @@ void Transform::SetLocalRotation(const glm::quat quaternion)
 
 void Transform::SetLocalScale(const glm::vec3& scale)
 {
-    _localScale = scale;
+    _localScale = glm::vec3(
+                            std::max(scale.x, Utils::Math::MinValue),
+                            std::max(scale.y, Utils::Math::MinValue),
+                            std::max(scale.z, Utils::Math::MinValue)
+                           );
     CalculateTRS();
 }
 
@@ -94,3 +101,18 @@ void Transform::CalculateTRS()
 }
 
 void Transform::OnUpdateEnd() { CalculateTRS(); }
+
+void Transform::OnGuiDraw()
+{
+    glm::vec3 euler = eulerAngles(_localRotation);
+    ImGui::InputFloat3(GetImGuiIDString("Position").c_str(), glm::value_ptr(_localPosition));
+    ImGui::InputFloat3(GetImGuiIDString("Rotation").c_str(), glm::value_ptr(euler));
+    ImGui::InputFloat3(GetImGuiIDString("Scale").c_str(), glm::value_ptr(_localScale));
+
+    SetLocalRotation(glm::quat(euler));
+    SetLocalPosition(_localPosition);
+    SetLocalScale(_localScale);
+}
+
+Transform::Transform():
+    Component("Transform") {}

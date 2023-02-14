@@ -25,6 +25,7 @@ class SimpleWalker final : public GameEngine::Components::Component
         glm::vec2 _randomDirection = glm::circularRand(1);
 
     public:
+        SimpleWalker();
         void OnStart() override;
         void RandomizeMoveTimers();
         void RandomizeSoundTimer();

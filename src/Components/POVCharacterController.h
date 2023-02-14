@@ -8,6 +8,7 @@ class POVCharacterController : public GameEngine::Components::Component
         GameEngine::Components::CharacterController* _characterController = nullptr;
         GameEngine::Components::Transform* _cameraTransform;
     public:
+        POVCharacterController();
         void OnStart() override;
         void OnUpdate() override;
         void SetCameraTransform(GameEngine::Components::Transform* cameraTransform);

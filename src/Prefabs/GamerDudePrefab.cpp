@@ -12,6 +12,9 @@ using namespace GameEngine;
 using namespace GameEngine::Components;
 
 
+GamerDudePrefab::GamerDudePrefab():
+    Prefab("Game Dude") {}
+
 void GamerDudePrefab::PrepareGameObject(GameObject* gameObject)
 {
     gameObject->AddComponent(new AudioSource(GET_SOUND(Hey)));

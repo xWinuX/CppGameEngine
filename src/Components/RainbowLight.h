@@ -7,6 +7,7 @@ class RainbowLight final : public GameEngine::Components::Component
         GameEngine::Components::PointLight* _pointLight = nullptr;
     
     public:
+        RainbowLight();
         void OnStart() override;
         void OnUpdate() override;
 };
