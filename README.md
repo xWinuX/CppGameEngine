@@ -1,64 +1,64 @@
 # Code
 
-Der grösste Teil des Codes ist unter /vendor/GameEngine.
+The majority of the code is located in /vendor/GameEngine.
 
-In /src befindet sich dann noch applikationsspezifischer Code der nicht unbedingt in die Engine gepasst hätte
+In /src there is application-specific code that wouldn't necessarily fit into the engine.
 
 ## Build
 
-Die Applikation wird unter dem /build Ordner gebuilded
+The application is built in the /build folder.
 
 ## Dependencies
 
-Im Ordner mit der Exe sollte sich der /res Ordner befinden und die DLL's im /dependencies Ordner (Dies sollte automatisch geschehen)
+The /res folder should be located in the same directory as the executable, and the DLLs should be in the /dependencies folder (this should happen automatically).
 
-## Resourcen
+## Resources
 
-Die ganzen Resourcen wie Shader und Texturen können unter /res gefunden werden.
+All resources such as shaders and textures can be found under /res.
 
 ## Third Party Code
 
-Ausser dem GameEngine Ordner ist alles unter /vendor Third Party Code und wurde nicht von mir geschrieben.
-Bei jedem Ordner hat es ein License file oder ähnliches.
+Except for the GameEngine folder, everything under /vendor is third party code and was not written by me. Each folder has a license file or something similar.
 
-# Applikation
+# Application
 
-## Steuerung
+## Controls
 
 | Key    | Action             |
 |--------|--------------------|
-| WASD   | Bewegen            |
-| LShift | Sprinten           |
-| Space  | Springen           |
-| Mouse  | Herum Schauen      |
-| F      | Fullscreen Toggle  |
-| Escape | Debug Menu Toggle  |
-| P      | Physics Debug View |
+| WASD   | Move               |
+| LShift | Sprint             |
+| Space  | Jump               |
+| Mouse  | Look around        |
+| F      | Fullscreen toggle  |
+| Escape | Debug menu toggle  |
+| P      | Physics debug view |
 
 ## GUI
 
-Wie bei der Steuerung beschrieben kann mit Escape ein GUI geöffnet werden dort gibt es verschiedene Funktionen
+As described in the Controls section, pressing Escape opens a GUI with various functions.
 
 ### Material Properties
 
-Die meisten Material Werte können geändert werden ausser interne Werte wie die ganzen Matrizen.
+Most material values can be changed except for internal values such as matrices.
 
 ### Scene Hierarchy
 
-Alle GameObjects sind ähnlich wie in Unity in einer Scene Hierarchy drin, dort sieht man auch welche Komponenten angehängt sind und kann ihre Werte verändern.
+All GameObjects are in a Scene Hierarchy similar to Unity, where you can also see which components are attached and change their values.
 
-### Sonstiges
-Ein paar Reiter sind leer weil es keine exposde Werte gibt.
+### Miscellaneous
 
-Um die Directional Light Position zu ändern kann der X/Y Rotations Wert des Directional Lights Gameobjects angepasst werden (Wie in Unity)
+Some tabs are empty because there are no exposed values.
 
-Der Root Transform kann auch angepasst werden, aber es geht ziemlich kaputt...
+To change the Directional Light position, you can adjust the X/Y Rotation value of the Directional Lights GameObject (similar to Unity).
+
+The Root Transform can also be adjusted, but it breaks things pretty badly...
 
 # Credits
 
-## Third Party Resourcen
+## Third Party Resources
 
-Alles was hier nicht aufgelistet ist wurde selbst erstellt.
+Everything not listed here was created by myself.
 
 | Resource                                      | Source                                                                                    |
 |-----------------------------------------------|-------------------------------------------------------------------------------------------|
@@ -66,10 +66,10 @@ Alles was hier nicht aufgelistet ist wurde selbst erstellt.
 | /res/models/Suzanne.gltf                      | https://www.blender.org                                                                   |
 | /res/textures/Skybox                          | https://assetstore.unity.com/packages/2d/textures-materials/sky/fantasy-skybox-free-18353 |
 | /res/textures/(Crate.png, CrateNormalMap.png) | SAE                                                                                       |
-| /res/texture/(Dirt.png, Sand.png, Grass.png)  | https://seamless-pixels.blogspot.com (Ja ich habe sie gekauft)                            |
-| /res/audio/BackgroundMusic.mp3                | Pax Votum (Kolleg von mir, macht auch sonst Music für meine Projekte)                     |
+| /res/texture/(Dirt.png, Sand.png, Grass.png)  | https://seamless-pixels.blogspot.com (Yes, I purchased them)                               |
+| /res/audio/BackgroundMusic.mp3                | Pax Votum (a colleague of mine, also makes music for my projects)                          |
 
-## Tutorials used
+## Tutorials Used
 
 - https://learnopengl.com
 - https://www.youtube.com/@ThinMatrix
