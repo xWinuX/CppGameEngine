@@ -1,3 +1,4 @@
+> Note: this is my first C++ project and the first time I made an Engine.
 # Code
 
 The majority of the code is located in /vendor/GameEngine.
